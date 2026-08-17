@@ -8,6 +8,7 @@ import { fetchHorticultureSeries, summarizeHorticulture } from '@/lib/horticultu
 import { fetchLivestockSeries, summarizeLivestock } from '@/lib/livestock-data';
 import { MICROSITES } from '@/lib/microsites';
 import type { MicrositeConfig } from '@/lib/microsites';
+import { fetchRecentQuakes } from '@/lib/quake-data';
 import { fetchSheepSeries } from '@/lib/sheep-data';
 import { formatMillions as formatMillionsSheep } from '@/lib/sheep-format';
 
@@ -20,11 +21,12 @@ function getMicrosite(slug: string): MicrositeConfig {
 }
 
 export default async function HomePage(): Promise<React.ReactElement> {
-  const [sheep, livestock, horticulture, forestry] = await Promise.all([
+  const [sheep, livestock, horticulture, forestry, quakes] = await Promise.all([
     fetchSheepSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
     fetchLivestockSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
     fetchHorticultureSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
     fetchForestrySeries(env.STATS_NZ_SUBSCRIPTION_KEY),
+    fetchRecentQuakes(),
   ]);
 
   const livestockStats = summarizeLivestock(livestock);
@@ -42,6 +44,7 @@ export default async function HomePage(): Promise<React.ReactElement> {
   const plantingConfig = getMicrosite('planting-bust');
   const kiwifruitConfig = getMicrosite('kiwifruit-overtake');
   const deerConfig = getMicrosite('deer-boom-bust');
+  const shakeConfig = getMicrosite('shake-index');
 
   return (
     <main>
@@ -52,7 +55,7 @@ export default async function HomePage(): Promise<React.ReactElement> {
             the surprising.
           </h1>
           <p className="numeral-paragraph-lg text-[var(--color-muted)]">
-            Six live microsites. All numbers come from Stats NZ at deploy time.
+            Seven live microsites. Stats NZ at deploy time, plus GeoNet for the shake index.
           </p>
         </Stack>
         <div className="grid gap-6 pb-[var(--spacing-3xl)] sm:grid-cols-2 lg:grid-cols-3">
@@ -109,6 +112,15 @@ export default async function HomePage(): Promise<React.ReactElement> {
             statLabel={`Farmed deer now (${livestock.latest.year})`}
             statValue={formatMillions(deer?.latest ?? 0)}
             accent={deerConfig.accent}
+          />
+          <MicrositeCard
+            slug={shakeConfig.slug}
+            eyebrow={shakeConfig.eyebrow}
+            title={shakeConfig.title}
+            description={shakeConfig.description}
+            statLabel="Recent felt quakes"
+            statValue={String(quakes.length)}
+            accent={shakeConfig.accent}
           />
         </div>
       </Container>
