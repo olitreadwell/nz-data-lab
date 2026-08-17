@@ -17,7 +17,9 @@ const GRADIENT_BOTTOM_OPACITY = 0.05;
 const ACTIVE_DOT_RADIUS = 5;
 
 function formatAxisTick(value: number): string {
-  return `${Math.round(value / 1000000)}m`;
+  const millions = value / 1_000_000;
+  const rounded = Math.round(millions * 10) / 10;
+  return `${Number.isInteger(rounded) ? rounded : rounded.toFixed(1)}m`;
 }
 
 function DeerTooltip({ active, label, payload }: TooltipContentProps): React.ReactElement | null {
