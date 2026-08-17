@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -23,6 +23,21 @@ describe('SpeciesRegisterSearch', () => {
     render(<SpeciesRegisterSearch initialQuery="kiwi" />);
     expect(await screen.findByText(/3 names match "kiwi"/)).toBeInTheDocument();
     expect(screen.getByText('Apteryx mantelli')).toBeInTheDocument();
+  });
+
+  it('exposes the class counts in a keyboard-reachable table', async () => {
+    const { container } = render(<SpeciesRegisterSearch initialQuery="kiwi" />);
+    await screen.findByText(/3 names match "kiwi"/);
+    const summary = container.querySelector('summary');
+    if (summary === null) {
+      throw new Error('Expected a chart data table summary');
+    }
+    fireEvent.click(summary);
+    const table = screen.getByRole('table');
+    expect(table).toHaveTextContent('Class');
+    expect(table).toHaveTextContent('Names');
+    expect(table).toHaveTextContent('Aves');
+    expect(table).toHaveTextContent('Insecta');
   });
 
   it('has no accessibility violations', async () => {

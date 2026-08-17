@@ -27,6 +27,22 @@ describe('ForestryChart', () => {
     expect(results).toHaveNoViolations();
   });
 
+  it('exposes the data in a keyboard-reachable table', () => {
+    const { container } = render(<ForestryChart points={POINTS} />);
+    const summary = container.querySelector('summary');
+    if (summary === null) {
+      throw new Error('Expected a chart data table summary');
+    }
+    fireEvent.click(summary);
+    const table = screen.getByRole('table');
+    expect(table).toHaveTextContent('Year');
+    expect(table).toHaveTextContent('New planting');
+    expect(table).toHaveTextContent('Harvested area');
+    expect(table).toHaveTextContent('2002');
+    expect(table).toHaveTextContent('33,674 ha');
+    expect(table).toHaveTextContent('46,658 ha');
+  });
+
   it('shows planting and harvest for the hovered year', async () => {
     render(<ForestryChart points={POINTS} />);
     fireEvent.mouseMove(screen.getByRole('img'), { clientX: 100, clientY: 100 });

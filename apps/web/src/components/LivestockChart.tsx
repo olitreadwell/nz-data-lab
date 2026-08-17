@@ -6,6 +6,8 @@ import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'rec
 import { formatMillions } from '@/lib/format';
 import type { LivestockSeriesPoint } from '@/lib/livestock-data';
 
+import { ChartDataTable } from './ChartDataTable';
+import type { ChartDataColumn } from './ChartDataTable';
 import { EmojiActiveDot, SeriesTooltip } from './chart-utils';
 import type { ChartSeriesDef } from './chart-utils';
 
@@ -46,6 +48,14 @@ export function LivestockChart({ points }: LivestockChartProps): React.ReactElem
         beefCattle: point.beefCattle,
         deer: point.deer,
       }));
+  const tableColumns: ChartDataColumn<LivestockSeriesPoint>[] = [
+    { key: 'year', header: 'Year' },
+    ...visibleSeries.map((definition) => ({
+      key: definition.key as keyof LivestockSeriesPoint,
+      header: definition.label,
+      format: formatMillions,
+    })),
+  ];
 
   if (points.length === 0) {
     return (
@@ -129,6 +139,11 @@ export function LivestockChart({ points }: LivestockChartProps): React.ReactElem
           </LineChart>
         </ResponsiveContainer>
       </div>
+      <ChartDataTable
+        summary="View livestock numbers as a table"
+        columns={tableColumns}
+        rows={points}
+      />
     </div>
   );
 }

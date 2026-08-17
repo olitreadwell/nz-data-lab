@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -31,6 +31,21 @@ describe('OpenDataSearch', () => {
     render(<OpenDataSearch initialQuery="water" />);
     expect(await screen.findByText(/3 datasets match "water"/)).toBeInTheDocument();
     expect(screen.getByText('River water quality')).toBeInTheDocument();
+  });
+
+  it('exposes the publisher counts in a keyboard-reachable table', async () => {
+    const { container } = render(<OpenDataSearch initialQuery="water" />);
+    await screen.findByText(/3 datasets match "water"/);
+    const summary = container.querySelector('summary');
+    if (summary === null) {
+      throw new Error('Expected a chart data table summary');
+    }
+    fireEvent.click(summary);
+    const table = screen.getByRole('table');
+    expect(table).toHaveTextContent('Publisher');
+    expect(table).toHaveTextContent('Datasets');
+    expect(table).toHaveTextContent('Ministry for the Environment');
+    expect(table).toHaveTextContent('NIWA');
   });
 
   it('has no accessibility violations', async () => {

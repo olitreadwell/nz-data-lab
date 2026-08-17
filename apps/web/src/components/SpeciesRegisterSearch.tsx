@@ -7,6 +7,8 @@ import type { TooltipContentProps } from 'recharts';
 import { searchLiveNzorNames } from '@/lib/live-sources';
 import type { LiveNzorName } from '@/lib/live-sources';
 
+import { ChartDataTable } from './ChartDataTable';
+
 interface SpeciesRegisterSearchProps {
   initialQuery: string;
 }
@@ -133,27 +135,37 @@ export function SpeciesRegisterSearch({
       </p>
       {!isLoading && error === null && names.length > 0 && (
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="h-[220px] sm:h-[260px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart role="img" aria-label={label}>
-                <Pie
-                  data={byClass}
-                  dataKey="count"
-                  nameKey="className"
-                  innerRadius={45}
-                  outerRadius={80}
-                  paddingAngle={2}
-                >
-                  {byClass.map((datum, index) => (
-                    <Cell
-                      key={datum.className}
-                      fill={CLASS_COLORS[index % CLASS_COLORS.length] ?? '#94a3b8'}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip content={(props) => <ClassTooltip {...props} />} />
-              </PieChart>
-            </ResponsiveContainer>
+          <div>
+            <div className="h-[220px] sm:h-[260px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart role="img" aria-label={label}>
+                  <Pie
+                    data={byClass}
+                    dataKey="count"
+                    nameKey="className"
+                    innerRadius={45}
+                    outerRadius={80}
+                    paddingAngle={2}
+                  >
+                    {byClass.map((datum, index) => (
+                      <Cell
+                        key={datum.className}
+                        fill={CLASS_COLORS[index % CLASS_COLORS.length] ?? '#94a3b8'}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip content={(props) => <ClassTooltip {...props} />} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <ChartDataTable
+              summary="View species by class as a table"
+              columns={[
+                { key: 'className', header: 'Class' },
+                { key: 'count', header: 'Names' },
+              ]}
+              rows={byClass}
+            />
           </div>
           <ul className="max-h-[260px] space-y-1 overflow-y-auto pr-1">
             {names.slice(0, MAX_NAMES_SHOWN).map((name) => (

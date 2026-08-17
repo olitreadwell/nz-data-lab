@@ -38,6 +38,36 @@ describe('LivestockChart', () => {
     expect(tooltip).toHaveTextContent('Deer');
   });
 
+  it('exposes all four species in a keyboard-reachable table', () => {
+    const { container } = render(<LivestockChart points={POINTS} />);
+    const summary = container.querySelector('summary');
+    if (summary === null) {
+      throw new Error('Expected a chart data table summary');
+    }
+    fireEvent.click(summary);
+    const table = screen.getByRole('table');
+    expect(table).toHaveTextContent('Year');
+    expect(table).toHaveTextContent('Sheep');
+    expect(table).toHaveTextContent('Dairy cattle');
+    expect(table).toHaveTextContent('Beef cattle');
+    expect(table).toHaveTextContent('Deer');
+    expect(table).toHaveTextContent('1994');
+    expect(table).toHaveTextContent('49.5 million');
+  });
+
+  it('drops sheep from the data table when toggled off', () => {
+    const { container } = render(<LivestockChart points={POINTS} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Hide sheep' }));
+    const summary = container.querySelector('summary');
+    if (summary === null) {
+      throw new Error('Expected a chart data table summary');
+    }
+    fireEvent.click(summary);
+    const table = screen.getByRole('table');
+    expect(table).toHaveTextContent('Dairy cattle');
+    expect(table).not.toHaveTextContent('Sheep');
+  });
+
   it('hides sheep from the chart and tooltip when toggled off', async () => {
     render(<LivestockChart points={POINTS} />);
     fireEvent.click(screen.getByRole('button', { name: 'Hide sheep' }));
