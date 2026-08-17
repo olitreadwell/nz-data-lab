@@ -9,7 +9,7 @@ import { HorticultureChart } from '@/components/HorticultureChart';
 import { KiwifruitOvertakeChart } from '@/components/KiwifruitOvertakeChart';
 import { LivestockChart } from '@/components/LivestockChart';
 import { MicrositeStory } from '@/components/MicrositeStory';
-import { QuakeScatterChart } from '@/components/QuakeScatterChart';
+import { QuakeMap } from '@/components/QuakeMap';
 import { SheepChart } from '@/components/SheepChart';
 import { StatCard } from '@/components/StatCard';
 import { env } from '@/env';
@@ -286,7 +286,7 @@ function renderStoryContent(
       const summary = summarizeGeoNetQuakes(data.quakes);
       const strongest = summary.strongest;
       return {
-        chart: <QuakeScatterChart quakes={data.quakes} />,
+        chart: <QuakeMap quakes={data.quakes} />,
         stats: (
           <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
             <StatCard

@@ -8,6 +8,18 @@ Every microsite loop appends a dated entry here. Format:
 - Sources: <data source + references>
 - Loop review: <what slowed the loop, what changed in the skill>
 
+## 2026-08-18 00:40 (NZST) - loop 2
+
+- Shipped: shake-index reworked from a scatter chart to a Leaflet map of
+  New Zealand (OpenStreetMap tiles, bubble size by magnitude, colour by felt
+  intensity, magnitude and depth sliders).
+- Sources: GeoNet API; react-leaflet v5 + leaflet 1.9.4 (client-side only
+  via next/dynamic ssr:false so the static export stays server-safe).
+- Loop review: the first Leaflet attempt broke prerender (window at module
+  load); the fix was splitting the map into a dynamic client-only module
+  and keeping shared helpers Leaflet-free. Chart-type registry still needs
+  building.
+
 ## 2026-08-18 00:05 (NZST) - loop 1
 
 - Shipped: shake-index - recent felt quakes as an adjustable bubble chart
