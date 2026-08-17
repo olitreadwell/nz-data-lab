@@ -23,8 +23,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={cn('font-sans', geist.variable)}>
       <body className="flex min-h-screen flex-col">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-[var(--radius-sm)] focus:bg-[var(--color-bg)] focus:px-3 focus:py-2 focus:text-[var(--color-fg)] focus:shadow-md"
+        >
+          Skip to content
+        </a>
         <SiteHeader />
-        <div className="flex-1">{children}</div>
+        <div id="main" tabIndex={-1} className="flex-1">
+          {children}
+        </div>
         <SiteFooter />
       </body>
     </html>
