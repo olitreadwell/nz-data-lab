@@ -23,12 +23,11 @@ vi.mock('@/lib/sheep-data', async (importOriginal) => {
 });
 
 describe('HomePage', () => {
-  it('renders the hero and the sheep index section on one page', async () => {
+  it('renders the hero and the sheep index teaser on one page', async () => {
     const stream = await renderToReadableStream(<HomePage />);
     const html = await new Response(stream).text();
     expect(html).toContain('Small experiments digging through New Zealand public data');
     expect(html).toContain('national animal is in freefall');
-    expect(html).toContain('data-sheep-latest');
-    expect(html).toContain('23.3 million sheep');
+    expect(html).toContain('Reveal the sheep index');
   });
 });

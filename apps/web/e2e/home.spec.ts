@@ -9,19 +9,22 @@ test.describe('home', () => {
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   });
 
-  test('@critical renders the sheep index chart on the landing page', async ({ page }) => {
+  test('@critical reveals the sheep index chart on click', async ({ page }) => {
     await page.goto('./');
+    await page.getByRole('button', { name: /reveal the sheep index/i }).click();
     await expect(page.getByRole('img', { name: /sheep numbers/i })).toBeVisible();
   });
 
   test('@critical no a11y violations on the landing page', async ({ page }) => {
     await page.goto('./');
+    await page.getByRole('button', { name: /reveal the sheep index/i }).click();
     const results = await new AxeBuilder({ page }).analyze();
     expect(results.violations).toEqual([]);
   });
 
   test('@smoke shows a plausible live sheep count', async ({ page }) => {
     await page.goto('./');
+    await page.getByRole('button', { name: /reveal the sheep index/i }).click();
     const latest = await page.getAttribute('[data-sheep-latest]', 'data-sheep-latest');
     expect(latest).not.toBeNull();
     const sheep = Number(latest);

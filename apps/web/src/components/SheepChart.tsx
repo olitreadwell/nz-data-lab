@@ -11,6 +11,24 @@ interface SheepChartProps {
 }
 
 const CHART_HEIGHT = 240;
+const ACTIVE_DOT_FONT_SIZE = 18;
+
+/** Active point marker: a sheep emoji instead of a plain dot. */
+function SheepActiveDot({ cx, cy }: { cx?: number; cy?: number }): React.ReactElement {
+  return (
+    <text
+      x={cx}
+      y={cy}
+      textAnchor="middle"
+      dominantBaseline="central"
+      fontSize={ACTIVE_DOT_FONT_SIZE}
+      pointerEvents="none"
+      aria-hidden="true"
+    >
+      🐑
+    </text>
+  );
+}
 
 /** Tooltip shown while hovering (mouse) or scrubbing (touch) the chart. */
 function SheepTooltip({ active, label, payload }: TooltipContentProps): React.ReactElement | null {
@@ -62,7 +80,7 @@ export function SheepChart({ points }: SheepChartProps): React.ReactElement {
       role="img"
       title={label}
       data={points}
-      margin={{ top: 8, right: 8, bottom: 0, left: 0 }}
+      margin={{ top: 16, right: 8, bottom: 0, left: 0 }}
     >
       <XAxis
         dataKey="year"
@@ -89,7 +107,7 @@ export function SheepChart({ points }: SheepChartProps): React.ReactElement {
         stroke="var(--color-fg)"
         strokeWidth={2}
         dot={false}
-        activeDot={{ r: 4, fill: 'var(--color-fg)', stroke: 'var(--color-bg)', strokeWidth: 2 }}
+        activeDot={<SheepActiveDot />}
       />
     </LineChart>
   );
