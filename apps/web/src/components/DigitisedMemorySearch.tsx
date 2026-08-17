@@ -27,6 +27,16 @@ function decadeOfYear(year: number): number {
   return Math.floor(year / DECADE_STEP) * DECADE_STEP;
 }
 
+// True when the record url is a safe http/https link that may be rendered as an anchor.
+function isSafeRecordUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
 function DecadeTooltip({ active, payload }: TooltipContentProps): React.ReactElement | null {
   if (!active || payload === undefined || payload.length === 0) {
     return null;
@@ -196,12 +206,12 @@ export function DigitisedMemorySearch({
           <ul className="max-h-[260px] space-y-1 overflow-y-auto pr-1">
             {visibleRecords.slice(0, MAX_RECORDS_SHOWN).map((record) => (
               <li key={record.id} className="numeral-paragraph-sm text-[var(--color-muted)]">
-                {record.url === '' ? (
-                  <span className="text-[var(--color-fg)]">{record.title}</span>
-                ) : (
+                {isSafeRecordUrl(record.url) ? (
                   <a className="text-[var(--color-fg)] underline" href={record.url}>
                     {record.title}
                   </a>
+                ) : (
+                  <span className="text-[var(--color-fg)]">{record.title}</span>
                 )}
                 {record.contentPartner === '' ? '' : ` (${record.contentPartner})`}
                 {record.year === null ? ' [undated]' : ` [${decadeOfYear(record.year)}s]`}
