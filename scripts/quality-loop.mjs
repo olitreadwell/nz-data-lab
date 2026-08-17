@@ -163,7 +163,7 @@ function generateIssues(count) {
   return created;
 }
 
-function triageIssues() {
+async function triageIssues() {
   const open = JSON.parse(
     runCapture('gh', [
       'issue',
@@ -234,19 +234,34 @@ function triageIssues() {
       console.log(`triage closed #${number}: ${verdict.reason ?? 'stale'}`);
       continue;
     }
-    const args = ['issue', 'edit', number, '--repo', REPO, '--body', verdict.body];
+    run('gh', ['issue', 'edit', number, '--repo', REPO, '--body', verdict.body]);
     if (verdict.priority !== undefined) {
-      args.push(
-        '--remove-label',
-        'priority-high',
-        '--remove-label',
-        'priority-medium',
-        '--remove-label',
-        'priority-low',
-      );
-      args.push('--add-label', `priority-${verdict.priority}`);
+      const target = `priority-${verdict.priority}`;
+      for (let attempt = 0; attempt < 3; attempt += 1) {
+        run('gh', [
+          'issue',
+          'edit',
+          number,
+          '--repo',
+          REPO,
+          '--remove-label',
+          'priority-high',
+          '--remove-label',
+          'priority-medium',
+          '--remove-label',
+          'priority-low',
+          '--add-label',
+          target,
+        ]);
+        const labels = JSON.parse(
+          runCapture('gh', ['issue', 'view', number, '--repo', REPO, '--json', 'labels']),
+        ).labels.map((label) => label.name);
+        if (labels.includes(target)) {
+          break;
+        }
+        await sleep(2000);
+      }
     }
-    run('gh', args);
     console.log(`triage updated #${number} (priority-${verdict.priority ?? 'unchanged'})`);
   }
 }
@@ -373,9 +388,9 @@ if (mode === 'generate') {
   await fanout(rest.map(Number));
 } else if (mode === 'full') {
   const created = generateIssues(5);
-  triageIssues();
+  await triageIssues();
   const rank = { high: 0, medium: 1, low: 2 };
-  const open = JSON.parse(
+  const pool = JSON.parse(
     runCapture('gh', [
       'issue',
       'list',
@@ -389,13 +404,6 @@ if (mode === 'generate') {
       'number,labels',
     ]),
   ).map((issue) => ({ number: issue.number, labels: issue.labels ?? [] }));
-  const pool = [
-    ...created.map((number) => ({
-      number,
-      labels: [{ name: 'priority-low' }],
-    })),
-    ...open.filter((entry) => !created.includes(entry.number)),
-  ];
   const prioritized = pool
     .map((entry) => {
       const label = (entry.labels ?? []).find((candidate) =>
