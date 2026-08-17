@@ -1,7 +1,9 @@
 'use client';
 
 import type { GeoNetQuake } from '@nzlab/nz-sources';
+import type { Map as LeafletMap } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { useEffect, useRef } from 'react';
 import { CircleMarker, MapContainer, TileLayer, Tooltip } from 'react-leaflet';
 
 import { BAND_COLORS, bandOf, radiusFor } from '@/lib/quake-utils';
@@ -23,10 +25,16 @@ function formatDate(iso: string): string {
 
 /** The Leaflet map itself, split out so it only loads in the browser. */
 export function LeafletQuakeMap({ quakes, label }: LeafletQuakeMapProps): React.ReactElement {
+  const mapRef = useRef<LeafletMap | null>(null);
+
+  useEffect(() => {
+    mapRef.current?.getContainer()?.setAttribute('aria-label', label);
+  }, [label]);
+
   return (
     <div className="h-[320px] w-full overflow-hidden rounded-[var(--radius-sm)] border border-[var(--color-border)] sm:h-[380px] lg:h-[440px]">
       <MapContainer
-        ariaLabel={label}
+        ref={mapRef}
         center={NZ_CENTER}
         zoom={DEFAULT_ZOOM}
         minZoom={MIN_ZOOM}
