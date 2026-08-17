@@ -33,22 +33,30 @@ every iteration makes the next one faster.
 
 1. **Generate (2 min)**: scan the repo against the checklists, write detailed
    issues (repro steps, checklist reference, acceptance criteria), create
-   them with `gh issue create --label quality-loop`. Never fabricate a
-   finding: verify each one against real code or a live check.
-2. **Prioritize (1 min)**: security > accessibility > correctness > perf >
-   polish. Small, high-value, single-file fixes first. Pick 3-4 per batch.
-   Skip issues whose files have uncommitted changes on `main` (concurrent
-   work) or defer them to a later loop.
-3. **Fan out (4 min)**: one worktree + feature branch per issue, one
+   them with `gh issue create --label quality-loop`. Score by severity and
+   file the highest-severity findings first (security/a11y = high).
+   Never fabricate a finding: verify each one against real code or a live
+   check. One root cause gets one issue, even across files.
+2. **Triage (2 min)**: review every open `quality-loop` issue against the
+   current code. Close stale or already-fixed issues, refresh bodies with
+   current file/line references, reassign priority labels, and merge
+   duplicates (same root cause or overlapping files) into one primary
+   issue, closing the rest as duplicates. `gh issue edit` applies the
+   refreshed bodies and labels.
+3. **Prioritize (1 min)**: security > accessibility > correctness > perf >
+   polish using the refreshed labels. Small, high-value, single-file fixes
+   first. Pick 3-4 per batch. Skip issues whose files have uncommitted
+   changes on `main` (concurrent work) or defer them to a later loop.
+4. **Fan out (4 min)**: one worktree + feature branch per issue, one
    `codex exec` per worktree in parallel. Each agent implements, verifies,
    and commits. `node scripts/quality-loop.mjs fanout <issue-number>...`
    drives the mechanics.
-4. **Verify (1 min)**: type-check, lint, unit tests, and build per worktree
+5. **Verify (1 min)**: type-check, lint, unit tests, and build per worktree
    before merge. Never merge a failing worktree.
-5. **Merge (1 min)**: sequential `--no-ff` merges to `main`, push, watch the
+6. **Merge (1 min)**: sequential `--no-ff` merges to `main`, push, watch the
    Pages deploy, curl the touched pages for 200.
-6. **Close (1 min)**: close each issue with the merge commit SHA.
-7. **Review (1 min)**: read the last loop's notes, list what slowed it down,
+7. **Close (1 min)**: close each issue with the merge commit SHA.
+8. **Review (1 min)**: read the last loop's notes, list what slowed it down,
    and update this skill with one concrete improvement. Keep the skill
    short; delete rules that no longer pay for themselves.
 
@@ -77,6 +85,7 @@ every iteration makes the next one faster.
 
 - What took longest? (generate, fan out, verify, merge, deploy)
 - Did any issue turn out to be unfixable or already fixed? Why?
+- Did triage catch duplicates or stale issues before fan-out? How many?
 - Did any worktree merge conflict or clobber concurrent work?
 - Did the checks catch anything before CI? Did CI catch anything after?
 - Is there a new checklist item or a new script improvement worth adding?

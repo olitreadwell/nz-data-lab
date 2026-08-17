@@ -50,7 +50,7 @@ function runCapture(command, args, cwd = ROOT) {
 }
 
 function codexExec(cwd, prompt) {
-  return spawn(
+  const child = spawn(
     'codex',
     [
       'exec',
@@ -64,6 +64,11 @@ function codexExec(cwd, prompt) {
     ],
     { stdio: 'inherit' },
   );
+  const exited = new Promise((resolve) => {
+    child.on('exit', (code) => resolve(code ?? 1));
+    child.on('error', () => resolve(1));
+  });
+  return { child, exited };
 }
 
 function ghIssue(number) {
@@ -119,6 +124,12 @@ function generateIssues(count) {
     '',
     'First run `gh issue list --repo olitreadwell/nz-data-lab --state open --json title`',
     'and skip any finding that is already an open issue (avoid duplicates).',
+    'Also make sure the issues you write do not overlap each other: one root cause',
+    'gets one issue, even if it shows up in several files.',
+    'Score every candidate finding by severity and file the highest-severity ones:',
+    'security and accessibility findings are high priority, correctness/robustness',
+    'and performance are medium, polish/docs/tests are low. Early iterations should',
+    'surface mostly high and medium findings.',
     `Write exactly ${count} detailed GitHub issues. Each issue must:`,
     '- name the exact file(s) and line(s) the finding is in (verify by reading the code)',
     '- state the checklist item it maps to and the URL',
@@ -150,6 +161,94 @@ function generateIssues(count) {
     created.push(createIssue(issue.title, issue.body, issue.priority));
   }
   return created;
+}
+
+function triageIssues() {
+  const open = JSON.parse(
+    runCapture('gh', [
+      'issue',
+      'list',
+      '--repo',
+      REPO,
+      '--label',
+      'quality-loop',
+      '--state',
+      'open',
+      '--json',
+      'number,title,body',
+    ]),
+  );
+  if (open.length === 0) {
+    console.log('no open quality-loop issues to triage');
+    return;
+  }
+  const prompt = [
+    `You are the triage agent for the quality-issue-loop in the nz-data-lab repo at ${ROOT}.`,
+    'Below is every open quality-loop issue. For EACH issue:',
+    '- read the code it references and decide whether the finding is STILL VALID',
+    '- if it is already fixed, obsolete, or out of scope, mark action "close"',
+    '- otherwise refresh the body: current file/line references, what the code does',
+    '  today, and updated acceptance criteria. Do not invent findings.',
+    '- reassign priority: security and accessibility = "high",',
+    '  correctness/robustness/perf = "medium", polish/docs/tests = "low"',
+    '',
+    'Then find DUPLICATES: issues with the same root cause or overlapping files',
+    '(for example two issues about chart data only existing in hover tooltips).',
+    'For each duplicate group pick one primary issue (broadest, clearest scope),',
+    'merge every group member acceptance criterion into its body (action "update"),',
+    'and close the rest (action "close", reason "Duplicate of #<primary number>").',
+    '',
+    `Issues: ${JSON.stringify(open)}`,
+    '',
+    'Output ONLY a JSON array, no prose, no fences:',
+    '[{"number": 13, "action": "update|close", "body": "...", "priority": "high|medium|low", "reason": "..."}]',
+  ].join('\n');
+  const out = runCapture('codex', [
+    'exec',
+    '-C',
+    ROOT,
+    '--ephemeral',
+    '-s',
+    'danger-full-access',
+    '--dangerously-bypass-approvals-and-sandbox',
+    prompt,
+  ]);
+  const start = out.indexOf('[');
+  const end = out.lastIndexOf(']');
+  if (start === -1 || end === -1) {
+    throw new Error(`triage codex exec did not return a JSON array:\n${out.slice(0, 500)}`);
+  }
+  const verdicts = JSON.parse(out.slice(start, end + 1));
+  for (const verdict of verdicts) {
+    const number = String(verdict.number);
+    if (verdict.action === 'close') {
+      run('gh', [
+        'issue',
+        'close',
+        number,
+        '--repo',
+        REPO,
+        '--comment',
+        `Triage: ${verdict.reason ?? 'no longer valid'}`,
+      ]);
+      console.log(`triage closed #${number}: ${verdict.reason ?? 'stale'}`);
+      continue;
+    }
+    const args = ['issue', 'edit', number, '--repo', REPO, '--body', verdict.body];
+    if (verdict.priority !== undefined) {
+      args.push(
+        '--remove-label',
+        'priority-high',
+        '--remove-label',
+        'priority-medium',
+        '--remove-label',
+        'priority-low',
+      );
+      args.push('--add-label', `priority-${verdict.priority}`);
+    }
+    run('gh', args);
+    console.log(`triage updated #${number} (priority-${verdict.priority ?? 'unchanged'})`);
+  }
 }
 
 async function fanout(issueNumbers) {
@@ -184,12 +283,12 @@ async function fanout(issueNumbers) {
       `Commit with a Conventional Commit message referencing the issue, e.g. "fix: add skip link (#${number})".`,
       'Do NOT push, do NOT merge, do NOT create a PR.',
     ].join('\n');
-    jobs.push({ number, branch, worktree, child: codexExec(worktree, prompt) });
+    jobs.push({ number, branch, worktree, ...codexExec(worktree, prompt) });
   }
 
   const failed = [];
   for (const job of jobs) {
-    const code = await awaitExit(job.child);
+    const code = await job.exited;
     if (code !== 0) {
       failed.push(job.number);
       console.error(`worktree agent failed for #${job.number} (exit ${code})`);
@@ -247,13 +346,6 @@ async function fanout(issueNumbers) {
   return merged;
 }
 
-function awaitExit(child) {
-  return new Promise((resolve) => {
-    child.on('exit', (code) => resolve(code ?? 1));
-    child.on('error', () => resolve(1));
-  });
-}
-
 function reviewLoop(summary) {
   mkdirSync(SKILL_DIR, { recursive: true });
   const date = new Date().toISOString().slice(0, 10);
@@ -281,6 +373,7 @@ if (mode === 'generate') {
   await fanout(rest.map(Number));
 } else if (mode === 'full') {
   const created = generateIssues(5);
+  triageIssues();
   const rank = { high: 0, medium: 1, low: 2 };
   const open = JSON.parse(
     runCapture('gh', [
