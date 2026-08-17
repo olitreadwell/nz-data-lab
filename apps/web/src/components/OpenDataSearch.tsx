@@ -1,0 +1,162 @@
+'use client';
+
+import { useCallback, useEffect, useState } from 'react';
+import { ResponsiveContainer, Treemap } from 'recharts';
+
+import { searchLiveDataGovtNz } from '@/lib/live-sources';
+import type { LiveDataGovtNzDataset } from '@/lib/live-sources';
+
+interface OpenDataSearchProps {
+  initialQuery: string;
+}
+
+interface OrgDatum {
+  name: string;
+  size: number;
+  [key: string]: string | number;
+}
+
+const ORG_COLORS = [
+  '#0ea5e9',
+  '#22c55e',
+  '#f59e0b',
+  '#8b5cf6',
+  '#ef4444',
+  '#14b8a6',
+  '#f43f5e',
+  '#84cc16',
+  '#6366f1',
+  '#eab308',
+];
+
+const MAX_DATASETS_SHOWN = 20;
+
+function groupByOrganization(datasets: LiveDataGovtNzDataset[]): OrgDatum[] {
+  const counts = new Map<string, number>();
+  for (const dataset of datasets) {
+    const org = dataset.organization ?? 'Unknown publisher';
+    counts.set(org, (counts.get(org) ?? 0) + 1);
+  }
+  return [...counts.entries()]
+    .map(([name, size]) => ({ name, size }))
+    .sort((a, b) => b.size - a.size);
+}
+
+/**
+ * Live search over the data.govt.nz open data catalogue: type a topic and
+ * the CKAN API answers from the browser (cross-origin allowed). A treemap
+ * shows which agencies publish the matches.
+ */
+export function OpenDataSearch({ initialQuery }: OpenDataSearchProps): React.ReactElement {
+  const [query, setQuery] = useState(initialQuery);
+  const [submittedQuery, setSubmittedQuery] = useState(initialQuery);
+  const [datasets, setDatasets] = useState<LiveDataGovtNzDataset[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const runSearch = useCallback(async (searchQuery: string) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      setDatasets(await searchLiveDataGovtNz(searchQuery));
+    } catch {
+      setError('The catalogue did not answer. Try again in a moment.');
+      setDatasets([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void runSearch(initialQuery);
+  }, [initialQuery, runSearch]);
+
+  const byOrg = groupByOrganization(datasets);
+  const label = `Open data datasets matching "${submittedQuery}": ${datasets.length} shown by publisher`;
+
+  return (
+    <div>
+      <form
+        className="mb-3 flex gap-2"
+        onSubmit={(event) => {
+          event.preventDefault();
+          setSubmittedQuery(query);
+          void runSearch(query);
+        }}
+      >
+        <label className="sr-only" htmlFor="opendata-search">
+          Search the open data catalogue
+        </label>
+        <input
+          id="opendata-search"
+          type="search"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Try water, climate, health, sheep"
+          className="w-full rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm"
+        />
+        <button
+          type="submit"
+          className="rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm text-[var(--color-fg)] hover:bg-[var(--color-muted)]/10"
+        >
+          Search
+        </button>
+      </form>
+      <p className="numeral-paragraph-sm mb-2 text-[var(--color-muted)]" aria-live="polite">
+        {isLoading
+          ? 'Searching the catalogue...'
+          : (error ?? `${datasets.length} datasets match "${submittedQuery}".`)}
+      </p>
+      {!isLoading && error === null && datasets.length > 0 && (
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div role="img" aria-label={label} className="h-[220px] sm:h-[260px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <Treemap
+                data={byOrg}
+                dataKey="size"
+                nameKey="name"
+                stroke="var(--color-bg)"
+                fill="#0ea5e9"
+                content={(props) => {
+                  const { x, y, width, height, index, name } = props as {
+                    x: number;
+                    y: number;
+                    width: number;
+                    height: number;
+                    index?: number;
+                    name?: string;
+                  };
+                  const color = ORG_COLORS[(index ?? 0) % ORG_COLORS.length] ?? '#94a3b8';
+                  return (
+                    <g>
+                      <rect x={x} y={y} width={width} height={height} fill={color} rx={2} />
+                      {width > 40 && height > 20 && (
+                        <text
+                          x={x + 4}
+                          y={y + 14}
+                          fill="var(--color-bg)"
+                          fontSize={11}
+                          fontWeight={600}
+                        >
+                          {name}
+                        </text>
+                      )}
+                    </g>
+                  );
+                }}
+              />
+            </ResponsiveContainer>
+          </div>
+          <ul className="max-h-[260px] space-y-1 overflow-y-auto pr-1">
+            {datasets.slice(0, MAX_DATASETS_SHOWN).map((dataset) => (
+              <li key={dataset.name} className="numeral-paragraph-sm text-[var(--color-muted)]">
+                <span className="text-[var(--color-fg)]">{dataset.title}</span>
+                {dataset.organization === undefined ? '' : ` (${dataset.organization})`}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}

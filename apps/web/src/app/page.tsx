@@ -45,6 +45,8 @@ export default async function HomePage(): Promise<React.ReactElement> {
   const kiwifruitConfig = getMicrosite('kiwifruit-overtake');
   const deerConfig = getMicrosite('deer-boom-bust');
   const shakeConfig = getMicrosite('shake-index');
+  const speciesConfig = getMicrosite('species-register');
+  const openDataConfig = getMicrosite('open-data-catalogue');
 
   return (
     <main>
@@ -55,7 +57,8 @@ export default async function HomePage(): Promise<React.ReactElement> {
             the surprising.
           </h1>
           <p className="numeral-paragraph-lg text-[var(--color-muted)]">
-            Seven live microsites. Stats NZ at deploy time, plus GeoNet for the shake index.
+            Nine live microsites. Stats NZ at deploy time, plus GeoNet, NZOR, and data.govt.nz live
+            from the browser.
           </p>
         </Stack>
         <div className="grid gap-6 pb-[var(--spacing-3xl)] sm:grid-cols-2 lg:grid-cols-3">
@@ -121,6 +124,24 @@ export default async function HomePage(): Promise<React.ReactElement> {
             statLabel="Recent felt quakes"
             statValue={String(quakes.length)}
             accent={shakeConfig.accent}
+          />
+          <MicrositeCard
+            slug={speciesConfig.slug}
+            eyebrow={speciesConfig.eyebrow}
+            title={speciesConfig.title}
+            description={speciesConfig.description}
+            statLabel="Names in the register"
+            statValue="170,151"
+            accent={speciesConfig.accent}
+          />
+          <MicrositeCard
+            slug={openDataConfig.slug}
+            eyebrow={openDataConfig.eyebrow}
+            title={openDataConfig.title}
+            description={openDataConfig.description}
+            statLabel="Datasets in the catalogue"
+            statValue="31,915"
+            accent={openDataConfig.accent}
           />
         </div>
       </Container>

@@ -8,6 +8,20 @@ Every microsite loop appends a dated entry here. Format:
 - Sources: <data source + references>
 - Loop review: <what slowed the loop, what changed in the skill>
 
+## 2026-08-18 01:55 (NZST) - loop 3
+
+- Shipped: species-register (live NZOR search, donut by class) and
+  open-data-catalogue (live data.govt.nz search, treemap by publisher).
+  Both search from the browser (CORS open), so no build-time snapshot.
+- Sources: NZOR (170,151 names) and data.govt.nz CKAN (31,915 datasets);
+  DOC and Te Ara references.
+- Loop review: client components cannot import @nzlab/nz-sources (its
+  fixtures read node:fs, which breaks the client bundle), so the browser
+  fetchers live in apps/web/src/lib/live-sources.ts. A future refactor
+  should split nz-sources into server and client entries to remove the
+  parse overlap. Chart types used so far: line, area, bar, scatter, donut,
+  treemap, map.
+
 ## 2026-08-18 00:40 (NZST) - loop 2
 
 - Shipped: shake-index reworked from a scatter chart to a Leaflet map of

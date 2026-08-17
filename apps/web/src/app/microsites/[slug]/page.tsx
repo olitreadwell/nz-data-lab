@@ -9,8 +9,10 @@ import { HorticultureChart } from '@/components/HorticultureChart';
 import { KiwifruitOvertakeChart } from '@/components/KiwifruitOvertakeChart';
 import { LivestockChart } from '@/components/LivestockChart';
 import { MicrositeStory } from '@/components/MicrositeStory';
+import { OpenDataSearch } from '@/components/OpenDataSearch';
 import { QuakeMap } from '@/components/QuakeMap';
 import { SheepChart } from '@/components/SheepChart';
+import { SpeciesRegisterSearch } from '@/components/SpeciesRegisterSearch';
 import { StatCard } from '@/components/StatCard';
 import { env } from '@/env';
 import { fetchForestrySeries, summarizeForestry } from '@/lib/forestry-data';
@@ -279,6 +281,28 @@ function renderStoryContent(
               testId="deer-change"
               dataValue={Math.round(data.deer?.changeFromPeakPercent ?? 0)}
             />
+          </dl>
+        ),
+      };
+    case 'species-register':
+      return {
+        chart: <SpeciesRegisterSearch initialQuery="kiwi" />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard label="Names in the register" value="170,151" accent="teal" />
+            <StatCard label="Native freshwater fish" value="51" accent="teal" />
+            <StatCard label="Native frog species" value="4" accent="teal" />
+          </dl>
+        ),
+      };
+    case 'open-data-catalogue':
+      return {
+        chart: <OpenDataSearch initialQuery="water" />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard label="Datasets in the catalogue" value="31,915" accent="indigo" />
+            <StatCard label="Datasets matching 'water'" value="4,236" accent="indigo" />
+            <StatCard label="Datasets matching 'climate'" value="865" accent="indigo" />
           </dl>
         ),
       };

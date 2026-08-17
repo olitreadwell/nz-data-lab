@@ -1,5 +1,6 @@
 /** Accent identities for the microsite hub: one color story per experiment. */
-export type MicrositeAccent = 'amber' | 'sky' | 'purple' | 'emerald' | 'lime' | 'violet' | 'rose';
+export type MicrositeAccent =
+  'amber' | 'sky' | 'purple' | 'emerald' | 'lime' | 'violet' | 'rose' | 'teal' | 'indigo';
 
 export interface MicrositeAccentStyles {
   eyebrow: string;
@@ -58,6 +59,20 @@ const ACCENT_STYLES: Record<MicrositeAccent, MicrositeAccentStyles> = {
     cardBg: 'bg-rose-50',
     cardValue: 'text-rose-700',
     chartBorder: 'border-rose-200',
+  },
+  teal: {
+    eyebrow: 'text-teal-600',
+    sectionBg: 'bg-gradient-to-b from-teal-50/80 via-transparent to-transparent',
+    cardBg: 'bg-teal-50',
+    cardValue: 'text-teal-700',
+    chartBorder: 'border-teal-200',
+  },
+  indigo: {
+    eyebrow: 'text-indigo-600',
+    sectionBg: 'bg-gradient-to-b from-indigo-50/80 via-transparent to-transparent',
+    cardBg: 'bg-indigo-50',
+    cardValue: 'text-indigo-700',
+    chartBorder: 'border-indigo-200',
   },
 };
 

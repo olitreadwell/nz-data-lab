@@ -253,4 +253,63 @@ export const MICROSITES: MicrositeConfig[] = [
       },
     ],
   },
+  {
+    slug: 'species-register',
+    label: 'Species register',
+    eyebrow: '🦎 the species register',
+    title: "New Zealand's species register holds 170,151 names.",
+    description:
+      'The NZ Organisms Register is the national list of scientific names for every known species in New Zealand. Search it live: the register answers from the browser.',
+    paragraphs: [
+      'Every species has a scientific name, and New Zealand keeps them all in one register. The register holds 170,151 names, from kiwi to kauri.',
+      'Type a name and the register returns the matches, grouped by class. The donut shows which groups they belong to.',
+    ],
+    accent: 'teal',
+    dataNote:
+      'Data: NZ Organisms Register (data.nzor.org.nz), searched live from the browser. The register holds 170,151 names.',
+    references: [
+      {
+        label: 'NZ Organisms Register (NZOR)',
+        url: 'https://www.nzor.org.nz/',
+        kind: 'data',
+      },
+      {
+        label: 'Native animals (DOC)',
+        url: 'https://www.doc.govt.nz/nature/native-animals/',
+        kind: 'data',
+      },
+      {
+        label: 'Native plants and animals (Te Ara)',
+        url: 'https://teara.govt.nz/en/native-plants-and-animals',
+        kind: 'history',
+      },
+    ],
+  },
+  {
+    slug: 'open-data-catalogue',
+    label: 'Open data catalogue',
+    eyebrow: '📂 the open data catalogue',
+    title: "The government's open data catalogue holds 31,915 datasets.",
+    description:
+      'data.govt.nz is the national catalogue of open government data. Search it live: the catalogue answers from the browser.',
+    paragraphs: [
+      'Agencies publish thousands of datasets, from water quality to weather to health. The catalogue holds 31,915 of them.',
+      'Type a topic and the catalogue returns matching datasets. The treemap shows which agencies publish them.',
+    ],
+    accent: 'indigo',
+    dataNote:
+      'Data: data.govt.nz CKAN API (catalogue.data.govt.nz), searched live from the browser. The catalogue holds 31,915 datasets.',
+    references: [
+      {
+        label: 'data.govt.nz',
+        url: 'https://data.govt.nz/',
+        kind: 'data',
+      },
+      {
+        label: 'data.govt.nz catalogue',
+        url: 'https://catalogue.data.govt.nz/',
+        kind: 'data',
+      },
+    ],
+  },
 ];
