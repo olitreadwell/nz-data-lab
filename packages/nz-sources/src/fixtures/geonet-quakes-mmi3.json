@@ -1,0 +1,85 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [175.646270752, -39.527153015]
+      },
+      "properties": {
+        "publicID": "2026p617265",
+        "time": "2026-08-17T09:19:19.434Z",
+        "depth": 10.199224472045898,
+        "magnitude": 3.442854385179525,
+        "mmi": 4,
+        "locality": "20 km north-west of Taihape",
+        "quality": "best"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [178.606124878, -38.510211945]
+      },
+      "properties": {
+        "publicID": "2026p615133",
+        "time": "2026-08-16T14:22:51.916Z",
+        "depth": 25.39997100830078,
+        "magnitude": 3.0194128890595207,
+        "mmi": 3,
+        "locality": "30 km south-east of Tolaga Bay",
+        "quality": "best"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [167.47819519, -45.007713318]
+      },
+      "properties": {
+        "publicID": "2026p614475",
+        "time": "2026-08-16T08:32:44.239Z",
+        "depth": 44.88520050048828,
+        "magnitude": 4.233027235234066,
+        "mmi": 4,
+        "locality": "45 km north-west of Te Anau",
+        "quality": "best"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [175.609619141, -39.965503693]
+      },
+      "properties": {
+        "publicID": "2026p613127",
+        "time": "2026-08-15T20:34:07.060Z",
+        "depth": 10,
+        "magnitude": 2.9333917196368064,
+        "mmi": 4,
+        "locality": "5 km south-east of Hunterville",
+        "quality": "deleted"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [176.044006348, -40.413280487]
+      },
+      "properties": {
+        "publicID": "2026p613126",
+        "time": "2026-08-15T20:33:41.164Z",
+        "depth": 20.18155860900879,
+        "magnitude": 2.914771042751515,
+        "mmi": 3,
+        "locality": "15 km north-west of Pongaroa",
+        "quality": "best"
+      }
+    }
+  ]
+}

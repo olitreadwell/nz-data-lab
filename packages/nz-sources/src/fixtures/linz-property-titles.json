@@ -1,0 +1,27 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": 1,
+      "properties": {
+        "title_reference": "OT12/345",
+        "land_district": "Otago",
+        "estate_description": "Fee Simple",
+        "area": 1012.5,
+        "survey_plan_references": "SO 12345"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 2,
+      "properties": {
+        "title_reference": "WN11/678",
+        "land_district": "Wellington",
+        "estate_description": "Fee Simple",
+        "area": 450.0,
+        "survey_plan_references": "SO 67890"
+      }
+    }
+  ]
+}
