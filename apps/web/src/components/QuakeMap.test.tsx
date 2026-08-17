@@ -1,5 +1,5 @@
 import type { GeoNetQuake } from '@nzlab/nz-sources';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -34,7 +34,7 @@ const QUAKES: GeoNetQuake[] = [
   },
   {
     publicId: '2026p614475',
-    time: '2026-08-16T12:00:00.000Z',
+    time: '2026-08-16T09:00:00.000Z',
     depthKm: 44.9,
     magnitude: 4.2,
     mmi: 4,
@@ -75,6 +75,27 @@ describe('QuakeMap', () => {
     fireEvent.change(slider, { target: { value: '5' } });
     expect(screen.getByText(/Showing 1 of 3 recent quakes/)).toBeInTheDocument();
     expect(await screen.findAllByTestId('quake-marker')).toHaveLength(1);
+  });
+
+  it('lists every visible quake with its data for keyboard users', () => {
+    render(<QuakeMap quakes={QUAKES} />);
+    const table = screen.getByRole('table', { name: /visible quakes/i });
+    expect(table).toBeInTheDocument();
+    // One header row plus one row per visible quake.
+    expect(screen.getAllByRole('row')).toHaveLength(4);
+    expect(within(table).getByText('20 km north-west of Taihape')).toBeInTheDocument();
+    expect(within(table).getByText('M 3.4')).toBeInTheDocument();
+    expect(within(table).getByText('45 km')).toBeInTheDocument();
+    expect(within(table).getByText('17 Aug')).toBeInTheDocument();
+  });
+
+  it('keeps the table in sync with the sliders', () => {
+    render(<QuakeMap quakes={QUAKES} />);
+    const slider = screen.getByRole('slider', { name: /minimum magnitude/i });
+    fireEvent.change(slider, { target: { value: '5' } });
+    expect(screen.getAllByRole('row')).toHaveLength(2);
+    expect(screen.getByText('5 km south-east of Hunterville')).toBeInTheDocument();
+    expect(screen.queryByText('20 km north-west of Taihape')).not.toBeInTheDocument();
   });
 
   it('maps MMI to bands and magnitude to bubble radius', () => {

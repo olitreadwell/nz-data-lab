@@ -4,7 +4,7 @@ import type { GeoNetQuake } from '@nzlab/nz-sources';
 import dynamic from 'next/dynamic';
 import { useMemo, useState } from 'react';
 
-import { MMI_BANDS } from '@/lib/quake-utils';
+import { formatQuakeDate, MMI_BANDS } from '@/lib/quake-utils';
 
 interface QuakeMapProps {
   quakes: GeoNetQuake[];
@@ -27,7 +27,9 @@ const LeafletMap = dynamic(() => import('./LeafletQuakeMap').then((m) => m.Leafl
  * Recent felt quakes on a Leaflet map of New Zealand: bubble size by
  * magnitude, colour by felt intensity (MMI). Two sliders filter the minimum
  * magnitude and maximum depth, and the map redraws live. The Leaflet map
- * itself is loaded client-side only, so prerender stays server-safe.
+ * itself is loaded client-side only, so prerender stays server-safe. The map
+ * data is also listed in a table below so it is readable without hovering the
+ * map markers.
  */
 export function QuakeMap({ quakes }: QuakeMapProps): React.ReactElement {
   const [minMagnitude, setMinMagnitude] = useState(DEFAULT_MIN_MAGNITUDE);
@@ -91,6 +93,44 @@ export function QuakeMap({ quakes }: QuakeMapProps): React.ReactElement {
         ))}
       </ul>
       <LeafletMap quakes={visible} label={label} />
+      <div className="mt-3 rounded-[var(--radius-sm)] border border-[var(--color-border)]">
+        <table className="w-full text-left">
+          <caption className="numeral-paragraph-sm px-3 pt-2 pb-1 text-left text-[var(--color-muted)]">
+            Visible quakes
+          </caption>
+          <thead>
+            <tr className="border-b border-[var(--color-border)] text-[var(--color-muted)]">
+              <th scope="col" className="px-3 py-2 font-medium">
+                Locality
+              </th>
+              <th scope="col" className="px-3 py-2 font-medium">
+                Magnitude
+              </th>
+              <th scope="col" className="px-3 py-2 font-medium">
+                Depth
+              </th>
+              <th scope="col" className="px-3 py-2 font-medium">
+                Date
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {visible.map((quake) => (
+              <tr
+                key={quake.publicId}
+                className="border-b border-[var(--color-border)] last:border-b-0"
+              >
+                <th scope="row" className="px-3 py-2 font-normal">
+                  {quake.locality}
+                </th>
+                <td className="px-3 py-2">M {quake.magnitude.toFixed(1)}</td>
+                <td className="px-3 py-2">{quake.depthKm.toFixed(0)} km</td>
+                <td className="px-3 py-2">{formatQuakeDate(quake.time)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

@@ -17,6 +17,14 @@ const MIN_BUBBLE_RADIUS = 4;
 const RADIUS_PER_MAGNITUDE = 3;
 const BASE_MAGNITUDE = 2;
 
+/** Short, human-readable date for a quake's ISO time, e.g. "17 Aug".
+ * @param iso - ISO 8601 timestamp of the quake.
+ * @returns a short locale-formatted date.
+ */
+export function formatQuakeDate(iso: string): string {
+  return new Date(iso).toLocaleDateString('en-NZ', { day: 'numeric', month: 'short' });
+}
+
 /** Maps a felt intensity (MMI) value to a colour band. */
 export function bandOf(mmi: number): string {
   if (mmi >= 7) {
