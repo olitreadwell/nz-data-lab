@@ -2,8 +2,11 @@ import { Container } from '@nzlab/ui';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { DairyTakeoverScatter } from '@/components/DairyTakeoverScatter';
+import { DeerBoomBustChart } from '@/components/DeerBoomBustChart';
 import { ForestryChart } from '@/components/ForestryChart';
 import { HorticultureChart } from '@/components/HorticultureChart';
+import { KiwifruitOvertakeChart } from '@/components/KiwifruitOvertakeChart';
 import { LivestockChart } from '@/components/LivestockChart';
 import { MicrositeStory } from '@/components/MicrositeStory';
 import { SheepChart } from '@/components/SheepChart';
@@ -45,7 +48,10 @@ export default async function MicrositePage({
   const horticultureStats = summarizeHorticulture(horticulture);
   const forestryStats = summarizeForestry(forestry);
   const dairy = livestockStats.find((stat) => stat.key === 'dairyCattle');
+  const deer = livestockStats.find((stat) => stat.key === 'deer');
   const wineGrapes = horticultureStats.find((stat) => stat.key === 'wineGrapes');
+  const kiwifruit = horticultureStats.find((stat) => stat.key === 'kiwifruit');
+  const apples = horticultureStats.find((stat) => stat.key === 'apples');
   const newPlanting = forestryStats.find((stat) => stat.key === 'newPlanting');
 
   const content = renderStoryContent(slug, {
@@ -54,7 +60,10 @@ export default async function MicrositePage({
     horticulture,
     forestry,
     dairy,
+    deer,
     wineGrapes,
+    kiwifruit,
+    apples,
     newPlanting,
   });
 
@@ -90,7 +99,12 @@ interface StoryData {
   horticulture: Awaited<ReturnType<typeof fetchHorticultureSeries>>;
   forestry: Awaited<ReturnType<typeof fetchForestrySeries>>;
   dairy: { latest?: number; first?: number; changeFromFirstPercent?: number } | undefined;
+  deer:
+    | { latest?: number; peak?: number; peakYear?: number; changeFromPeakPercent?: number }
+    | undefined;
   wineGrapes: { latest?: number; first?: number; changeFromFirstPercent?: number } | undefined;
+  kiwifruit: { latest?: number; first?: number } | undefined;
+  apples: { latest?: number } | undefined;
   newPlanting: { latest?: number; first?: number; changeFromFirstPercent?: number } | undefined;
 }
 
@@ -128,7 +142,17 @@ function renderStoryContent(
       };
     case 'dairy-takeover':
       return {
-        chart: <LivestockChart points={data.livestock.points} />,
+        chart: (
+          <div className="space-y-6">
+            <LivestockChart points={data.livestock.points} />
+            <p className="numeral-paragraph-sm text-[var(--color-muted)]">
+              The same years, plotted as a path: each bubble is one year, with sheep on the vertical
+              axis and dairy cattle on the horizontal. Colour shows the decade and bubble size shows
+              total livestock, so the flip from wool to milk reads as one diagonal move.
+            </p>
+            <DairyTakeoverScatter points={data.livestock.points} />
+          </div>
+        ),
         stats: (
           <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
             <StatCard
@@ -205,6 +229,60 @@ function renderStoryContent(
               accent="emerald"
               testId="planting-change"
               dataValue={Math.round(data.newPlanting?.changeFromFirstPercent ?? 0)}
+            />
+          </dl>
+        ),
+      };
+    case 'kiwifruit-overtake':
+      return {
+        chart: <KiwifruitOvertakeChart points={data.horticulture.points} />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label={`Kiwifruit now (${data.horticulture.latest.year})`}
+              value={formatHectares(data.kiwifruit?.latest ?? 0)}
+              accent="lime"
+              testId="kiwifruit-latest"
+              dataValue={data.kiwifruit?.latest}
+            />
+            <StatCard
+              label={`Apples now (${data.horticulture.latest.year})`}
+              value={formatHectares(data.apples?.latest ?? 0)}
+              accent="lime"
+              testId="apples-latest"
+              dataValue={data.apples?.latest}
+            />
+            <StatCard
+              label={`Kiwifruit in ${data.horticulture.first.year}`}
+              value={formatHectares(data.kiwifruit?.first ?? 0)}
+              accent="lime"
+            />
+          </dl>
+        ),
+      };
+    case 'deer-boom-bust':
+      return {
+        chart: <DeerBoomBustChart points={data.livestock.points} />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label={`Farmed deer now (${data.livestock.latest.year})`}
+              value={formatMillions(data.deer?.latest ?? 0)}
+              accent="violet"
+              testId="deer-latest"
+              dataValue={data.deer?.latest}
+            />
+            <StatCard
+              label={`Peak herd (${data.deer?.peakYear ?? ''})`}
+              value={formatMillions(data.deer?.peak ?? 0)}
+              accent="violet"
+            />
+            <StatCard
+              label="Change since peak"
+              value={`${Math.round(data.deer?.changeFromPeakPercent ?? 0)}%`}
+              accent="violet"
+              testId="deer-change"
+              dataValue={Math.round(data.deer?.changeFromPeakPercent ?? 0)}
             />
           </dl>
         ),
