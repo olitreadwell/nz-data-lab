@@ -436,3 +436,178 @@ async function fetchJson(url: string): Promise<unknown> {
   }
   return response.json();
 }
+
+export interface LiveWikidataRiver {
+  name: string;
+  lengthKm: number;
+}
+
+export interface LiveWikidataPeak {
+  name: string;
+  elevationM: number;
+}
+
+export interface LiveAucklandParkBoard {
+  board: string;
+  parkCount: number;
+  areaM2: number;
+}
+
+/** Extracts the value strings from a Wikidata SPARQL results payload. */
+export function parseWikidataSparqlRows(payload: unknown): Array<Record<string, string>> {
+  const bindings = (payload as { results?: { bindings?: unknown[] } }).results?.bindings ?? [];
+  return bindings.map((binding) => {
+    const row = binding as Record<string, { value?: string }>;
+    const out: Record<string, string> = {};
+    for (const [key, cell] of Object.entries(row)) {
+      out[key] = cell.value ?? '';
+    }
+    return out;
+  });
+}
+
+/**
+ * Parses a Wikidata SPARQL payload of New Zealand rivers into length-sorted
+ * entries. Values outside 50-500 km are dropped: Wikidata holds a few bad
+ * entries (a stream logged as 900 km) and duplicate names, so the filter
+ * keeps the longest value per name.
+ */
+export function parseWikidataRivers(payload: unknown): LiveWikidataRiver[] {
+  const byName = new Map<string, number>();
+  for (const row of parseWikidataSparqlRows(payload)) {
+    const name = row.riverLabel ?? '';
+    const lengthKm = Number(row.length);
+    if (name === '' || !Number.isFinite(lengthKm)) {
+      continue;
+    }
+    if (lengthKm < 50 || lengthKm > 500) {
+      continue;
+    }
+    const existing = byName.get(name);
+    if (existing === undefined || lengthKm > existing) {
+      byName.set(name, lengthKm);
+    }
+  }
+  return [...byName.entries()]
+    .map(([name, lengthKm]) => ({ name, lengthKm }))
+    .sort((a, b) => b.lengthKm - a.lengthKm);
+}
+
+/**
+ * Parses a Wikidata SPARQL payload of New Zealand peaks into elevation-sorted
+ * entries. Values outside 1,000-4,000 m are dropped: Wikidata holds a couple
+ * of bad elevations (a peak logged as 4,656 m), and duplicate names keep the
+ * highest value.
+ */
+export function parseWikidataPeaks(payload: unknown): LiveWikidataPeak[] {
+  const byName = new Map<string, number>();
+  for (const row of parseWikidataSparqlRows(payload)) {
+    const name = row.peakLabel ?? '';
+    const elevationM = Number(row.elevation);
+    if (name === '' || !Number.isFinite(elevationM)) {
+      continue;
+    }
+    if (elevationM < 1000 || elevationM > 4000) {
+      continue;
+    }
+    const existing = byName.get(name);
+    if (existing === undefined || elevationM > existing) {
+      byName.set(name, elevationM);
+    }
+  }
+  return [...byName.entries()]
+    .map(([name, elevationM]) => ({ name, elevationM }))
+    .sort((a, b) => b.elevationM - a.elevationM);
+}
+
+/** Fetches New Zealand rivers by length from Wikidata (CORS is open). */
+export async function fetchLiveWikidataRivers(): Promise<LiveWikidataRiver[]> {
+  const query = `SELECT ?river ?riverLabel ?length WHERE {
+  ?river wdt:P31 wd:Q4022; wdt:P17 wd:Q664; wdt:P2043 ?length.
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+} ORDER BY DESC(?length) LIMIT 20`;
+  const url = new URL('https://query.wikidata.org/sparql');
+  url.searchParams.set('query', query);
+  const controller = createLiveSearchAbortController();
+  const response = await fetch(url, {
+    signal: controller.signal,
+    headers: { Accept: 'application/sparql-results+json' },
+  });
+  if (!response.ok) {
+    throw new Error(`Wikidata HTTP ${response.status}`);
+  }
+  return parseWikidataRivers(await response.json());
+}
+
+/** Fetches New Zealand peaks by elevation from Wikidata (CORS is open). */
+export async function fetchLiveWikidataPeaks(): Promise<LiveWikidataPeak[]> {
+  const query = `SELECT ?peak ?peakLabel ?elevation WHERE {
+  ?peak wdt:P31 wd:Q8502; wdt:P17 wd:Q664; wdt:P2044 ?elevation.
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+} ORDER BY DESC(?elevation) LIMIT 20`;
+  const url = new URL('https://query.wikidata.org/sparql');
+  url.searchParams.set('query', query);
+  const controller = createLiveSearchAbortController();
+  const response = await fetch(url, {
+    signal: controller.signal,
+    headers: { Accept: 'application/sparql-results+json' },
+  });
+  if (!response.ok) {
+    throw new Error(`Wikidata HTTP ${response.status}`);
+  }
+  return parseWikidataPeaks(await response.json());
+}
+
+/**
+ * Parses an ArcGIS group-by statistics payload of Auckland Council park
+ * extents into local-board rows, sorted by park area. Rows without a local
+ * board are dropped.
+ */
+export function parseAucklandParkBoards(payload: unknown): LiveAucklandParkBoard[] {
+  const features = (payload as { features?: unknown[] }).features ?? [];
+  return features
+    .map((feature) => {
+      const attributes = (feature as { attributes?: Record<string, unknown> }).attributes ?? {};
+      const rawBoard = attributes.LOCALBOARD;
+      const board = typeof rawBoard === 'string' ? rawBoard : '';
+      const parkCount = Number(attributes.count ?? 0);
+      const areaM2 = Number(attributes.totalArea ?? 0);
+      return { board, parkCount, areaM2 };
+    })
+    .filter(
+      (entry) => entry.board !== '' && entry.board !== 'None' && entry.board !== 'NOT SUPPLIED',
+    )
+    .sort((a, b) => b.areaM2 - a.areaM2);
+}
+
+/**
+ * Fetches Auckland Council park extents grouped by local board from the
+ * ArcGIS REST service (CORS is open).
+ */
+export async function fetchLiveAucklandParkBoards(): Promise<LiveAucklandParkBoard[]> {
+  const url = new URL(
+    'https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Park_Extents/FeatureServer/0/query',
+  );
+  url.searchParams.set('where', '1=1');
+  url.searchParams.set('returnGeometry', 'false');
+  url.searchParams.set('groupByFieldsForStatistics', 'LOCALBOARD');
+  url.searchParams.set(
+    'outStatistics',
+    JSON.stringify([
+      { statisticType: 'count', onStatisticField: 'OBJECTID', outStatisticFieldName: 'count' },
+      {
+        statisticType: 'sum',
+        onStatisticField: 'Shape__Area',
+        outStatisticFieldName: 'totalArea',
+      },
+    ]),
+  );
+  url.searchParams.set('orderByFields', 'totalArea DESC');
+  url.searchParams.set('f', 'json');
+  const controller = createLiveSearchAbortController();
+  const response = await fetch(url, { signal: controller.signal });
+  if (!response.ok) {
+    throw new Error(`Auckland Council HTTP ${response.status}`);
+  }
+  return parseAucklandParkBoards(await response.json());
+}

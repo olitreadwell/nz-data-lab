@@ -2,8 +2,11 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   LIVE_SEARCH_TIMEOUT_MS,
+  parseAucklandParkBoards,
   parseGbifKingdomFacet,
   parseInaturalistTotal,
+  parseWikidataPeaks,
+  parseWikidataRivers,
   parseWikipediaPageviews,
   searchLiveDataGovtNz,
   searchLiveNzorNames,
@@ -111,5 +114,74 @@ describe('parseWikipediaPageviews', () => {
 
   it('returns an empty list when the query has no pages', () => {
     expect(parseWikipediaPageviews({ query: {} })).toEqual([]);
+  });
+});
+
+describe('parseWikidataRivers', () => {
+  it('parses rivers sorted by length, dropping noise and duplicates', () => {
+    const payload = {
+      results: {
+        bindings: [
+          { riverLabel: { value: 'Waikato River' }, length: { value: '425' } },
+          { riverLabel: { value: 'Kākānui Stream' }, length: { value: '900' } },
+          { riverLabel: { value: 'Taieri River' }, length: { value: '200' } },
+          { riverLabel: { value: 'Taieri River' }, length: { value: '288' } },
+          { riverLabel: { value: 'Clutha River / Mata-Au' }, length: { value: '338' } },
+        ],
+      },
+    };
+    expect(parseWikidataRivers(payload)).toEqual([
+      { name: 'Waikato River', lengthKm: 425 },
+      { name: 'Clutha River / Mata-Au', lengthKm: 338 },
+      { name: 'Taieri River', lengthKm: 288 },
+    ]);
+  });
+
+  it('returns an empty list when there are no bindings', () => {
+    expect(parseWikidataRivers({ results: { bindings: [] } })).toEqual([]);
+  });
+});
+
+describe('parseWikidataPeaks', () => {
+  it('parses peaks sorted by elevation, dropping noise and duplicates', () => {
+    const payload = {
+      results: {
+        bindings: [
+          { peakLabel: { value: 'Aoraki / Mount Cook' }, elevation: { value: '3724' } },
+          { peakLabel: { value: 'Mole' }, elevation: { value: '4656' } },
+          { peakLabel: { value: 'Mount Tasman' }, elevation: { value: '3497' } },
+          { peakLabel: { value: 'Mount Tasman' }, elevation: { value: '3000' } },
+        ],
+      },
+    };
+    expect(parseWikidataPeaks(payload)).toEqual([
+      { name: 'Aoraki / Mount Cook', elevationM: 3724 },
+      { name: 'Mount Tasman', elevationM: 3497 },
+    ]);
+  });
+
+  it('returns an empty list when there are no bindings', () => {
+    expect(parseWikidataPeaks({ results: { bindings: [] } })).toEqual([]);
+  });
+});
+
+describe('parseAucklandParkBoards', () => {
+  it('parses local-board rows sorted by area, dropping blank boards', () => {
+    const payload = {
+      features: [
+        { attributes: { LOCALBOARD: 'Franklin', count: 382, totalArea: 200596395 } },
+        { attributes: { LOCALBOARD: 'Rodney', count: 424, totalArea: 53970780 } },
+        { attributes: { LOCALBOARD: 'None', count: 20, totalArea: 120335 } },
+        { attributes: { LOCALBOARD: 'NOT SUPPLIED', count: 6, totalArea: 1479983 } },
+      ],
+    };
+    expect(parseAucklandParkBoards(payload)).toEqual([
+      { board: 'Franklin', parkCount: 382, areaM2: 200596395 },
+      { board: 'Rodney', parkCount: 424, areaM2: 53970780 },
+    ]);
+  });
+
+  it('returns an empty list when there are no features', () => {
+    expect(parseAucklandParkBoards({ features: [] })).toEqual([]);
   });
 });
