@@ -1,0 +1,13 @@
+The nz-microsite-loop has been blocked repeatedly and could not run its normal iterations. Your job is to heal the loop itself.
+
+Context: the loop wrapper at scripts/run-microsite-loop.sh skips ticks when the repo is not in a runnable state. The last skip reasons are in the log at ~/Library/Logs/nz-microsite-loop.log and the state file at ~/Library/Logs/nz-microsite-loop-state.json.
+
+Do this:
+1. Read the log and state file to find the blocker.
+2. Diagnose the root cause. Common cases: the dirty-main guard is too strict (build noise like next-env.d.ts, scratch dirs), the repo is behind origin/main, a concurrent agent is mid-work, or the deploy is failing.
+3. Fix the blocker in the repo: update scripts/run-microsite-loop.sh, skills/nz-microsite-loop/SKILL.md, or .gitignore as needed. Keep the fix small and targeted.
+4. Update skills/nz-microsite-loop/SKILL.md with the lesson so the loop improves over time.
+5. Commit with a Conventional Commit message, push to main, and confirm the wrapper would now pass its guards (run bash -n and check the guard logic).
+6. If the repo is now runnable, run one normal loop iteration per skills/nz-microsite-loop/SKILL.md.
+
+Hard rules: never delete or weaken a failing test; never revert another agent's committed work; no console.log, no any, npm only. If the blocker is a concurrent agent actively working, do not fight it: document the situation in the skill and exit cleanly.

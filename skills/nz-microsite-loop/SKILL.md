@@ -52,6 +52,22 @@ commit per microsite, then one merge and one deploy.
 - If a loop fails three times on the same blocker, stop, document the
   blocker in the changelog, and ask the user one precise question.
 
+## Self-healing (the loop fixes itself)
+
+The wrapper (`scripts/run-microsite-loop.sh`) tracks consecutive skips in
+`~/Library/Logs/nz-microsite-loop-state.json`. After 3 skips in a row it
+stops waiting and spawns a "heal the loop" session
+(`scripts/heal-loop-prompt.txt`) that:
+
+1. Reads the log and state file to find the blocker.
+2. Fixes the root cause in the wrapper, the skill, or `.gitignore`.
+3. Records the lesson in this skill.
+4. Commits and pushes the fix, then runs one normal iteration if possible.
+
+This is why the review step is not only for shipped loops: a loop that
+cannot ship must still be able to improve itself. If a blocker repeats,
+fix the guard or the skill rather than working around it by hand.
+
 ## Loop review checklist (step 7)
 
 - What took longest? (research, build, verify, deploy)
