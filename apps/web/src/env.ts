@@ -18,6 +18,10 @@ const serverSchema = z.object({
   // dataflow catalogue and AGR_* tables as CSV; the key unlocks codelists,
   // jsondata, and the remaining tables. Server-only, never expose to the client.
   STATS_NZ_SUBSCRIPTION_KEY: z.string().optional(),
+  // DigitalNZ (National Library) v3 API key (https://api.digitalnz.org/v3).
+  // Optional: the search endpoint answers keyless; the key raises the rate
+  // limit. Server-only, never expose to the client.
+  DIGITAL_NZ_API_KEY: z.string().optional(),
 });
 
 const clientSchema = z.object({
