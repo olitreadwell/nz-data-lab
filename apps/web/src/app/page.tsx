@@ -47,6 +47,7 @@ export default async function HomePage(): Promise<React.ReactElement> {
   const shakeConfig = getMicrosite('shake-index');
   const speciesConfig = getMicrosite('species-register');
   const openDataConfig = getMicrosite('open-data-catalogue');
+  const digitisedConfig = getMicrosite('digitised-memory');
 
   return (
     <main>
@@ -57,8 +58,8 @@ export default async function HomePage(): Promise<React.ReactElement> {
             the surprising.
           </h1>
           <p className="numeral-paragraph-lg text-[var(--color-muted)]">
-            Nine live microsites. Stats NZ at deploy time, plus GeoNet, NZOR, and data.govt.nz live
-            from the browser.
+            Eleven live microsites. Stats NZ at deploy time, plus GeoNet, NZOR, data.govt.nz,
+            DigitalNZ, and Trade Me live from the browser.
           </p>
         </Stack>
         <div className="grid gap-6 pb-[var(--spacing-3xl)] sm:grid-cols-2 lg:grid-cols-3">
@@ -142,6 +143,15 @@ export default async function HomePage(): Promise<React.ReactElement> {
             statLabel="Datasets in the catalogue"
             statValue="31,915"
             accent={openDataConfig.accent}
+          />
+          <MicrositeCard
+            slug={digitisedConfig.slug}
+            eyebrow={digitisedConfig.eyebrow}
+            title={digitisedConfig.title}
+            description={digitisedConfig.description}
+            statLabel="Records matching 'gold'"
+            statValue="1,977,021"
+            accent={digitisedConfig.accent}
           />
         </div>
       </Container>

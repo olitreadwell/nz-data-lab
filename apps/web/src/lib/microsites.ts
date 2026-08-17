@@ -312,4 +312,36 @@ export const MICROSITES: MicrositeConfig[] = [
       },
     ],
   },
+  {
+    slug: 'digitised-memory',
+    label: 'Digitised memory',
+    eyebrow: '📜 the digitised memory',
+    title: "Search 'gold' and the 1890s light up.",
+    description:
+      "DigitalNZ is the search engine for New Zealand's digitised collections. It searches records from libraries, museums, and archives. This page shows which decades the matches come from.",
+    paragraphs: [
+      'The collection is built from newspapers, photos, audio, and maps. Papers Past alone holds millions of pages of old newspapers, which is why the 1860s to 1920s dominate so many searches.',
+      "Search 'gold' and the histogram peaks in the 1890s, with 427,164 matching records. The 1860s, 1870s, and 1880s each hold more than 100,000 matching records too.",
+    ],
+    accent: 'cyan',
+    dataNote:
+      "Data: DigitalNZ (National Library) v3 API, searched live from the browser. 'gold' matches 1,977,021 records; the 1890s hold 427,164 of them. Drag the sliders to narrow the decades.",
+    references: [
+      {
+        label: 'DigitalNZ',
+        url: 'https://www.digitalnz.org/',
+        kind: 'data',
+      },
+      {
+        label: 'National Library of New Zealand',
+        url: 'https://natlib.govt.nz/',
+        kind: 'data',
+      },
+      {
+        label: 'Papers Past',
+        url: 'https://paperspast.natlib.govt.nz/',
+        kind: 'data',
+      },
+    ],
+  },
 ];

@@ -100,3 +100,14 @@ describe('MicrositePage', () => {
     expect(html).toContain('Canterbury lamb gives way to dairy');
   });
 });
+
+it('renders the digitised memory story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'digitised-memory' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('the 1890s light up');
+  expect(html).toContain('DigitalNZ');
+  expect(html).toContain('Papers Past');
+});
+

@@ -89,3 +89,97 @@ export async function searchLiveDataGovtNz(query: string): Promise<LiveDataGovtN
   }
   return parseDataGovtNzSearch(await response.json());
 }
+
+export interface LiveDigitalNzRecord {
+  id: number;
+  title: string;
+  contentPartner: string;
+  url: string;
+  year: number | null;
+}
+
+export interface LiveDigitalNzDecade {
+  decade: number;
+  count: number;
+}
+
+export interface LiveDigitalNzSearchResult {
+  resultCount: number;
+  decades: LiveDigitalNzDecade[];
+  records: LiveDigitalNzRecord[];
+}
+
+/** Extracts a year from a DigitalNZ record's date fields, or null when absent. */
+function parseDigitalNzRecordYear(record: {
+  date?: string[];
+  display_date?: string | null;
+}): number | null {
+  const isoDate = record.date?.[0];
+  if (isoDate !== undefined) {
+    const parsedDate = new Date(isoDate);
+    if (!Number.isNaN(parsedDate.getTime())) {
+      return parsedDate.getUTCFullYear();
+    }
+  }
+  const displayMatch = record.display_date?.match(/\b(1[5-9]\d\d|20\d\d)\b/);
+  if (displayMatch !== undefined && displayMatch !== null) {
+    return Number(displayMatch[1]);
+  }
+  return null;
+}
+
+/** Parses a DigitalNZ v3 records payload with decade facets into a search result. */
+export function parseDigitalNzSearch(payload: unknown): LiveDigitalNzSearchResult {
+  const search = (
+    payload as {
+      search?: {
+        result_count?: number;
+        facets?: { decade?: Record<string, number> };
+        results?: unknown[];
+      };
+    }
+  ).search;
+  const resultCount = search?.result_count ?? 0;
+  const decadeFacet = search?.facets?.decade ?? {};
+  const decades = Object.entries(decadeFacet)
+    .map(([decade, count]) => ({ decade: Number(decade), count }))
+    .filter((entry) => Number.isFinite(entry.decade))
+    .sort((a, b) => a.decade - b.decade);
+  const records = (search?.results ?? []).map((row) => {
+    const record = row as {
+      id?: number;
+      title?: string;
+      display_content_partner?: string | null;
+      landing_url?: string | null;
+      date?: string[];
+      display_date?: string | null;
+    };
+    return {
+      id: record.id ?? 0,
+      title: record.title ?? '',
+      contentPartner: record.display_content_partner ?? '',
+      url: record.landing_url ?? '',
+      year: parseDigitalNzRecordYear(record),
+    };
+  });
+  return { resultCount, decades, records };
+}
+
+/**
+ * Searches the DigitalNZ (National Library) collection from the browser
+ * (CORS is open), asking for the decade facet alongside the records.
+ */
+export async function searchLiveDigitalNz(query: string): Promise<LiveDigitalNzSearchResult> {
+  const controller = createLiveSearchAbortController();
+  const url = new URL('https://api.digitalnz.org/v3/records.json');
+  url.searchParams.set('text', query);
+  url.searchParams.set('per_page', '20');
+  url.searchParams.set('facets', 'decade');
+  url.searchParams.set('facet_fields', 'decade:100');
+  const response = await fetch(url, { signal: controller.signal });
+  if (!response.ok) {
+    throw new Error(`DigitalNZ HTTP ${response.status}`);
+  }
+  return parseDigitalNzSearch(await response.json());
+}
+

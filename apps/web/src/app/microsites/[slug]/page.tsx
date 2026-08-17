@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { DeerBoomBustChart } from '@/components/DeerBoomBustChart';
+import { DigitisedMemorySearch } from '@/components/DigitisedMemorySearch';
 import { ForestryChart } from '@/components/ForestryChart';
 import { HorticultureChart } from '@/components/HorticultureChart';
 import { KiwifruitOvertakeChart } from '@/components/KiwifruitOvertakeChart';
@@ -303,6 +304,17 @@ function renderStoryContent(
             <StatCard label="Datasets in the catalogue" value="31,915" accent="indigo" />
             <StatCard label="Datasets matching 'water'" value="4,236" accent="indigo" />
             <StatCard label="Datasets matching 'climate'" value="865" accent="indigo" />
+          </dl>
+        ),
+      };
+    case 'digitised-memory':
+      return {
+        chart: <DigitisedMemorySearch initialQuery="gold" />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard label="Records matching 'gold'" value="1,977,021" accent="cyan" />
+            <StatCard label="1890s records matching 'gold'" value="427,164" accent="cyan" />
+            <StatCard label="Peak decade" value="1890s" accent="cyan" />
           </dl>
         ),
       };
