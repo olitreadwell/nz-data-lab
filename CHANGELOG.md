@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-08-18 10:35 (NZST) - loop 5
+
+- Shipped: backyard-species-census (live iNaturalist census, bubble chart by
+  species, observations, and observers per group with taxon toggles),
+  species-record-ledger (live GBIF occurrence search, slope chart by kingdom
+  2014 vs 2024 with kingdom toggles), and what-the-world-reads (live Wikipedia
+  pageviews, range timeline of daily views per NZ topic with a window slider).
+- Sources: iNaturalist API (New Zealand place 6803), GBIF occurrence search
+  (country NZ), and English Wikipedia pageviews API, all live from the
+  browser (CORS open). Chart types used so far: line, area, bar, scatter,
+  donut, treemap, map, histogram, radial, bubble, slope, timeline.
+- Loop review: the launchd quality loop committed to main mid-run again, so
+  the worktree branch was based on a stale main; the rebase onto origin/main
+  went cleanly this time. The bigger slowdown was node_modules: symlinking
+  the main repo's node_modules into the worktree breaks vitest's esbuild
+  ("too many levels of symbolic links"), so a full npm install in the
+  worktree was needed (~70s). The skill now says to run npm install in a
+  fresh worktree instead of symlinking.
+
 ## 2026-08-18 09:45 (NZST) - loop 4
 
 - Shipped: digitised-memory (live DigitalNZ search, histogram by decade with
