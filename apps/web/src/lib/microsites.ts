@@ -462,4 +462,101 @@ export const MICROSITES: MicrositeConfig[] = [
       },
     ],
   },
+
+  {
+    slug: 'river-lengths',
+    label: 'River lengths',
+    eyebrow: '🏞️ the river lengths',
+    title: "The Waikato is New Zealand's longest river at 425 km.",
+    description:
+      'Wikidata lists the length of every named New Zealand river. The Waikato tops the list at 425 km, and the ten longest rivers stretch 2,603 km end to end.',
+    paragraphs: [
+      'The Clutha is second at 338 km, and the Whanganui third at 290 km. Six of the top ten rivers are in the South Island.',
+      'The waterfall chart adds each river to the running total. Toggle the top-N buttons to widen or narrow the list.',
+    ],
+    accent: 'cyan',
+    dataNote:
+      'Data: Wikidata SPARQL query for New Zealand rivers (P31 river, P17 New Zealand, P2043 length), fetched live from the browser. Values outside 50-500 km are dropped as bad entries. The top-10 total is 2,603 km.',
+    references: [
+      {
+        label: 'Wikidata river length query',
+        url: 'https://query.wikidata.org/sparql?query=SELECT%20%3Friver%20%3FriverLabel%20%3Flength%20WHERE%20%7B%20%3Friver%20wdt%3AP31%20wd%3AQ4022%3B%20wdt%3AP17%20wd%3AQ664%3B%20wdt%3AP2043%20%3Flength.%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22en%22.%20%7D%20%7D%20ORDER%20BY%20DESC(%3Flength)%20LIMIT%2020',
+        kind: 'data',
+      },
+      {
+        label: 'Freshwater and estuaries (NIWA)',
+        url: 'https://niwa.co.nz/freshwater-and-estuaries',
+        kind: 'data',
+      },
+      {
+        label: 'Rivers (Te Ara)',
+        url: 'https://teara.govt.nz/en/rivers',
+        kind: 'history',
+      },
+    ],
+  },
+  {
+    slug: 'peak-heights',
+    label: 'Peak heights',
+    eyebrow: '⛰️ the peak heights',
+    title: "Aoraki is New Zealand's highest peak at 3,724 m.",
+    description:
+      "Wikidata lists the elevation of New Zealand's named peaks. Aoraki / Mount Cook tops the list at 3,724 m, and the ten highest peaks are all in the Southern Alps.",
+    paragraphs: [
+      'Mount Tasman is second at 3,497 m, and Mount Dampier third at 3,440 m. Six peaks rise above 3,200 m.',
+      'The funnel narrows from the highest peak down. Toggle the top-N buttons to widen or narrow the list.',
+    ],
+    accent: 'violet',
+    dataNote:
+      'Data: Wikidata SPARQL query for New Zealand peaks (P31 mountain, P17 New Zealand, P2044 elevation), fetched live from the browser. Values outside 1,000-4,000 m are dropped as bad entries. The top-10 total is 33,278 m.',
+    references: [
+      {
+        label: 'Wikidata peak elevation query',
+        url: 'https://query.wikidata.org/sparql?query=SELECT%20%3Fpeak%20%3FpeakLabel%20%3Felevation%20WHERE%20%7B%20%3Fpeak%20wdt%3AP31%20wd%3AQ8502%3B%20wdt%3AP17%20wd%3AQ664%3B%20wdt%3AP2044%20%3Felevation.%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22en%22.%20%7D%20%7D%20ORDER%20BY%20DESC(%3Felevation)%20LIMIT%2020',
+        kind: 'data',
+      },
+      {
+        label: 'Places to go (DOC)',
+        url: 'https://www.doc.govt.nz/parks-and-recreation/places-to-go/',
+        kind: 'data',
+      },
+      {
+        label: 'Mountains (Te Ara)',
+        url: 'https://teara.govt.nz/en/mountains',
+        kind: 'history',
+      },
+    ],
+  },
+  {
+    slug: 'auckland-parks',
+    label: 'Auckland parks',
+    eyebrow: '🌳 the auckland parks',
+    title: 'Auckland has 3,953 parks covering 53,677 hectares.',
+    description:
+      'Auckland Council maps every park it owns or maintains. The 3,953 parks cover 53,677 hectares, and two local boards hold most of the land.',
+    paragraphs: [
+      'Franklin holds 20,060 hectares of park land and Waitākere Ranges 18,339 hectares. Together they cover 72% of the total.',
+      "The pie shows each local board's share. Toggle the top-N buttons to widen the view, or type to filter boards by name.",
+    ],
+    accent: 'emerald',
+    dataNote:
+      'Data: Auckland Council Park Extents dataset (ArcGIS REST service), grouped by local board, fetched live from the browser. Park land is the maintained extent, not the legal reserve boundary.',
+    references: [
+      {
+        label: 'Park Extents dataset (Auckland Council)',
+        url: 'https://data-aucklandcouncil.opendata.arcgis.com/datasets/3135043373ba48b7a9b5240370cb53ac',
+        kind: 'data',
+      },
+      {
+        label: 'Auckland Council open data',
+        url: 'https://data-aucklandcouncil.opendata.arcgis.com/',
+        kind: 'data',
+      },
+      {
+        label: 'Population (Stats NZ)',
+        url: 'https://www.stats.govt.nz/topics/population/',
+        kind: 'data',
+      },
+    ],
+  },
 ];

@@ -3,6 +3,7 @@ import { Container } from '@nzlab/ui';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { AucklandParks } from '@/components/AucklandParks';
 import { BackyardSpeciesCensus } from '@/components/BackyardSpeciesCensus';
 import { DeerBoomBustChart } from '@/components/DeerBoomBustChart';
 import { DigitisedMemorySearch } from '@/components/DigitisedMemorySearch';
@@ -12,7 +13,9 @@ import { KiwifruitOvertakeChart } from '@/components/KiwifruitOvertakeChart';
 import { LivestockChart } from '@/components/LivestockChart';
 import { MicrositeStory } from '@/components/MicrositeStory';
 import { OpenDataSearch } from '@/components/OpenDataSearch';
+import { PeakHeights } from '@/components/PeakHeights';
 import { QuakeMap } from '@/components/QuakeMap';
+import { RiverLengths } from '@/components/RiverLengths';
 import { SheepChart } from '@/components/SheepChart';
 import { SpeciesRecordLedger } from '@/components/SpeciesRecordLedger';
 import { SpeciesRegisterSearch } from '@/components/SpeciesRegisterSearch';
@@ -412,6 +415,39 @@ function renderStoryContent(
             <StatCard label="New Zealand page peak" value="21,562" accent="sky" />
             <StatCard label="Lord of the Rings peak" value="10,438" accent="sky" />
             <StatCard label="Jacinda Ardern peak" value="8,429" accent="sky" />
+          </dl>
+        ),
+      };
+    case 'river-lengths':
+      return {
+        chart: <RiverLengths />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard label="Longest river" value="Waikato, 425 km" accent="cyan" />
+            <StatCard label="Top 10 total" value="2,603 km" accent="cyan" />
+            <StatCard label="Rivers over 200 km" value="7" accent="cyan" />
+          </dl>
+        ),
+      };
+    case 'peak-heights':
+      return {
+        chart: <PeakHeights />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard label="Highest peak" value="Aoraki, 3,724 m" accent="violet" />
+            <StatCard label="Top 10 total" value="33,278 m" accent="violet" />
+            <StatCard label="Peaks above 3,200 m" value="6" accent="violet" />
+          </dl>
+        ),
+      };
+    case 'auckland-parks':
+      return {
+        chart: <AucklandParks />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard label="Parks in Auckland" value="3,953" accent="emerald" />
+            <StatCard label="Park land" value="53,677 ha" accent="emerald" />
+            <StatCard label="Franklin + Waitākere share" value="72%" accent="emerald" />
           </dl>
         ),
       };
