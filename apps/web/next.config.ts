@@ -1,7 +1,7 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  transpilePackages: ['@nzlab/ui'],
+  transpilePackages: ['@nzlab/ui', '@nzlab/nz-sources'],
   typedRoutes: true,
   devIndicators: false,
   // GitHub Pages serves static files only, so the app exports to plain HTML.
