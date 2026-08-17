@@ -8,6 +8,8 @@ import { DigitisedMemorySearch } from './DigitisedMemorySearch';
 
 expect.extend(toHaveNoViolations);
 
+const { SEARCH_MOCK } = vi.hoisted(() => ({ SEARCH_MOCK: vi.fn() }));
+
 const RESULT: LiveDigitalNzSearchResult = {
   resultCount: 1977021,
   decades: [
@@ -33,8 +35,10 @@ const RESULT: LiveDigitalNzSearchResult = {
   ],
 };
 
+SEARCH_MOCK.mockResolvedValue(RESULT);
+
 vi.mock('@/lib/live-sources', () => ({
-  searchLiveDigitalNz: vi.fn(async () => RESULT),
+  searchLiveDigitalNz: SEARCH_MOCK,
 }));
 
 describe('DigitisedMemorySearch', () => {
@@ -61,5 +65,49 @@ describe('DigitisedMemorySearch', () => {
     await screen.findByText(/1,977,021 records match/);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
+  });
+
+  it('renders an anchor only for safe http/https urls', async () => {
+    SEARCH_MOCK.mockResolvedValueOnce({
+      resultCount: 4,
+      decades: [],
+      records: [
+        {
+          id: 1,
+          title: 'https record',
+          contentPartner: '',
+          url: 'https://example.com/1',
+          year: null,
+        },
+        {
+          id: 2,
+          title: 'http record',
+          contentPartner: '',
+          url: 'http://example.com/2',
+          year: null,
+        },
+        {
+          id: 3,
+          title: 'javascript record',
+          contentPartner: '',
+          url: 'javascript:alert(1)',
+          year: null,
+        },
+        { id: 4, title: 'empty record', contentPartner: '', url: '', year: null },
+      ],
+    });
+    render(<DigitisedMemorySearch initialQuery="gold" />);
+    await screen.findByText('https record');
+
+    expect(screen.getByText('https record').closest('a')).toHaveAttribute(
+      'href',
+      'https://example.com/1',
+    );
+    expect(screen.getByText('http record').closest('a')).toHaveAttribute(
+      'href',
+      'http://example.com/2',
+    );
+    expect(screen.getByText('javascript record').closest('a')).toBeNull();
+    expect(screen.getByText('empty record').closest('a')).toBeNull();
   });
 });
