@@ -31,13 +31,17 @@ export default async function HomePage(): Promise<React.ReactElement> {
   const horticultureStats = summarizeHorticulture(horticulture);
   const forestryStats = summarizeForestry(forestry);
   const dairy = livestockStats.find((stat) => stat.key === 'dairyCattle');
+  const deer = livestockStats.find((stat) => stat.key === 'deer');
   const wineGrapes = horticultureStats.find((stat) => stat.key === 'wineGrapes');
+  const kiwifruit = horticultureStats.find((stat) => stat.key === 'kiwifruit');
   const newPlanting = forestryStats.find((stat) => stat.key === 'newPlanting');
 
   const sheepConfig = getMicrosite('sheep-index');
   const dairyConfig = getMicrosite('dairy-takeover');
   const vineyardConfig = getMicrosite('vineyard-boom');
   const plantingConfig = getMicrosite('planting-bust');
+  const kiwifruitConfig = getMicrosite('kiwifruit-overtake');
+  const deerConfig = getMicrosite('deer-boom-bust');
 
   return (
     <main>
@@ -48,10 +52,10 @@ export default async function HomePage(): Promise<React.ReactElement> {
             the surprising.
           </h1>
           <p className="numeral-paragraph-lg text-[var(--color-muted)]">
-            Four live microsites. All numbers come from Stats NZ at deploy time.
+            Six live microsites. All numbers come from Stats NZ at deploy time.
           </p>
         </Stack>
-        <div className="grid gap-6 pb-[var(--spacing-3xl)] sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 pb-[var(--spacing-3xl)] sm:grid-cols-2 lg:grid-cols-3">
           <MicrositeCard
             slug={sheepConfig.slug}
             eyebrow={sheepConfig.eyebrow}
@@ -87,6 +91,24 @@ export default async function HomePage(): Promise<React.ReactElement> {
             statLabel={`New planting in ${forestry.latest.year}`}
             statValue={formatHectares(newPlanting?.latest ?? 0)}
             accent={plantingConfig.accent}
+          />
+          <MicrositeCard
+            slug={kiwifruitConfig.slug}
+            eyebrow={kiwifruitConfig.eyebrow}
+            title={kiwifruitConfig.title}
+            description={kiwifruitConfig.description}
+            statLabel={`Kiwifruit now (${horticulture.latest.year})`}
+            statValue={formatHectares(kiwifruit?.latest ?? 0)}
+            accent={kiwifruitConfig.accent}
+          />
+          <MicrositeCard
+            slug={deerConfig.slug}
+            eyebrow={deerConfig.eyebrow}
+            title={deerConfig.title}
+            description={deerConfig.description}
+            statLabel={`Farmed deer now (${livestock.latest.year})`}
+            statValue={formatMillions(deer?.latest ?? 0)}
+            accent={deerConfig.accent}
           />
         </div>
       </Container>

@@ -157,4 +157,68 @@ export const MICROSITES: MicrositeConfig[] = [
       },
     ],
   },
+  {
+    slug: 'kiwifruit-overtake',
+    label: 'Kiwifruit overtake',
+    eyebrow: '🥝 the kiwifruit overtake',
+    title: 'Kiwifruit overtook the apple.',
+    description:
+      'In 1994 apples covered 15,257 hectares and kiwifruit 12,174. By 2024 kiwifruit covered 14,514 hectares while apples had fallen to 9,522. The orchard flipped.',
+    paragraphs: [
+      'Kiwifruit vines came to New Zealand in 1904, when Isabel Fraser brought seeds back from China. The first commercial orchards appeared in the 1930s, and the green-fleshed Hayward variety became the export standard.',
+      'The apple orchard shrank as land moved to kiwifruit and other crops. The kiwifruit boom survived a bacterial disease, PSA, that hit green vines in 2010 and pushed growers into the gold variety.',
+    ],
+    accent: 'lime',
+    dataNote:
+      'Data: Stats NZ Aotearoa Data Explorer, table AGR_AGR_002 (Horticulture by Regional Council), national area in hectares for kiwifruit, apples, and avocados. Hover or drag across the chart to read any year.',
+    references: [
+      {
+        label: 'Kiwifruit (Te Ara)',
+        url: 'https://teara.govt.nz/en/kiwifruit',
+        kind: 'history',
+      },
+      {
+        label: 'Livestock numbers fall while fruit area increases (Stats NZ)',
+        url: 'https://www.stats.govt.nz/news/livestock-numbers-fall-over-the-last-10-years-while-area-planted-in-fruit-increases/',
+        kind: 'data',
+      },
+      {
+        label: 'Horticulture (Te Ara)',
+        url: 'https://teara.govt.nz/en/horticulture',
+        kind: 'history',
+      },
+    ],
+  },
+  {
+    slug: 'deer-boom-bust',
+    label: 'Deer boom and bust',
+    eyebrow: '🦌 the deer boom and bust',
+    title: 'The deer herd boomed, then bust.',
+    description:
+      'Farmed deer went from 1.23 million in 1994 to a peak of 1.76 million in 2004, then fell to 712,000 by 2025. The herd has more than halved from its peak.',
+    paragraphs: [
+      'Deer farming began in the 1970s, when farmers rounded up wild deer for velvet and venison. The industry grew fast through the 1990s as venison exports to Europe and velvet exports to Asia took off.',
+      'The bust came as returns fell and paddocks switched to dairy. The deer herd has now shrunk for two decades straight.',
+    ],
+    accent: 'violet',
+    dataNote:
+      'Data: Stats NZ Aotearoa Data Explorer, table AGR_AGR_003 (Livestock Numbers by Regional Council), national farmed deer total. Hover or drag across the chart to read any year.',
+    references: [
+      {
+        label: 'Deer farming (Te Ara)',
+        url: 'https://teara.govt.nz/en/deer-farming',
+        kind: 'history',
+      },
+      {
+        label: 'Sheep number falls to six for each person (Stats NZ)',
+        url: 'https://www.stats.govt.nz/news/sheep-number-falls-to-six-for-each-person/',
+        kind: 'data',
+      },
+      {
+        label: 'Farming in the economy (Te Ara)',
+        url: 'https://teara.govt.nz/en/farming-in-the-economy',
+        kind: 'culture',
+      },
+    ],
+  },
 ];
