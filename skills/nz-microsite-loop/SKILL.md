@@ -13,34 +13,38 @@ next one faster.
 
 ## Loop contract (one iteration, ~20 minutes)
 
-1. **Research (5 min)**: pick one NZ data source from `@nzlab/nz-sources`
-   adapters (GeoNet, DigitalNZ, data.govt.nz, TradeMe, NZOR, LINZ) or a
-   Stats NZ table already wired in `apps/web/src/lib/`. Fan out with parallel
-   subagents when the story needs external facts. Verify every reference URL
-   returns 200 before linking it. Never fabricate a stat.
-2. **Story (2 min)**: one short story, oli-style copy (no em dashes, no
-   puffery, real verified numbers, named sources). One microsite per loop.
-3. **Build (8 min)**: a new microsite under `apps/web/src/app/microsites/`
-   with a chart type not already used on the site (line, area, bar, scatter,
-   bubble, slope, timeline, map). Make it interactive or adjustable: a
-   slider, a toggle, a search, a brush, or a filter. Reuse
-   `MicrositeStory`, `StatCard`, `MicrositeReferences`, and the accent
-   system. Add a unit test per new component.
+Aim for 2-3 microsites per loop, batched in one worktree branch with one
+commit per microsite, then one merge and one deploy.
+
+1. **Research (5 min)**: pick 2-3 NZ data sources from `@nzlab/nz-sources`
+   adapters (GeoNet, DigitalNZ, data.govt.nz, TradeMe, NZOR, LINZ) or Stats
+   NZ tables already wired in `apps/web/src/lib/`. Fan out with parallel
+   subagents when the stories need external facts. Verify every reference
+   URL returns 200 before linking it. Never fabricate a stat.
+2. **Stories (2 min)**: one short story per microsite, oli-style copy (no
+   em dashes, no puffery, real verified numbers, named sources).
+3. **Build (8 min)**: one new microsite per source under
+   `apps/web/src/app/microsites/`. Each needs a chart type not already used
+   on the site (line, area, bar, scatter, bubble, slope, timeline, map) and
+   an interaction: a slider, a toggle, a search, a brush, or a filter.
+   Reuse `MicrositeStory`, `StatCard`, `MicrositeReferences`, and the
+   accent system. Add a unit test per new component.
 4. **Verify (3 min)**: `npx tsc --noEmit` and `npx vitest run` in
    `apps/web`, lint the changed files. Fix errors before merging.
-5. **Ship (2 min)**: worktree + branch, commit with a Conventional Commit
-   message, merge to `main`, push, watch the Pages deploy, curl the new
+5. **Ship (2 min)**: worktree + branch, one Conventional Commit per
+   microsite, merge to `main`, push, watch the Pages deploy, curl each new
    page for 200 and for a content marker.
-6. **Changelog (1 min)**: append a dated entry to `CHANGELOG.md` in the
-   same commit as the microsite.
+6. **Changelog (1 min)**: append one dated entry to `CHANGELOG.md` listing
+   every microsite shipped in the loop.
 7. **Review (1 min)**: read the last loop's notes, list what slowed it down,
    and update this skill with one concrete improvement. Keep the skill
    short; delete rules that no longer pay for themselves.
 
 ## Hard rules
 
-- One microsite per loop, one chart type per microsite, no repeated chart
-  types across the site unless the story demands it.
+- 2-3 microsites per loop, one chart type per microsite, no repeated chart
+  types across the site unless the story demands it. Keep a running list of
+  chart types used in the changelog so the next loop picks a fresh one.
 - Every number in the copy must come from the data or a verified source.
 - Every reference URL must return 200 (curl before commit).
 - No `console.log`, no `any`, explicit return types, npm only.

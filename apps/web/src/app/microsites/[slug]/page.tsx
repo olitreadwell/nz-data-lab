@@ -3,7 +3,6 @@ import { Container } from '@nzlab/ui';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import { DairyTakeoverScatter } from '@/components/DairyTakeoverScatter';
 import { DeerBoomBustChart } from '@/components/DeerBoomBustChart';
 import { ForestryChart } from '@/components/ForestryChart';
 import { HorticultureChart } from '@/components/HorticultureChart';
