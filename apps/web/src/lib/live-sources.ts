@@ -242,3 +242,197 @@ export async function fetchLiveTradeMeTree(): Promise<LiveTradeMeCategory> {
   }
   return parseTradeMeTree(await response.json());
 }
+
+export interface LiveInaturalistTaxon {
+  taxon: string;
+  speciesCount: number;
+  observationCount: number;
+  observerCount: number;
+}
+
+/** Iconic taxa shown on the backyard-species-census bubble chart. */
+export const INATURALIST_TAXA = [
+  'Aves',
+  'Mammalia',
+  'Reptilia',
+  'Actinopterygii',
+  'Insecta',
+  'Arachnida',
+  'Mollusca',
+  'Plantae',
+  'Fungi',
+] as const;
+
+/** The iNaturalist place id for New Zealand. */
+export const INATURALIST_NZ_PLACE_ID = 6803;
+
+/** Extracts the total_results count from an iNaturalist list payload. */
+export function parseInaturalistTotal(payload: unknown): number {
+  const total = (payload as { total_results?: number }).total_results;
+  return typeof total === 'number' && Number.isFinite(total) ? total : 0;
+}
+
+/**
+ * Fetches per-taxon species, observation, and observer counts for New
+ * Zealand from iNaturalist (CORS is open). Three small list calls per taxon,
+ * all in parallel.
+ */
+export async function fetchLiveInaturalistTaxa(): Promise<LiveInaturalistTaxon[]> {
+  const results = await Promise.all(
+    INATURALIST_TAXA.map(async (taxon) => {
+      const base = 'https://api.inaturalist.org/v1/observations';
+      const placeQuery = `place_id=${INATURALIST_NZ_PLACE_ID}`;
+      const [species, observations, observers] = await Promise.all([
+        fetchJson(
+          `${base}/species_counts?${placeQuery}&hrank=species&iconic_taxa=${taxon}&per_page=1`,
+        ),
+        fetchJson(`${base}?${placeQuery}&iconic_taxa=${taxon}&per_page=1`),
+        fetchJson(`${base}/observers?${placeQuery}&iconic_taxa=${taxon}&per_page=1`),
+      ]);
+      return {
+        taxon,
+        speciesCount: parseInaturalistTotal(species),
+        observationCount: parseInaturalistTotal(observations),
+        observerCount: parseInaturalistTotal(observers),
+      };
+    }),
+  );
+  return results;
+}
+
+export interface LiveGbifKingdom {
+  kingdom: string;
+  count2014: number;
+  count2024: number;
+}
+
+/** GBIF kingdom keys mapped to their names. */
+const GBIF_KINGDOM_NAMES: Record<string, string> = {
+  '1': 'Animalia',
+  '6': 'Plantae',
+  '3': 'Fungi',
+  '4': 'Protozoa',
+  '5': 'Chromista',
+  '2': 'Archaea',
+  '7': 'Bacteria',
+  '8': 'Viruses',
+  '0': 'Unknown',
+};
+
+/** Extracts the KINGDOM_KEY facet counts from a GBIF occurrence search. */
+export function parseGbifKingdomFacet(payload: unknown): Record<string, number> {
+  const facets = (payload as { facets?: unknown[] }).facets ?? [];
+  const kingdomFacet = facets.find((facet) => {
+    const candidate = facet as { field?: string };
+    return candidate.field === 'KINGDOM_KEY';
+  }) as { counts?: Array<{ name: string; count: number }> } | undefined;
+  const counts: Record<string, number> = {};
+  for (const entry of kingdomFacet?.counts ?? []) {
+    counts[entry.name] = entry.count;
+  }
+  return counts;
+}
+
+/**
+ * Fetches New Zealand occurrence records by kingdom for 2014 and 2024 from
+ * GBIF (CORS is open), for the species-record-ledger slope chart.
+ */
+export async function fetchLiveGbifKingdoms(): Promise<LiveGbifKingdom[]> {
+  const [counts2014, counts2024] = await Promise.all([
+    fetchGbifKingdomCounts(2014),
+    fetchGbifKingdomCounts(2024),
+  ]);
+  const keys = new Set([...Object.keys(counts2014), ...Object.keys(counts2024)]);
+  return [...keys]
+    .map((key) => ({
+      kingdom: GBIF_KINGDOM_NAMES[key] ?? key,
+      count2014: counts2014[key] ?? 0,
+      count2024: counts2024[key] ?? 0,
+    }))
+    .filter((entry) => entry.kingdom !== 'Unknown')
+    .sort((a, b) => b.count2024 - a.count2024);
+}
+
+async function fetchGbifKingdomCounts(year: number): Promise<Record<string, number>> {
+  const url = new URL('https://api.gbif.org/v1/occurrence/search');
+  url.searchParams.set('country', 'NZ');
+  url.searchParams.set('year', String(year));
+  url.searchParams.set('facet', 'kingdomKey');
+  url.searchParams.set('limit', '0');
+  const controller = createLiveSearchAbortController();
+  const response = await fetch(url, { signal: controller.signal });
+  if (!response.ok) {
+    throw new Error(`GBIF HTTP ${response.status}`);
+  }
+  return parseGbifKingdomFacet(await response.json());
+}
+
+export interface LiveWikipediaPage {
+  title: string;
+  dailyViews: number[];
+}
+
+/** NZ topics tracked on the what-the-world-reads timeline. */
+export const WIKIPEDIA_NZ_PAGES = [
+  'New Zealand',
+  'Auckland',
+  'Wellington',
+  'Christchurch',
+  'All Blacks',
+  'Kiwi',
+  'Māori people',
+  'Rugby union in New Zealand',
+  'The Lord of the Rings (film series)',
+  'Jacinda Ardern',
+  'Queenstown, New Zealand',
+  'Hobbiton Movie Set',
+] as const;
+
+/** Parses a Wikipedia pageviews query payload into per-page daily view series. */
+export function parseWikipediaPageviews(payload: unknown): LiveWikipediaPage[] {
+  const pages = (
+    payload as {
+      query?: {
+        pages?: Record<string, { title?: string; pageviews?: Record<string, number | null> }>;
+      };
+    }
+  ).query?.pages;
+  if (pages === undefined) {
+    return [];
+  }
+  return Object.values(pages).map((page) => {
+    const views = page.pageviews ?? {};
+    const dailyViews = Object.entries(views)
+      .sort(([dateA], [dateB]) => dateA.localeCompare(dateB))
+      .map(([, count]) => count ?? 0);
+    return { title: page.title ?? '', dailyViews };
+  });
+}
+
+/**
+ * Fetches the last 60 days of daily pageviews for the tracked NZ topics from
+ * the English Wikipedia API (CORS is open).
+ */
+export async function fetchLiveWikipediaPageviews(): Promise<LiveWikipediaPage[]> {
+  const url = new URL('https://en.wikipedia.org/w/api.php');
+  url.searchParams.set('action', 'query');
+  url.searchParams.set('titles', WIKIPEDIA_NZ_PAGES.join('|'));
+  url.searchParams.set('prop', 'pageviews');
+  url.searchParams.set('format', 'json');
+  const controller = createLiveSearchAbortController();
+  const response = await fetch(url, { signal: controller.signal });
+  if (!response.ok) {
+    throw new Error(`Wikipedia HTTP ${response.status}`);
+  }
+  return parseWikipediaPageviews(await response.json());
+}
+
+/** Fetches a JSON payload with the shared live-search timeout. */
+async function fetchJson(url: string): Promise<unknown> {
+  const controller = createLiveSearchAbortController();
+  const response = await fetch(url, { signal: controller.signal });
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+  return response.json();
+}

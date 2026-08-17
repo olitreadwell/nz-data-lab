@@ -376,4 +376,90 @@ export const MICROSITES: MicrositeConfig[] = [
       },
     ],
   },
+  {
+    slug: 'backyard-species-census',
+    label: 'Backyard species census',
+    eyebrow: '🐦 the backyard census',
+    title: 'New Zealanders have logged 4.3 million observations of 23,828 species.',
+    description:
+      'iNaturalist is a citizen science network. In New Zealand, people have logged 4,342,223 observations of 23,828 species, from kākā to kauri. This page shows the live counts by group.',
+    paragraphs: [
+      'Plants lead the census with 9,840 species and 2,025,138 observations. Insects are second with 5,605 species and 800,635 observations.',
+      'Birds punch above their weight: 657 species drew 544,818 observations, the most per species of any group.',
+    ],
+    accent: 'emerald',
+    dataNote:
+      'Data: iNaturalist API, New Zealand place (id 6803), fetched live from the browser. Bubble size shows how many observers logged each group.',
+    references: [
+      {
+        label: 'iNaturalist API docs',
+        url: 'https://api.inaturalist.org/v1/docs/',
+        kind: 'data',
+      },
+      {
+        label: 'iNaturalist New Zealand place',
+        url: 'https://api.inaturalist.org/v1/places/6803',
+        kind: 'data',
+      },
+      {
+        label: 'Native animals (DOC)',
+        url: 'https://www.doc.govt.nz/nature/native-animals/',
+        kind: 'data',
+      },
+    ],
+  },
+  {
+    slug: 'species-record-ledger',
+    label: 'Species record ledger',
+    eyebrow: '🧬 the species record ledger',
+    title: 'The record ledger flipped from fungi to animals.',
+    description:
+      'GBIF is the global species record database. New Zealand contributed 748,744 records in 2014 and 1,920,171 in 2024. The mix flipped: fungi fell from 61% of records to 5%, while animals rose to 78%.',
+    paragraphs: [
+      'Fungi dominated the 2014 ledger with 458,989 records, 61% of the total. By 2024 that had fallen to 98,269 records, 5%.',
+      'Animal records grew from 208,004 to 1,496,447, a 7.2-fold rise, as museums and citizen science projects digitised their collections.',
+    ],
+    accent: 'indigo',
+    dataNote:
+      'Data: GBIF occurrence search API, country NZ, records by kingdom for 2014 and 2024, fetched live from the browser.',
+    references: [
+      {
+        label: 'GBIF occurrence API',
+        url: 'https://techdocs.gbif.org/en/openapi/v1/occurrence',
+        kind: 'data',
+      },
+      {
+        label: 'GBIF New Zealand occurrence search',
+        url: 'https://api.gbif.org/v1/occurrence/search?country=NZ',
+        kind: 'data',
+      },
+    ],
+  },
+  {
+    slug: 'what-the-world-reads',
+    label: 'What the world reads',
+    eyebrow: '🌏 what the world reads',
+    title: 'The world reads about New Zealand up to 21,562 times a day.',
+    description:
+      'The English Wikipedia page for New Zealand gets up to 21,562 views in a day. This page shows the daily view ranges for 12 New Zealand topics, fetched live from Wikipedia.',
+    paragraphs: [
+      'The Lord of the Rings (film series) is the second most-read topic, with up to 10,438 daily views. Jacinda Ardern peaked at 8,429.',
+      'Drag the slider to widen or narrow the window. The dot marks the latest day.',
+    ],
+    accent: 'sky',
+    dataNote:
+      'Data: English Wikipedia pageviews API, last 60 days, fetched live from the browser. Each line spans the lowest to highest daily views in the window.',
+    references: [
+      {
+        label: 'New Zealand (Wikipedia)',
+        url: 'https://en.wikipedia.org/wiki/New_Zealand',
+        kind: 'data',
+      },
+      {
+        label: 'Wikipedia pageviews',
+        url: 'https://en.wikipedia.org/wiki/Wikipedia:Pageviews',
+        kind: 'data',
+      },
+    ],
+  },
 ];

@@ -70,3 +70,30 @@ export async function fetchCatalogueTotal(): Promise<number> {
     return CATALOGUE_TOTAL_FALLBACK;
   }
 }
+
+/** iNaturalist observations in New Zealand (2026-08-18). */
+export const INATURALIST_NZ_OBSERVATIONS = '4,342,223';
+
+/** iNaturalist species logged in New Zealand (2026-08-18). */
+export const INATURALIST_NZ_SPECIES = '23,828';
+
+/** iNaturalist observers in New Zealand (2026-08-18). */
+export const INATURALIST_NZ_OBSERVERS = '65,569';
+
+/** GBIF New Zealand occurrence records in 2014 (2026-08-18). */
+export const GBIF_NZ_RECORDS_2014 = '748,744';
+
+/** GBIF New Zealand occurrence records in 2024 (2026-08-18). */
+export const GBIF_NZ_RECORDS_2024 = '1,920,171';
+
+/** GBIF New Zealand animal share of records in 2024 (2026-08-18). */
+export const GBIF_NZ_ANIMAL_SHARE_2024 = '78%';
+
+/** English Wikipedia daily views peak for the New Zealand page (2026-08-18). */
+export const WIKIPEDIA_NZ_PAGE_PEAK = '21,562';
+
+/** English Wikipedia daily views peak for The Lord of the Rings (film series) (2026-08-18). */
+export const WIKIPEDIA_LOTR_PEAK = '10,438';
+
+/** English Wikipedia daily views peak for Jacinda Ardern (2026-08-18). */
+export const WIKIPEDIA_ARDERN_PEAK = '8,429';
