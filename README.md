@@ -116,7 +116,10 @@ with no server.
   by the workflow; it stays empty for local dev and Vercel builds.
 - Static export means no API routes and no dynamic rendering. The
   `/api/health` route was removed for this reason; the sheep-index page fetches
-  Stats NZ data at build time instead of on each request.
+  Stats NZ data at build time instead of on each request, falling back to a
+  committed snapshot when the API blocks the build runner. Add a
+  `STATS_NZ_SUBSCRIPTION_KEY` repo secret to make the daily refresh hit the
+  live API from CI.
 - One-time setup: in the repo's Settings → Pages, set Source to "GitHub
   Actions" so the workflow's `actions/deploy-pages` step is allowed to publish.
 

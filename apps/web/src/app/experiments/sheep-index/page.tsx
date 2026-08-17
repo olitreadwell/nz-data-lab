@@ -68,8 +68,9 @@ export default async function SheepIndexPage(): Promise<React.ReactElement> {
 
           <p className="numeral-paragraph-sm mt-8 max-w-3xl text-[var(--color-muted)]">
             Data: Stats NZ Aotearoa Data Explorer, table AGR_AGR_003 (Livestock Numbers by Regional
-            Council), national sheep total, fetched at deploy time via @nzlab/stats-nz; the site
-            redeploys daily so the numbers stay fresh. Table link:{' '}
+            Council), national sheep total, fetched at deploy time via @nzlab/stats-nz, falling back
+            to a committed snapshot when the API blocks the build runner; the site redeploys daily.
+            Table link:{' '}
             <a className="underline" href="https://www.stats.govt.nz/tools/aotearoa-data-explorer/">
               aotearoa data explorer
             </a>

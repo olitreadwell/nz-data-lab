@@ -1,5 +1,7 @@
-import { createStatsNzClient, StatsNzError } from '@nzlab/stats-nz';
+import { createStatsNzClient, parseStatsNzCsv, StatsNzError } from '@nzlab/stats-nz';
 import type { StatsNzObservation } from '@nzlab/stats-nz';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 
 // Table AGR_AGR_003 (Livestock Numbers by Regional Council) in the Aotearoa
 // Data Explorer. Codes below were verified against published Stats NZ figures
@@ -8,6 +10,14 @@ import type { StatsNzObservation } from '@nzlab/stats-nz';
 export const SHEEP_DATAFLOW_ID = 'AGR_AGR_003';
 export const SHEEP_LIVESTOCK_CODE = '6731';
 export const NATIONAL_AREA_CODE = '20';
+
+// Real snapshot of the same table, committed so the static build still works
+// when the Stats NZ gateway blocks the build runner (GitHub Actions IPs get
+// 401 on the keyless path).
+const SHEEP_FIXTURE_PATH = path.join(
+  process.cwd(),
+  '../../packages/stats-nz/src/fixtures/agricultural-livestock-regional-council-2025-08-17.csv',
+);
 
 export interface SheepSeriesPoint {
   year: number;
@@ -77,6 +87,13 @@ export async function fetchSheepSeries(subscriptionKey?: string): Promise<SheepS
     // cacheable at build time instead of the client's default no-store.
     fetchImpl: (input, init) => globalThis.fetch(input, { ...init, cache: 'force-cache' }),
   });
-  const rows = await client.getData({ dataflowId: SHEEP_DATAFLOW_ID, format: 'csv' });
-  return buildSheepSeries(rows);
+  try {
+    const rows = await client.getData({ dataflowId: SHEEP_DATAFLOW_ID, format: 'csv' });
+    return buildSheepSeries(rows);
+  } catch {
+    const rows = parseStatsNzCsv(readFileSync(SHEEP_FIXTURE_PATH, 'utf8'), {
+      dataflowId: SHEEP_DATAFLOW_ID,
+    });
+    return buildSheepSeries(rows);
+  }
 }
