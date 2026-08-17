@@ -1,6 +1,6 @@
 # nz-data-lab
 
-olitreadwell.github.io/nz-data-lab
+[https://olitreadwell.github.io/nz-data-lab](https://olitreadwell.github.io/nz-data-lab)
 
 Small experiments digging through New Zealand public data (Stats NZ, Hansard
 transcripts, and whatever else turns up something weird, funny, or surprising).
