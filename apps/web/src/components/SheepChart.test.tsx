@@ -1,8 +1,9 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { describe, expect, it } from 'vitest';
 
-import type { SheepSeriesPoint } from './sheep-data';
+import type { SheepSeriesPoint } from '@/lib/sheep-data';
+
 import { SheepChart } from './SheepChart';
 
 expect.extend(toHaveNoViolations);
@@ -24,6 +25,14 @@ describe('SheepChart', () => {
     const { container } = render(<SheepChart points={POINTS} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
+  });
+
+  it('shows the population for the hovered year', async () => {
+    render(<SheepChart points={POINTS} />);
+    fireEvent.mouseMove(screen.getByRole('img'), { clientX: 100, clientY: 100 });
+    const tooltip = await screen.findByTestId('sheep-tooltip');
+    expect(tooltip).toHaveTextContent('1994');
+    expect(tooltip).toHaveTextContent('49.5 million sheep');
   });
 
   it('renders a fallback label for empty data', () => {

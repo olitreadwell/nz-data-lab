@@ -7,12 +7,12 @@ import { SiteHeader } from './SiteHeader';
 expect.extend(toHaveNoViolations);
 
 describe('SiteHeader', () => {
-  it('links home and to experiments', () => {
+  it('links home and to the sheep index section', () => {
     render(<SiteHeader />);
     expect(screen.getByRole('link', { name: 'nz-data-lab' })).toHaveAttribute('href', '/');
-    expect(screen.getByRole('link', { name: 'experiments' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'the sheep index' })).toHaveAttribute(
       'href',
-      '/experiments',
+      '#sheep-index',
     );
   });
 

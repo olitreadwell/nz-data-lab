@@ -10,10 +10,10 @@ export function SiteHeader(): React.ReactElement {
         </Link>
         <nav>
           <Link
-            href="/experiments"
+            href="#sheep-index"
             className="numeral-paragraph-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-fg)]"
           >
-            experiments
+            the sheep index
           </Link>
         </nav>
       </div>

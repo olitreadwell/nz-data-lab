@@ -44,21 +44,16 @@ Homepage at http://localhost:3000, Storybook at http://localhost:6006.
 
 ## Experiments
 
-Every experiment lives at `apps/web/src/app/experiments/<slug>/`. Start a new one by
-copying `apps/web/src/app/experiments/_example/` (an underscore-prefixed folder — not
-routed by Next.js, so it's a template, not a live page):
+The deployed site is a single page: the current experiment (the Sheep Index) lives
+directly on the home page (`apps/web/src/app/page.tsx`), with its data module in
+`apps/web/src/lib/sheep-data.ts` and its chart in `apps/web/src/components/SheepChart.tsx`.
+Each experiment's writeup (pitch, data source, verdict, orchestration notes) lives in
+`docs/experiments/<slug>/`.
 
-- `page.tsx` — the experiment itself
-- `error.tsx` — local error boundary, so a broken experiment doesn't take the rest of
-  the site down
-- `README.md` — the pitch, the data source, the verdict (alive/dead)
-- `ORCHESTRATION.md` — what got handed to the cheap model, what came back, what needed
-  fixing
-- `TUTORIAL.md` — the cleaned-up, outside-reader writeup, written last
-
-Once it ships, add an entry to `apps/web/src/lib/experiments.ts` (the typed registry the
-`/experiments` index page reads from) and a line to `INDEX.md` at the repo root. If it's
-tutorial-worthy, add a line to `TUTORIALS.md` too.
+Start a new experiment by copying `apps/web/src/app/experiments/_example/` (an
+underscore-prefixed folder — not routed by Next.js, so it's a template, not a live
+page). When one ships, add its section to the home page and a line to `INDEX.md` at the
+repo root. If it's tutorial-worthy, add a line to `TUTORIALS.md` too.
 
 ## Node version
 
@@ -115,7 +110,7 @@ with no server.
 - The Pages base path (`/nz-data-lab`) is injected as `NEXT_PUBLIC_BASE_PATH`
   by the workflow; it stays empty for local dev and Vercel builds.
 - Static export means no API routes and no dynamic rendering. The
-  `/api/health` route was removed for this reason; the sheep-index page fetches
+  `/api/health` route was removed for this reason; the sheep index fetches
   Stats NZ data at build time instead of on each request, falling back to a
   committed snapshot when the API blocks the build runner. Add a
   `STATS_NZ_SUBSCRIPTION_KEY` repo secret to make the daily refresh hit the
