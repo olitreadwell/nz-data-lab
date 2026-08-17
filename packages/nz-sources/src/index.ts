@@ -1,5 +1,5 @@
 export { searchDataGovtNzDatasets, parseDataGovtNzDatasets, dataGovtNzAdapter } from './dataGovtNz';
-export type { DataGovtNzDataset } from './dataGovtNz';
+export type { DataGovtNzDataset, DataGovtNzSearchResult } from './dataGovtNz';
 export { searchDigitalNzRecords, parseDigitalNzRecords, digitalNzAdapter } from './digitalNz';
 export type { DigitalNzRecord } from './digitalNz';
 export { NzSourceApiError, NzSourceError, NzSourceParseError } from './errors';

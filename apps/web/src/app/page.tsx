@@ -4,6 +4,12 @@ import { MicrositeCard } from '@/components/MicrositeCard';
 import { env } from '@/env';
 import { fetchForestrySeries, summarizeForestry } from '@/lib/forestry-data';
 import { formatHectares, formatMillions } from '@/lib/format';
+import {
+  DIGITALNZ_GOLD_RECORDS,
+  fetchCatalogueTotal,
+  fetchRegisterTotal,
+  TRADEME_LEAF_CATEGORIES,
+} from '@/lib/headline-stats';
 import { fetchHorticultureSeries, summarizeHorticulture } from '@/lib/horticulture-data';
 import { fetchLivestockSeries, summarizeLivestock } from '@/lib/livestock-data';
 import { MICROSITES } from '@/lib/microsites';
@@ -21,13 +27,16 @@ function getMicrosite(slug: string): MicrositeConfig {
 }
 
 export default async function HomePage(): Promise<React.ReactElement> {
-  const [sheep, livestock, horticulture, forestry, quakes] = await Promise.all([
-    fetchSheepSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
-    fetchLivestockSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
-    fetchHorticultureSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
-    fetchForestrySeries(env.STATS_NZ_SUBSCRIPTION_KEY),
-    fetchRecentQuakes(),
-  ]);
+  const [sheep, livestock, horticulture, forestry, quakes, registerTotal, catalogueTotal] =
+    await Promise.all([
+      fetchSheepSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
+      fetchLivestockSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
+      fetchHorticultureSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
+      fetchForestrySeries(env.STATS_NZ_SUBSCRIPTION_KEY),
+      fetchRecentQuakes(),
+      fetchRegisterTotal(),
+      fetchCatalogueTotal(),
+    ]);
 
   const livestockStats = summarizeLivestock(livestock);
   const horticultureStats = summarizeHorticulture(horticulture);
@@ -133,7 +142,7 @@ export default async function HomePage(): Promise<React.ReactElement> {
             title={speciesConfig.title}
             description={speciesConfig.description}
             statLabel="Names in the register"
-            statValue="170,151"
+            statValue={registerTotal.toLocaleString('en-NZ')}
             accent={speciesConfig.accent}
           />
           <MicrositeCard
@@ -142,7 +151,7 @@ export default async function HomePage(): Promise<React.ReactElement> {
             title={openDataConfig.title}
             description={openDataConfig.description}
             statLabel="Datasets in the catalogue"
-            statValue="31,915"
+            statValue={catalogueTotal.toLocaleString('en-NZ')}
             accent={openDataConfig.accent}
           />
           <MicrositeCard
@@ -151,7 +160,7 @@ export default async function HomePage(): Promise<React.ReactElement> {
             title={digitisedConfig.title}
             description={digitisedConfig.description}
             statLabel="Records matching 'gold'"
-            statValue="1,977,021"
+            statValue={DIGITALNZ_GOLD_RECORDS}
             accent={digitisedConfig.accent}
           />
           <MicrositeCard
@@ -160,7 +169,7 @@ export default async function HomePage(): Promise<React.ReactElement> {
             title={garageSaleConfig.title}
             description={garageSaleConfig.description}
             statLabel="Leaf categories"
-            statValue="5,589"
+            statValue={TRADEME_LEAF_CATEGORIES}
             accent={garageSaleConfig.accent}
           />
         </div>
