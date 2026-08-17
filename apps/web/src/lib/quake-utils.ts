@@ -19,10 +19,15 @@ const BASE_MAGNITUDE = 2;
 
 /** Short, human-readable date for a quake's ISO time, e.g. "17 Aug".
  * @param iso - ISO 8601 timestamp of the quake.
- * @returns a short locale-formatted date.
+ * @returns a short locale-formatted date, or the raw string when the
+ * timestamp is not a valid date.
  */
 export function formatQuakeDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-NZ', { day: 'numeric', month: 'short' });
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) {
+    return iso;
+  }
+  return date.toLocaleDateString('en-NZ', { day: 'numeric', month: 'short' });
 }
 
 /** Maps a felt intensity (MMI) value to a colour band. */
