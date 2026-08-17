@@ -3,12 +3,14 @@ import { expect, test } from '@playwright/test';
 
 test.describe('home', () => {
   test('@critical renders the landing page', async ({ page }) => {
-    await page.goto('/');
+    // Relative URL (no leading slash) so it resolves against the baseURL path
+    // (the GitHub Pages deploy serves the site under /<repo>/).
+    await page.goto('./');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   });
 
   test('@critical no a11y violations on the landing page', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('./');
     const results = await new AxeBuilder({ page }).analyze();
     expect(results.violations).toEqual([]);
   });

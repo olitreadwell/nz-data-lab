@@ -1,6 +1,10 @@
 import { defineConfig } from '@playwright/test';
 
 const CI = !!process.env.CI;
+// Normalized to end with "/" so relative page.goto() URLs resolve against the
+// baseURL path — required for the GitHub Pages deploy, which serves the site
+// under /<repo>/ rather than at the origin root.
+const BASE_URL = (process.env.BASE_URL ?? 'http://localhost:3000').replace(/\/?$/, '/');
 
 export default defineConfig({
   testDir: './e2e',
@@ -12,7 +16,7 @@ export default defineConfig({
   snapshotDir: './e2e/__snapshots__',
   timeout: 60_000,
   use: {
-    baseURL: process.env.BASE_URL ?? 'http://localhost:3000',
+    baseURL: BASE_URL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
