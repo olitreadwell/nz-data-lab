@@ -7,7 +7,7 @@ test.describe('home', () => {
     // (the GitHub Pages deploy serves the site under /<repo>/).
     await page.goto('./');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    await expect(page.getByRole('link', { name: /read the story/i })).toHaveCount(4);
+    await expect(page.getByRole('link', { name: /read the story/i })).toHaveCount(7);
   });
 
   test('@critical opens a microsite story from its card', async ({ page }) => {

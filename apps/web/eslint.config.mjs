@@ -17,6 +17,17 @@ export default [
     },
   },
   {
+    // Standalone config files aren't part of the TS project, so type-aware
+    // unsafe rules can't resolve their imports. They're config, not app code.
+    files: ['eslint.config.mjs', 'postcss.config.mjs', 'playwright.config.ts'],
+    rules: {
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+    },
+  },
+  {
     // Next-generated types file.
     files: ['next-env.d.ts'],
     rules: {
@@ -24,8 +35,8 @@ export default [
     },
   },
   {
-    // e2e specs aren't part of the TS project (playwright runs them).
-    ignores: ['e2e/**', 'screenshots/**'],
+    // e2e specs and build output aren't part of the TS project.
+    ignores: ['e2e/**', 'screenshots/**', 'out/**', '.next/**'],
   },
   {
     files: ['src/**/*.{ts,tsx}'],
