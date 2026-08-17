@@ -10,7 +10,7 @@ interface QuakeMapProps {
   quakes: GeoNetQuake[];
 }
 
-const DEFAULT_MIN_MAGNITUDE = 3;
+const DEFAULT_MIN_MAGNITUDE = 2;
 const DEFAULT_MAX_DEPTH_KM = 100;
 const MIN_MAGNITUDE_LIMIT = 2;
 const MAX_MAGNITUDE_LIMIT = 6;
