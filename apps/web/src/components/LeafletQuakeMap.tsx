@@ -6,7 +6,7 @@ import 'leaflet/dist/leaflet.css';
 import { useEffect, useRef } from 'react';
 import { CircleMarker, MapContainer, TileLayer, Tooltip } from 'react-leaflet';
 
-import { BAND_COLORS, bandOf, radiusFor } from '@/lib/quake-utils';
+import { BAND_COLORS, bandOf, formatQuakeDate, radiusFor } from '@/lib/quake-utils';
 
 interface LeafletQuakeMapProps {
   quakes: GeoNetQuake[];
@@ -19,16 +19,21 @@ const DEFAULT_ZOOM = 5;
 const MIN_ZOOM = 4;
 const MAX_ZOOM = 9;
 
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-NZ', { day: 'numeric', month: 'short' });
-}
-
 /** The Leaflet map itself, split out so it only loads in the browser. */
 export function LeafletQuakeMap({ quakes, label }: LeafletQuakeMapProps): React.ReactElement {
   const mapRef = useRef<LeafletMap | null>(null);
 
   useEffect(() => {
-    mapRef.current?.getContainer()?.setAttribute('aria-label', label);
+    const container = mapRef.current?.getContainer();
+    if (container === undefined) {
+      return;
+    }
+    container.setAttribute('aria-label', label);
+    // Make the map a focusable surface with its own keyboard interaction
+    // scope; Leaflet's built-in keyboard handler pans with arrow keys and
+    // zooms with +/- once the container is focused.
+    container.setAttribute('role', 'application');
+    container.tabIndex = 0;
   }, [label]);
 
   return (
@@ -60,7 +65,7 @@ export function LeafletQuakeMap({ quakes, label }: LeafletQuakeMapProps): React.
           >
             <Tooltip>
               M {quake.magnitude.toFixed(1)} at {quake.depthKm.toFixed(0)} km, {quake.locality},{' '}
-              {formatDate(quake.time)}
+              {formatQuakeDate(quake.time)}
             </Tooltip>
           </CircleMarker>
         ))}
