@@ -221,4 +221,36 @@ export const MICROSITES: MicrositeConfig[] = [
       },
     ],
   },
+  {
+    slug: 'shake-index',
+    label: 'Shake index',
+    eyebrow: '🌏 the shake index',
+    title: 'New Zealand shakes 20,000 times a year.',
+    description:
+      'GeoNet locates around 20,000 earthquakes in and around New Zealand each year. Most are too small to feel. This page shows the recent felt quakes from the GeoNet API, fetched at deploy time.',
+    paragraphs: [
+      'Around 250 quakes a year are big enough to be felt. The biggest known quake in New Zealand was the 1855 Wairarapa earthquake, magnitude 8.2, which shifted around 5,000 square kilometres of land.',
+      'Each dot below is one recent quake. Drag the sliders to set the smallest magnitude and the deepest quake you want to see. Colour shows how strongly the quake was felt.',
+    ],
+    accent: 'rose',
+    dataNote:
+      'Data: GeoNet API (api.geonet.org.nz/quake?MMI=3), recent felt quakes, fetched at deploy time via @nzlab/nz-sources, falling back to a committed snapshot when the API blocks the build runner. The site redeploys daily.',
+    references: [
+      {
+        label: 'Earthquake FAQ (GeoNet)',
+        url: 'https://www.geonet.org.nz/earthquake/faq',
+        kind: 'data',
+      },
+      {
+        label: 'Quakes (GeoNet)',
+        url: 'https://www.geonet.org.nz/earthquake',
+        kind: 'data',
+      },
+      {
+        label: 'Earthquakes (Te Ara)',
+        url: 'https://teara.govt.nz/en/earthquakes',
+        kind: 'history',
+      },
+    ],
+  },
 ];

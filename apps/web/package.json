@@ -21,6 +21,7 @@
     "clean:all": "rm -rf .next .turbo tsconfig.tsbuildinfo node_modules"
   },
   "dependencies": {
+    "@nzlab/nz-sources": "*",
     "@nzlab/stats-nz": "^0.0.0",
     "@nzlab/ui": "*",
     "@react-three/drei": "^10.7.8",

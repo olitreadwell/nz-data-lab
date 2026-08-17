@@ -1,3 +1,4 @@
+import { summarizeGeoNetQuakes } from '@nzlab/nz-sources';
 import { Container } from '@nzlab/ui';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -9,6 +10,7 @@ import { HorticultureChart } from '@/components/HorticultureChart';
 import { KiwifruitOvertakeChart } from '@/components/KiwifruitOvertakeChart';
 import { LivestockChart } from '@/components/LivestockChart';
 import { MicrositeStory } from '@/components/MicrositeStory';
+import { QuakeScatterChart } from '@/components/QuakeScatterChart';
 import { SheepChart } from '@/components/SheepChart';
 import { StatCard } from '@/components/StatCard';
 import { env } from '@/env';
@@ -17,6 +19,7 @@ import { formatHectares, formatMillions } from '@/lib/format';
 import { fetchHorticultureSeries, summarizeHorticulture } from '@/lib/horticulture-data';
 import { fetchLivestockSeries, summarizeLivestock } from '@/lib/livestock-data';
 import { MICROSITES } from '@/lib/microsites';
+import { fetchRecentQuakes } from '@/lib/quake-data';
 import { fetchSheepSeries } from '@/lib/sheep-data';
 import { formatMillions as formatMillionsSheep } from '@/lib/sheep-format';
 
@@ -37,11 +40,12 @@ export default async function MicrositePage({
     notFound();
   }
 
-  const [sheep, livestock, horticulture, forestry] = await Promise.all([
+  const [sheep, livestock, horticulture, forestry, quakes] = await Promise.all([
     fetchSheepSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
     fetchLivestockSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
     fetchHorticultureSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
     fetchForestrySeries(env.STATS_NZ_SUBSCRIPTION_KEY),
+    fetchRecentQuakes(),
   ]);
 
   const livestockStats = summarizeLivestock(livestock);
@@ -65,6 +69,7 @@ export default async function MicrositePage({
     kiwifruit,
     apples,
     newPlanting,
+    quakes,
   });
 
   return (
@@ -106,6 +111,7 @@ interface StoryData {
   kiwifruit: { latest?: number; first?: number } | undefined;
   apples: { latest?: number } | undefined;
   newPlanting: { latest?: number; first?: number; changeFromFirstPercent?: number } | undefined;
+  quakes: Awaited<ReturnType<typeof fetchRecentQuakes>>;
 }
 
 function renderStoryContent(
@@ -287,6 +293,34 @@ function renderStoryContent(
           </dl>
         ),
       };
+    case 'shake-index': {
+      const summary = summarizeGeoNetQuakes(data.quakes);
+      const strongest = summary.strongest;
+      return {
+        chart: <QuakeScatterChart quakes={data.quakes} />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Recent felt quakes"
+              value={String(summary.total)}
+              accent="rose"
+              testId="quake-total"
+              dataValue={summary.total}
+            />
+            <StatCard
+              label={
+                strongest === undefined ? 'Strongest recent' : `Strongest: ${strongest.locality}`
+              }
+              value={strongest === undefined ? 'n/a' : `M ${strongest.magnitude.toFixed(1)}`}
+              accent="rose"
+              testId="quake-strongest"
+              dataValue={strongest?.magnitude}
+            />
+            <StatCard label="Felt quakes per year" value="~250" accent="rose" />
+          </dl>
+        ),
+      };
+    }
     default:
       return { chart: null, stats: null };
   }
