@@ -1,6 +1,6 @@
 'use client';
 
-import { Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
+import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { TooltipContentProps } from 'recharts';
 
 import type { SheepSeriesPoint } from '@/lib/sheep-data';
@@ -10,7 +10,6 @@ interface SheepChartProps {
   points: SheepSeriesPoint[];
 }
 
-const CHART_HEIGHT = 240;
 const ACTIVE_DOT_FONT_SIZE = 18;
 
 /** Active point marker: a sheep emoji instead of a plain dot. */
@@ -73,42 +72,43 @@ export function SheepChart({ points }: SheepChartProps): React.ReactElement {
   }
 
   return (
-    <LineChart
-      width="100%"
-      height={CHART_HEIGHT}
-      responsive
-      role="img"
-      title={label}
-      data={points}
-      margin={{ top: 16, right: 8, bottom: 0, left: 0 }}
-    >
-      <XAxis
-        dataKey="year"
-        tickLine={false}
-        axisLine={false}
-        tick={{ fill: 'var(--color-muted)', fontSize: 11 }}
-      />
-      <YAxis
-        width={36}
-        tickLine={false}
-        axisLine={false}
-        domain={['dataMin', 'dataMax']}
-        padding={{ top: 16, bottom: 8 }}
-        tick={{ fill: 'var(--color-muted)', fontSize: 11 }}
-        tickFormatter={(value: number) => `${Math.round(value / 1000000)}m`}
-      />
-      <Tooltip
-        content={SheepTooltip}
-        cursor={{ stroke: 'var(--color-border)', strokeDasharray: '4 4' }}
-      />
-      <Line
-        type="monotone"
-        dataKey="sheep"
-        stroke="var(--color-fg)"
-        strokeWidth={2}
-        dot={false}
-        activeDot={<SheepActiveDot />}
-      />
-    </LineChart>
+    <div className="h-[200px] sm:h-[240px] lg:h-[280px]">
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart
+          role="img"
+          aria-label={label}
+          data={points}
+          margin={{ top: 16, right: 8, bottom: 0, left: 0 }}
+        >
+          <XAxis
+            dataKey="year"
+            tickLine={false}
+            axisLine={false}
+            tick={{ fill: 'var(--color-muted)', fontSize: 11 }}
+          />
+          <YAxis
+            width={36}
+            tickLine={false}
+            axisLine={false}
+            domain={['dataMin', 'dataMax']}
+            padding={{ top: 16, bottom: 8 }}
+            tick={{ fill: 'var(--color-muted)', fontSize: 11 }}
+            tickFormatter={(value: number) => `${Math.round(value / 1000000)}m`}
+          />
+          <Tooltip
+            content={SheepTooltip}
+            cursor={{ stroke: 'var(--color-border)', strokeDasharray: '4 4' }}
+          />
+          <Line
+            type="monotone"
+            dataKey="sheep"
+            stroke="var(--color-fg)"
+            strokeWidth={2}
+            dot={false}
+            activeDot={<SheepActiveDot />}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
   );
 }

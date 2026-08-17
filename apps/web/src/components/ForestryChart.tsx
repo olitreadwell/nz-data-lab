@@ -1,6 +1,14 @@
 'use client';
 
-import { Area, AreaChart, ReferenceLine, Tooltip, XAxis, YAxis } from 'recharts';
+import {
+  Area,
+  AreaChart,
+  ReferenceLine,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 
 import type { ForestrySeriesPoint } from '@/lib/forestry-data';
 import { formatHectares } from '@/lib/format';
@@ -11,8 +19,6 @@ import type { ChartSeriesDef } from './chart-utils';
 interface ForestryChartProps {
   points: ForestrySeriesPoint[];
 }
-
-const CHART_HEIGHT = 260;
 
 const SERIES: ChartSeriesDef[] = [
   { key: 'newPlanting', label: 'New planting', emoji: '🌱', color: '#10b981' },
@@ -55,76 +61,77 @@ export function ForestryChart({ points }: ForestryChartProps): React.ReactElemen
           </li>
         ))}
       </ul>
-      <AreaChart
-        width="100%"
-        height={CHART_HEIGHT}
-        responsive
-        role="img"
-        title={label}
-        data={points}
-        margin={{ top: 16, right: 8, bottom: 0, left: 0 }}
-      >
-        <defs>
-          <linearGradient id="newPlantingFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#10b981" stopOpacity={0.35} />
-            <stop offset="100%" stopColor="#10b981" stopOpacity={0.02} />
-          </linearGradient>
-          <linearGradient id="harvestedAreaFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#d97706" stopOpacity={0.3} />
-            <stop offset="100%" stopColor="#d97706" stopOpacity={0.02} />
-          </linearGradient>
-        </defs>
-        <XAxis
-          dataKey="year"
-          tickLine={false}
-          axisLine={false}
-          tick={{ fill: 'var(--color-muted)', fontSize: 11 }}
-        />
-        <YAxis
-          width={36}
-          tickLine={false}
-          axisLine={false}
-          domain={['dataMin', 'dataMax']}
-          padding={{ top: 16, bottom: 8 }}
-          tick={{ fill: 'var(--color-muted)', fontSize: 11 }}
-          tickFormatter={formatAxisTick}
-        />
-        <Tooltip
-          content={(props) => (
-            <SeriesTooltip
-              {...props}
-              series={SERIES}
-              formatValue={formatHectares}
-              testId="forestry-tooltip"
+      <div className="h-[220px] sm:h-[260px] lg:h-[300px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart
+            role="img"
+            aria-label={label}
+            data={points}
+            margin={{ top: 16, right: 8, bottom: 0, left: 0 }}
+          >
+            <defs>
+              <linearGradient id="newPlantingFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#10b981" stopOpacity={0.35} />
+                <stop offset="100%" stopColor="#10b981" stopOpacity={0.02} />
+              </linearGradient>
+              <linearGradient id="harvestedAreaFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#d97706" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="#d97706" stopOpacity={0.02} />
+              </linearGradient>
+            </defs>
+            <XAxis
+              dataKey="year"
+              tickLine={false}
+              axisLine={false}
+              tick={{ fill: 'var(--color-muted)', fontSize: 11 }}
             />
-          )}
-          cursor={{ stroke: 'var(--color-border)', strokeDasharray: '4 4' }}
-        />
-        <ReferenceLine
-          y={0}
-          stroke="var(--color-border)"
-          strokeDasharray="4 4"
-          ifOverflow="extendDomain"
-        />
-        <Area
-          type="monotone"
-          dataKey="newPlanting"
-          stroke="#10b981"
-          strokeWidth={2.5}
-          fill="url(#newPlantingFill)"
-          dot={false}
-          activeDot={<EmojiActiveDot emoji="🌱" />}
-        />
-        <Area
-          type="monotone"
-          dataKey="harvestedArea"
-          stroke="#d97706"
-          strokeWidth={2.5}
-          fill="url(#harvestedAreaFill)"
-          dot={false}
-          activeDot={<EmojiActiveDot emoji="🌲" />}
-        />
-      </AreaChart>
+            <YAxis
+              width={36}
+              tickLine={false}
+              axisLine={false}
+              domain={['dataMin', 'dataMax']}
+              padding={{ top: 16, bottom: 8 }}
+              tick={{ fill: 'var(--color-muted)', fontSize: 11 }}
+              tickFormatter={formatAxisTick}
+            />
+            <Tooltip
+              content={(props) => (
+                <SeriesTooltip
+                  {...props}
+                  series={SERIES}
+                  formatValue={formatHectares}
+                  testId="forestry-tooltip"
+                />
+              )}
+              cursor={{ stroke: 'var(--color-border)', strokeDasharray: '4 4' }}
+            />
+            <ReferenceLine
+              y={0}
+              stroke="var(--color-border)"
+              strokeDasharray="4 4"
+              ifOverflow="extendDomain"
+            />
+            <Area
+              type="monotone"
+              dataKey="newPlanting"
+              stroke="#10b981"
+              strokeWidth={2.5}
+              fill="url(#newPlantingFill)"
+              dot={false}
+              activeDot={<EmojiActiveDot emoji="🌱" />}
+            />
+            <Area
+              type="monotone"
+              dataKey="harvestedArea"
+              stroke="#d97706"
+              strokeWidth={2.5}
+              fill="url(#harvestedAreaFill)"
+              dot={false}
+              activeDot={<EmojiActiveDot emoji="🌲" />}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }

@@ -38,6 +38,19 @@ describe('LivestockChart', () => {
     expect(tooltip).toHaveTextContent('Deer');
   });
 
+  it('hides sheep from the chart and tooltip when toggled off', async () => {
+    render(<LivestockChart points={POINTS} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Hide sheep' }));
+    expect(screen.getByRole('button', { name: 'Show sheep' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    fireEvent.mouseMove(screen.getByRole('img'), { clientX: 100, clientY: 100 });
+    const tooltip = await screen.findByTestId('livestock-tooltip');
+    expect(tooltip).toHaveTextContent('Dairy cattle');
+    expect(tooltip).not.toHaveTextContent('Sheep');
+  });
+
   it('renders a fallback label for empty data', () => {
     render(<LivestockChart points={[]} />);
     expect(screen.getByRole('img')).toHaveAccessibleName(/livestock numbers over time/i);
