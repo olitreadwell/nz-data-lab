@@ -1,0 +1,47 @@
+#!/bin/bash
+# Runs one nz-microsite-loop iteration every 20 minutes via launchd.
+# Spawns a non-interactive codex session that follows the loop skill,
+# then logs the outcome. Guarded by a lockfile so iterations never overlap.
+set -euo pipefail
+
+REPO="$HOME/code/nz-data-lab"
+PROMPT="$REPO/scripts/loop-prompt.txt"
+LOG="$HOME/Library/Logs/nz-microsite-loop.log"
+LOCK="$HOME/Library/Logs/nz-microsite-loop.lock"
+CODEX_BIN="$HOME/.local/share/mise/installs/node/lts/bin/codex"
+
+mkdir -p "$(dirname "$LOG")"
+
+# Never overlap: if a previous iteration is still running, skip this tick.
+if ! mkdir "$LOCK" 2>/dev/null; then
+  echo "$(date '+%F %T') skipped: previous iteration still running" >> "$LOG"
+  exit 0
+fi
+trap 'rmdir "$LOCK" 2>/dev/null || true' EXIT
+
+echo "$(date '+%F %T') ===== loop iteration start =====" >> "$LOG"
+
+# The loop merges to main and pushes; only run from a clean main.
+cd "$REPO"
+if ! git diff --quiet; then
+  echo "$(date '+%F %T') skipped: main has uncommitted changes" >> "$LOG"
+  exit 0
+fi
+if [ "$(git branch --show-current)" != "main" ]; then
+  echo "$(date '+%F %T') skipped: not on main" >> "$LOG"
+  exit 0
+fi
+git fetch origin main --quiet || true
+if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+  echo "$(date '+%F %T') skipped: main is behind origin/main (pull first)" >> "$LOG"
+  exit 0
+fi
+
+# Spawn the agent. Headless: approval never, full access (mirrors config.toml).
+if "$CODEX_BIN" exec --cd "$REPO" -c 'approval_policy="never"' -c 'sandbox_mode="danger-full-access"' "$(cat "$PROMPT")" >> "$LOG" 2>&1; then
+  echo "$(date '+%F %T') loop iteration finished ok" >> "$LOG"
+else
+  status=$?
+  echo "$(date '+%F %T') loop iteration FAILED (exit $status)" >> "$LOG"
+  exit "$status"
+fi
