@@ -53,6 +53,34 @@ export function buildWideSeries<K extends string>(
   return { points, first, latest };
 }
 
+export interface HistoricalAnchor<K extends string> {
+  year: number;
+  values: Record<K, number>;
+  source: { label: string; url: string };
+}
+
+/**
+ * Prepends a single earlier data point cited from a different Stats NZ
+ * release, when the series doesn't already reach back that far. Used for
+ * long-view context (e.g. a 1990 figure) ahead of a table that only starts
+ * in 1994 — the caller's chart is expected to render it as a dashed lead-in
+ * rather than part of the regular annual series.
+ */
+export function withHistoricalAnchor<K extends string>(
+  series: WideSeries<K>,
+  anchor: HistoricalAnchor<K>,
+): WideSeries<K> {
+  if (series.first.year <= anchor.year) {
+    return series;
+  }
+  const anchorPoint = { year: anchor.year, ...anchor.values } as WideSeriesPoint<K>;
+  return {
+    points: [anchorPoint, ...series.points],
+    first: anchorPoint,
+    latest: series.latest,
+  };
+}
+
 export interface SeriesStat<K extends string> {
   key: K;
   label: string;

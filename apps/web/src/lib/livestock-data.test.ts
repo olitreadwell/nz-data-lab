@@ -3,7 +3,12 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-import { buildLivestockSeries, summarizeLivestock } from './livestock-data';
+import {
+  buildLivestockSeries,
+  LIVESTOCK_HISTORICAL_ANCHOR,
+  summarizeLivestock,
+} from './livestock-data';
+import { withHistoricalAnchor } from './stats-series';
 
 const FIXTURE_PATH = path.join(
   process.cwd(),
@@ -38,5 +43,22 @@ describe('buildLivestockSeries', () => {
     const sheep = stats.find((stat) => stat.key === 'sheep');
     expect(sheep?.peakYear).toBe(1994);
     expect(sheep?.changeFromPeakPercent).toBeLessThan(-50);
+  });
+});
+
+describe('withHistoricalAnchor applied to the livestock series', () => {
+  it('prepends the 1990 point for all four species and shifts the sheep peak', () => {
+    const series = withHistoricalAnchor(loadFixture(), LIVESTOCK_HISTORICAL_ANCHOR);
+    expect(series.first).toEqual({
+      year: 1990,
+      sheep: 57_900_000,
+      dairyCattle: 3_400_000,
+      beefCattle: 4_600_000,
+      deer: 976_000,
+    });
+    const stats = summarizeLivestock(series);
+    const sheep = stats.find((stat) => stat.key === 'sheep');
+    expect(sheep?.peakYear).toBe(1990);
+    expect(sheep?.peak).toBe(57_900_000);
   });
 });

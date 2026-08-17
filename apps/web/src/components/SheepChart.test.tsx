@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { describe, expect, it } from 'vitest';
 
@@ -38,5 +38,21 @@ describe('SheepChart', () => {
   it('renders a fallback label for empty data', () => {
     render(<SheepChart points={[]} />);
     expect(screen.getByRole('img')).toHaveAccessibleName(/sheep numbers over time/i);
+  });
+
+  it('still shows the tooltip value for the spliced-in historical anchor point', async () => {
+    const withAnchor = [{ year: 1990, sheep: 57900000 }, ...POINTS];
+    render(<SheepChart points={withAnchor} historicalAnchorYear={1990} />);
+    fireEvent.mouseMove(screen.getByRole('img'), { clientX: 100, clientY: 100 });
+    const tooltip = await screen.findByTestId('sheep-tooltip');
+    expect(tooltip).toHaveTextContent('1990');
+    expect(tooltip).toHaveTextContent('57.9 million sheep');
+  });
+
+  it('has no accessibility violations with a historical anchor point', async () => {
+    const withAnchor = [{ year: 1990, sheep: 57900000 }, ...POINTS];
+    const { container } = render(<SheepChart points={withAnchor} historicalAnchorYear={1990} />);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
   });
 });

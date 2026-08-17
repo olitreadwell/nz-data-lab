@@ -11,6 +11,20 @@ export const SHEEP_DATAFLOW_ID = 'AGR_AGR_003';
 export const SHEEP_LIVESTOCK_CODE = '6731';
 export const NATIONAL_AREA_CODE = '20';
 
+// AGR_AGR_003 (Livestock Numbers by Regional Council) only goes back to 1994
+// in the Aotearoa Data Explorer. This single earlier point is a separate
+// citation from Stats NZ's own "Livestock numbers: Data to 2023" indicator
+// release, spliced in as a lower-resolution lead-in rather than treated as
+// part of the same annual table — see SheepChart's dashed pre-1994 segment.
+export const SHEEP_HISTORICAL_ANCHOR = {
+  year: 1990,
+  sheep: 57_900_000,
+  source: {
+    label: 'Stats NZ, Livestock numbers: Data to 2023',
+    url: 'https://www.stats.govt.nz/indicators/livestock-numbers-data-to-2023/',
+  },
+} as const;
+
 // Real snapshot of the same table, committed so the static build still works
 // when the Stats NZ gateway blocks the build runner (GitHub Actions IPs get
 // 401 on the keyless path).
@@ -80,6 +94,25 @@ export function buildSheepSeries(rows: StatsNzObservation[]): SheepSeries {
   };
 }
 
+/** Prepends the 1990 historical anchor when the series doesn't already reach back that far. */
+export function withHistoricalAnchor(series: SheepSeries): SheepSeries {
+  const anchor = SHEEP_HISTORICAL_ANCHOR;
+  if (series.first.year <= anchor.year) {
+    return series;
+  }
+  const anchorPoint: SheepSeriesPoint = { year: anchor.year, sheep: anchor.sheep };
+  const points = [anchorPoint, ...series.points];
+  const peak = anchorPoint.sheep > series.peak.sheep ? anchorPoint : series.peak;
+  return {
+    points,
+    first: anchorPoint,
+    peak,
+    latest: series.latest,
+    changeFromFirstPercent: percentChange(anchorPoint.sheep, series.latest.sheep),
+    changeFromPeakPercent: percentChange(peak.sheep, series.latest.sheep),
+  };
+}
+
 export async function fetchSheepSeries(subscriptionKey?: string): Promise<SheepSeries> {
   const client = createStatsNzClient({
     ...(subscriptionKey === undefined ? {} : { subscriptionKey }),
@@ -89,11 +122,11 @@ export async function fetchSheepSeries(subscriptionKey?: string): Promise<SheepS
   });
   try {
     const rows = await client.getData({ dataflowId: SHEEP_DATAFLOW_ID, format: 'csv' });
-    return buildSheepSeries(rows);
+    return withHistoricalAnchor(buildSheepSeries(rows));
   } catch {
     const rows = parseStatsNzCsv(readFileSync(SHEEP_FIXTURE_PATH, 'utf8'), {
       dataflowId: SHEEP_DATAFLOW_ID,
     });
-    return buildSheepSeries(rows);
+    return withHistoricalAnchor(buildSheepSeries(rows));
   }
 }

@@ -5,11 +5,17 @@ import { Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { formatMillions } from '@/lib/format';
 import type { LivestockSeriesPoint } from '@/lib/livestock-data';
 
-import { EmojiActiveDot, SeriesTooltip } from './chart-utils';
+import { EmojiActiveDot, SeriesTooltip, withLeadMainSplit } from './chart-utils';
 import type { ChartSeriesDef } from './chart-utils';
 
 interface LivestockChartProps {
   points: LivestockSeriesPoint[];
+  /**
+   * Year of a spliced-in earlier data point (e.g. 1990), if `points[0]` is
+   * one. When set, the segment from that point to the next one is rendered
+   * dashed to signal it's a single historical citation, not annual data.
+   */
+  historicalAnchorYear?: number;
 }
 
 const CHART_HEIGHT = 260;
@@ -20,12 +26,16 @@ const SERIES: ChartSeriesDef[] = [
   { key: 'beefCattle', label: 'Beef cattle', emoji: '🐂', color: '#f43f5e' },
   { key: 'deer', label: 'Deer', emoji: '🦌', color: '#8b5cf6' },
 ];
+const SERIES_KEYS = SERIES.map((definition) => definition.key);
 
 function formatAxisTick(value: number): string {
   return `${Math.round(value / 1000000)}m`;
 }
 
-export function LivestockChart({ points }: LivestockChartProps): React.ReactElement {
+export function LivestockChart({
+  points,
+  historicalAnchorYear,
+}: LivestockChartProps): React.ReactElement {
   const firstYear = points[0]?.year;
   const lastYear = points[points.length - 1]?.year;
   const label =
@@ -40,6 +50,12 @@ export function LivestockChart({ points }: LivestockChartProps): React.ReactElem
       </svg>
     );
   }
+
+  const boundaryYear =
+    historicalAnchorYear !== undefined && firstYear === historicalAnchorYear
+      ? points[1]?.year
+      : undefined;
+  const chartData = withLeadMainSplit(points, SERIES_KEYS, boundaryYear);
 
   return (
     <div>
@@ -63,7 +79,7 @@ export function LivestockChart({ points }: LivestockChartProps): React.ReactElem
         responsive
         role="img"
         title={label}
-        data={points}
+        data={chartData}
         margin={{ top: 16, right: 8, bottom: 0, left: 0 }}
       >
         <XAxis
@@ -92,14 +108,30 @@ export function LivestockChart({ points }: LivestockChartProps): React.ReactElem
           )}
           cursor={{ stroke: 'var(--color-border)', strokeDasharray: '4 4' }}
         />
+        {boundaryYear !== undefined &&
+          SERIES.map((definition) => (
+            <Line
+              key={`${definition.key}-lead`}
+              type="monotone"
+              dataKey={`${definition.key}Lead`}
+              stroke={definition.color}
+              strokeWidth={2.5}
+              strokeDasharray="4 4"
+              strokeOpacity={0.6}
+              dot={false}
+              connectNulls
+              isAnimationActive={false}
+            />
+          ))}
         {SERIES.map((definition) => (
           <Line
             key={definition.key}
             type="monotone"
-            dataKey={definition.key}
+            dataKey={boundaryYear !== undefined ? `${definition.key}Main` : definition.key}
             stroke={definition.color}
             strokeWidth={2.5}
             dot={false}
+            connectNulls
             activeDot={<EmojiActiveDot emoji={definition.emoji} />}
           />
         ))}

@@ -4,7 +4,13 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-import { buildSheepSeries, NATIONAL_AREA_CODE, SHEEP_LIVESTOCK_CODE } from './sheep-data';
+import {
+  buildSheepSeries,
+  NATIONAL_AREA_CODE,
+  SHEEP_HISTORICAL_ANCHOR,
+  SHEEP_LIVESTOCK_CODE,
+  withHistoricalAnchor,
+} from './sheep-data';
 
 // Real rows pulled from the ADE API (table AGR_AGR_003, format=csv) on
 // 2025-08-17, kept small here so the transform test reads like a table.
@@ -52,6 +58,27 @@ describe('buildSheepSeries', () => {
   it('exports the codes that identify the sheep national series', () => {
     expect(SHEEP_LIVESTOCK_CODE).toBe('6731');
     expect(NATIONAL_AREA_CODE).toBe('20');
+  });
+});
+
+describe('withHistoricalAnchor', () => {
+  it('prepends the 1990 anchor and recomputes peak/first/change', () => {
+    const series = withHistoricalAnchor(buildSheepSeries(REAL_ROWS));
+    expect(series.points[0]).toEqual({ year: 1990, sheep: SHEEP_HISTORICAL_ANCHOR.sheep });
+    expect(series.first).toEqual({ year: 1990, sheep: SHEEP_HISTORICAL_ANCHOR.sheep });
+    expect(series.peak).toEqual({ year: 1990, sheep: SHEEP_HISTORICAL_ANCHOR.sheep });
+    expect(series.latest).toEqual({ year: 2025, sheep: 23252463 });
+    expect(series.changeFromFirstPercent).toBeCloseTo(-59.8, 0);
+  });
+
+  it('leaves the series untouched when it already reaches back to or past the anchor year', () => {
+    const rows = [
+      { dimensions: { LIVESTOCK: '6731', AREA: '20', YEAR: '1985' }, value: 60000000 },
+      { dimensions: { LIVESTOCK: '6731', AREA: '20', YEAR: '2025' }, value: 23252463 },
+    ];
+    const series = withHistoricalAnchor(buildSheepSeries(rows));
+    expect(series.points).toHaveLength(2);
+    expect(series.first.year).toBe(1985);
   });
 });
 

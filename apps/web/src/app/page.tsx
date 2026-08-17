@@ -13,8 +13,12 @@ import { env } from '@/env';
 import { fetchForestrySeries, summarizeForestry } from '@/lib/forestry-data';
 import { formatHectares, formatMillions } from '@/lib/format';
 import { fetchHorticultureSeries, summarizeHorticulture } from '@/lib/horticulture-data';
-import { fetchLivestockSeries, summarizeLivestock } from '@/lib/livestock-data';
-import { fetchSheepSeries } from '@/lib/sheep-data';
+import {
+  fetchLivestockSeries,
+  LIVESTOCK_HISTORICAL_ANCHOR,
+  summarizeLivestock,
+} from '@/lib/livestock-data';
+import { fetchSheepSeries, SHEEP_HISTORICAL_ANCHOR } from '@/lib/sheep-data';
 import { formatMillions as formatMillionsSheep } from '@/lib/sheep-format';
 
 export default async function HomePage(): Promise<React.ReactElement> {
@@ -65,12 +69,12 @@ export default async function HomePage(): Promise<React.ReactElement> {
         id="sheep-index"
         eyebrow="🐑 the sheep index"
         title="New Zealand's national animal is in freefall."
-        description="The national sheep flock has nearly halved since 1994, dropping from 49.5 million to 23.3 million by 2025. The series starts in 1994, the year the flock peaked. This page shows the real series, pulled from the Stats NZ Aotearoa Data Explorer at deploy time."
+        description="The national sheep flock has nearly halved since 1994, dropping from 49.5 million to 23.3 million by 2025 — and it's fallen even further from where it really stood before this table begins. New Zealand's true high-water mark was 70.3 million sheep in 1982, propped up by a government price-floor scheme; when the Lange government abolished those subsidies overnight in 1984, lamb and wool returns fell by roughly half in a single season, and the flock has been shrinking ever since. The dashed lead-in on the chart is a single 1990 data point (57.9 million) cited from a separate Stats NZ release, spliced in ahead of the regular 1994–2025 series pulled from the Aotearoa Data Explorer at deploy time."
         accent="amber"
       >
         <ClickToReveal buttonLabel="Reveal the sheep index" hideLabel="Hide the sheep index">
           <div className="rounded-[var(--radius-lg)] border border-[var(--color-border)] p-4 sm:p-6">
-            <SheepChart points={sheep.points} />
+            <SheepChart points={sheep.points} historicalAnchorYear={SHEEP_HISTORICAL_ANCHOR.year} />
           </div>
 
           <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
@@ -99,7 +103,15 @@ export default async function HomePage(): Promise<React.ReactElement> {
             Data: Stats NZ Aotearoa Data Explorer, table AGR_AGR_003 (Livestock Numbers by Regional
             Council), national sheep total, fetched at deploy time via @nzlab/stats-nz, falling back
             to a committed snapshot when the API blocks the build runner; the site redeploys daily.
-            Hover or drag across the chart to read the flock at any year. Table link:{' '}
+            The dashed 1990 point is a separate citation from Stats NZ&apos;s{' '}
+            <a
+              className="underline"
+              href="https://www.stats.govt.nz/indicators/livestock-numbers-data-to-2023/"
+            >
+              Livestock numbers: Data to 2023
+            </a>{' '}
+            indicator, not part of AGR_AGR_003 — it&apos;s a lower-resolution lead-in, not annual
+            data. Hover or drag across the chart to read the flock at any year. Table link:{' '}
             <a className="underline" href="https://www.stats.govt.nz/tools/aotearoa-data-explorer/">
               aotearoa data explorer
             </a>
@@ -112,12 +124,15 @@ export default async function HomePage(): Promise<React.ReactElement> {
         id="dairy-takeover"
         eyebrow="🐄 the dairy takeover"
         title="The paddocks flipped from wool to milk."
-        description="While the sheep flock nearly halved, dairy cattle nearly doubled. The same paddocks that once grew wool now grow milk — and the beef herd and deer herd shrank too. Four livestock lines, one quiet revolution."
+        description="While the sheep flock nearly halved, dairy cattle nearly doubled. The same paddocks that once grew wool now grow milk — and the beef herd and deer herd shrank too. Four livestock lines, one quiet revolution, now traceable back to a spliced-in 1990 baseline (dashed on the chart) from a separate Stats NZ release. The shift got a big structural push in 2001, when the Dairy Industry Restructuring Act merged the country's regional dairy co-operatives into Fonterra, a single national exporter processing around 96% of NZ milk."
         accent="sky"
       >
         <ClickToReveal buttonLabel="Reveal the dairy takeover" hideLabel="Hide the dairy takeover">
           <div className="rounded-[var(--radius-lg)] border border-[var(--color-border)] p-4 sm:p-6">
-            <LivestockChart points={livestock.points} />
+            <LivestockChart
+              points={livestock.points}
+              historicalAnchorYear={LIVESTOCK_HISTORICAL_ANCHOR.year}
+            />
           </div>
 
           <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
@@ -134,7 +149,7 @@ export default async function HomePage(): Promise<React.ReactElement> {
               accent="sky"
             />
             <StatCard
-              label="Change since 1994"
+              label={`Change since ${livestock.first.year}`}
               value={`${Math.round(dairy?.changeFromFirstPercent ?? 0)}%`}
               accent="sky"
               testId="dairy-change"
@@ -144,8 +159,10 @@ export default async function HomePage(): Promise<React.ReactElement> {
 
           <p className="numeral-paragraph-sm max-w-3xl pb-[var(--spacing-2xl)] text-[var(--color-muted)]">
             Data: Stats NZ Aotearoa Data Explorer, table AGR_AGR_003 (Livestock Numbers by Regional
-            Council), national totals for sheep, dairy cattle, beef cattle, and deer. Hover or drag
-            across the chart to read any year.
+            Council), national totals for sheep, dairy cattle, beef cattle, and deer. The dashed
+            1990 point for all four species is a separate citation from Stats NZ&apos;s Livestock
+            numbers: Data to 2023 indicator, not part of AGR_AGR_003. Hover or drag across the chart
+            to read any year.
           </p>
         </ClickToReveal>
       </MicrositeSection>
@@ -154,7 +171,7 @@ export default async function HomePage(): Promise<React.ReactElement> {
         id="vineyard-boom"
         eyebrow="🍇 the vineyard boom"
         title="Wine grapes took over the orchard."
-        description="In 1994 wine grapes covered 7,160 hectares. By 2024 that was 37,627 — a five-fold boom that left apples, kiwifruit, and avocados in the dust. New Zealand didn't just start making wine; it started growing it everywhere."
+        description="In 1994 wine grapes covered 7,160 hectares. By 2024 that was 37,627 — a five-fold boom that left apples, kiwifruit, and avocados in the dust. New Zealand didn't just start making wine; it started growing it everywhere. The run-up to this chart has a strange footnote: in 1986, facing a glut of low-quality wine, the government paid growers $6,000 a hectare to uproot vines, and it took until 1993 — the year before this chart's data begins — for the national vineyard area to regrow back to its pre-uproot size. There's no requirement on what growers did with the cleared land, so some replanted with Sauvignon Blanc the next day, which is part of how Marlborough became the region it is today."
         accent="purple"
       >
         <ClickToReveal buttonLabel="Reveal the vineyard boom" hideLabel="Hide the vineyard boom">
@@ -187,7 +204,9 @@ export default async function HomePage(): Promise<React.ReactElement> {
           <p className="numeral-paragraph-sm max-w-3xl pb-[var(--spacing-2xl)] text-[var(--color-muted)]">
             Data: Stats NZ Aotearoa Data Explorer, table AGR_AGR_002 (Horticulture by Regional
             Council), national area in hectares for wine grapes, kiwifruit, apples, and avocados.
-            Hover or drag across the chart to read any year.
+            The 1986 vine-pull and 1993 recovery notes above are narrative context only — from Te
+            Ara&apos;s history of NZ wine, not from this table — so they aren&apos;t plotted on the
+            chart. Hover or drag across the chart to read any year.
           </p>
         </ClickToReveal>
       </MicrositeSection>
@@ -196,7 +215,7 @@ export default async function HomePage(): Promise<React.ReactElement> {
         id="planting-bust"
         eyebrow="🌲 the planting bust"
         title="We stopped planting trees, but kept chopping them down."
-        description="New planting collapsed from 33,674 hectares in 2002 to 8,293 by 2018 — down 75% — while the harvested area kept climbing to 62,103 hectares. The forest is being eaten faster than it is being grown."
+        description="New planting collapsed from 33,674 hectares in 2002 to 8,293 by 2018 — down 75% — while the harvested area kept climbing to 62,103 hectares. The forest is being eaten faster than it is being grown. It's not the country's first planting boom-and-bust either — an earlier one ran from 1925 to 1935 — but this cycle has a clear trigger: the NZ Emissions Trading Scheme launched in 2008 and tied new planting's economics to a carbon price that then sat near a policy-imposed ceiling for most of the following decade. By 2014 some seedlings planted when prices were briefly higher were being mulched because planting had turned uneconomic before they were ready. The One Billion Trees Programme launched in 2018, right at this chart's last data point, as an explicit attempt to reverse the trend — whether it worked is a question for the next data refresh."
         accent="emerald"
       >
         <ClickToReveal buttonLabel="Reveal the planting bust" hideLabel="Hide the planting bust">
@@ -230,8 +249,10 @@ export default async function HomePage(): Promise<React.ReactElement> {
 
           <p className="numeral-paragraph-sm max-w-3xl pb-[var(--spacing-2xl)] text-[var(--color-muted)]">
             Data: Stats NZ Aotearoa Data Explorer, table AGR_AGR_001 (Forestry by Regional Council),
-            national new planting and exotic timber harvested area in hectares. Hover or drag across
-            the chart to read any year.
+            national new planting and exotic timber harvested area in hectares. The ETS and One
+            Billion Trees notes above are narrative context only — from MPI&apos;s National Exotic
+            Forest Description and Motu&apos;s ETS research, not from this table — so they
+            aren&apos;t plotted on the chart. Hover or drag across the chart to read any year.
           </p>
         </ClickToReveal>
       </MicrositeSection>

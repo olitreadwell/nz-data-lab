@@ -6,8 +6,16 @@ import type { TooltipContentProps } from 'recharts';
 import type { SheepSeriesPoint } from '@/lib/sheep-data';
 import { formatMillions } from '@/lib/sheep-format';
 
+import { withLeadMainSplit } from './chart-utils';
+
 interface SheepChartProps {
   points: SheepSeriesPoint[];
+  /**
+   * Year of a spliced-in earlier data point (e.g. 1990), if `points[0]` is
+   * one. When set, the segment from that point to the next one is rendered
+   * dashed to signal it's a single historical citation, not annual data.
+   */
+  historicalAnchorYear?: number;
 }
 
 const CHART_HEIGHT = 240;
@@ -35,8 +43,8 @@ function SheepTooltip({ active, label, payload }: TooltipContentProps): React.Re
   if (!active || payload === undefined || payload.length === 0) {
     return null;
   }
-  const value = payload[0]?.value;
-  if (typeof value !== 'number' || !Number.isFinite(value)) {
+  const entry = payload.find((item) => typeof item.value === 'number');
+  if (entry === undefined || typeof entry.value !== 'number') {
     return null;
   }
   return (
@@ -47,12 +55,12 @@ function SheepTooltip({ active, label, payload }: TooltipContentProps): React.Re
       className="rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-bg)] px-2 py-1"
     >
       <p className="numeral-text-eyebrow text-[10px] text-[var(--color-muted)]">{label}</p>
-      <p className="numeral-paragraph-sm text-[var(--color-fg)]">{formatMillions(value)}</p>
+      <p className="numeral-paragraph-sm text-[var(--color-fg)]">{formatMillions(entry.value)}</p>
     </div>
   );
 }
 
-export function SheepChart({ points }: SheepChartProps): React.ReactElement {
+export function SheepChart({ points, historicalAnchorYear }: SheepChartProps): React.ReactElement {
   const sheepValues = points.map((point) => point.sheep);
   const minSheep = Math.min(...sheepValues);
   const maxSheep = Math.max(...sheepValues);
@@ -72,6 +80,12 @@ export function SheepChart({ points }: SheepChartProps): React.ReactElement {
     );
   }
 
+  const boundaryYear =
+    historicalAnchorYear !== undefined && firstYear === historicalAnchorYear
+      ? points[1]?.year
+      : undefined;
+  const chartData = withLeadMainSplit(points, ['sheep'], boundaryYear);
+
   return (
     <LineChart
       width="100%"
@@ -79,7 +93,7 @@ export function SheepChart({ points }: SheepChartProps): React.ReactElement {
       responsive
       role="img"
       title={label}
-      data={points}
+      data={chartData}
       margin={{ top: 16, right: 8, bottom: 0, left: 0 }}
     >
       <XAxis
@@ -101,12 +115,25 @@ export function SheepChart({ points }: SheepChartProps): React.ReactElement {
         content={SheepTooltip}
         cursor={{ stroke: 'var(--color-border)', strokeDasharray: '4 4' }}
       />
+      {boundaryYear !== undefined && (
+        <Line
+          type="monotone"
+          dataKey="sheepLead"
+          stroke="var(--color-muted)"
+          strokeWidth={2}
+          strokeDasharray="4 4"
+          dot={false}
+          connectNulls
+          isAnimationActive={false}
+        />
+      )}
       <Line
         type="monotone"
-        dataKey="sheep"
+        dataKey={boundaryYear !== undefined ? 'sheepMain' : 'sheep'}
         stroke="var(--color-fg)"
         strokeWidth={2}
         dot={false}
+        connectNulls
         activeDot={<SheepActiveDot />}
       />
     </LineChart>

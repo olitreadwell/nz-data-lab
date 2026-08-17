@@ -3,8 +3,8 @@ import type { StatsNzObservation } from '@nzlab/stats-nz';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { buildWideSeries, summarizeWideSeries } from './stats-series';
-import type { SeriesStat, WideSeries, WideSeriesPoint } from './stats-series';
+import { buildWideSeries, summarizeWideSeries, withHistoricalAnchor } from './stats-series';
+import type { HistoricalAnchor, SeriesStat, WideSeries, WideSeriesPoint } from './stats-series';
 
 // Table AGR_AGR_003 (Livestock Numbers by Regional Council). Codes verified
 // against the Stats NZ "Agriculture Published Variables (v. 2023)" data
@@ -30,6 +30,24 @@ export type LivestockSeries = WideSeries<LivestockSeriesKey>;
 
 export type LivestockStat = SeriesStat<LivestockSeriesKey>;
 
+// AGR_AGR_003 only goes back to 1994. This 1990 point for all four species is
+// a separate citation from Stats NZ's own "Livestock numbers: Data to 2023"
+// indicator release — see withHistoricalAnchor and LivestockChart's dashed
+// pre-1994 segment.
+export const LIVESTOCK_HISTORICAL_ANCHOR: HistoricalAnchor<LivestockSeriesKey> = {
+  year: 1990,
+  values: {
+    sheep: 57_900_000,
+    dairyCattle: 3_400_000,
+    beefCattle: 4_600_000,
+    deer: 976_000,
+  },
+  source: {
+    label: 'Stats NZ, Livestock numbers: Data to 2023',
+    url: 'https://www.stats.govt.nz/indicators/livestock-numbers-data-to-2023/',
+  },
+};
+
 export function buildLivestockSeries(rows: StatsNzObservation[]): LivestockSeries {
   return buildWideSeries(rows, {
     dimension: 'LIVESTOCK',
@@ -54,11 +72,11 @@ export async function fetchLivestockSeries(subscriptionKey?: string): Promise<Li
   });
   try {
     const rows = await client.getData({ dataflowId: LIVESTOCK_DATAFLOW_ID, format: 'csv' });
-    return buildLivestockSeries(rows);
+    return withHistoricalAnchor(buildLivestockSeries(rows), LIVESTOCK_HISTORICAL_ANCHOR);
   } catch {
     const rows = parseStatsNzCsv(readFileSync(LIVESTOCK_FIXTURE_PATH, 'utf8'), {
       dataflowId: LIVESTOCK_DATAFLOW_ID,
     });
-    return buildLivestockSeries(rows);
+    return withHistoricalAnchor(buildLivestockSeries(rows), LIVESTOCK_HISTORICAL_ANCHOR);
   }
 }

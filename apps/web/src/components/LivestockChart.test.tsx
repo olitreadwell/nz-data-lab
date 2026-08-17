@@ -42,4 +42,29 @@ describe('LivestockChart', () => {
     render(<LivestockChart points={[]} />);
     expect(screen.getByRole('img')).toHaveAccessibleName(/livestock numbers over time/i);
   });
+
+  it('shows all four species once for the spliced-in historical anchor point', async () => {
+    const withAnchor: LivestockSeriesPoint[] = [
+      { year: 1990, sheep: 57900000, dairyCattle: 3400000, beefCattle: 4600000, deer: 976000 },
+      ...POINTS,
+    ];
+    render(<LivestockChart points={withAnchor} historicalAnchorYear={1990} />);
+    fireEvent.mouseMove(screen.getByRole('img'), { clientX: 100, clientY: 100 });
+    const tooltip = await screen.findByTestId('livestock-tooltip');
+    expect(tooltip).toHaveTextContent('1990');
+    const sheepMatches = tooltip.textContent?.match(/Sheep/g) ?? [];
+    expect(sheepMatches).toHaveLength(1);
+  });
+
+  it('has no accessibility violations with a historical anchor point', async () => {
+    const withAnchor: LivestockSeriesPoint[] = [
+      { year: 1990, sheep: 57900000, dairyCattle: 3400000, beefCattle: 4600000, deer: 976000 },
+      ...POINTS,
+    ];
+    const { container } = render(
+      <LivestockChart points={withAnchor} historicalAnchorYear={1990} />,
+    );
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
 });
