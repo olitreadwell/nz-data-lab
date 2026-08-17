@@ -51,3 +51,7 @@ Fixes to the loop itself this iteration:
 - Generation now scores findings by severity (security/a11y = high) and
   files the highest-severity ones first, so early iterations surface more
   high-priority work.
+
+## 2026-08-17
+
+Generated 5 issues, merged 4 fixes (#30, #14, #32, #27).

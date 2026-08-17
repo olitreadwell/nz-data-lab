@@ -363,7 +363,7 @@ async function fanout(issueNumbers) {
 
 function reviewLoop(summary) {
   mkdirSync(SKILL_DIR, { recursive: true });
-  const date = new Date().toISOString().slice(0, 10);
+  const date = new Date().toLocaleDateString('en-CA');
   const entry = `\n## ${date}\n\n${summary}\n`;
   if (!existsSync(NOTES_FILE)) {
     writeFileSync(
