@@ -8,7 +8,10 @@ import {
   DIGITALNZ_GOLD_RECORDS,
   fetchCatalogueTotal,
   fetchRegisterTotal,
+  GBIF_NZ_RECORDS_2024,
+  INATURALIST_NZ_OBSERVATIONS,
   TRADEME_LEAF_CATEGORIES,
+  WIKIPEDIA_NZ_PAGE_PEAK,
 } from '@/lib/headline-stats';
 import { fetchHorticultureSeries, summarizeHorticulture } from '@/lib/horticulture-data';
 import { fetchLivestockSeries, summarizeLivestock } from '@/lib/livestock-data';
@@ -58,6 +61,9 @@ export default async function HomePage(): Promise<React.ReactElement> {
   const openDataConfig = getMicrosite('open-data-catalogue');
   const digitisedConfig = getMicrosite('digitised-memory');
   const garageSaleConfig = getMicrosite('online-garage-sale');
+  const backyardConfig = getMicrosite('backyard-species-census');
+  const ledgerConfig = getMicrosite('species-record-ledger');
+  const worldReadsConfig = getMicrosite('what-the-world-reads');
 
   return (
     <main>
@@ -68,8 +74,8 @@ export default async function HomePage(): Promise<React.ReactElement> {
             the surprising.
           </h1>
           <p className="numeral-paragraph-lg text-[var(--color-muted)]">
-            Eleven live microsites. Stats NZ at deploy time, plus GeoNet, NZOR, data.govt.nz,
-            DigitalNZ, and Trade Me live from the browser.
+            Fourteen live microsites. Stats NZ at deploy time, plus GeoNet, NZOR, data.govt.nz,
+            DigitalNZ, Trade Me, iNaturalist, GBIF, and Wikipedia live from the browser.
           </p>
         </Stack>
         <div className="grid gap-6 pb-[var(--spacing-3xl)] sm:grid-cols-2 lg:grid-cols-3">
@@ -171,6 +177,33 @@ export default async function HomePage(): Promise<React.ReactElement> {
             statLabel="Leaf categories"
             statValue={TRADEME_LEAF_CATEGORIES}
             accent={garageSaleConfig.accent}
+          />
+          <MicrositeCard
+            slug={backyardConfig.slug}
+            eyebrow={backyardConfig.eyebrow}
+            title={backyardConfig.title}
+            description={backyardConfig.description}
+            statLabel="Observations in New Zealand"
+            statValue={INATURALIST_NZ_OBSERVATIONS}
+            accent={backyardConfig.accent}
+          />
+          <MicrositeCard
+            slug={ledgerConfig.slug}
+            eyebrow={ledgerConfig.eyebrow}
+            title={ledgerConfig.title}
+            description={ledgerConfig.description}
+            statLabel="Records in 2024"
+            statValue={GBIF_NZ_RECORDS_2024}
+            accent={ledgerConfig.accent}
+          />
+          <MicrositeCard
+            slug={worldReadsConfig.slug}
+            eyebrow={worldReadsConfig.eyebrow}
+            title={worldReadsConfig.title}
+            description={worldReadsConfig.description}
+            statLabel="New Zealand page peak"
+            statValue={WIKIPEDIA_NZ_PAGE_PEAK}
+            accent={worldReadsConfig.accent}
           />
         </div>
       </Container>

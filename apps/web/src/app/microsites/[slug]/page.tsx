@@ -3,6 +3,7 @@ import { Container } from '@nzlab/ui';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { BackyardSpeciesCensus } from '@/components/BackyardSpeciesCensus';
 import { DeerBoomBustChart } from '@/components/DeerBoomBustChart';
 import { DigitisedMemorySearch } from '@/components/DigitisedMemorySearch';
 import { ForestryChart } from '@/components/ForestryChart';
@@ -13,9 +14,11 @@ import { MicrositeStory } from '@/components/MicrositeStory';
 import { OpenDataSearch } from '@/components/OpenDataSearch';
 import { QuakeMap } from '@/components/QuakeMap';
 import { SheepChart } from '@/components/SheepChart';
+import { SpeciesRecordLedger } from '@/components/SpeciesRecordLedger';
 import { SpeciesRegisterSearch } from '@/components/SpeciesRegisterSearch';
 import { StatCard } from '@/components/StatCard';
 import { TradeMeTree } from '@/components/TradeMeTree';
+import { WhatTheWorldReads } from '@/components/WhatTheWorldReads';
 import { env } from '@/env';
 import { fetchForestrySeries, summarizeForestry } from '@/lib/forestry-data';
 import { formatHectares, formatMillions } from '@/lib/format';
@@ -376,6 +379,39 @@ function renderStoryContent(
               accent="fuchsia"
             />
             <StatCard label="Motors leaves" value={TRADEME_MOTORS_LEAVES} accent="fuchsia" />
+          </dl>
+        ),
+      };
+    case 'backyard-species-census':
+      return {
+        chart: <BackyardSpeciesCensus />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard label="Observations in New Zealand" value="4,342,223" accent="emerald" />
+            <StatCard label="Species logged" value="23,828" accent="emerald" />
+            <StatCard label="Observers" value="65,569" accent="emerald" />
+          </dl>
+        ),
+      };
+    case 'species-record-ledger':
+      return {
+        chart: <SpeciesRecordLedger />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard label="Records in 2014" value="748,744" accent="indigo" />
+            <StatCard label="Records in 2024" value="1,920,171" accent="indigo" />
+            <StatCard label="Animal share in 2024" value="78%" accent="indigo" />
+          </dl>
+        ),
+      };
+    case 'what-the-world-reads':
+      return {
+        chart: <WhatTheWorldReads />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard label="New Zealand page peak" value="21,562" accent="sky" />
+            <StatCard label="Lord of the Rings peak" value="10,438" accent="sky" />
+            <StatCard label="Jacinda Ardern peak" value="8,429" accent="sky" />
           </dl>
         ),
       };
