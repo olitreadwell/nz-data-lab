@@ -1,0 +1,54 @@
+{
+  "name": "@nzlab/root",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "npm@10.9.2",
+  "engines": {
+    "node": ">=22.17.1"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "format": "turbo format",
+    "format:check": "turbo format:check",
+    "type-check": "turbo type-check",
+    "test": "turbo test",
+    "test:unit": "turbo test --",
+    "test:coverage": "turbo test:coverage",
+    "test:e2e": "turbo test:e2e",
+    "test:a11y": "turbo test:a11y",
+    "test:visual": "turbo test:visual",
+    "storybook": "turbo storybook --filter=@nzlab/ui",
+    "build:storybook": "turbo build-storybook --filter=@nzlab/ui",
+    "clean": "rm -rf .turbo apps/*/.next apps/*/.turbo apps/*/dist apps/*/tsconfig.tsbuildinfo apps/*/coverage apps/*/playwright-report apps/*/test-results packages/*/.turbo packages/*/dist packages/*/tsconfig.tsbuildinfo packages/*/.rollup.cache packages/*/coverage packages/*/storybook-static",
+    "clean:all": "rm -rf node_modules apps/*/node_modules packages/*/node_modules .turbo apps/*/.next apps/*/.turbo apps/*/dist apps/*/tsconfig.tsbuildinfo apps/*/coverage apps/*/playwright-report apps/*/test-results packages/*/.turbo packages/*/dist packages/*/tsconfig.tsbuildinfo packages/*/.rollup.cache packages/*/coverage packages/*/storybook-static && npm cache clean --force",
+    "prepare": "husky",
+    "setup": "node scripts/setup.mjs"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,mjs,cjs,json,md,css,scss,yml,yaml}": "prettier --write",
+    "*.{ts,tsx,js,mjs}": "eslint --fix --no-warn-ignored"
+  },
+  "overrides": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@clack/prompts": "^0.7",
+    "@eslint/js": "^9.39.5",
+    "@trivago/prettier-plugin-sort-imports": "^6.0.2",
+    "ajv": "^8",
+    "eslint": "^9.39.5",
+    "globals": "^17.4.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.5.0",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "turbo": "^2.5.6"
+  }
+}

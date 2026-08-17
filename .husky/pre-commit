@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+
+# Autofix only — no blocking checks.
+#
+# Runs prettier --write and eslint --fix on staged files via lint-staged.
+# The commit succeeds even if eslint reports warnings; only unfixable
+# *errors* will fail. To bypass entirely:  git commit --no-verify
+#
+# The CI lint job is advisory (continue-on-error: true). PR comments via
+# reviewdog surface any new findings inline. Only build / type-check /
+# tests can fail a PR check.
+
+npx lint-staged --concurrent=2

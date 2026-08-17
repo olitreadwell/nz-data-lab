@@ -1,0 +1,15 @@
+# Default owners for everything
+* @numeralstudio
+
+# Frontend
+/apps/web/ @numeralstudio
+/packages/ui/ @numeralstudio
+
+# Config
+/packages/config-*/ @numeralstudio
+
+# CI/CD
+/.github/ @numeralstudio
+
+# Docs
+/docs/ @numeralstudio
