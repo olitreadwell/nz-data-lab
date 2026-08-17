@@ -1,7 +1,7 @@
 import { renderToReadableStream } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 
-import HomePage from './page';
+import MicrositePage from './page';
 
 vi.mock('@/lib/sheep-data', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/lib/sheep-data')>();
@@ -10,7 +10,6 @@ vi.mock('@/lib/sheep-data', async (importOriginal) => {
     fetchSheepSeries: vi.fn().mockResolvedValue({
       points: [
         { year: 1994, sheep: 49466054 },
-        { year: 2010, sheep: 32562612 },
         { year: 2025, sheep: 23252463 },
       ],
       first: { year: 1994, sheep: 49466054 },
@@ -79,32 +78,25 @@ vi.mock('@/lib/forestry-data', async (importOriginal) => {
   };
 });
 
-describe('HomePage', () => {
-  it('renders the mission line and all four microsite cards', async () => {
-    const stream = await renderToReadableStream(<HomePage />);
+describe('MicrositePage', () => {
+  it('renders the sheep story with narrative, chart, and sources', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'sheep-index' })} />,
+    );
     const html = await new Response(stream).text();
-    expect(html).toContain('Small experiments digging through New Zealand public data');
     expect(html).toContain('national animal is in freefall');
+    expect(html).toContain('70 million sheep');
+    expect(html).toContain('Sources and further reading');
+    expect(html).toContain('Sheep number falls to six for each person');
+    expect(html).toContain('All microsites');
+  });
+
+  it('renders the dairy story with the livestock chart', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'dairy-takeover' })} />,
+    );
+    const html = await new Response(stream).text();
     expect(html).toContain('paddocks flipped from wool to milk');
-    expect(html).toContain('Wine grapes took over the orchard');
-    expect(html).toContain('stopped planting trees');
-  });
-
-  it('links every card to its story page', async () => {
-    const stream = await renderToReadableStream(<HomePage />);
-    const html = await new Response(stream).text();
-    expect(html).toContain('href="/microsites/sheep-index"');
-    expect(html).toContain('href="/microsites/dairy-takeover"');
-    expect(html).toContain('href="/microsites/vineyard-boom"');
-    expect(html).toContain('href="/microsites/planting-bust"');
-  });
-
-  it('shows a headline stat on each card', async () => {
-    const stream = await renderToReadableStream(<HomePage />);
-    const html = await new Response(stream).text();
-    expect(html).toContain('23.3 million');
-    expect(html).toContain('5.8 million');
-    expect(html).toContain('37,627 ha');
-    expect(html).toContain('8,293 ha');
+    expect(html).toContain('Canterbury lamb gives way to dairy');
   });
 });

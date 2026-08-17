@@ -9,7 +9,7 @@ expect.extend(toHaveNoViolations);
 describe('SiteFooter', () => {
   it('renders the mission line', () => {
     render(<SiteFooter />);
-    expect(screen.getByText(/the sheep index is live/i)).toBeInTheDocument();
+    expect(screen.getByText(/four microsites are live/i)).toBeInTheDocument();
   });
 
   it('has no accessibility violations', async () => {

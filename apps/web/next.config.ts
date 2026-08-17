@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
   // The Pages workflow sets NEXT_PUBLIC_BASE_PATH to /<repo-name>; it stays
   // empty for local dev and Vercel builds so URLs remain root-relative.
   output: 'export',
+  // Story routes become <slug>/index.html so GitHub Pages serves
+  // /microsites/<slug>/ without an .html extension.
+  trailingSlash: true,
   basePath: process.env.NEXT_PUBLIC_BASE_PATH ?? '',
   assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH ?? '',
   images: {

@@ -7,12 +7,12 @@ import { SiteHeader } from './SiteHeader';
 expect.extend(toHaveNoViolations);
 
 describe('SiteHeader', () => {
-  it('links home and to the sheep index section', () => {
+  it('links home and to the sheep index story', () => {
     render(<SiteHeader />);
     expect(screen.getByRole('link', { name: 'nz-data-lab' })).toHaveAttribute('href', '/');
     expect(screen.getByRole('link', { name: 'the sheep index' })).toHaveAttribute(
       'href',
-      '#sheep-index',
+      '/microsites/sheep-index',
     );
   });
 

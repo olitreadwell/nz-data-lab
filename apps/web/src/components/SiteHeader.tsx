@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-/** Sticky, blurred site header — wordmark + primary nav link. */
+/** Sticky, blurred site header: wordmark + primary nav link. */
 export function SiteHeader(): React.ReactElement {
   return (
     <header className="sticky top-0 z-20 w-full border-b border-[var(--color-border)] bg-[var(--color-bg)]/95 backdrop-blur supports-[backdrop-filter]:bg-[var(--color-bg)]/70">
@@ -10,7 +10,7 @@ export function SiteHeader(): React.ReactElement {
         </Link>
         <nav>
           <Link
-            href="#sheep-index"
+            href="/microsites/sheep-index"
             className="numeral-paragraph-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-fg)]"
           >
             the sheep index
