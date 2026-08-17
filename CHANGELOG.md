@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-08-18 09:45 (NZST) - loop 4
+
+- Shipped: digitised-memory (live DigitalNZ search, histogram by decade with
+  decade-range sliders) and online-garage-sale (live Trade Me category tree,
+  radial bar by leaf count with search and expand).
+- Sources: DigitalNZ (National Library) v3 API and Trade Me public category
+  tree, both live from the browser (CORS open). Chart types used so far:
+  line, area, bar, scatter, donut, treemap, map, histogram, radial.
+- Loop review: the launchd quality loop committed to main mid-run (live-search
+  timeout fix), so the worktree branch was based on a stale main and the new
+  fetchers had to be reconciled with the timeout pattern. The skill now says
+  to fetch origin and rebase onto the latest main before merging. Splitting
+  shared infra (fetchers, accents) across per-microsite commits is fiddly;
+  commit it with the first microsite.
+
 Every microsite loop appends a dated entry here. Format:
 
 ## YYYY-MM-DD HH:MM (NZST) - loop N

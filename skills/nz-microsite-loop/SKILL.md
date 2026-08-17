@@ -33,7 +33,10 @@ commit per microsite, then one merge and one deploy.
    `apps/web`, lint the changed files. Fix errors before merging.
 5. **Ship (2 min)**: worktree + branch, one Conventional Commit per
    microsite, merge to `main`, push, watch the Pages deploy, curl each new
-   page for 200 and for a content marker.
+   page for 200 and for a content marker. Before merging, run `git fetch
+origin` and rebase the branch onto `origin/main` if it moved while you
+   built: the launchd quality loop commits to `main` concurrently, and a
+   stale base makes the merge fight the new code.
 6. **Changelog (1 min)**: append one dated entry to `CHANGELOG.md` listing
    every microsite shipped in the loop.
 7. **Review (1 min)**: read the last loop's notes, list what slowed it down,
