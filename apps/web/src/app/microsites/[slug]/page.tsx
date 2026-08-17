@@ -147,17 +147,7 @@ function renderStoryContent(
       };
     case 'dairy-takeover':
       return {
-        chart: (
-          <div className="space-y-6">
-            <LivestockChart points={data.livestock.points} />
-            <p className="numeral-paragraph-sm text-[var(--color-muted)]">
-              The same years, plotted as a path: each bubble is one year, with sheep on the vertical
-              axis and dairy cattle on the horizontal. Colour shows the decade and bubble size shows
-              total livestock, so the flip from wool to milk reads as one diagonal move.
-            </p>
-            <DairyTakeoverScatter points={data.livestock.points} />
-          </div>
-        ),
+        chart: <LivestockChart points={data.livestock.points} />,
         stats: (
           <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
             <StatCard

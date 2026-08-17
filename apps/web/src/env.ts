@@ -25,7 +25,9 @@ const serverSchema = z.object({
 });
 
 const clientSchema = z.object({
-  NEXT_PUBLIC_APP_URL: z.string().url(),
+  // Unused today; kept for future metadata/OG tags. Defaulted so local and
+  // CI builds without the var still pass; the Pages deploy sets the real URL.
+  NEXT_PUBLIC_APP_URL: z.string().url().default('http://localhost:3000'),
 });
 
 export const env = serverSchema.parse(process.env);
