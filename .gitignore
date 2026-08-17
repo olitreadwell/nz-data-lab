@@ -44,3 +44,6 @@ apps/web/screenshots/*.png
 
 # Superpowers (AI planning docs)
 docs/superpowers/
+
+# Git worktree scratch dirs (loop and concurrent agents)
+.worktrees/
