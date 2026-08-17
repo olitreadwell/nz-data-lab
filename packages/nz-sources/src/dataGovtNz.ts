@@ -14,6 +14,12 @@ export interface DataGovtNzDataset {
   organization: string | undefined;
 }
 
+/** A data.govt.nz CKAN package_search response: total count plus the rows. */
+export interface DataGovtNzSearchResult {
+  count: number;
+  datasets: DataGovtNzDataset[];
+}
+
 const DATA_GOVT_NZ_DATASET_SCHEMA = z.object({
   name: z.string(),
   title: z.string(),
@@ -35,19 +41,22 @@ const DATA_GOVT_NZ_RESPONSE_SCHEMA = z.object({
 });
 
 /** Parses a data.govt.nz CKAN package_search payload into datasets. */
-export function parseDataGovtNzDatasets(payload: unknown): DataGovtNzDataset[] {
+export function parseDataGovtNzDatasets(payload: unknown): DataGovtNzSearchResult {
   const parsed = DATA_GOVT_NZ_RESPONSE_SCHEMA.safeParse(payload);
   if (!parsed.success) {
     throw new NzSourceParseError('data.govt.nz', parsed.error.message);
   }
-  return parsed.data.result.results.map((dataset) => ({
-    name: dataset.name,
-    title: dataset.title,
-    notes: dataset.notes,
-    metadataModified: dataset.metadata_modified,
-    url: dataset.url,
-    organization: dataset.organization,
-  }));
+  return {
+    count: parsed.data.result.count,
+    datasets: parsed.data.result.results.map((dataset) => ({
+      name: dataset.name,
+      title: dataset.title,
+      notes: dataset.notes,
+      metadataModified: dataset.metadata_modified,
+      url: dataset.url,
+      organization: dataset.organization,
+    })),
+  };
 }
 
 /**
@@ -57,7 +66,7 @@ export function parseDataGovtNzDatasets(payload: unknown): DataGovtNzDataset[] {
 export async function searchDataGovtNzDatasets(
   query: string,
   fetchImpl: typeof globalThis.fetch = globalThis.fetch,
-): Promise<DataGovtNzDataset[]> {
+): Promise<DataGovtNzSearchResult> {
   const url = `https://catalogue.data.govt.nz/api/3/action/package_search?q=${encodeURIComponent(query)}&rows=20`;
   const response = await fetchImpl(url);
   if (!response.ok) {
@@ -67,7 +76,7 @@ export async function searchDataGovtNzDatasets(
 }
 
 /** data.govt.nz adapter: catalogue search, keyless. */
-export const dataGovtNzAdapter: NzDataAdapter<DataGovtNzDataset[]> = {
+export const dataGovtNzAdapter: NzDataAdapter<DataGovtNzSearchResult> = {
   id: 'data-govt-nz',
   name: 'data.govt.nz catalogue',
   auth: 'none',

@@ -3,6 +3,15 @@ import { describe, expect, it, vi } from 'vitest';
 
 import MicrositePage from './page';
 
+vi.mock('@/lib/headline-stats', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/headline-stats')>();
+  return {
+    ...actual,
+    fetchRegisterTotal: vi.fn().mockResolvedValue(170151),
+    fetchCatalogueTotal: vi.fn().mockResolvedValue(31915),
+  };
+});
+
 vi.mock('@/lib/sheep-data', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/lib/sheep-data')>();
   return {
@@ -119,4 +128,22 @@ it('renders the online garage sale story', async () => {
   expect(html).toContain('5,589 leaf categories');
   expect(html).toContain('Trade Me');
   expect(html).toContain('Home &amp; living');
+});
+
+it('renders the species register with the live register total', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'species-register' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('170,151');
+  expect(html).toContain('Names in the register');
+});
+
+it('renders the open data catalogue with the live catalogue total', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'open-data-catalogue' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('31,915');
+  expect(html).toContain('Datasets in the catalogue');
 });

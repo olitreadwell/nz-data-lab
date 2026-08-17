@@ -11,9 +11,10 @@ const FIXTURE = JSON.parse(
 
 describe('parseDataGovtNzDatasets', () => {
   it('parses the data.govt.nz CKAN fixture into datasets', () => {
-    const datasets = parseDataGovtNzDatasets(FIXTURE);
-    expect(datasets.length).toBeGreaterThan(0);
-    const first = datasets[0];
+    const result = parseDataGovtNzDatasets(FIXTURE);
+    expect(result.count).toBe(31);
+    expect(result.datasets.length).toBeGreaterThan(0);
+    const first = result.datasets[0];
     expect(first?.title?.length).toBeGreaterThan(0);
     expect(first?.name?.length).toBeGreaterThan(0);
   });

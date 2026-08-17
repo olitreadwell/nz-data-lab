@@ -36,9 +36,10 @@ describe('adapter fetchLive paths', () => {
       'fetch',
       vi.fn(async () => jsonResponse(readFixtureJson('data-govt-nz-search-sheep.json'))),
     );
-    const datasets = await dataGovtNzAdapter.fetchLive();
-    expect(datasets.length).toBeGreaterThan(0);
-    expect(datasets[0]?.title.length).toBeGreaterThan(0);
+    const result = await dataGovtNzAdapter.fetchLive();
+    expect(result.count).toBeGreaterThan(0);
+    expect(result.datasets.length).toBeGreaterThan(0);
+    expect(result.datasets[0]?.title.length).toBeGreaterThan(0);
   });
 
   it('fetches and parses DigitalNZ records', async () => {

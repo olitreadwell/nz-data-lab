@@ -19,6 +19,20 @@ import { TradeMeTree } from '@/components/TradeMeTree';
 import { env } from '@/env';
 import { fetchForestrySeries, summarizeForestry } from '@/lib/forestry-data';
 import { formatHectares, formatMillions } from '@/lib/format';
+import {
+  CATALOGUE_CLIMATE_MATCHES,
+  CATALOGUE_WATER_MATCHES,
+  DIGITALNZ_GOLD_1890S_RECORDS,
+  DIGITALNZ_GOLD_RECORDS,
+  FELT_QUAKES_PER_YEAR,
+  fetchCatalogueTotal,
+  fetchRegisterTotal,
+  NATIVE_FRESHWATER_FISH,
+  NATIVE_FROG_SPECIES,
+  TRADEME_HOME_LIVING_LEAVES,
+  TRADEME_LEAF_CATEGORIES,
+  TRADEME_MOTORS_LEAVES,
+} from '@/lib/headline-stats';
 import { fetchHorticultureSeries, summarizeHorticulture } from '@/lib/horticulture-data';
 import { fetchLivestockSeries, summarizeLivestock } from '@/lib/livestock-data';
 import { MICROSITES } from '@/lib/microsites';
@@ -43,13 +57,16 @@ export default async function MicrositePage({
     notFound();
   }
 
-  const [sheep, livestock, horticulture, forestry, quakes] = await Promise.all([
-    fetchSheepSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
-    fetchLivestockSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
-    fetchHorticultureSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
-    fetchForestrySeries(env.STATS_NZ_SUBSCRIPTION_KEY),
-    fetchRecentQuakes(),
-  ]);
+  const [sheep, livestock, horticulture, forestry, quakes, registerTotal, catalogueTotal] =
+    await Promise.all([
+      fetchSheepSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
+      fetchLivestockSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
+      fetchHorticultureSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
+      fetchForestrySeries(env.STATS_NZ_SUBSCRIPTION_KEY),
+      fetchRecentQuakes(),
+      fetchRegisterTotal(),
+      fetchCatalogueTotal(),
+    ]);
 
   const livestockStats = summarizeLivestock(livestock);
   const horticultureStats = summarizeHorticulture(horticulture);
@@ -73,6 +90,8 @@ export default async function MicrositePage({
     apples,
     newPlanting,
     quakes,
+    registerTotal,
+    catalogueTotal,
   });
 
   return (
@@ -115,6 +134,8 @@ interface StoryData {
   apples: { latest?: number } | undefined;
   newPlanting: { latest?: number; first?: number; changeFromFirstPercent?: number } | undefined;
   quakes: Awaited<ReturnType<typeof fetchRecentQuakes>>;
+  registerTotal: number;
+  catalogueTotal: number;
 }
 
 function renderStoryContent(
@@ -291,9 +312,13 @@ function renderStoryContent(
         chart: <SpeciesRegisterSearch initialQuery="kiwi" />,
         stats: (
           <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
-            <StatCard label="Names in the register" value="170,151" accent="teal" />
-            <StatCard label="Native freshwater fish" value="51" accent="teal" />
-            <StatCard label="Native frog species" value="4" accent="teal" />
+            <StatCard
+              label="Names in the register"
+              value={data.registerTotal.toLocaleString('en-NZ')}
+              accent="teal"
+            />
+            <StatCard label="Native freshwater fish" value={NATIVE_FRESHWATER_FISH} accent="teal" />
+            <StatCard label="Native frog species" value={NATIVE_FROG_SPECIES} accent="teal" />
           </dl>
         ),
       };
@@ -302,9 +327,21 @@ function renderStoryContent(
         chart: <OpenDataSearch initialQuery="water" />,
         stats: (
           <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
-            <StatCard label="Datasets in the catalogue" value="31,915" accent="indigo" />
-            <StatCard label="Datasets matching 'water'" value="4,236" accent="indigo" />
-            <StatCard label="Datasets matching 'climate'" value="865" accent="indigo" />
+            <StatCard
+              label="Datasets in the catalogue"
+              value={data.catalogueTotal.toLocaleString('en-NZ')}
+              accent="indigo"
+            />
+            <StatCard
+              label="Datasets matching 'water'"
+              value={CATALOGUE_WATER_MATCHES}
+              accent="indigo"
+            />
+            <StatCard
+              label="Datasets matching 'climate'"
+              value={CATALOGUE_CLIMATE_MATCHES}
+              accent="indigo"
+            />
           </dl>
         ),
       };
@@ -313,8 +350,16 @@ function renderStoryContent(
         chart: <DigitisedMemorySearch initialQuery="gold" />,
         stats: (
           <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
-            <StatCard label="Records matching 'gold'" value="1,977,021" accent="cyan" />
-            <StatCard label="1890s records matching 'gold'" value="427,164" accent="cyan" />
+            <StatCard
+              label="Records matching 'gold'"
+              value={DIGITALNZ_GOLD_RECORDS}
+              accent="cyan"
+            />
+            <StatCard
+              label="1890s records matching 'gold'"
+              value={DIGITALNZ_GOLD_1890S_RECORDS}
+              accent="cyan"
+            />
             <StatCard label="Peak decade" value="1890s" accent="cyan" />
           </dl>
         ),
@@ -324,9 +369,13 @@ function renderStoryContent(
         chart: <TradeMeTree />,
         stats: (
           <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
-            <StatCard label="Leaf categories" value="5,589" accent="fuchsia" />
-            <StatCard label="Home & living leaves" value="581" accent="fuchsia" />
-            <StatCard label="Motors leaves" value="560" accent="fuchsia" />
+            <StatCard label="Leaf categories" value={TRADEME_LEAF_CATEGORIES} accent="fuchsia" />
+            <StatCard
+              label="Home & living leaves"
+              value={TRADEME_HOME_LIVING_LEAVES}
+              accent="fuchsia"
+            />
+            <StatCard label="Motors leaves" value={TRADEME_MOTORS_LEAVES} accent="fuchsia" />
           </dl>
         ),
       };
@@ -353,7 +402,7 @@ function renderStoryContent(
               testId="quake-strongest"
               dataValue={strongest?.magnitude}
             />
-            <StatCard label="Felt quakes per year" value="~250" accent="rose" />
+            <StatCard label="Felt quakes per year" value={FELT_QUAKES_PER_YEAR} accent="rose" />
           </dl>
         ),
       };

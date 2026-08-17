@@ -3,6 +3,15 @@ import { describe, expect, it, vi } from 'vitest';
 
 import HomePage from './page';
 
+vi.mock('@/lib/headline-stats', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/headline-stats')>();
+  return {
+    ...actual,
+    fetchRegisterTotal: vi.fn().mockResolvedValue(170151),
+    fetchCatalogueTotal: vi.fn().mockResolvedValue(31915),
+  };
+});
+
 vi.mock('@/lib/sheep-data', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/lib/sheep-data')>();
   return {
@@ -106,5 +115,7 @@ describe('HomePage', () => {
     expect(html).toContain('5.8 million');
     expect(html).toContain('37,627 ha');
     expect(html).toContain('8,293 ha');
+    expect(html).toContain('170,151');
+    expect(html).toContain('31,915');
   });
 });
