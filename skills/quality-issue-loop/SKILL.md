@@ -11,6 +11,9 @@ every iteration makes the next one faster.
 - The user asks to "loop quality issues", "fan out and fix issues", "keep
   improving the app", or "run the quality loop".
 - A checklist-driven improvement backlog needs to become shipped fixes.
+- The user reports an issue from the site: the report-an-issue bubble on
+  every page opens a prefilled GitHub issue, and triage turns it into a
+  spec and pulls it into the loop.
 
 ## Research sources (the issue generator's checklists)
 

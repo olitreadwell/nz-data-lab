@@ -55,3 +55,14 @@ Fixes to the loop itself this iteration:
 ## 2026-08-17
 
 Generated 5 issues, merged 4 fixes (#30, #14, #32, #27).
+
+## 2026-08-18 (report-an-issue feature)
+
+Added a floating report-an-issue bubble to every page
+(apps/web/src/components/ReportIssueButton.tsx). It opens a small dialog
+(type, item, description) and builds a prefilled GitHub new-issue URL with
+page URL, title, timestamp, and user agent, so the reporter reviews and
+submits on GitHub (a static export cannot hold a token). Triage now reviews
+ALL open issues, not just quality-loop-labeled ones, so user reports get
+spec'd, labeled, prioritized, and fixed by the loop. Also fixed: GitHub
+Pages does not serve .well-known paths, so security.txt ships at the root.
