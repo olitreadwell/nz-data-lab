@@ -16,6 +16,18 @@ export interface LiveNzorName {
 
 const NZOR_XML_PARSER = new XMLParser({ ignoreAttributes: false, parseTagValue: false });
 
+/** How long a browser live-search request may take before it is aborted. */
+export const LIVE_SEARCH_TIMEOUT_MS = 10_000;
+
+/** Creates an AbortController that aborts after the live-search timeout.
+ * @returns the controller whose signal is passed to fetch.
+ */
+function createLiveSearchAbortController(): AbortController {
+  const controller = new AbortController();
+  setTimeout(() => controller.abort(), LIVE_SEARCH_TIMEOUT_MS);
+  return controller;
+}
+
 /** Parses an NZOR /names XML payload into name records. */
 export function parseNzorNamesXml(payload: string): LiveNzorName[] {
   const parsed = NZOR_XML_PARSER.parse(payload) as {
@@ -35,7 +47,10 @@ export function parseNzorNamesXml(payload: string): LiveNzorName[] {
 
 /** Searches the NZ Organisms Register from the browser (CORS is open). */
 export async function searchLiveNzorNames(query: string): Promise<LiveNzorName[]> {
-  const response = await fetch(`https://data.nzor.org.nz/names?q=${encodeURIComponent(query)}`);
+  const controller = createLiveSearchAbortController();
+  const response = await fetch(`https://data.nzor.org.nz/names?q=${encodeURIComponent(query)}`, {
+    signal: controller.signal,
+  });
   if (!response.ok) {
     throw new Error(`NZOR HTTP ${response.status}`);
   }
@@ -64,8 +79,10 @@ export function parseDataGovtNzSearch(payload: unknown): LiveDataGovtNzDataset[]
 
 /** Searches the data.govt.nz catalogue from the browser (CORS is open). */
 export async function searchLiveDataGovtNz(query: string): Promise<LiveDataGovtNzDataset[]> {
+  const controller = createLiveSearchAbortController();
   const response = await fetch(
     `https://catalogue.data.govt.nz/api/3/action/package_search?q=${encodeURIComponent(query)}&rows=20`,
+    { signal: controller.signal },
   );
   if (!response.ok) {
     throw new Error(`data.govt.nz HTTP ${response.status}`);
