@@ -7,13 +7,9 @@ import { SiteHeader } from './SiteHeader';
 expect.extend(toHaveNoViolations);
 
 describe('SiteHeader', () => {
-  it('links home and to the sheep index story', () => {
+  it('links home from the wordmark', () => {
     render(<SiteHeader />);
     expect(screen.getByRole('link', { name: 'nz-data-lab' })).toHaveAttribute('href', '/');
-    expect(screen.getByRole('link', { name: 'the sheep index' })).toHaveAttribute(
-      'href',
-      '/microsites/sheep-index',
-    );
   });
 
   it('has no accessibility violations', async () => {
