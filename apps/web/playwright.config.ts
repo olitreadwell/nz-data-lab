@@ -51,13 +51,11 @@ export default defineConfig({
       },
     },
   ],
-  ...(CI
-    ? {}
-    : {
-        webServer: {
-          command: 'pnpm dev',
-          port: 3000,
-          reuseExistingServer: true,
-        },
-      }),
+  webServer: {
+    // CI serves the static export (the workflow builds first); local dev
+    // uses the dev server. The repo is npm-only, so no pnpm.
+    command: CI ? 'npx serve out -l 3000' : 'npm run dev',
+    port: 3000,
+    reuseExistingServer: !CI,
+  },
 });
