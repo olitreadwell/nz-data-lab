@@ -6,6 +6,8 @@ import type { TooltipContentProps } from 'recharts';
 import type { SheepSeriesPoint } from '@/lib/sheep-data';
 import { formatMillions } from '@/lib/sheep-format';
 
+import { ChartDataTable } from './ChartDataTable';
+
 interface SheepChartProps {
   points: SheepSeriesPoint[];
 }
@@ -109,6 +111,14 @@ export function SheepChart({ points }: SheepChartProps): React.ReactElement {
           />
         </LineChart>
       </ResponsiveContainer>
+      <ChartDataTable
+        summary="View sheep numbers as a table"
+        columns={[
+          { key: 'year', header: 'Year' },
+          { key: 'sheep', header: 'Sheep', format: formatMillions },
+        ]}
+        rows={points}
+      />
     </div>
   );
 }

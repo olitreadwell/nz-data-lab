@@ -13,6 +13,7 @@ import {
 import type { ForestrySeriesPoint } from '@/lib/forestry-data';
 import { formatHectares } from '@/lib/format';
 
+import { ChartDataTable } from './ChartDataTable';
 import { EmojiActiveDot, SeriesTooltip } from './chart-utils';
 import type { ChartSeriesDef } from './chart-utils';
 
@@ -132,6 +133,15 @@ export function ForestryChart({ points }: ForestryChartProps): React.ReactElemen
           </AreaChart>
         </ResponsiveContainer>
       </div>
+      <ChartDataTable
+        summary="View forestry planting and harvest as a table"
+        columns={[
+          { key: 'year', header: 'Year' },
+          { key: 'newPlanting', header: 'New planting', format: formatHectares },
+          { key: 'harvestedArea', header: 'Harvested area', format: formatHectares },
+        ]}
+        rows={points}
+      />
     </div>
   );
 }

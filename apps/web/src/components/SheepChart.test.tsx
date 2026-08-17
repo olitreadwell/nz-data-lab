@@ -27,6 +27,21 @@ describe('SheepChart', () => {
     expect(results).toHaveNoViolations();
   });
 
+  it('exposes the data in a keyboard-reachable table', () => {
+    const { container } = render(<SheepChart points={POINTS} />);
+    const summary = container.querySelector('summary');
+    if (summary === null) {
+      throw new Error('Expected a chart data table summary');
+    }
+    fireEvent.click(summary);
+    expect(screen.getByRole('columnheader', { name: 'Year' })).toBeInTheDocument();
+    expect(screen.getByRole('columnheader', { name: 'Sheep' })).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: '1994' })).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: '49.5 million sheep' })).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: '2025' })).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: '23.3 million sheep' })).toBeInTheDocument();
+  });
+
   it('shows the population for the hovered year', async () => {
     render(<SheepChart points={POINTS} />);
     fireEvent.mouseMove(screen.getByRole('img'), { clientX: 100, clientY: 100 });

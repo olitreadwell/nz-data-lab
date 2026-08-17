@@ -6,6 +6,8 @@ import { ResponsiveContainer, Treemap } from 'recharts';
 import { searchLiveDataGovtNz } from '@/lib/live-sources';
 import type { LiveDataGovtNzDataset } from '@/lib/live-sources';
 
+import { ChartDataTable } from './ChartDataTable';
+
 interface OpenDataSearchProps {
   initialQuery: string;
 }
@@ -109,43 +111,53 @@ export function OpenDataSearch({ initialQuery }: OpenDataSearchProps): React.Rea
       </p>
       {!isLoading && error === null && datasets.length > 0 && (
         <div className="grid gap-4 sm:grid-cols-2">
-          <div role="img" aria-label={label} className="h-[220px] sm:h-[260px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <Treemap
-                data={byOrg}
-                dataKey="size"
-                nameKey="name"
-                stroke="var(--color-bg)"
-                fill="#0ea5e9"
-                content={(props) => {
-                  const { x, y, width, height, index, name } = props as {
-                    x: number;
-                    y: number;
-                    width: number;
-                    height: number;
-                    index?: number;
-                    name?: string;
-                  };
-                  const color = ORG_COLORS[(index ?? 0) % ORG_COLORS.length] ?? '#94a3b8';
-                  return (
-                    <g>
-                      <rect x={x} y={y} width={width} height={height} fill={color} rx={2} />
-                      {width > 40 && height > 20 && (
-                        <text
-                          x={x + 4}
-                          y={y + 14}
-                          fill="var(--color-bg)"
-                          fontSize={11}
-                          fontWeight={600}
-                        >
-                          {name}
-                        </text>
-                      )}
-                    </g>
-                  );
-                }}
-              />
-            </ResponsiveContainer>
+          <div>
+            <div role="img" aria-label={label} className="h-[220px] sm:h-[260px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <Treemap
+                  data={byOrg}
+                  dataKey="size"
+                  nameKey="name"
+                  stroke="var(--color-bg)"
+                  fill="#0ea5e9"
+                  content={(props) => {
+                    const { x, y, width, height, index, name } = props as {
+                      x: number;
+                      y: number;
+                      width: number;
+                      height: number;
+                      index?: number;
+                      name?: string;
+                    };
+                    const color = ORG_COLORS[(index ?? 0) % ORG_COLORS.length] ?? '#94a3b8';
+                    return (
+                      <g>
+                        <rect x={x} y={y} width={width} height={height} fill={color} rx={2} />
+                        {width > 40 && height > 20 && (
+                          <text
+                            x={x + 4}
+                            y={y + 14}
+                            fill="var(--color-bg)"
+                            fontSize={11}
+                            fontWeight={600}
+                          >
+                            {name}
+                          </text>
+                        )}
+                      </g>
+                    );
+                  }}
+                />
+              </ResponsiveContainer>
+            </div>
+            <ChartDataTable
+              summary="View datasets by publisher as a table"
+              columns={[
+                { key: 'name', header: 'Publisher' },
+                { key: 'size', header: 'Datasets' },
+              ]}
+              rows={byOrg}
+            />
           </div>
           <ul className="max-h-[260px] space-y-1 overflow-y-auto pr-1">
             {datasets.slice(0, MAX_DATASETS_SHOWN).map((dataset) => (
