@@ -170,12 +170,10 @@ async function triageIssues() {
       'list',
       '--repo',
       REPO,
-      '--label',
-      'quality-loop',
       '--state',
       'open',
       '--json',
-      'number,title,body',
+      'number,title,body,labels',
     ]),
   );
   if (open.length === 0) {
@@ -184,11 +182,13 @@ async function triageIssues() {
   }
   const prompt = [
     `You are the triage agent for the quality-issue-loop in the nz-data-lab repo at ${ROOT}.`,
-    'Below is every open quality-loop issue. For EACH issue:',
+    'Below is every open issue in the repo (user reports and loop-generated).',
+    'For EACH issue:',
+    '- skip bot/dependency-dashboard issues (e.g. renovate, Dependency Dashboard)',
     '- read the code it references and decide whether the finding is STILL VALID',
     '- if it is already fixed, obsolete, or out of scope, mark action "close"',
-    '- otherwise refresh the body: current file/line references, what the code does',
-    '  today, and updated acceptance criteria. Do not invent findings.',
+    '- otherwise refresh the body into a fixable spec: current file/line references,',
+    '  what the code does today, and updated acceptance criteria. Do not invent findings.',
     '- reassign priority: security and accessibility = "high",',
     '  correctness/robustness/perf = "medium", polish/docs/tests = "low"',
     '',
@@ -234,7 +234,17 @@ async function triageIssues() {
       console.log(`triage closed #${number}: ${verdict.reason ?? 'stale'}`);
       continue;
     }
-    run('gh', ['issue', 'edit', number, '--repo', REPO, '--body', verdict.body]);
+    run('gh', [
+      'issue',
+      'edit',
+      number,
+      '--repo',
+      REPO,
+      '--body',
+      verdict.body,
+      '--add-label',
+      'quality-loop',
+    ]);
     if (verdict.priority !== undefined) {
       const target = `priority-${verdict.priority}`;
       for (let attempt = 0; attempt < 3; attempt += 1) {
