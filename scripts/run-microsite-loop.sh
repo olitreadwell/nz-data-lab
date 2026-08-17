@@ -13,6 +13,10 @@
 #   then retried on the next tick.
 set -euo pipefail
 
+# launchd runs with a minimal PATH; node lives under mise, so add it or the
+# codex binary (a node script) cannot start.
+export PATH="$HOME/.local/share/mise/installs/node/lts/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+
 REPO="$HOME/code/nz-data-lab"
 PROMPT="$REPO/scripts/loop-prompt.txt"
 HEAL_PROMPT="$REPO/scripts/heal-loop-prompt.txt"
