@@ -344,4 +344,36 @@ export const MICROSITES: MicrositeConfig[] = [
       },
     ],
   },
+  {
+    slug: 'online-garage-sale',
+    label: 'Online garage sale',
+    eyebrow: '🛒 the online garage sale',
+    title: "Trade Me's category tree has 5,589 leaf categories.",
+    description:
+      "Trade Me is New Zealand's online marketplace. Its category tree organises every listing, from cars to collectables. This page shows the tree, fetched live from the Trade Me API.",
+    paragraphs: [
+      'Home & living is the biggest branch with 581 leaf categories. Motors is close behind with 560, and Sports has 535.',
+      'Type to filter the tree, or click a branch to expand it. The radial chart shows the top-level branches by leaf count.',
+    ],
+    accent: 'fuchsia',
+    dataNote:
+      'Data: Trade Me public category tree (api.trademe.co.nz/v1/Categories.json), fetched live from the browser. The tree holds 5,589 leaf categories.',
+    references: [
+      {
+        label: 'Trade Me',
+        url: 'https://www.trademe.co.nz/',
+        kind: 'data',
+      },
+      {
+        label: 'About Trade Me',
+        url: 'https://www.trademe.co.nz/about',
+        kind: 'history',
+      },
+      {
+        label: 'Trade Me Motors',
+        url: 'https://www.trademe.co.nz/motors',
+        kind: 'data',
+      },
+    ],
+  },
 ];

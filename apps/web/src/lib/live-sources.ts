@@ -183,3 +183,62 @@ export async function searchLiveDigitalNz(query: string): Promise<LiveDigitalNzS
   return parseDigitalNzSearch(await response.json());
 }
 
+export interface LiveTradeMeCategory {
+  name: string;
+  number: string;
+  path: string;
+  isLeaf: boolean;
+  subcategories: LiveTradeMeCategory[];
+}
+
+interface RawTradeMeCategory {
+  Name: string;
+  Number: string;
+  Path: string;
+  IsLeaf: boolean;
+  Subcategories: RawTradeMeCategory[];
+}
+
+function isRawTradeMeCategory(value: unknown): value is RawTradeMeCategory {
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
+  const record = value as Record<string, unknown>;
+  return (
+    typeof record.Name === 'string' &&
+    typeof record.Number === 'string' &&
+    typeof record.Path === 'string' &&
+    (record.IsLeaf === undefined || typeof record.IsLeaf === 'boolean') &&
+    (record.Subcategories === undefined || Array.isArray(record.Subcategories))
+  );
+}
+
+function toLiveTradeMeCategory(category: RawTradeMeCategory): LiveTradeMeCategory {
+  return {
+    name: category.Name,
+    number: category.Number,
+    path: category.Path,
+    isLeaf: category.IsLeaf,
+    subcategories: (category.Subcategories ?? []).map(toLiveTradeMeCategory),
+  };
+}
+
+/** Parses a Trade Me Categories.json payload into a category tree. */
+export function parseTradeMeTree(payload: unknown): LiveTradeMeCategory {
+  if (!isRawTradeMeCategory(payload)) {
+    throw new Error('Trade Me: invalid category payload');
+  }
+  return toLiveTradeMeCategory(payload);
+}
+
+/** Fetches the Trade Me category tree from the browser (CORS is open). */
+export async function fetchLiveTradeMeTree(): Promise<LiveTradeMeCategory> {
+  const controller = createLiveSearchAbortController();
+  const response = await fetch('https://api.trademe.co.nz/v1/Categories.json', {
+    signal: controller.signal,
+  });
+  if (!response.ok) {
+    throw new Error(`Trade Me HTTP ${response.status}`);
+  }
+  return parseTradeMeTree(await response.json());
+}

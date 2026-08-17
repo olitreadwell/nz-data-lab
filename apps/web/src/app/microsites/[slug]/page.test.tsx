@@ -111,3 +111,12 @@ it('renders the digitised memory story', async () => {
   expect(html).toContain('Papers Past');
 });
 
+it('renders the online garage sale story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'online-garage-sale' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('5,589 leaf categories');
+  expect(html).toContain('Trade Me');
+  expect(html).toContain('Home &amp; living');
+});

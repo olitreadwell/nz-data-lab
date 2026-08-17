@@ -48,6 +48,7 @@ export default async function HomePage(): Promise<React.ReactElement> {
   const speciesConfig = getMicrosite('species-register');
   const openDataConfig = getMicrosite('open-data-catalogue');
   const digitisedConfig = getMicrosite('digitised-memory');
+  const garageSaleConfig = getMicrosite('online-garage-sale');
 
   return (
     <main>
@@ -152,6 +153,15 @@ export default async function HomePage(): Promise<React.ReactElement> {
             statLabel="Records matching 'gold'"
             statValue="1,977,021"
             accent={digitisedConfig.accent}
+          />
+          <MicrositeCard
+            slug={garageSaleConfig.slug}
+            eyebrow={garageSaleConfig.eyebrow}
+            title={garageSaleConfig.title}
+            description={garageSaleConfig.description}
+            statLabel="Leaf categories"
+            statValue="5,589"
+            accent={garageSaleConfig.accent}
           />
         </div>
       </Container>

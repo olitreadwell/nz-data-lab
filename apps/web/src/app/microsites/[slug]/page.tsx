@@ -15,6 +15,7 @@ import { QuakeMap } from '@/components/QuakeMap';
 import { SheepChart } from '@/components/SheepChart';
 import { SpeciesRegisterSearch } from '@/components/SpeciesRegisterSearch';
 import { StatCard } from '@/components/StatCard';
+import { TradeMeTree } from '@/components/TradeMeTree';
 import { env } from '@/env';
 import { fetchForestrySeries, summarizeForestry } from '@/lib/forestry-data';
 import { formatHectares, formatMillions } from '@/lib/format';
@@ -315,6 +316,17 @@ function renderStoryContent(
             <StatCard label="Records matching 'gold'" value="1,977,021" accent="cyan" />
             <StatCard label="1890s records matching 'gold'" value="427,164" accent="cyan" />
             <StatCard label="Peak decade" value="1890s" accent="cyan" />
+          </dl>
+        ),
+      };
+    case 'online-garage-sale':
+      return {
+        chart: <TradeMeTree />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard label="Leaf categories" value="5,589" accent="fuchsia" />
+            <StatCard label="Home & living leaves" value="581" accent="fuchsia" />
+            <StatCard label="Motors leaves" value="560" accent="fuchsia" />
           </dl>
         ),
       };

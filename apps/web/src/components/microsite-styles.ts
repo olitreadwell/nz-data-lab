@@ -10,7 +10,7 @@ export type MicrositeAccent =
   | 'teal'
   | 'indigo'
   | 'cyan'
-;
+  | 'fuchsia';
 
 export interface MicrositeAccentStyles {
   eyebrow: string;
@@ -90,6 +90,13 @@ const ACCENT_STYLES: Record<MicrositeAccent, MicrositeAccentStyles> = {
     cardBg: 'bg-cyan-50',
     cardValue: 'text-cyan-700',
     chartBorder: 'border-cyan-200',
+  },
+  fuchsia: {
+    eyebrow: 'text-fuchsia-600',
+    sectionBg: 'bg-gradient-to-b from-fuchsia-50/80 via-transparent to-transparent',
+    cardBg: 'bg-fuchsia-50',
+    cardValue: 'text-fuchsia-700',
+    chartBorder: 'border-fuchsia-200',
   },
 };
 
