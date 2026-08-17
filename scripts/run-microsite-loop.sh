@@ -17,6 +17,18 @@ set -euo pipefail
 # codex binary (a node script) cannot start.
 export PATH="$HOME/.local/share/mise/installs/node/lts/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 
+# The codex model provider needs this key; launchd does not inherit the
+# interactive shell environment, so load it from a 0600 file if present.
+ENV_FILE="$HOME/.config/nz-microsite-loop.env"
+if [ -f "$ENV_FILE" ]; then
+  set -a
+  # shellcheck disable=SC1090
+  . "$ENV_FILE"
+  set +a
+else
+  echo "$(date '+%F %T') warning: $ENV_FILE missing; agent runs may fail auth" >> "$LOG"
+fi
+
 REPO="$HOME/code/nz-data-lab"
 PROMPT="$REPO/scripts/loop-prompt.txt"
 HEAL_PROMPT="$REPO/scripts/heal-loop-prompt.txt"
