@@ -7,11 +7,15 @@ import {
   parseAucklandParkBoards,
   parseCanterburyRainGauges,
   parseDataGovtNzSearch,
+  parseCasCrashCells,
+  parseEvChargingCurrentTypes,
+  parseEvChargingOperators,
   parseGbifKingdomFacet,
   parseHamiltonPlaygrounds,
   parseInaturalistTotal,
   parseNzSchools,
   parseNzorNamesXml,
+  parseMvrFleetRows,
   parseWikidataPeaks,
   parseWikidataRivers,
   parseWikipediaPageviews,
@@ -386,5 +390,88 @@ describe('parseHamiltonPlaygrounds', () => {
 
   it('returns an empty list when there are no features', () => {
     expect(parseHamiltonPlaygrounds({ features: [] })).toEqual([]);
+  });
+});
+
+describe('parseEvChargingOperators', () => {
+  it('parses operator rows sorted by count, dropping blank operators', () => {
+    const payload = {
+      features: [
+        { attributes: { operator: 'ChargeNet NZ', count: 307 } },
+        { attributes: { operator: 'JOLT', count: 47 } },
+        { attributes: { operator: '', count: 3 } },
+      ],
+    };
+    expect(parseEvChargingOperators(payload)).toEqual([
+      { operator: 'ChargeNet NZ', count: 307 },
+      { operator: 'JOLT', count: 47 },
+    ]);
+  });
+
+  it('returns an empty list when there are no features', () => {
+    expect(parseEvChargingOperators({ features: [] })).toEqual([]);
+  });
+});
+
+describe('parseEvChargingCurrentTypes', () => {
+  it('parses current-type rows sorted by count', () => {
+    const payload = {
+      features: [
+        { attributes: { currentType: 'DC', count: 566 } },
+        { attributes: { currentType: 'AC', count: 44 } },
+        { attributes: { currentType: 'Mixed', count: 29 } },
+      ],
+    };
+    expect(parseEvChargingCurrentTypes(payload)).toEqual([
+      { currentType: 'DC', count: 566 },
+      { currentType: 'AC', count: 44 },
+      { currentType: 'Mixed', count: 29 },
+    ]);
+  });
+});
+
+describe('parseCasCrashCells', () => {
+  it('parses region-by-year cells sorted by year then region', () => {
+    const payload = {
+      features: [
+        { attributes: { region: 'Auckland Region', crashYear: 2007, count: 41661 } },
+        { attributes: { region: 'Auckland Region', crashYear: 2006, count: 39778 } },
+        { attributes: { region: null, crashYear: 2006, count: 108 } },
+      ],
+    };
+    expect(parseCasCrashCells(payload)).toEqual([
+      { region: 'Auckland Region', year: 2006, count: 39778 },
+      { region: 'Auckland Region', year: 2007, count: 41661 },
+    ]);
+  });
+});
+
+describe('parseMvrFleetRows', () => {
+  it('parses motive-power rows sorted by count, grouping blanks as Unknown', () => {
+    const payload = {
+      features: [
+        { attributes: { MOTIVE_POWER: 'PETROL', count: 3178101 } },
+        { attributes: { MOTIVE_POWER: null, count: 882333 } },
+        { attributes: { MOTIVE_POWER: 'ELECTRIC', count: 107525 } },
+      ],
+    };
+    expect(parseMvrFleetRows(payload, 'MOTIVE_POWER')).toEqual([
+      { label: 'PETROL', count: 3178101 },
+      { label: 'Unknown', count: 882333 },
+      { label: 'ELECTRIC', count: 107525 },
+    ]);
+  });
+
+  it('parses vehicle-type rows', () => {
+    const payload = {
+      features: [
+        { attributes: { VEHICLE_TYPE: 'PASSENGER CAR/VAN', count: 3687148 } },
+        { attributes: { VEHICLE_TYPE: 'MOTORCYCLE', count: 191097 } },
+      ],
+    };
+    expect(parseMvrFleetRows(payload, 'VEHICLE_TYPE')).toEqual([
+      { label: 'PASSENGER CAR/VAN', count: 3687148 },
+      { label: 'MOTORCYCLE', count: 191097 },
+    ]);
   });
 });

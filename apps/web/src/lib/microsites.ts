@@ -739,4 +739,85 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+  {
+    slug: 'ev-charging',
+    label: 'EV charging',
+    eyebrow: '🔌 the ev charging map',
+    title: 'New Zealand has 639 public EV charging stations.',
+    description:
+      'The NZTA EV Roam register lists every public EV charging station in New Zealand. ChargeNet runs 307 of them, more than any other operator.',
+    paragraphs: [
+      'The register counts 639 stations, from fast DC chargers on the main highways to slow AC chargers in town centres. 566 stations offer DC charging.',
+      'ChargeNet runs 307 stations, Meridian 104, and Z Energy 63. Toggle the view to see the stations by current type, or type to filter operators by name.',
+    ],
+    accent: 'emerald',
+    dataNote:
+      'Data: NZTA EV Roam charging stations (ArcGIS REST service), grouped by operator and current type, fetched live from the browser. The register holds 639 stations.',
+    references: [
+      {
+        label: 'EV Roam charging stations (NZTA)',
+        url: 'https://opendata-nzta.opendata.arcgis.com/datasets/NZTA::ev-roam-charging-stations',
+        kind: 'data',
+      },
+      {
+        label: 'EV Roam (NZTA)',
+        url: 'https://www.nzta.govt.nz/vehicles/electric-vehicles/ev-roam/',
+        kind: 'data',
+      },
+    ],
+  },
+  {
+    slug: 'road-crash-trend',
+    label: 'Road crash trend',
+    eyebrow: '🚗 the road crash trend',
+    title: 'Road crashes fell 27% from 2006 to 2025.',
+    description:
+      'The NZTA Crash Analysis System records every reported crash on New Zealand roads. Crashes fell from 39,778 in 2006 to 29,017 in 2025, down 27%.',
+    paragraphs: [
+      'The heatmap shows crashes by region and year. Auckland leads every year, with 235,352 crashes across the series, more than the next three regions combined.',
+      'Fatal crashes tell a similar story: 350 in 2006, 259 in 2025. Toggle between all crashes and fatal crashes, or drag the slider to narrow the year window.',
+    ],
+    accent: 'rose',
+    dataNote:
+      'Data: NZTA Crash Analysis System (CAS) public dataset (ArcGIS REST service), crashes by region and year, fetched live from the browser. The series covers 2006 to 2026 and holds 705,609 crashes.',
+    references: [
+      {
+        label: 'Crash Analysis System data (NZTA)',
+        url: 'https://opendata-nzta.opendata.arcgis.com/datasets/NZTA::crash-analysis-system-cas-data-1',
+        kind: 'data',
+      },
+      {
+        label: 'Road safety data (NZTA)',
+        url: 'https://www.nzta.govt.nz/safety/data/',
+        kind: 'data',
+      },
+    ],
+  },
+  {
+    slug: 'vehicle-fleet',
+    label: 'Vehicle fleet',
+    eyebrow: '🚙 the vehicle fleet',
+    title: "New Zealand's fleet has 107,525 electric vehicles.",
+    description:
+      'The NZTA Motor Vehicle Register lists every vehicle in New Zealand. The fleet holds 5.9 million vehicles, and 107,525 of them are electric.',
+    paragraphs: [
+      'Petrol still dominates with 3.18 million vehicles, and diesel adds 1.23 million. Hybrids are the fast-growing middle: 420,013 petrol hybrids and 50,321 plug-in hybrids.',
+      'The sunburst shows the fleet by fuel or by vehicle type. Passenger cars and vans make up 3.69 million of the 5.9 million vehicles.',
+    ],
+    accent: 'sky',
+    dataNote:
+      'Data: NZTA Motor Vehicle Register (ArcGIS REST service), grouped by motive power and vehicle type, fetched live from the browser. 882,333 vehicles have no motive power recorded; 881,263 of them are trailers or caravans, grouped as Unknown.',
+    references: [
+      {
+        label: 'Motor Vehicle Register (NZTA)',
+        url: 'https://opendata-nzta.opendata.arcgis.com/datasets/NZTA::motor-vehicle-register',
+        kind: 'data',
+      },
+      {
+        label: 'New Zealand Motor Vehicle Register statistics (NZTA)',
+        url: 'https://www.nzta.govt.nz/resources/new-zealand-motor-vehicle-register-statistics/',
+        kind: 'data',
+      },
+    ],
+  },
 ]);
