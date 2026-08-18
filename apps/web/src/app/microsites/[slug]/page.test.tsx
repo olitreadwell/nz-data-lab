@@ -177,6 +177,16 @@ describe('MicrositePage', () => {
     expect(html).toContain('5,122,600');
   });
 
+  it('renders the regional population growth story', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'regional-population-growth' })} />,
+    );
+    const html = await new Response(stream).text();
+    expect(html).toContain('The top of the country is growing faster than the bottom.');
+    expect(html).toContain('240,936');
+    expect(html).toContain('Sources and further reading');
+  });
+
   it('renders the quake magnitudes story', async () => {
     const stream = await renderToReadableStream(
       <MicrositePage params={Promise.resolve({ slug: 'quake-magnitudes' })} />,

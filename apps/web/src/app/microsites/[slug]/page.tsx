@@ -23,6 +23,7 @@ import { PopulationRankBump } from '@/components/PopulationRankBump';
 import { QuakeMagnitudeHistogram } from '@/components/QuakeMagnitudeHistogram';
 import { QuakeMap } from '@/components/QuakeMap';
 import { RabbitChart } from '@/components/RabbitChart';
+import { RegionalGrowthDumbbell } from '@/components/RegionalGrowthDumbbell';
 import { ReportIssueButton } from '@/components/ReportIssueButton';
 import { RiverLengths } from '@/components/RiverLengths';
 import { RoadCrashTrend } from '@/components/RoadCrashTrend';
@@ -703,6 +704,35 @@ function renderStoryContent(
         ),
       };
     }
+    case 'regional-population-growth':
+      return {
+        chart: <RegionalGrowthDumbbell />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Auckland gain, 2013-2023"
+              value="240,936"
+              accent="emerald"
+              testId="regional-growth-auckland-gain"
+              dataValue={240936}
+            />
+            <StatCard
+              label="Fastest growth"
+              value="Northland, +27.9%"
+              accent="emerald"
+              testId="regional-growth-northland"
+              dataValue={27.9}
+            />
+            <StatCard
+              label="Slowest growth"
+              value="West Coast, +3.9%"
+              accent="emerald"
+              testId="regional-growth-west-coast"
+              dataValue={3.9}
+            />
+          </dl>
+        ),
+      };
     default:
       return { chart: null, stats: null };
   }

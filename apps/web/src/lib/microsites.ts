@@ -853,4 +853,37 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+
+  {
+    slug: 'regional-population-growth',
+    label: 'Regional population growth',
+    eyebrow: '🗺️ the growth gap',
+    title: 'The top of the country is growing faster than the bottom.',
+    description:
+      'Every region grew between the 2013 and 2023 censuses, but the growth piled up in the north. Northland grew the fastest at 27.9 percent, Auckland added the most people at 240,936, and the West Coast grew the slowest at 3.9 percent.',
+    paragraphs: [
+      'The four fastest-growing regions are all in the top of the North Island. Northland, Waikato, and Bay of Plenty all grew by more than 23 percent, and together with Auckland they added 444,783 people, about 59 percent of the national gain of 751,875.',
+      'The bottom of the country grew much more slowly. The West Coast added 1,242 people in the decade, and Southland grew 7.3 percent. Canterbury was the exception to the south: it added 111,594 people, the second-largest gain of any region.',
+    ],
+    accent: 'emerald',
+    dataNote:
+      'Data: Stats NZ 2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts, Table 1 (census usually resident population count by regional council area, 2013 and 2023 censuses). The chart plots population on a log scale, so the gap between the dots shows the growth rate. Hover a row to read both counts.',
+    references: [
+      {
+        label: '2023 Census population counts release (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
+        kind: 'data',
+      },
+      {
+        label: '2023 Census (Stats NZ)',
+        url: 'https://www.stats.govt.nz/2023-census/',
+        kind: 'data',
+      },
+      {
+        label: 'Population (Stats NZ)',
+        url: 'https://www.stats.govt.nz/topics/population',
+        kind: 'history',
+      },
+    ],
+  },
 ]);
