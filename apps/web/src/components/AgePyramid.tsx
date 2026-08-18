@@ -43,6 +43,13 @@ export function AgePyramid(): React.ReactElement {
     { key: 'total', header: 'Total', format: (value) => value.toLocaleString('en-NZ') },
   ];
 
+  const legendItems = (
+    [
+      ['male', 'Male', MALE_COLOR],
+      ['female', 'Female', FEMALE_COLOR],
+    ] as const
+  ).filter(([sex]) => view === 'both' || view === sex);
+
   return (
     <div>
       <div className="mb-3 flex gap-1 rounded-[var(--radius-sm)] border border-[var(--color-border)] p-1">
@@ -64,6 +71,18 @@ export function AgePyramid(): React.ReactElement {
           </button>
         ))}
       </div>
+      <ul className="mb-3 flex gap-4" aria-label="Chart legend">
+        {legendItems.map(([sex, label, color]) => (
+          <li key={sex} className="flex items-center gap-2 text-sm text-[var(--color-fg)]">
+            <span
+              aria-hidden="true"
+              className="h-3 w-3 rounded-[var(--radius-sm)]"
+              style={{ backgroundColor: color }}
+            />
+            {label}
+          </li>
+        ))}
+      </ul>
       <div role="img" aria-label={chartLabel}>
         <ul className="space-y-1">
           {bands.map((band) => {
