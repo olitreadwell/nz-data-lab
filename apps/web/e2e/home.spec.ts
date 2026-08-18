@@ -17,7 +17,7 @@ test.describe('home', () => {
     await expect(page.getByText('Sources and further reading')).toBeVisible();
   });
 
-  test('@critical no a11y violations on the landing page', async ({ page }) => {
+  test('@critical @a11y no a11y violations on the landing page', async ({ page }) => {
     await page.goto('./');
     const results = await new AxeBuilder({ page }).analyze();
     expect(results.violations).toEqual([]);
