@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { TooltipContentProps } from 'recharts';
 
@@ -77,20 +77,31 @@ export function DigitisedMemorySearch({
   const [error, setError] = useState<string | null>(null);
   const [minDecade, setMinDecade] = useState<number | null>(null);
   const [maxDecade, setMaxDecade] = useState<number | null>(null);
+  const requestIdRef = useRef(0);
 
   const runSearch = useCallback(async (searchQuery: string) => {
+    const requestId = requestIdRef.current + 1;
+    requestIdRef.current = requestId;
     setIsLoading(true);
     setError(null);
     try {
       const next = await searchLiveDigitalNz(searchQuery);
+      if (requestIdRef.current !== requestId) {
+        return;
+      }
       setResult(next);
       setMinDecade(next.decades[0]?.decade ?? null);
       setMaxDecade(next.decades[next.decades.length - 1]?.decade ?? null);
     } catch {
+      if (requestIdRef.current !== requestId) {
+        return;
+      }
       setError('The collection did not answer. Try again in a moment.');
       setResult(null);
     } finally {
-      setIsLoading(false);
+      if (requestIdRef.current === requestId) {
+        setIsLoading(false);
+      }
     }
   }, []);
 
