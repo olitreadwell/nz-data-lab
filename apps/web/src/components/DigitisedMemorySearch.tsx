@@ -126,6 +126,11 @@ export function DigitisedMemorySearch({
   const firstDecade = decades[0]?.decade ?? 0;
   const lastDecade = decades[decades.length - 1]?.decade ?? 0;
   const hasDecades = decades.length > 0;
+  const isDecadeFiltered =
+    hasDecades &&
+    minDecade !== null &&
+    maxDecade !== null &&
+    (minDecade > firstDecade || maxDecade < lastDecade);
   const chartLabel = `Records matching "${submittedQuery}" by decade`;
   const decadeColumns: ChartDataColumn<LiveDigitalNzDecade>[] = [
     { key: 'decade', header: 'Decade', format: (value) => `${value}s` },
@@ -243,6 +248,12 @@ export function DigitisedMemorySearch({
               </li>
             ))}
           </ul>
+          {isDecadeFiltered && (
+            <p className="sr-only" aria-live="polite">
+              Showing {visibleRecords.length} of {result.resultCount.toLocaleString('en-NZ')}{' '}
+              records
+            </p>
+          )}
         </div>
       )}
     </div>

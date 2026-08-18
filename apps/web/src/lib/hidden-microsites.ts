@@ -8,7 +8,6 @@
  * generated (direct URLs 404).
  */
 export const HIDDEN_MICROSITES: string[] = [
-  'digitised-memory',
   'auckland-parks',
   'peak-heights',
   'open-school-map',
