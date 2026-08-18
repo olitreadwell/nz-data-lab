@@ -23,6 +23,7 @@ import { PopulationRankBump } from '@/components/PopulationRankBump';
 import { QuakeMagnitudeHistogram } from '@/components/QuakeMagnitudeHistogram';
 import { QuakeMap } from '@/components/QuakeMap';
 import { RabbitChart } from '@/components/RabbitChart';
+import { ReportIssueButton } from '@/components/ReportIssueButton';
 import { RiverLengths } from '@/components/RiverLengths';
 import { RoadCrashTrend } from '@/components/RoadCrashTrend';
 import { SchoolRoll } from '@/components/SchoolRoll';
@@ -161,6 +162,7 @@ export default async function MicrositePage({
         dataNote={microsite.dataNote}
         references={microsite.references}
       />
+      <ReportIssueButton pageLabel={microsite.label} />
     </>
   );
 }

@@ -1,6 +1,7 @@
 import { Container, Stack } from '@nzlab/ui';
 
 import { MicrositeCard } from '@/components/MicrositeCard';
+import { ReportIssueButton } from '@/components/ReportIssueButton';
 import { env } from '@/env';
 import { fetchForestrySeries, summarizeForestry } from '@/lib/forestry-data';
 import { formatHectares, formatMillions } from '@/lib/format';
@@ -193,32 +194,35 @@ export default async function HomePage(): Promise<React.ReactElement> {
   cards.reverse();
 
   return (
-    <Container size="wide">
-      <Stack className="max-w-3xl gap-4 py-[var(--spacing-2xl)]">
-        <h1 className="numeral-heading-3xl">
-          Small experiments digging through New Zealand public data for the weird, the funny, and
-          the surprising.
-        </h1>
-        <p className="numeral-paragraph-lg text-[var(--color-muted)]">
-          {cards.length} live microsites. Stats NZ at deploy time, plus GeoNet, NZOR,
-          data.govt.nz, DigitalNZ, Trade Me, iNaturalist, GBIF, and Wikipedia live from the
-          browser.
-        </p>
-      </Stack>
-      <div className="grid gap-6 pb-[var(--spacing-3xl)] sm:grid-cols-2 lg:grid-cols-3">
-        {cards.map((card) => (
-          <MicrositeCard
-            key={card.config.slug}
-            slug={card.config.slug}
-            eyebrow={card.config.eyebrow}
-            title={card.config.title}
-            description={card.config.description}
-            statLabel={card.statLabel}
-            statValue={card.statValue}
-            accent={card.config.accent}
-          />
-        ))}
-      </div>
-    </Container>
+    <>
+      <Container size="wide">
+        <Stack className="max-w-3xl gap-4 py-[var(--spacing-2xl)]">
+          <h1 className="numeral-heading-3xl">
+            Small experiments digging through New Zealand public data for the weird, the funny, and
+            the surprising.
+          </h1>
+          <p className="numeral-paragraph-lg text-[var(--color-muted)]">
+            {cards.length} live microsites. Stats NZ at deploy time, plus GeoNet, NZOR,
+            data.govt.nz, DigitalNZ, Trade Me, iNaturalist, GBIF, and Wikipedia live from the
+            browser.
+          </p>
+        </Stack>
+        <div className="grid gap-6 pb-[var(--spacing-3xl)] sm:grid-cols-2 lg:grid-cols-3">
+          {cards.map((card) => (
+            <MicrositeCard
+              key={card.config.slug}
+              slug={card.config.slug}
+              eyebrow={card.config.eyebrow}
+              title={card.config.title}
+              description={card.config.description}
+              statLabel={card.statLabel}
+              statValue={card.statValue}
+              accent={card.config.accent}
+            />
+          ))}
+        </div>
+      </Container>
+      <ReportIssueButton />
+    </>
   );
 }
