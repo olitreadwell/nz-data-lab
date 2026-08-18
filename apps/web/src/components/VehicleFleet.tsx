@@ -19,6 +19,27 @@ interface FleetDatum {
   count: number;
 }
 
+/** One sector in the sunburst and its legend entry: label, count, and fill colour. */
+interface SectorDatum extends FleetDatum {
+  color: string;
+}
+
+/** Colour per sector, reused by both the sunburst fill and the legend swatch. */
+const SECTOR_COLORS = [
+  '#1f77b4',
+  '#ff7f0e',
+  '#2ca02c',
+  '#d62728',
+  '#9467bd',
+  '#8c564b',
+  '#e377c2',
+  '#7f7f7f',
+  '#bcbd22',
+  '#17becf',
+];
+
+const FALLBACK_SECTOR_COLOR = '#1f77b4';
+
 function formatVehicles(value: string | number): string {
   return Number(value).toLocaleString('en-NZ');
 }
@@ -95,12 +116,24 @@ export function VehicleFleet(): React.ReactElement {
   const rows = viewMode === 'motivePower' ? motivePowerRows : vehicleTypeRows;
   const totalVehicles = useMemo(() => rows.reduce((sum, row) => sum + row.count, 0), [rows]);
   const data = useMemo(() => groupFleetRows(rows, TOP_N), [rows]);
+  const coloredData = useMemo<SectorDatum[]>(
+    () =>
+      data.map((row, index) => ({
+        ...row,
+        color: SECTOR_COLORS[index % SECTOR_COLORS.length] ?? FALLBACK_SECTOR_COLOR,
+      })),
+    [data],
+  );
   const sunburstData = useMemo<SunburstData>(
     () => ({
       name: 'New Zealand fleet',
-      children: data.map((row) => ({ name: row.label, value: row.count })),
+      children: coloredData.map((row) => ({
+        name: row.label,
+        value: row.count,
+        fill: row.color,
+      })),
     }),
-    [data],
+    [coloredData],
   );
   const chartLabel =
     viewMode === 'motivePower'
@@ -144,14 +177,30 @@ export function VehicleFleet(): React.ReactElement {
               <Tooltip content={FleetTooltip} />
             </SunburstChart>
           </div>
+          <ul
+            className="mt-2 mb-2 flex flex-wrap gap-x-4 gap-y-1 text-sm"
+            aria-label="Sector colours legend"
+          >
+            {coloredData.map((row) => (
+              <li key={row.label} className="flex items-center gap-2">
+                <span
+                  className="h-3 w-3 shrink-0 rounded-[2px]"
+                  style={{ backgroundColor: row.color }}
+                  aria-hidden="true"
+                />
+                <span className="text-[var(--color-fg)]">{row.label}</span>
+              </li>
+            ))}
+          </ul>
           <p className="numeral-paragraph-sm mt-1 text-[var(--color-muted)]">
             Each sector is one {viewMode === 'motivePower' ? 'fuel type' : 'vehicle type'}; the
-            angle shows its share of the fleet. Hover a sector to read the count.
+            angle shows its share of the fleet. The table below lists every sector and its count.
           </p>
           <ChartDataTable
             summary="View the vehicle fleet as a table"
             columns={tableColumns}
-            rows={data}
+            rows={coloredData}
+            defaultOpen
           />
         </div>
       )}
