@@ -745,10 +745,10 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
     eyebrow: '📅 the quake months',
     title: 'Quakes of magnitude 3+ cluster in autumn.',
     description:
-      'In the two years to 19 August 2026, GeoNet located 6,883 earthquakes of magnitude 3 or stronger. April was the busiest month with 675, November the quietest with 488.',
+      'In the two years to 19 August 2026, GeoNet located 4,150 earthquakes of magnitude 3 or stronger. April was the busiest month with 436, August the quietest with 272.',
     paragraphs: [
-      'The seasonal swing is real but modest: the busiest month runs about 40% higher than the quietest. In the full year 2025, April had 316 quakes of magnitude 3 or stronger and September just 214.',
-      'The autumn tilt holds at magnitude 4 and stronger, where April is again the busiest month (314) and November the quietest (205). At magnitude 5 and stronger the pattern shifts: July was the busiest month with 129, while November stayed the quietest with 66.',
+      'The seasonal swing is real but modest: the busiest month runs about 60% higher than the quietest. In the full year 2025, April had 188 quakes of magnitude 3 or stronger and September just 131.',
+      'The autumn tilt holds at magnitude 4 and stronger, where April is again the busiest month (108) and November the quietest (44). At magnitude 5 and stronger the pattern shifts: October was the busiest month with 16, while November stayed the quietest with 2.',
     ],
     accent: 'rose',
     dataNote:
