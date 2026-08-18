@@ -128,7 +128,7 @@ describe('TradeMeTree', () => {
     fireEvent.click(summary);
     const table = screen.getByRole('table');
     expect(table).toHaveTextContent('Category');
-    expect(table).toHaveTextContent('Leaf count');
+    expect(table).toHaveTextContent('Leaf categories');
     expect(table).toHaveTextContent('Home & living');
     expect(table).toHaveTextContent('Trade Me Motors');
     expect(table).toHaveTextContent('2');

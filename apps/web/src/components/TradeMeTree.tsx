@@ -203,11 +203,6 @@ export function TradeMeTree(): React.ReactElement {
   }, []);
 
   const chartLabel = 'Top-level Trade Me categories by leaf count';
-  const tableColumns: ChartDataColumn<FlatCategory>[] = [
-    { key: 'name', header: 'Category' },
-    { key: 'leafCount', header: 'Leaf count' },
-  ];
-
   const topCategoryColumns: ChartDataColumn<FlatCategory>[] = [
     { key: 'name', header: 'Category' },
     {
@@ -267,11 +262,6 @@ export function TradeMeTree(): React.ReactElement {
                 </RadialBarChart>
               </ResponsiveContainer>
             </div>
-            <ChartDataTable
-              summary="View the top categories as a table"
-              columns={tableColumns}
-              rows={topCategories}
-            />
           </div>
           <ChartDataTable
             summary="View top-level categories by leaf count as a table"
