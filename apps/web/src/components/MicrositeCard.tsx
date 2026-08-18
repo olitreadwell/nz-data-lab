@@ -9,8 +9,8 @@ interface MicrositeCardProps {
   eyebrow: string;
   title: string;
   description: string;
-  statLabel: string;
-  statValue: string;
+  statLabel?: string;
+  statValue?: string;
   accent: MicrositeAccent;
 }
 
@@ -33,10 +33,12 @@ export function MicrositeCard({
       <MicrositeEyebrow className={`numeral-text-eyebrow ${styles.eyebrow}`} eyebrow={eyebrow} />
       <h2 className="numeral-heading-xl">{title}</h2>
       <p className="numeral-paragraph-md text-[var(--color-muted)]">{description}</p>
-      <dl className="mt-auto">
-        <dt className="numeral-text-eyebrow text-[var(--color-muted)]">{statLabel}</dt>
-        <dd className={`numeral-heading-2xl ${styles.cardValue}`}>{statValue}</dd>
-      </dl>
+      {statLabel !== undefined && statValue !== undefined ? (
+        <dl className="mt-auto">
+          <dt className="numeral-text-eyebrow text-[var(--color-muted)]">{statLabel}</dt>
+          <dd className={`numeral-heading-2xl ${styles.cardValue}`}>{statValue}</dd>
+        </dl>
+      ) : null}
     </Link>
   );
 }

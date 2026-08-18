@@ -1,6 +1,7 @@
 import { Container, Stack } from '@nzlab/ui';
 
 import { MicrositeGallery } from '@/components/MicrositeGallery';
+import type { MicrositeGalleryCard } from '@/components/MicrositeGallery';
 import { ReportIssueButton } from '@/components/ReportIssueButton';
 import { env } from '@/env';
 import { fetchForestrySeries, summarizeForestry } from '@/lib/forestry-data';
@@ -237,8 +238,29 @@ export default async function HomePage(): Promise<React.ReactElement> {
     (card): card is { config: MicrositeConfig; statLabel: string; statValue: string } =>
       card.config !== undefined,
   );
-  // The cards array is in ship order (oldest first); show the newest first.
-  cards.reverse();
+  // The home page shows every live microsite; only the curated ones carry a
+  // headline stat fetched at deploy time.
+  const statBySlug = new Map(
+    cards.map((card) => [
+      card.config.slug,
+      { statLabel: card.statLabel, statValue: card.statValue },
+    ]),
+  );
+  // The full microsite list is in ship order (oldest first); show the newest first.
+  const galleryCards: MicrositeGalleryCard[] = [...MICROSITES].reverse().map((config) => {
+    const stat = statBySlug.get(config.slug);
+    return {
+      slug: config.slug,
+      eyebrow: config.eyebrow,
+      title: config.title,
+      description: config.description,
+      accent: config.accent,
+      dataSource: config.dataSource,
+      chartType: config.chartType,
+      category: config.category,
+      ...(stat !== undefined ? { statLabel: stat.statLabel, statValue: stat.statValue } : {}),
+    };
+  });
 
   return (
     <>
@@ -249,26 +271,13 @@ export default async function HomePage(): Promise<React.ReactElement> {
             the surprising.
           </h1>
           <p className="numeral-paragraph-lg text-[var(--color-muted)]">
-            {cards.length} live microsites. Stats NZ at deploy time, plus GeoNet, NZOR,
+            {galleryCards.length} live microsites. Stats NZ at deploy time, plus GeoNet, NZOR,
             data.govt.nz, DigitalNZ, Trade Me, iNaturalist, GBIF, and Wikipedia live from the
             browser.
           </p>
         </Stack>
         <div className="pb-[var(--spacing-3xl)]">
-          <MicrositeGallery
-            cards={cards.map((card) => ({
-              slug: card.config.slug,
-              eyebrow: card.config.eyebrow,
-              title: card.config.title,
-              description: card.config.description,
-              statLabel: card.statLabel,
-              statValue: card.statValue,
-              accent: card.config.accent,
-              dataSource: card.config.dataSource,
-              chartType: card.config.chartType,
-              category: card.config.category,
-            }))}
-          />
+          <MicrositeGallery cards={galleryCards} />
         </div>
       </Container>
       <ReportIssueButton />

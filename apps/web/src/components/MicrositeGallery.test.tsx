@@ -100,3 +100,21 @@ describe('MicrositeGallery', () => {
     expect(screen.getByText('Showing 3 of 3 microsites.')).toBeInTheDocument();
   });
 });
+
+describe('MicrositeGallery cards without headline stats', () => {
+  it('still renders a card and links to the story', () => {
+    const statless: MicrositeGalleryCard = {
+      slug: 'retail-sales-by-month',
+      eyebrow: '🛍️ retail sales',
+      title: 'Retail Sales by Month',
+      description: 'A streamgraph of card transactions.',
+      accent: 'purple',
+      dataSource: 'Stats NZ',
+      chartType: 'Streamgraph',
+      category: 'Economy & business',
+    };
+    render(<MicrositeGallery cards={[statless]} />);
+    expect(screen.getByRole('link', { name: /Retail Sales by Month/ })).toBeInTheDocument();
+    expect(screen.queryByText('Showing 1 of 1 microsites.')).toBeInTheDocument();
+  });
+});

@@ -11,8 +11,8 @@ export interface MicrositeGalleryCard {
   eyebrow: string;
   title: string;
   description: string;
-  statLabel: string;
-  statValue: string;
+  statLabel?: string;
+  statValue?: string;
   accent: MicrositeAccent;
   dataSource: string;
   chartType: string;
@@ -126,9 +126,10 @@ export function MicrositeGallery({ cards }: MicrositeGalleryProps): React.ReactE
               eyebrow={card.eyebrow}
               title={card.title}
               description={card.description}
-              statLabel={card.statLabel}
-              statValue={card.statValue}
               accent={card.accent}
+              {...(card.statLabel !== undefined && card.statValue !== undefined
+                ? { statLabel: card.statLabel, statValue: card.statValue }
+                : {})}
             />
           ))}
         </div>
