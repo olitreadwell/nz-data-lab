@@ -30,8 +30,19 @@ describe('QuakeMagnitudeHistogram', () => {
 
   it('narrows the window to 30 days', () => {
     render(<QuakeMagnitudeHistogram events={EVENTS} />);
-    fireEvent.click(screen.getByRole('button', { name: '30 days' }));
+    fireEvent.click(screen.getByRole('radio', { name: '30 days' }));
     expect(screen.getByText(/3 quakes in the last 30 days/)).toBeInTheDocument();
+  });
+
+  it('exposes the time window selector as a radio group with one checked option', () => {
+    render(<QuakeMagnitudeHistogram events={EVENTS} />);
+    const group = screen.getByRole('radiogroup', { name: 'Time window' });
+    expect(group).toBeInTheDocument();
+    const checked = screen
+      .getAllByRole('radio')
+      .filter((radio) => radio.getAttribute('aria-checked') === 'true');
+    expect(checked).toHaveLength(1);
+    expect(checked[0]).toHaveTextContent('90 days');
   });
 
   it('has no accessibility violations', async () => {

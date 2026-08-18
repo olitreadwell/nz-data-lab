@@ -5,6 +5,7 @@ import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxi
 import type { TooltipContentProps } from 'recharts';
 
 import type { QuakeCatalogEvent } from '@/lib/quake-catalog';
+import { handleRadioGroupKeyDown } from '@/lib/radio-group';
 import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
 import { ChartDataTable } from './ChartDataTable';
@@ -129,14 +130,18 @@ export function QuakeMagnitudeHistogram({
           />
           <span className="numeral-text-eyebrow">{binSize.toFixed(1)} magnitude</span>
         </label>
-        <div className="flex items-end gap-1">
-          {DAY_OPTIONS.map((days) => (
+        <div role="radiogroup" aria-label="Time window" className="flex items-end gap-1">
+          {DAY_OPTIONS.map((days, index) => (
             <button
               key={days}
               type="button"
+              role="radio"
+              aria-checked={maxDays === days}
               onClick={() => setMaxDays(days)}
-              aria-pressed={maxDays === days}
-              className="rounded-[var(--radius-sm)] border border-[var(--color-border)] px-2 py-1 text-sm text-[var(--color-muted)] hover:text-[var(--color-fg)] aria-pressed:bg-[var(--color-border)]"
+              onKeyDown={(event) =>
+                handleRadioGroupKeyDown(event, index, DAY_OPTIONS, setMaxDays)
+              }
+              className="rounded-[var(--radius-sm)] border border-[var(--color-border)] px-2 py-1 text-sm text-[var(--color-muted)] hover:text-[var(--color-fg)] aria-checked:bg-[var(--color-border)]"
             >
               {days} days
             </button>

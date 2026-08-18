@@ -45,7 +45,7 @@ describe('RoadCrashTrend', () => {
   it('toggles to fatal crashes', async () => {
     render(<RoadCrashTrend />);
     await screen.findByText(/40,618 crashes in view/);
-    fireEvent.click(screen.getByRole('button', { name: 'Fatal crashes' }));
+    fireEvent.click(screen.getByRole('radio', { name: 'Fatal crashes' }));
     expect(
       screen.getByRole('img', { name: /Fatal crashes by region and year, 2006 to 2026/ }),
     ).toBeInTheDocument();
@@ -73,13 +73,25 @@ describe('RoadCrashTrend', () => {
     render(<RoadCrashTrend />);
     await screen.findByText(/40,618 crashes in view/);
     fireEvent.click(screen.getByText((_content, element) => element?.tagName === 'SUMMARY'));
-    fireEvent.click(screen.getByRole('button', { name: 'Fatal crashes' }));
+    fireEvent.click(screen.getByRole('radio', { name: 'Fatal crashes' }));
     expect(screen.getByRole('cell', { name: '350' })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: '375' })).toBeInTheDocument();
     const slider = screen.getByRole('slider', { name: /Up to year/ });
     fireEvent.change(slider, { target: { value: '2006' } });
     expect(screen.getByRole('cell', { name: '350' })).toBeInTheDocument();
     expect(screen.queryByRole('cell', { name: '375' })).not.toBeInTheDocument();
+  });
+
+  it('exposes the crash type selector as a radio group with one checked option', async () => {
+    render(<RoadCrashTrend />);
+    await screen.findByText(/40,618 crashes in view/);
+    const group = screen.getByRole('radiogroup', { name: 'Crash type' });
+    expect(group).toBeInTheDocument();
+    const checked = screen
+      .getAllByRole('radio')
+      .filter((radio) => radio.getAttribute('aria-checked') === 'true');
+    expect(checked).toHaveLength(1);
+    expect(checked[0]).toHaveTextContent('All crashes');
   });
 
   it('has no accessibility violations', async () => {

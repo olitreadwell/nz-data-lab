@@ -23,12 +23,12 @@ describe('AgePyramid', () => {
 
   it('keeps the legend correct in single-sex views', () => {
     render(<AgePyramid />);
-    fireEvent.click(screen.getByRole('button', { name: 'Male only' }));
+    fireEvent.click(screen.getByRole('radio', { name: 'Male only' }));
     const maleLegend = screen.getByRole('list', { name: 'Chart legend' });
     expect(maleLegend).toHaveTextContent('Male');
     expect(maleLegend).not.toHaveTextContent('Female');
 
-    fireEvent.click(screen.getByRole('button', { name: 'Female only' }));
+    fireEvent.click(screen.getByRole('radio', { name: 'Female only' }));
     const femaleLegend = screen.getByRole('list', { name: 'Chart legend' });
     expect(femaleLegend).toHaveTextContent('Female');
     expect(femaleLegend).not.toHaveTextContent('Male');
@@ -36,10 +36,21 @@ describe('AgePyramid', () => {
 
   it('switches to a single sex view', () => {
     render(<AgePyramid />);
-    fireEvent.click(screen.getByRole('button', { name: 'Male only' }));
+    fireEvent.click(screen.getByRole('radio', { name: 'Male only' }));
     expect(
       screen.getByRole('img', { name: /New Zealand male population by 5-year age group/i }),
     ).toBeInTheDocument();
+  });
+
+  it('exposes the sex selector as a radio group with one checked option', () => {
+    render(<AgePyramid />);
+    const group = screen.getByRole('radiogroup', { name: 'Sex to display' });
+    expect(group).toBeInTheDocument();
+    const checked = screen
+      .getAllByRole('radio')
+      .filter((radio) => radio.getAttribute('aria-checked') === 'true');
+    expect(checked).toHaveLength(1);
+    expect(checked[0]).toHaveTextContent('Male and female');
   });
 
   it('has no accessibility violations', async () => {
