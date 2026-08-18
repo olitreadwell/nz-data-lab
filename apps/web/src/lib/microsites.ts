@@ -853,4 +853,33 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+
+  {
+    slug: 'age-distribution',
+    label: 'Age distribution',
+    eyebrow: '👵 the age distribution',
+    title: 'The baby boom bulge moved up the age ladder.',
+    description:
+      'In the 2013 census the 50-59 band held 560,178 people, more than the 20-29 band (548,826). By 2023 the biggest ten-year band was 30-39 at 719,616, and the baby boomers sat in 60-69.',
+    paragraphs: [
+      'New Zealand counted 4,993,923 people in the 2023 census, up from 4,242,048 in 2013. The median age moved only slightly, from 38.0 to 38.1 years.',
+      'The bulge aged in step with the census. The 60-69 band of 2023 held 548,910 people, nearly the same as the 50-59 band of 2013. The 20-29 band of 2013 (548,826) became the 30-39 band of 2023, the largest ten-year band of all.',
+      'The 25-34 band was the hollow in 2013 at 514,689 people, the smallest ten-year band between 20 and 49. Drag the slider to follow the bands across the three censuses.',
+    ],
+    accent: 'teal',
+    dataNote:
+      'Data: Stats NZ "2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts", Table 6, census usually resident population count by five-year age group, 2013, 2018, and 2023 Censuses. Counts have fixed random rounding to base 3 applied, so the bands may not sum to the stated total. The series is final, so this snapshot does not go stale.',
+    references: [
+      {
+        label: '2023 Census population counts (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
+        kind: 'data',
+      },
+      {
+        label: '2023 Census (Stats NZ)',
+        url: 'https://www.stats.govt.nz/2023-census/',
+        kind: 'data',
+      },
+    ],
+  },
 ]);

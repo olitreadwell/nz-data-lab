@@ -268,3 +268,14 @@ it('renders the vehicle fleet story', async () => {
   expect(html).toContain('3.18 million');
   expect(html).toContain('Motor Vehicle Register (NZTA)');
 });
+
+it('renders the age distribution story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'age-distribution' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('The baby boom bulge moved up the age ladder.');
+  expect(html).toContain('4,993,923');
+  expect(html).toContain('data-value="4993923"');
+  expect(html).toContain('Sources and further reading');
+});

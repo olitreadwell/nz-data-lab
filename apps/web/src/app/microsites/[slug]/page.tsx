@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { AgePyramid } from '@/components/AgePyramid';
+import { AgeDistributionHistogram } from '@/components/AgeDistributionHistogram';
 import { AucklandParks } from '@/components/AucklandParks';
 import { BackyardSpeciesCensus } from '@/components/BackyardSpeciesCensus';
 import { CanterburyRain } from '@/components/CanterburyRain';
@@ -701,6 +702,35 @@ function renderStoryContent(
         ),
       };
     }
+    case 'age-distribution':
+      return {
+        chart: <AgeDistributionHistogram />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="People counted, 2023 census"
+              value="4,993,923"
+              accent="teal"
+              testId="age-total-2023"
+              dataValue={4993923}
+            />
+            <StatCard
+              label="Biggest band, 2023"
+              value="30-39: 719,616"
+              accent="teal"
+              testId="age-biggest-band-2023"
+              dataValue={719616}
+            />
+            <StatCard
+              label="50-59 band, 2013"
+              value="560,178"
+              accent="teal"
+              testId="age-bulge-2013"
+              dataValue={560178}
+            />
+          </dl>
+        ),
+      };
     default:
       return { chart: null, stats: null };
   }
