@@ -12,6 +12,7 @@ export const HIDDEN_MICROSITES: string[] = [
   'auckland-parks',
   'peak-heights',
   'open-school-map',
+  'open-data-catalogue',
 ];
 
 /**
