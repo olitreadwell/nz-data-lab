@@ -18,7 +18,8 @@
     "test:e2e:critical": "playwright test --grep @critical",
     "test:e2e:update-snapshots": "playwright test --update-snapshots",
     "clean": "rm -rf .next .turbo tsconfig.tsbuildinfo",
-    "clean:all": "rm -rf .next .turbo tsconfig.tsbuildinfo node_modules"
+    "clean:all": "rm -rf .next .turbo tsconfig.tsbuildinfo node_modules",
+    "test:a11y": "playwright test --grep @a11y"
   },
   "dependencies": {
     "@nzlab/nz-sources": "*",
