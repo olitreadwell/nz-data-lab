@@ -80,9 +80,9 @@ describe('TradeMeTree', () => {
     expect(
       screen.getAllByText('View top-level categories by leaf count as a table').length,
     ).toBeGreaterThan(0);
-    expect(screen.getByRole('cell', { name: 'Home & living' })).toBeInTheDocument();
+    expect(screen.getByRole('rowheader', { name: 'Home & living' })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: '2' })).toBeInTheDocument();
-    expect(screen.getByRole('cell', { name: 'Trade Me Motors' })).toBeInTheDocument();
+    expect(screen.getByRole('rowheader', { name: 'Trade Me Motors' })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: '1' })).toBeInTheDocument();
   });
 
