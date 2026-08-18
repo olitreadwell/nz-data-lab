@@ -38,6 +38,8 @@ describe('ReportIssueButton', () => {
     expect(params.get('title')).toContain('[Bug]');
     expect(params.get('body')).toContain('Sheep index');
     expect(params.get('body')).toContain('The sheep chart shows the wrong year range.');
+    expect(params.get('body')).not.toContain('User agent');
+    expect(params.get('body')).not.toContain(navigator.userAgent);
   });
 
   it('closes on Escape and returns focus to the trigger', () => {

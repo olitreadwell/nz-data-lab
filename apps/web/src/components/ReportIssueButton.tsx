@@ -52,7 +52,6 @@ function buildIssueUrl(input: {
     `- Type: ${input.type}`,
     `- Item: ${input.item}`,
     `- Reported: ${new Date().toLocaleString('en-NZ', { timeZone: 'Pacific/Auckland' })} (NZST)`,
-    `- User agent: ${navigator.userAgent}`,
     '',
     '## Description',
     input.description,
