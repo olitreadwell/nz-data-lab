@@ -2,6 +2,7 @@ import { Container, Stack } from '@nzlab/ui';
 
 import { getMicrositeAccentStyles } from './microsite-styles';
 import type { MicrositeAccent } from './microsite-styles';
+import { MicrositeEyebrow } from './MicrositeEyebrow';
 import { MicrositeReferences } from './MicrositeReferences';
 import type { MicrositeReference } from './MicrositeReferences';
 
@@ -39,7 +40,10 @@ export function MicrositeStory({
     >
       <Container size="wide">
         <Stack className="max-w-3xl gap-6 py-[var(--spacing-2xl)]">
-          <p className={`numeral-text-eyebrow ${styles.eyebrow}`}>{eyebrow}</p>
+          <MicrositeEyebrow
+            className={`numeral-text-eyebrow ${styles.eyebrow}`}
+            eyebrow={eyebrow}
+          />
           <h2 className="numeral-heading-2xl">{title}</h2>
           <p className="numeral-paragraph-lg text-[var(--color-muted)]">{description}</p>
           {paragraphs.map((paragraph) => (

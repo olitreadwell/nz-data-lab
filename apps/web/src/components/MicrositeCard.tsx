@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { getMicrositeAccentStyles } from './microsite-styles';
 import type { MicrositeAccent } from './microsite-styles';
+import { MicrositeEyebrow } from './MicrositeEyebrow';
 
 interface MicrositeCardProps {
   slug: string;
@@ -29,7 +30,7 @@ export function MicrositeCard({
       href={`/microsites/${slug}`}
       className={`flex flex-col gap-3 rounded-[var(--radius-lg)] border border-[var(--color-border)] p-6 ${styles.cardBg} transition-colors hover:border-[var(--color-fg)]`}
     >
-      <p className={`numeral-text-eyebrow ${styles.eyebrow}`}>{eyebrow}</p>
+      <MicrositeEyebrow className={`numeral-text-eyebrow ${styles.eyebrow}`} eyebrow={eyebrow} />
       <h2 className="numeral-heading-xl">{title}</h2>
       <p className="numeral-paragraph-md text-[var(--color-muted)]">{description}</p>
       <dl className="mt-auto">
