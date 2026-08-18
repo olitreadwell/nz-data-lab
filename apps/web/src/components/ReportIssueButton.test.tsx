@@ -128,6 +128,15 @@ describe('ReportIssueButton', () => {
 });
 
 describe('ReportIssueButton focus trap', () => {
+  it('makes the background inert while open and restores it on close', () => {
+    const { container } = render(<ReportIssueButton />);
+    expect(container).not.toHaveAttribute('inert');
+    fireEvent.click(screen.getByRole('button', { name: 'Report an issue' }));
+    expect(container).toHaveAttribute('inert');
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(container).not.toHaveAttribute('inert');
+  });
+
   it('cycles focus forward and backward within the dialog', () => {
     render(<ReportIssueButton />);
     fireEvent.click(screen.getByRole('button', { name: 'Report an issue' }));

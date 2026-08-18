@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 import type { MicrositeConfig } from '@/lib/microsites';
 import { MICROSITES } from '@/lib/microsites';
@@ -267,6 +268,25 @@ export function ReportIssueButton({ pageLabel }: ReportIssueButtonProps): React.
     }
   }, [open]);
 
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!open || dialog === null) {
+      return;
+    }
+    const background = Array.from(document.body.children).filter((child) => child !== dialog);
+    const hadInert = background.map((child) => child.hasAttribute('inert'));
+    background.forEach((child) => child.setAttribute('inert', ''));
+    return () => {
+      background.forEach((child, index) => {
+        if (hadInert[index] === true) {
+          child.setAttribute('inert', '');
+        } else {
+          child.removeAttribute('inert');
+        }
+      });
+    };
+  }, [open]);
+
   const submit = (): void => {
     const url = buildIssueUrl({
       type,
@@ -331,168 +351,174 @@ export function ReportIssueButton({ pageLabel }: ReportIssueButtonProps): React.
           <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
         </svg>
       </button>
-      {open ? (
-        <div
-          ref={dialogRef}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="report-issue-title"
-          aria-describedby="report-issue-description"
-          className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center"
-        >
-          <div
-            aria-hidden="true"
-            onClick={() => setOpen(false)}
-            className="absolute inset-0 bg-black/40"
-          />
-          <div className="relative w-full max-w-md rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-bg)] p-5 shadow-xl">
-            <div className="mb-4 flex items-start justify-between gap-4">
-              <div>
-                <h2 id="report-issue-title" className="numeral-heading-lg">
-                  Report an issue
-                </h2>
-                <p
-                  id="report-issue-description"
-                  className="numeral-paragraph-sm text-[var(--color-muted)]"
-                >
-                  Prefills a GitHub issue with this page&apos;s context.
-                </p>
-              </div>
-              <button
-                type="button"
-                aria-label="Close"
-                onClick={() => setOpen(false)}
-                className="rounded p-1 text-[var(--color-muted)] hover:text-[var(--color-fg)] focus-visible:outline-2 focus-visible:outline-offset-2"
-              >
-                <svg
-                  aria-hidden="true"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="size-4"
-                >
-                  <path d="M18 6 6 18M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            <form
-              onSubmit={(event) => {
-                event.preventDefault();
-                submit();
-              }}
-              className="grid gap-4"
+      {open && typeof document !== 'undefined'
+        ? createPortal(
+            <div
+              ref={dialogRef}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="report-issue-title"
+              aria-describedby="report-issue-description"
+              className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center"
             >
-              <div className="grid grid-cols-2 gap-3">
-                <label className="grid gap-1">
-                  <span className="numeral-paragraph-sm text-[var(--color-muted)]">Type</span>
-                  <select
-                    value={type}
-                    onChange={(event) => setType(event.target.value as IssueType)}
-                    className="rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-bg)] px-2 py-1.5"
+              <div
+                aria-hidden="true"
+                onClick={() => setOpen(false)}
+                className="absolute inset-0 bg-black/40"
+              />
+              <div className="relative w-full max-w-md rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-bg)] p-5 shadow-xl">
+                <div className="mb-4 flex items-start justify-between gap-4">
+                  <div>
+                    <h2 id="report-issue-title" className="numeral-heading-lg">
+                      Report an issue
+                    </h2>
+                    <p
+                      id="report-issue-description"
+                      className="numeral-paragraph-sm text-[var(--color-muted)]"
+                    >
+                      Prefills a GitHub issue with this page&apos;s context.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    aria-label="Close"
+                    onClick={() => setOpen(false)}
+                    className="rounded p-1 text-[var(--color-muted)] hover:text-[var(--color-fg)] focus-visible:outline-2 focus-visible:outline-offset-2"
                   >
-                    {ISSUE_TYPES.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label className="grid gap-1">
-                  <span className="numeral-paragraph-sm text-[var(--color-muted)]">Severity</span>
-                  <select
-                    value={severity}
-                    onChange={(event) => setSeverity(event.target.value as Severity)}
-                    className="rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-bg)] px-2 py-1.5"
-                  >
-                    {SEVERITIES.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              </div>
-              <label className="grid gap-1">
-                <span className="numeral-paragraph-sm text-[var(--color-muted)]">Item</span>
-                <select
-                  value={item}
-                  onChange={(event) => setItem(event.target.value)}
-                  className="rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-bg)] px-2 py-1.5"
-                >
-                  <option>Home page</option>
-                  {MICROSITES.map((microsite) => (
-                    <option key={microsite.slug}>{microsite.label}</option>
-                  ))}
-                  <option>Other</option>
-                </select>
-              </label>
-              <label className="grid gap-1">
-                <span className="numeral-paragraph-sm text-[var(--color-muted)]">
-                  What happened?
-                </span>
-                <textarea
-                  ref={descriptionRef}
-                  required
-                  minLength={MIN_DESCRIPTION_LENGTH}
-                  rows={3}
-                  value={description}
-                  onChange={(event) => setDescription(event.target.value)}
-                  placeholder="Describe the problem and what you saw."
-                  aria-describedby="report-issue-min-length"
-                  className="rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-bg)] px-2 py-1.5"
-                />
-                <span
-                  id="report-issue-min-length"
-                  className="numeral-paragraph-sm text-[var(--color-muted)]"
-                >
-                  At least {MIN_DESCRIPTION_LENGTH} characters
-                </span>
-                {descriptionTooShort ? (
-                  <p role="status" className="numeral-paragraph-sm text-[var(--color-muted)]">
-                    Add at least {MIN_DESCRIPTION_LENGTH} characters to enable the submit button.
-                  </p>
-                ) : null}
-              </label>
-              <label className="grid gap-1">
-                <span className="numeral-paragraph-sm text-[var(--color-muted)]">
-                  What did you expect?
-                </span>
-                <textarea
-                  rows={2}
-                  value={expected}
-                  onChange={(event) => setExpected(event.target.value)}
-                  placeholder="Optional: what should have happened instead?"
-                  className="rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-bg)] px-2 py-1.5"
-                />
-              </label>
-              <div className="flex flex-wrap items-center gap-2">
-                <button
-                  type="submit"
-                  disabled={descriptionTooShort}
-                  className="numeral-button numeral-button-primary disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  Open GitHub issue
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    void copy();
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="size-4"
+                    >
+                      <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <form
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    submit();
                   }}
-                  className="numeral-button numeral-button-secondary"
+                  className="grid gap-4"
                 >
-                  {copied ? 'Copied' : 'Copy link'}
-                </button>
+                  <div className="grid grid-cols-2 gap-3">
+                    <label className="grid gap-1">
+                      <span className="numeral-paragraph-sm text-[var(--color-muted)]">Type</span>
+                      <select
+                        value={type}
+                        onChange={(event) => setType(event.target.value as IssueType)}
+                        className="rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-bg)] px-2 py-1.5"
+                      >
+                        {ISSUE_TYPES.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <label className="grid gap-1">
+                      <span className="numeral-paragraph-sm text-[var(--color-muted)]">
+                        Severity
+                      </span>
+                      <select
+                        value={severity}
+                        onChange={(event) => setSeverity(event.target.value as Severity)}
+                        className="rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-bg)] px-2 py-1.5"
+                      >
+                        {SEVERITIES.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  </div>
+                  <label className="grid gap-1">
+                    <span className="numeral-paragraph-sm text-[var(--color-muted)]">Item</span>
+                    <select
+                      value={item}
+                      onChange={(event) => setItem(event.target.value)}
+                      className="rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-bg)] px-2 py-1.5"
+                    >
+                      <option>Home page</option>
+                      {MICROSITES.map((microsite) => (
+                        <option key={microsite.slug}>{microsite.label}</option>
+                      ))}
+                      <option>Other</option>
+                    </select>
+                  </label>
+                  <label className="grid gap-1">
+                    <span className="numeral-paragraph-sm text-[var(--color-muted)]">
+                      What happened?
+                    </span>
+                    <textarea
+                      ref={descriptionRef}
+                      required
+                      minLength={MIN_DESCRIPTION_LENGTH}
+                      rows={3}
+                      value={description}
+                      onChange={(event) => setDescription(event.target.value)}
+                      placeholder="Describe the problem and what you saw."
+                      aria-describedby="report-issue-min-length"
+                      className="rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-bg)] px-2 py-1.5"
+                    />
+                    <span
+                      id="report-issue-min-length"
+                      className="numeral-paragraph-sm text-[var(--color-muted)]"
+                    >
+                      At least {MIN_DESCRIPTION_LENGTH} characters
+                    </span>
+                    {descriptionTooShort ? (
+                      <p role="status" className="numeral-paragraph-sm text-[var(--color-muted)]">
+                        Add at least {MIN_DESCRIPTION_LENGTH} characters to enable the submit
+                        button.
+                      </p>
+                    ) : null}
+                  </label>
+                  <label className="grid gap-1">
+                    <span className="numeral-paragraph-sm text-[var(--color-muted)]">
+                      What did you expect?
+                    </span>
+                    <textarea
+                      rows={2}
+                      value={expected}
+                      onChange={(event) => setExpected(event.target.value)}
+                      placeholder="Optional: what should have happened instead?"
+                      className="rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-bg)] px-2 py-1.5"
+                    />
+                  </label>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="submit"
+                      disabled={descriptionTooShort}
+                      className="numeral-button numeral-button-primary disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Open GitHub issue
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        void copy();
+                      }}
+                      className="numeral-button numeral-button-secondary"
+                    >
+                      {copied ? 'Copied' : 'Copy link'}
+                    </button>
+                  </div>
+                  {blocked ? (
+                    <p role="alert" className="numeral-paragraph-sm text-[var(--color-muted)]">
+                      Your browser blocked the new window. Copy the prefilled link instead.
+                    </p>
+                  ) : null}
+                </form>
               </div>
-              {blocked ? (
-                <p role="alert" className="numeral-paragraph-sm text-[var(--color-muted)]">
-                  Your browser blocked the new window. Copy the prefilled link instead.
-                </p>
-              ) : null}
-            </form>
-          </div>
-        </div>
-      ) : null}
+            </div>,
+            document.body,
+          )
+        : null}
     </>
   );
 }
