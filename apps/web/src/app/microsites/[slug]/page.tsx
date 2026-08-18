@@ -8,6 +8,7 @@ import { AgePyramid } from '@/components/AgePyramid';
 import { AucklandParks } from '@/components/AucklandParks';
 import { BackyardSpeciesCensus } from '@/components/BackyardSpeciesCensus';
 import { CanterburyRain } from '@/components/CanterburyRain';
+import { CityRankSlope } from '@/components/CityRankSlope';
 import { DeerBoomBustChart } from '@/components/DeerBoomBustChart';
 import { DigitisedMemorySearch } from '@/components/DigitisedMemorySearch';
 import { EvCharging } from '@/components/EvCharging';
@@ -36,6 +37,7 @@ import { VehicleFleet } from '@/components/VehicleFleet';
 import { WhatTheWorldReads } from '@/components/WhatTheWorldReads';
 import { env } from '@/env';
 import { CENSUS_RANK_HIGHLIGHTS, formatRankOrdinal } from '@/lib/census-rank-data';
+import { CITY_RANK_ROWS } from '@/lib/city-rank-data';
 import { EXPORT_DESTINATION_ROWS } from '@/lib/export-destination-data';
 import { fetchForestrySeries, summarizeForestry } from '@/lib/forestry-data';
 import { formatHectares, formatMillions } from '@/lib/format';
@@ -729,6 +731,39 @@ function renderStoryContent(
               accent="indigo"
               testId="china-exports"
               dataValue={china?.exports2026}
+            />
+          </dl>
+        ),
+      };
+    }
+    case 'city-population-ranks': {
+      const tauranga = CITY_RANK_ROWS.find((row) => row.name === 'Tauranga city');
+      const aucklandCity = CITY_RANK_ROWS.find((row) => row.name === 'Auckland');
+      const dunedin = CITY_RANK_ROWS.find((row) => row.name === 'Dunedin city');
+      return {
+        chart: <CityRankSlope />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Tauranga rank, 2023"
+              value="#5"
+              accent="cyan"
+              testId="tauranga-rank"
+              dataValue={tauranga?.rank2023}
+            />
+            <StatCard
+              label="Auckland rank, 2023"
+              value="#1"
+              accent="cyan"
+              testId="auckland-city-rank"
+              dataValue={aucklandCity?.rank2023}
+            />
+            <StatCard
+              label="Dunedin rank, 2023"
+              value="#6"
+              accent="cyan"
+              testId="dunedin-rank"
+              dataValue={dunedin?.rank2023}
             />
           </dl>
         ),

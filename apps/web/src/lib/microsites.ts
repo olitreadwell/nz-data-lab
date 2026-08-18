@@ -874,4 +874,31 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+  {
+    slug: 'city-population-ranks',
+    label: 'City population ranks',
+    eyebrow: '🏙️ the city population ranks',
+    title: 'Tauranga passed Dunedin to become the fifth-biggest city.',
+    description:
+      'Between the 2013 and 2018 censuses, Tauranga overtook Dunedin. By 2023 Tauranga counted 152,844 people and Dunedin 128,901.',
+    paragraphs: [
+      'Auckland stayed the biggest city at 1,656,486, with Christchurch (391,383) and Wellington (202,689) next. Hamilton held fourth place at 174,741.',
+      'The ranks below are among the ten biggest city councils, not all 67 territorial authorities. City boundaries changed little over the three censuses, so the comparison is consistent.',
+    ],
+    accent: 'cyan',
+    dataNote:
+      'Data: Stats NZ 2023 Census population counts release (Table 2, published 29 May 2024), usually resident population counts by territorial authority, ranked among the ten biggest city councils. Counts have fixed random rounding to base 3 applied.',
+    references: [
+      {
+        label: '2023 Census population counts release (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
+        kind: 'data',
+      },
+      {
+        label: 'First results from the 2023 Census (Stats NZ)',
+        url: 'https://www.stats.govt.nz/news/first-results-from-the-2023-census-older-more-diverse-population-and-an-extra-300000-people-between-censuses/',
+        kind: 'news',
+      },
+    ],
+  },
 ]);
