@@ -2,8 +2,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   LIVE_SEARCH_TIMEOUT_MS,
+  OVERpass_SCHOOLS_TIMEOUT_MS,
   fetchLiveGbifKingdoms,
   fetchLiveInaturalistTaxa,
+  fetchLiveNzSchools,
   parseAucklandParkBoards,
   parseCanterburyRainGauges,
   parseDataGovtNzSearch,
@@ -473,5 +475,28 @@ describe('parseMvrFleetRows', () => {
       { label: 'PASSENGER CAR/VAN', count: 3687148 },
       { label: 'MOTORCYCLE', count: 191097 },
     ]);
+  });
+});
+
+describe('fetchLiveNzSchools', () => {
+  const OVERpass_QUERY_TIMEOUT_MS = 60_000;
+
+  it('uses a timeout at least as long as the Overpass [timeout:60] query', () => {
+    expect(OVERpass_SCHOOLS_TIMEOUT_MS).toBeGreaterThanOrEqual(OVERpass_QUERY_TIMEOUT_MS);
+  });
+
+  it('aborts the Overpass fetch after the long timeout', async () => {
+    vi.useFakeTimers();
+    const fetchMock = stubHangingFetch();
+
+    const promise = fetchLiveNzSchools();
+    const expectation = expect(promise).rejects.toThrow('Aborted');
+    await vi.advanceTimersByTimeAsync(OVERpass_SCHOOLS_TIMEOUT_MS);
+
+    await expectation;
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.any(URL),
+      expect.objectContaining({ signal: expect.any(AbortSignal) }),
+    );
   });
 });
