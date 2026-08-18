@@ -10,8 +10,6 @@
 export const HIDDEN_MICROSITES: string[] = [
   'shake-index',
   'digitised-memory',
-  'backyard-species-census',
-  'species-record-ledger',
   'what-the-world-reads',
   'open-data-catalogue',
   'vineyard-boom',
