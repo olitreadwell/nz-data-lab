@@ -1,13 +1,17 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
+import { MICROSITES } from '../src/lib/microsites';
+
 test.describe('home', () => {
   test('@critical renders the landing page with microsite cards', async ({ page }) => {
     // Relative URL (no leading slash) so it resolves against the baseURL path
     // (the GitHub Pages deploy serves the site under /<repo>/).
     await page.goto('./');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    await expect(page.getByRole('link', { name: /read the story/i })).toHaveCount(26);
+    await expect(page.getByRole('link', { name: /read the story/i })).toHaveCount(
+      MICROSITES.length,
+    );
   });
 
   test('@critical opens a microsite story from its card', async ({ page }) => {
