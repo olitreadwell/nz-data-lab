@@ -129,16 +129,28 @@ ignored. Security headers are instead configured per host:
   copies it into the export and `apps/web/scripts/generate-csp.mjs` rewrites
   `out/_headers` with a fresh per-build CSP nonce, so the served CSP always
   matches the nonce injected into the inline scripts. `_headers`-aware static
-  hosts (Vercel, Netlify, and similar) honor it; GitHub Pages does not serve
-  custom headers, so the CSP and friends only take effect on hosts that do.
+  hosts (Netlify, Cloudflare Pages, and similar) honor it; GitHub Pages does
+  not serve custom headers.
 - `apps/web/vercel.json` carries the non-CSP headers for Vercel. It holds no
   CSP and no nonce, so source control never contains a public nonce.
 
-The Content-Security-Policy allows only the origins the app actually uses:
-`'self'`, the OpenStreetMap tile host, and the live API hosts in
-`apps/web/src/lib/live-sources.ts`. `apps/web/src/lib/security-headers.test.ts`
-keeps the CSP in sync with those hosts and asserts no committed file carries a
-nonce.
+### Deploy-host decision (issue #213)
+
+The site actually deploys to GitHub Pages, which cannot serve custom response
+headers at all. The strict CSP and the other security headers are therefore
+not present in the served responses on the current host. To serve them the
+site must move to a `_headers`-aware host (Netlify or Cloudflare Pages) or to
+Vercel with a nonce-less CSP in `vercel.json`. Until that move happens, the
+served-response check in the deploy workflow fails loudly (advisory) rather
+than silently passing, so the gap stays visible.
+
+`apps/web/scripts/check-deployed-security-headers.mjs` hits a deployed URL and
+asserts `Content-Security-Policy`, `X-Content-Type-Options`,
+`Referrer-Policy`, `X-Frame-Options`, and `Permissions-Policy` are present in
+the served response. `apps/web/src/lib/security-headers.test.ts` serves the
+generated export locally and asserts the same headers on the served response,
+keeping the CSP in sync with the live API hosts and asserting no committed
+file carries a nonce.
 
 ## Optional integrations
 
