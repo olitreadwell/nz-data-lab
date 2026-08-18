@@ -12,11 +12,11 @@ const DAY = 24 * 60 * 60;
 const NOW = Date.now() / 1000;
 
 const EVENTS: QuakeCatalogEvent[] = [
-  { timeEpochSec: NOW - 5 * DAY, magnitude: 1.2 },
-  { timeEpochSec: NOW - 10 * DAY, magnitude: 1.8 },
-  { timeEpochSec: NOW - 20 * DAY, magnitude: 2.3 },
-  { timeEpochSec: NOW - 40 * DAY, magnitude: 3.1 },
-  { timeEpochSec: NOW - 70 * DAY, magnitude: 4.6 },
+  { timeEpochSec: NOW - 5 * DAY, magnitude: 1.2, depthKm: 10 },
+  { timeEpochSec: NOW - 10 * DAY, magnitude: 1.8, depthKm: 25 },
+  { timeEpochSec: NOW - 20 * DAY, magnitude: 2.3, depthKm: 40 },
+  { timeEpochSec: NOW - 40 * DAY, magnitude: 3.1, depthKm: 100 },
+  { timeEpochSec: NOW - 70 * DAY, magnitude: 4.6, depthKm: 200 },
 ];
 
 describe('QuakeMagnitudeHistogram', () => {

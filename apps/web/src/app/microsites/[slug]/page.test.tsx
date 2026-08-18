@@ -15,9 +15,9 @@ vi.mock('next/navigation', () => ({
 
 vi.mock('@/lib/quake-catalog', () => ({
   fetchRecentQuakeCatalog: vi.fn().mockResolvedValue([
-    { timeEpochSec: 1780000000, magnitude: 1.4 },
-    { timeEpochSec: 1780000001, magnitude: 2.2 },
-    { timeEpochSec: 1780000002, magnitude: 6.3 },
+    { timeEpochSec: 1780000000, magnitude: 1.4, depthKm: 12 },
+    { timeEpochSec: 1780000001, magnitude: 2.2, depthKm: 30 },
+    { timeEpochSec: 1780000002, magnitude: 6.3, depthKm: 45 },
   ]),
 }));
 
@@ -215,6 +215,33 @@ describe('MicrositePage', () => {
     expect(html).toContain('13.3 per km');
     expect(html).toContain('HawkesBayRabbits spotlight counts (data.govt.nz)');
   });
+  it('renders the quake depth scatter story', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'quake-depth-scatter' })} />,
+    );
+    const html = await new Response(stream).text();
+    expect(html).toContain('Shallow quakes are the ones people feel');
+    expect(html).toContain('Share shallower than 40 km');
+  });
+
+  it('renders the quake frequency by magnitude story', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'quake-frequency-magnitude' })} />,
+    );
+    const html = await new Response(stream).text();
+    expect(html).toContain('Small quakes vastly outnumber big ones');
+    expect(html).toContain('Magnitude 4 or stronger');
+  });
+
+  it('renders the quake depth distribution story', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'quake-depth-distribution' })} />,
+    );
+    const html = await new Response(stream).text();
+    expect(html).toContain('Deep quakes cluster under the North Island');
+    expect(html).toContain('Share shallower than 40 km');
+  });
+
   it('renders the dairy story with the livestock chart', async () => {
     const stream = await renderToReadableStream(
       <MicrositePage params={Promise.resolve({ slug: 'dairy-takeover' })} />,

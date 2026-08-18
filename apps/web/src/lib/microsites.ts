@@ -767,6 +767,102 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
     ],
   },
   {
+    slug: 'quake-depth-scatter',
+    label: 'Quake depth scatter',
+    eyebrow: '📉 the quake depth scatter',
+    title: 'Shallow quakes are the ones people feel.',
+    description:
+      'In the three months to 18 August 2026, GeoNet located 5,148 earthquakes of magnitude 1 or stronger. 3,408 of them, 66%, ruptured shallower than 40 km. The deepest reached 600 km.',
+    paragraphs: [
+      'Shallow quakes release their energy close to the surface, which is why they are the ones people feel. Of the 101 quakes of magnitude 4 or stronger in the same three months, 55 were shallower than 40 km.',
+      'Each dot is one quake. Depth runs down the chart, so the shallow quakes sit at the top. Use the day buttons to narrow the window, and hover a dot to read its magnitude and depth.',
+    ],
+    accent: 'rose',
+    dataNote:
+      'Data: GeoNet FDSN event service (service.geonet.org.nz), earthquakes of magnitude 1 or stronger in the three months to 18 August 2026, fetched at build time and falling back to a committed snapshot of that catalog. The site redeploys daily.',
+    references: [
+      {
+        label: 'GeoNet FDSN event service',
+        url: 'https://service.geonet.org.nz/fdsnws/event/1/',
+        kind: 'data',
+      },
+      {
+        label: 'GeoNet FDSN usage',
+        url: 'https://www.geonet.org.nz/data/tools/FDSN',
+        kind: 'data',
+      },
+      {
+        label: 'Earthquake FAQ (GeoNet)',
+        url: 'https://www.geonet.org.nz/earthquake/faq',
+        kind: 'data',
+      },
+    ],
+  },
+  {
+    slug: 'quake-frequency-magnitude',
+    label: 'Quake frequency by magnitude',
+    eyebrow: '📉 the quake frequency',
+    title: 'Small quakes vastly outnumber big ones.',
+    description:
+      'In the three months to 18 August 2026, GeoNet located 5,148 earthquakes of magnitude 1 or stronger. 2,712 were magnitude 2 or stronger, 101 were magnitude 4 or stronger, and just 2 reached magnitude 6.',
+    paragraphs: [
+      'The pattern is the Gutenberg-Richter law, named for the seismologists who first described it. The count falls steeply with each step up in magnitude: 2,712 quakes of magnitude 2 or stronger, 552 of 3 or stronger, 101 of 4 or stronger, 10 of 5 or stronger, and 2 of 6 or stronger.',
+      'The log view draws the law as a straight line. Toggle between linear and log to see how the small quakes dominate the count.',
+    ],
+    accent: 'indigo',
+    dataNote:
+      'Data: GeoNet FDSN event service (service.geonet.org.nz), earthquakes of magnitude 1 or stronger in the three months to 18 August 2026, fetched at build time and falling back to a committed snapshot of that catalog. The site redeploys daily.',
+    references: [
+      {
+        label: 'GeoNet FDSN event service',
+        url: 'https://service.geonet.org.nz/fdsnws/event/1/',
+        kind: 'data',
+      },
+      {
+        label: 'GeoNet FDSN usage',
+        url: 'https://www.geonet.org.nz/data/tools/FDSN',
+        kind: 'data',
+      },
+      {
+        label: 'Gutenberg-Richter law (Wikipedia)',
+        url: 'https://en.wikipedia.org/wiki/Gutenberg%E2%80%93Richter_law',
+        kind: 'history',
+      },
+    ],
+  },
+  {
+    slug: 'quake-depth-distribution',
+    label: 'Quake depth distribution',
+    eyebrow: '🌋 the quake depth distribution',
+    title: 'Deep quakes cluster under the North Island.',
+    description:
+      'In the three months to 18 August 2026, GeoNet located 5,148 earthquakes of magnitude 1 or stronger. 3,408 of them, 66%, ruptured shallower than 40 km. The deep quakes sit almost entirely under the North Island.',
+    paragraphs: [
+      "The Pacific plate dives beneath the North Island's east coast, so quakes there can rupture hundreds of kilometres down. 1,031 of the 1,037 quakes deeper than 100 km were under the North Island.",
+      "The South Island's quakes are almost all shallow: 697 of 870, 80%, ruptured shallower than 40 km. The radial chart shows the depth bands. Use the magnitude buttons to filter.",
+    ],
+    accent: 'teal',
+    dataNote:
+      'Data: GeoNet FDSN event service (service.geonet.org.nz), earthquakes of magnitude 1 or stronger in the three months to 18 August 2026, fetched at build time and falling back to a committed snapshot of that catalog. The site redeploys daily.',
+    references: [
+      {
+        label: 'GeoNet FDSN event service',
+        url: 'https://service.geonet.org.nz/fdsnws/event/1/',
+        kind: 'data',
+      },
+      {
+        label: 'GeoNet FDSN usage',
+        url: 'https://www.geonet.org.nz/data/tools/FDSN',
+        kind: 'data',
+      },
+      {
+        label: 'Hikurangi Trough (Wikipedia)',
+        url: 'https://en.wikipedia.org/wiki/Hikurangi_Trough',
+        kind: 'history',
+      },
+    ],
+  },
+  {
     slug: 'ev-charging',
     label: 'EV charging',
     eyebrow: '🔌 the ev charging map',

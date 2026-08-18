@@ -6,6 +6,7 @@ import path from 'node:path';
 export interface QuakeCatalogEvent {
   timeEpochSec: number;
   magnitude: number;
+  depthKm: number;
 }
 
 const FDSN_EVENT_QUERY_URL = 'https://service.geonet.org.nz/fdsnws/event/1/query';
@@ -34,8 +35,9 @@ export function parseGeoNetFdsnEvents(payload: string): QuakeCatalogEvent[] {
   const columns = header.split('|').map((column) => column.trim());
   const timeIndex = columns.indexOf('Time');
   const magnitudeIndex = columns.indexOf('Magnitude');
+  const depthIndex = columns.indexOf('Depth/km');
   const eventTypeIndex = columns.indexOf('EventType');
-  if (timeIndex < 0 || magnitudeIndex < 0 || eventTypeIndex < 0) {
+  if (timeIndex < 0 || magnitudeIndex < 0 || depthIndex < 0 || eventTypeIndex < 0) {
     throw new NzSourceParseError('GeoNet FDSN', 'missing expected columns');
   }
   const events: QuakeCatalogEvent[] = [];
@@ -45,11 +47,16 @@ export function parseGeoNetFdsnEvents(payload: string): QuakeCatalogEvent[] {
       continue;
     }
     const magnitude = Number(cells[magnitudeIndex]);
+    const depthKm = Number(cells[depthIndex]);
     const timeEpochSec = Date.parse(cells[timeIndex] ?? '') / 1000;
-    if (!Number.isFinite(magnitude) || !Number.isFinite(timeEpochSec)) {
+    if (
+      !Number.isFinite(magnitude) ||
+      !Number.isFinite(depthKm) ||
+      !Number.isFinite(timeEpochSec)
+    ) {
       continue;
     }
-    events.push({ timeEpochSec, magnitude });
+    events.push({ timeEpochSec, magnitude, depthKm });
   }
   return events;
 }
@@ -95,10 +102,10 @@ export function loadQuakeCatalogFixture(): QuakeCatalogEvent[] {
     throw new NzSourceParseError('GeoNet FDSN', 'catalog fixture is not an array');
   }
   return parsed.map((row) => {
-    const event = row as { t?: unknown; m?: unknown };
-    if (typeof event.t !== 'number' || typeof event.m !== 'number') {
+    const event = row as { t?: unknown; m?: unknown; d?: unknown };
+    if (typeof event.t !== 'number' || typeof event.m !== 'number' || typeof event.d !== 'number') {
       throw new NzSourceParseError('GeoNet FDSN', 'catalog fixture row is malformed');
     }
-    return { timeEpochSec: event.t, magnitude: event.m };
+    return { timeEpochSec: event.t, magnitude: event.m, depthKm: event.d };
   });
 }
