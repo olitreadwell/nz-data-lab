@@ -132,6 +132,21 @@ export default async function HomePage(): Promise<React.ReactElement> {
       statLabel: 'Parks in Auckland',
       statValue: '3,953',
     },
+    {
+      config: getMicrosite('open-school-map'),
+      statLabel: 'Schools on OpenStreetMap',
+      statValue: '2,604',
+    },
+    {
+      config: getMicrosite('canterbury-rain'),
+      statLabel: 'Wettest gauge in a day',
+      statValue: '40.5 mm',
+    },
+    {
+      config: getMicrosite('hamilton-playgrounds'),
+      statLabel: 'Playgrounds in Hamilton',
+      statValue: '85',
+    },
   ].filter(
     (card): card is { config: MicrositeConfig; statLabel: string; statValue: string } =>
       card.config !== undefined,
