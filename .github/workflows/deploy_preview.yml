@@ -30,16 +30,14 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci
-      - name: Install Vercel CLI
-        run: npm install -g vercel
       - name: Pull Vercel environment
-        run: vercel pull --yes --environment=preview
+        run: npx vercel@59.1.4 pull --yes --environment=preview
       - name: Build
-        run: vercel build
+        run: npx vercel@59.1.4 build
       - name: Deploy
         id: deploy
         run: |
-          url=$(vercel deploy --prebuilt)
+          url=$(npx vercel@59.1.4 deploy --prebuilt)
           echo "url=$url" >> "$GITHUB_OUTPUT"
       - name: Comment PR with preview URL
         uses: actions/github-script@v7
