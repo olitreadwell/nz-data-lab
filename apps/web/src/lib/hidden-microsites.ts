@@ -16,6 +16,8 @@ export const HIDDEN_MICROSITES: string[] = [
   'open-data-catalogue',
   'auckland-parks',
   'vineyard-boom',
+  'species-register',
+  'species-record-ledger',
 ];
 
 /**
