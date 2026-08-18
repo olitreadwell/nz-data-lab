@@ -14,10 +14,10 @@ const baseProps = {
 };
 
 describe('MicrositeCard', () => {
-  it('gives the link a concise accessible name from the title', () => {
+  it('lets the visible text be the link\u2019s accessible name', () => {
     render(<MicrositeCard {...baseProps} />);
-    const link = screen.getByRole('link', { name: 'The Sheep Index - read the story' });
-    expect(link).toBeInTheDocument();
+    const link = screen.getByRole('link', { name: /How New Zealand/ });
+    expect(link).not.toHaveAttribute('aria-label');
   });
 
   it('no longer renders a redundant "Read the story" span', () => {
