@@ -83,6 +83,17 @@ This is why the review step is not only for shipped loops: a loop that
 cannot ship must still be able to improve itself. If a blocker repeats,
 fix the guard or the skill rather than working around it by hand.
 
+## Known blockers
+
+- The quality loop appends its daily notes to
+  `skills/quality-issue-loop/LOOP-NOTES.md` and does not always commit them
+  before its iteration ends. An uncommitted notes entry used to make the
+  dirty-main guard skip every tick; the wrapper now excludes that file (like
+  `next-env.d.ts`), so notes left behind never block this loop. Git still
+  refuses a merge that would overwrite a dirty file, so the safety net stays
+  intact. If the loop skips for a dirty main again, the wrapper logs the
+  dirty file list, so read that line before changing the guard.
+
 ## Loop review checklist (step 8)
 
 - What took longest? (research, build, verify, deploy)
