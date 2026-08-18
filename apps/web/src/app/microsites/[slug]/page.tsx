@@ -8,9 +8,11 @@ import { AgePyramid } from '@/components/AgePyramid';
 import { AucklandParks } from '@/components/AucklandParks';
 import { BackyardSpeciesCensus } from '@/components/BackyardSpeciesCensus';
 import { CanterburyRain } from '@/components/CanterburyRain';
+import { CityRankSlope } from '@/components/CityRankSlope';
 import { DeerBoomBustChart } from '@/components/DeerBoomBustChart';
 import { DigitisedMemorySearch } from '@/components/DigitisedMemorySearch';
 import { EvCharging } from '@/components/EvCharging';
+import { ExportDestinationSlope } from '@/components/ExportDestinationSlope';
 import { ForestryChart } from '@/components/ForestryChart';
 import { HamiltonPlaygrounds } from '@/components/HamiltonPlaygrounds';
 import { HorticultureChart } from '@/components/HorticultureChart';
@@ -24,6 +26,7 @@ import { QuakeMagnitudeHistogram } from '@/components/QuakeMagnitudeHistogram';
 import { QuakeMap } from '@/components/QuakeMap';
 import { QuakeMonthRose } from '@/components/QuakeMonthRose';
 import { RabbitChart } from '@/components/RabbitChart';
+import { RegionalRankSlope } from '@/components/RegionalRankSlope';
 import { ReportIssueButton } from '@/components/ReportIssueButton';
 import { RiverLengths } from '@/components/RiverLengths';
 import { RoadCrashTrend } from '@/components/RoadCrashTrend';
@@ -37,6 +40,8 @@ import { VehicleFleet } from '@/components/VehicleFleet';
 import { WhatTheWorldReads } from '@/components/WhatTheWorldReads';
 import { env } from '@/env';
 import { CENSUS_RANK_HIGHLIGHTS, formatRankOrdinal } from '@/lib/census-rank-data';
+import { CITY_RANK_ROWS } from '@/lib/city-rank-data';
+import { EXPORT_DESTINATION_ROWS } from '@/lib/export-destination-data';
 import { fetchForestrySeries, summarizeForestry } from '@/lib/forestry-data';
 import { formatHectares, formatMillions } from '@/lib/format';
 import {
@@ -67,6 +72,7 @@ import {
 import { fetchRabbitSpotlightSeries } from '@/lib/rabbit-data';
 import type { RabbitSpotlightSeries } from '@/lib/rabbit-data';
 import { formatRabbitsPerKm } from '@/lib/rabbit-format';
+import { REGIONAL_CENSUS_ROWS } from '@/lib/regional-census-data';
 import { fetchSheepSeries } from '@/lib/sheep-data';
 import { formatMillions as formatMillionsSheep } from '@/lib/sheep-format';
 
@@ -741,6 +747,103 @@ function renderStoryContent(
               dataValue={strongest?.magnitude}
             />
             <StatCard label="Felt quakes per year" value={FELT_QUAKES_PER_YEAR} accent="rose" />
+          </dl>
+        ),
+      };
+    }
+    case 'regional-population-ranks': {
+      const auckland = REGIONAL_CENSUS_ROWS.find((row) => row.name === 'Auckland');
+      const westCoast = REGIONAL_CENSUS_ROWS.find((row) => row.name === 'West Coast');
+      return {
+        chart: <RegionalRankSlope />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Auckland region, 2023 census"
+              value={auckland?.population2023.toLocaleString('en-NZ') ?? ''}
+              accent="teal"
+              testId="auckland-region-population"
+              dataValue={auckland?.population2023}
+            />
+            <StatCard
+              label="Auckland rank, 2013 and 2023"
+              value="#1 both censuses"
+              accent="teal"
+              testId="auckland-region-rank"
+              dataValue={auckland?.rank2023}
+            />
+            <StatCard
+              label="West Coast rank, 2023"
+              value="#16"
+              accent="teal"
+              testId="west-coast-rank"
+              dataValue={westCoast?.rank2023}
+            />
+          </dl>
+        ),
+      };
+    }
+    case 'export-destination-ranks': {
+      const china = EXPORT_DESTINATION_ROWS.find((row) => row.name === 'China');
+      const australia = EXPORT_DESTINATION_ROWS.find((row) => row.name === 'Australia');
+      return {
+        chart: <ExportDestinationSlope />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="China rank, 2026"
+              value="#1"
+              accent="indigo"
+              testId="china-rank"
+              dataValue={china?.rank2026}
+            />
+            <StatCard
+              label="Australia rank, 2026"
+              value="#2"
+              accent="indigo"
+              testId="australia-rank"
+              dataValue={australia?.rank2026}
+            />
+            <StatCard
+              label="China exports, year ended March 2026"
+              value={`$${(china?.exports2026 ?? 0).toFixed(1)}b`}
+              accent="indigo"
+              testId="china-exports"
+              dataValue={china?.exports2026}
+            />
+          </dl>
+        ),
+      };
+    }
+    case 'city-population-ranks': {
+      const tauranga = CITY_RANK_ROWS.find((row) => row.name === 'Tauranga city');
+      const aucklandCity = CITY_RANK_ROWS.find((row) => row.name === 'Auckland');
+      const dunedin = CITY_RANK_ROWS.find((row) => row.name === 'Dunedin city');
+      return {
+        chart: <CityRankSlope />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Tauranga rank, 2023"
+              value="#5"
+              accent="cyan"
+              testId="tauranga-rank"
+              dataValue={tauranga?.rank2023}
+            />
+            <StatCard
+              label="Auckland rank, 2023"
+              value="#1"
+              accent="cyan"
+              testId="auckland-city-rank"
+              dataValue={aucklandCity?.rank2023}
+            />
+            <StatCard
+              label="Dunedin rank, 2023"
+              value="#6"
+              accent="cyan"
+              testId="dunedin-rank"
+              dataValue={dunedin?.rank2023}
+            />
           </dl>
         ),
       };

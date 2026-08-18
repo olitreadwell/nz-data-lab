@@ -880,4 +880,85 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+  {
+    slug: 'regional-population-ranks',
+    label: 'Regional population ranks',
+    eyebrow: '🗺️ the regional population ranks',
+    title: 'The regional pecking order is frozen.',
+    description:
+      'Between the 2013 and 2023 censuses, not one of the 16 regions changed rank. Auckland stayed first with 1,656,486 people, and the West Coast stayed last with 33,390.',
+    paragraphs: [
+      'The ranks are stable because the regions grow at similar rates. The West Coast was the only region whose population shrank between 2013 and 2018, from 32,148 to 31,575, before growing again to 33,390 by 2023.',
+      'Ranks hide absolute change, so the table keeps the counts. Every region grew between 2018 and 2023, and Tasman grew fastest at 10.3 percent.',
+    ],
+    accent: 'teal',
+    dataNote:
+      'Data: Stats NZ 2023 Census population counts release (Table 1, published 29 May 2024), usually resident population counts by regional council. Counts have fixed random rounding to base 3 applied. The series is final: censuses run every five years.',
+    references: [
+      {
+        label: '2023 Census population counts release (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
+        kind: 'data',
+      },
+      {
+        label: 'First results from the 2023 Census (Stats NZ)',
+        url: 'https://www.stats.govt.nz/news/first-results-from-the-2023-census-older-more-diverse-population-and-an-extra-300000-people-between-censuses/',
+        kind: 'news',
+      },
+    ],
+  },
+  {
+    slug: 'export-destination-ranks',
+    label: 'Export destination ranks',
+    eyebrow: '🚢 the export destination ranks',
+    title: 'China overtook Australia as the top export market.',
+    description:
+      "In the year ended March 2015, Australia was still New Zealand's biggest goods export market at $8.6 billion, just ahead of China's $8.6 billion. By 2026 China's lead was $9.3 billion.",
+    paragraphs: [
+      'China took the top spot in 2016 and has held it since. In the year ended March 2026, goods exports to China reached $19.7 billion, more than Australia ($10.5 billion) and the United States ($9.3 billion) combined.',
+      "The slope chart ranks the top ten destinations in 2015, 2020, and 2026. The order has barely moved since 2015; the story is the size of China's lead, not the ranking.",
+    ],
+    accent: 'indigo',
+    dataNote:
+      'Data: Stats NZ goods and services trade by country releases. The 2015 and 2020 figures are from the year ended March 2020 release; the 2026 figures are aggregated from the monthly series in the International trade: December 2025 quarter release (April 2025 to March 2026). Goods exports, NZ$ millions.',
+    references: [
+      {
+        label: 'Goods and services trade by country: Year ended March 2020 (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/goods-and-services-trade-by-country-year-ended-march-2020/',
+        kind: 'data',
+      },
+      {
+        label: 'International trade: December 2025 quarter (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/international-trade-december-2025-quarter/',
+        kind: 'data',
+      },
+    ],
+  },
+  {
+    slug: 'city-population-ranks',
+    label: 'City population ranks',
+    eyebrow: '🏙️ the city population ranks',
+    title: 'Tauranga passed Dunedin to become the fifth-biggest city.',
+    description:
+      'Between the 2013 and 2018 censuses, Tauranga overtook Dunedin. By 2023 Tauranga counted 152,844 people and Dunedin 128,901.',
+    paragraphs: [
+      'Auckland stayed the biggest city at 1,656,486, with Christchurch (391,383) and Wellington (202,689) next. Hamilton held fourth place at 174,741.',
+      'The ranks below are among the ten biggest city councils, not all 67 territorial authorities. City boundaries changed little over the three censuses, so the comparison is consistent.',
+    ],
+    accent: 'cyan',
+    dataNote:
+      'Data: Stats NZ 2023 Census population counts release (Table 2, published 29 May 2024), usually resident population counts by territorial authority, ranked among the ten biggest city councils. Counts have fixed random rounding to base 3 applied.',
+    references: [
+      {
+        label: '2023 Census population counts release (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
+        kind: 'data',
+      },
+      {
+        label: 'First results from the 2023 Census (Stats NZ)',
+        url: 'https://www.stats.govt.nz/news/first-results-from-the-2023-census-older-more-diverse-population-and-an-extra-300000-people-between-censuses/',
+        kind: 'news',
+      },
+    ],
+  },
 ]);
