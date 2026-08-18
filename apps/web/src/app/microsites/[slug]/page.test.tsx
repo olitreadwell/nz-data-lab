@@ -4,13 +4,12 @@ import { describe, expect, it, vi } from 'vitest';
 import MicrositePage from './page';
 
 const notFoundMock = vi.fn();
-vi.mock('next/navigation', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('next/navigation')>();
-  return {
-    ...actual,
-    notFound: () => notFoundMock(),
-  };
-});
+vi.mock('next/navigation', () => ({
+  notFound: (): never => {
+    notFoundMock();
+    throw new Error('NEXT_NOT_FOUND');
+  },
+}));
 
 vi.mock('@/lib/headline-stats', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/lib/headline-stats')>();

@@ -2,7 +2,6 @@ import { renderToReadableStream } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 
 import { HIDDEN_MICROSITES } from '@/lib/hidden-microsites';
-import { MICROSITES } from '@/lib/microsites';
 
 import HomePage from './page';
 
