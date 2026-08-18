@@ -145,7 +145,7 @@ export function AucklandParks(): React.ReactElement {
               </button>
             ))}
             <label className="ml-auto flex items-center gap-2 text-sm text-[var(--color-muted)]">
-              Filter
+              Filter boards by name
               <input
                 type="search"
                 value={query}
