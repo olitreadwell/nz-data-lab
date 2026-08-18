@@ -40,16 +40,30 @@ function injectNonce(html) {
   });
 }
 
+// Add the nonce to every element with an inline style attribute so a strict
+// style-src (no 'unsafe-inline') still permits the chart colors and bar widths
+// this build emitted. The nonce sits immediately after the tag name.
+const INLINE_STYLE_TAG = /<([a-z][a-z0-9-]*)(?=[^>]*\sstyle=)([^>]*)>/g;
+function injectStyleNonce(html) {
+  return html.replace(INLINE_STYLE_TAG, (match, tagName, attrs) => {
+    const cleanAttrs = attrs.replace(/\s+nonce="[^"]*"/g, '').trim();
+    return cleanAttrs
+      ? `<${tagName} nonce="${nonce}" ${cleanAttrs}>`
+      : `<${tagName} nonce="${nonce}">`;
+  });
+}
+
 for (const file of htmlFiles(OUT_DIR)) {
-  writeFileSync(file, injectNonce(readFileSync(file, 'utf8')));
+  writeFileSync(file, injectStyleNonce(injectNonce(readFileSync(file, 'utf8'))));
 }
 
 // Point script-src at the nonce instead of 'unsafe-inline'. The committed
 // source has no nonce, so match `script-src 'self'` with or without a trailing
 // nonce/unsafe-inline and replace it with the fresh nonce.
 const SCRIPT_SRC = /(script-src\s+'self')(?:\s+(?:'unsafe-inline'|'nonce-[^']*'))?/;
+const STYLE_SRC = /(style-src\s+'self')(?:\s+(?:'unsafe-inline'|'nonce-[^']*'))?/;
 function withNonce(csp) {
-  return csp.replace(SCRIPT_SRC, `$1 'nonce-${nonce}'`);
+  return csp.replace(SCRIPT_SRC, `$1 'nonce-${nonce}'`).replace(STYLE_SRC, `$1 'nonce-${nonce}'`);
 }
 
 // The CSP is generated only into the untracked build output; the committed

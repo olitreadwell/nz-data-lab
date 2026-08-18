@@ -82,7 +82,7 @@ function generateCspOutput(): GeneratedCsp {
   const dir = mkdtempSync(path.join(tmpdir(), 'csp-'));
   writeFileSync(
     path.join(dir, 'index.html'),
-    '<html><body><script>window.__cspTest = true;</script></body></html>',
+    '<html><body><script>window.__cspTest = true;</script><div style="background-color: rgb(1, 2, 3);">swatch</div></body></html>',
   );
   execFileSync('node', [GENERATE_CSP_SCRIPT, dir], { cwd: WEB_ROOT });
   return {
@@ -198,6 +198,20 @@ describe('security headers', () => {
     expect(scriptSrc).not.toContain("'unsafe-inline'");
   });
 
+  it('does not allow unsafe-inline in style-src', () => {
+    const styleSrc = cspDirective(servedCsp, 'style-src');
+    expect(styleSrc).not.toContain("'unsafe-inline'");
+  });
+
+  it('stamps the fresh nonce into inline style attributes', () => {
+    const styleSrc = cspDirective(servedCsp, 'style-src');
+    const nonce = /'nonce-([^']+)'/.exec(styleSrc)?.[1];
+    if (nonce === undefined) {
+      throw new Error('CSP style-src is missing a nonce');
+    }
+    expect(generated.html).toContain(`nonce="${nonce}" style="`);
+  });
+
   it('injects a fresh nonce into the generated _headers and the inline scripts', () => {
     const scriptSrc = cspDirective(servedCsp, 'script-src');
     const nonce = /'nonce-([^']+)'/.exec(scriptSrc)?.[1];
@@ -256,7 +270,7 @@ describe('security headers', () => {
 
   it('mirrors the headers in the static _headers file', () => {
     const staticHeaders = readStaticHeaders();
-    const stripNonce = (csp: string) => csp.replace(/\s+'nonce-[^']*'/, '');
+    const stripNonce = (csp: string) => csp.replace(/\s+'nonce-[^']*'/g, '');
     for (const header of vercelHeaders) {
       const staticLine = staticHeaders
         .split('\n')
