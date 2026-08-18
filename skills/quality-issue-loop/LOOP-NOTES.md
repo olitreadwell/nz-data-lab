@@ -66,3 +66,21 @@ submits on GitHub (a static export cannot hold a token). Triage now reviews
 ALL open issues, not just quality-loop-labeled ones, so user reports get
 spec'd, labeled, prioritized, and fixed by the loop. Also fixed: GitHub
 Pages does not serve .well-known paths, so security.txt ships at the root.
+
+## 2026-08-18 (hide-first rule)
+
+New hard rule from the user: the moment a bug is filed against a microsite,
+that microsite comes off the site (highest priority) and stays hidden until
+the fix ships. Implemented:
+
+- `apps/web/src/lib/hidden-microsites.ts` — `HIDDEN_MICROSITES` array plus
+  `withHiddenMicrositesRemoved`; `microsites.ts` filters through it, so a
+  hidden slug disappears from the home grid, the report-button item list,
+  and `generateStaticParams` (direct URLs 404).
+- Home page (`apps/web/src/app/page.tsx`) refactored from 14 hardcoded card
+  blocks to a filtered card list so hiding one cannot crash the build.
+- Loop script: triage verdicts can carry `microsite` + `hide`; the script
+  hides (commit + push + deploy) immediately during triage. Fan-out agents
+  un-hide as part of the fix.
+- Applied: #154 (shake-index map z-index over the report dialog) -> shake-index
+  hidden, verified 404 on the deployed site; fix pending in the loop.
