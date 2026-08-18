@@ -61,6 +61,17 @@ describe('ReportIssueButton', () => {
     expect(trigger).toHaveFocus();
   });
 
+  it('renders the backdrop as a non-focusable, aria-hidden element', () => {
+    render(<ReportIssueButton />);
+    fireEvent.click(screen.getByRole('button', { name: 'Report an issue' }));
+    expect(screen.queryByRole('button', { name: 'Close report dialog' })).not.toBeInTheDocument();
+    const dialog = screen.getByRole('dialog');
+    const backdrop = dialog.firstElementChild;
+    expect(backdrop).not.toBeNull();
+    expect(backdrop).not.toBeInstanceOf(HTMLButtonElement);
+    expect(backdrop).toHaveAttribute('aria-hidden', 'true');
+  });
+
   it('has no accessibility violations when open', async () => {
     render(<ReportIssueButton />);
     fireEvent.click(screen.getByRole('button', { name: 'Report an issue' }));
