@@ -122,6 +122,16 @@ when no wrapper is already running (check the lock file first).
   intact. If the loop skips for a dirty main again, the wrapper logs the
   dirty file list, so read that line before changing the guard.
 
+- A stalled run can leave a clean worktree with committed microsites that
+  were never pushed or handed off (the agent hit the time cap after
+  committing but before the push and issue steps). Before starting fresh,
+  check for a clean, unmerged `feat/microsite-loop-*` worktree and resume
+  it: verify its commits (tsc, vitest, lint), rebase onto origin/main,
+  push, file the review issues, then build any remaining microsites to fill
+  the 2-3 batch. Loop 14 resumed loop 14's stalled work this way: two
+  committed microsites were verified and handed off, and a third was built
+  from the next open issue with a proven source.
+
 - A heal session that runs the wrapper manually while its parent wrapper is
   still alive recurses: the manual run skips on the lock (the parent holds
   it) and the accumulated skips spawn a nested heal session. The wrapper
