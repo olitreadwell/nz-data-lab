@@ -150,6 +150,7 @@ export function ReportIssueButton({ pageLabel }: ReportIssueButtonProps): React.
           role="dialog"
           aria-modal="true"
           aria-labelledby="report-issue-title"
+          aria-describedby="report-issue-description"
           className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center"
         >
           <button
@@ -164,7 +165,10 @@ export function ReportIssueButton({ pageLabel }: ReportIssueButtonProps): React.
                 <h2 id="report-issue-title" className="numeral-heading-lg">
                   Report an issue
                 </h2>
-                <p className="numeral-paragraph-sm text-[var(--color-muted)]">
+                <p
+                  id="report-issue-description"
+                  className="numeral-paragraph-sm text-[var(--color-muted)]"
+                >
                   Opens a prefilled GitHub issue for this page.
                 </p>
               </div>

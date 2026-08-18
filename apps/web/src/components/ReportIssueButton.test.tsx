@@ -22,6 +22,15 @@ describe('ReportIssueButton', () => {
     expect(screen.getByRole('combobox', { name: /item/i })).toBeInTheDocument();
   });
 
+  it('associates the helper paragraph with the dialog via aria-describedby', () => {
+    render(<ReportIssueButton />);
+    fireEvent.click(screen.getByRole('button', { name: 'Report an issue' }));
+    const dialog = screen.getByRole('dialog');
+    const description = screen.getByText('Opens a prefilled GitHub issue for this page.');
+    expect(dialog).toHaveAttribute('aria-describedby', 'report-issue-description');
+    expect(description).toHaveAttribute('id', 'report-issue-description');
+  });
+
   it('opens a prefilled GitHub issue with page context on submit', () => {
     const open = vi.spyOn(window, 'open').mockImplementation(() => null);
     render(<ReportIssueButton pageLabel="Sheep index" />);
