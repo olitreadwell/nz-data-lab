@@ -218,3 +218,43 @@ Generated 5 issues, merged 4 fixes (#235, #234, #233, #232).
 ## 2026-08-19
 
 Generated 5 issues, merged 4 fixes (#246, #245, #244, #243).
+
+## 2026-08-19 (manual batch + microsite merge, outside the schedule)
+
+Fan-out batch (#268 leaflet focus, #271 treemap a11y, #270 iNaturalist
+deadline, #267 CSP style-src): first three merged and pushed; #267's fan-out
+agent commit was lost when the fan-out script died on a broken `gh` symlink
+(worktree + branch deleted before merge), so the fix was re-implemented by
+hand. The CSP fix now drops `'unsafe-inline'` from `style-src` entirely:
+generate-csp.mjs stamps the per-build nonce into every inline style
+attribute and both CSP sources serve `style-src 'self' 'nonce-…'`; the
+deploy check asserts the style nonces round-trip.
+
+Merged all 9 microsite-loop branches sequentially into main (9, 7, 8, 10,
+11, 12, 13, 14, 15), keeping both sides on merge conflicts
+(microsites.ts, page.tsx, home page, hidden-microsites union rule,
+add/add files combined). Branch merges surfaced two pre-existing build
+breaks that the loop's no-build-in-worktree gate had missed:
+
+- client charts importing node:fs fixture modules (QuakeMonthRose,
+  QuakeYearStripChart, RegionDensityChoropleth) broke the Turbopack static
+  build; split the pure month-binning helpers out of quake-month-data.ts
+  and switched the quake-year and region-density fixtures to JSON imports
+  (renamed the GeoJSON to .json).
+- the quake month fixture gained real depths (t/m/d rows) to satisfy the
+  now-required depthKm on QuakeCatalogEvent; regenerated from the live FDSN
+  service over the same 24-month window, story numbers unchanged.
+
+Deploy infrastructure was broken: the Vercel GitHub Actions secrets were
+empty and the site had been 404ing, and the Vercel project settings had
+been reset (no rootDirectory/outputDirectory), so `vercel build` failed
+with "No Output Directory named public". Restored the three VERCEL_*
+secrets from the local CLI token, set project rootDirectory=apps/web,
+buildCommand="npm run build", outputDirectory="out", and pointed the
+deploy's header check at the production domain (deployment URLs are
+SSO-protected). The production site is live again with the strict CSP.
+
+Skill improvements for next iterations: the loop must never trust a fan-out
+merge that errored after the agent finished (verify the merge landed before
+pruning the worktree/branch), and every merged branch needs a real
+`next build` on a main checkout before deploy, not just type-check+test.
