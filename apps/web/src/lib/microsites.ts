@@ -847,4 +847,31 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+  {
+    slug: 'export-destination-ranks',
+    label: 'Export destination ranks',
+    eyebrow: '🚢 the export destination ranks',
+    title: 'China overtook Australia as the top export market.',
+    description:
+      "In the year ended March 2015, Australia was still New Zealand's biggest goods export market at $8.6 billion, just ahead of China's $8.6 billion. By 2026 China's lead was $9.3 billion.",
+    paragraphs: [
+      'China took the top spot in 2016 and has held it since. In the year ended March 2026, goods exports to China reached $19.7 billion, more than Australia ($10.5 billion) and the United States ($9.3 billion) combined.',
+      "The slope chart ranks the top ten destinations in 2015, 2020, and 2026. The order has barely moved since 2015; the story is the size of China's lead, not the ranking.",
+    ],
+    accent: 'indigo',
+    dataNote:
+      'Data: Stats NZ goods and services trade by country releases. The 2015 and 2020 figures are from the year ended March 2020 release; the 2026 figures are aggregated from the monthly series in the International trade: December 2025 quarter release (April 2025 to March 2026). Goods exports, NZ$ millions.',
+    references: [
+      {
+        label: 'Goods and services trade by country: Year ended March 2020 (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/goods-and-services-trade-by-country-year-ended-march-2020/',
+        kind: 'data',
+      },
+      {
+        label: 'International trade: December 2025 quarter (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/international-trade-december-2025-quarter/',
+        kind: 'data',
+      },
+    ],
+  },
 ]);

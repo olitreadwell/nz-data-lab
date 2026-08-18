@@ -11,6 +11,7 @@ import { CanterburyRain } from '@/components/CanterburyRain';
 import { DeerBoomBustChart } from '@/components/DeerBoomBustChart';
 import { DigitisedMemorySearch } from '@/components/DigitisedMemorySearch';
 import { EvCharging } from '@/components/EvCharging';
+import { ExportDestinationSlope } from '@/components/ExportDestinationSlope';
 import { ForestryChart } from '@/components/ForestryChart';
 import { HamiltonPlaygrounds } from '@/components/HamiltonPlaygrounds';
 import { HorticultureChart } from '@/components/HorticultureChart';
@@ -35,6 +36,7 @@ import { VehicleFleet } from '@/components/VehicleFleet';
 import { WhatTheWorldReads } from '@/components/WhatTheWorldReads';
 import { env } from '@/env';
 import { CENSUS_RANK_HIGHLIGHTS, formatRankOrdinal } from '@/lib/census-rank-data';
+import { EXPORT_DESTINATION_ROWS } from '@/lib/export-destination-data';
 import { fetchForestrySeries, summarizeForestry } from '@/lib/forestry-data';
 import { formatHectares, formatMillions } from '@/lib/format';
 import {
@@ -695,6 +697,38 @@ function renderStoryContent(
               accent="teal"
               testId="west-coast-rank"
               dataValue={westCoast?.rank2023}
+            />
+          </dl>
+        ),
+      };
+    }
+    case 'export-destination-ranks': {
+      const china = EXPORT_DESTINATION_ROWS.find((row) => row.name === 'China');
+      const australia = EXPORT_DESTINATION_ROWS.find((row) => row.name === 'Australia');
+      return {
+        chart: <ExportDestinationSlope />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="China rank, 2026"
+              value="#1"
+              accent="indigo"
+              testId="china-rank"
+              dataValue={china?.rank2026}
+            />
+            <StatCard
+              label="Australia rank, 2026"
+              value="#2"
+              accent="indigo"
+              testId="australia-rank"
+              dataValue={australia?.rank2026}
+            />
+            <StatCard
+              label="China exports, year ended March 2026"
+              value={`$${(china?.exports2026 ?? 0).toFixed(1)}b`}
+              accent="indigo"
+              testId="china-exports"
+              dataValue={china?.exports2026}
             />
           </dl>
         ),
