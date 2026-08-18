@@ -55,9 +55,9 @@ describe('DigitisedMemorySearch', () => {
     render(<DigitisedMemorySearch initialQuery="gold" />);
     await screen.findByText(/1,977,021 records match/);
     expect(screen.getAllByText('View records by decade as a table').length).toBeGreaterThan(0);
-    expect(screen.getByRole('cell', { name: '1860s' })).toBeInTheDocument();
+    expect(screen.getByRole('rowheader', { name: '1860s' })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: '108,375' })).toBeInTheDocument();
-    expect(screen.getByRole('cell', { name: '1890s' })).toBeInTheDocument();
+    expect(screen.getByRole('rowheader', { name: '1890s' })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: '427,164' })).toBeInTheDocument();
   });
 

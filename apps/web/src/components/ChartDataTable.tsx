@@ -47,16 +47,27 @@ export function ChartDataTable<T>({
           <tbody>
             {rows.map((row, rowIndex) => (
               <tr key={rowIndex}>
-                {columns.map((column) => (
-                  <td
-                    key={String(column.key)}
-                    className="border-b border-[var(--color-border)] py-1 pr-3 text-[var(--color-muted)]"
-                  >
-                    {column.format === undefined
+                {columns.map((column, columnIndex) => {
+                  const content =
+                    column.format === undefined
                       ? String(row[column.key])
-                      : column.format(row[column.key])}
-                  </td>
-                ))}
+                      : column.format(row[column.key]);
+                  const cellClassName =
+                    'border-b border-[var(--color-border)] py-1 pr-3 text-[var(--color-muted)]';
+                  return columnIndex === 0 ? (
+                    <th
+                      key={String(column.key)}
+                      scope="row"
+                      className={cellClassName}
+                    >
+                      {content}
+                    </th>
+                  ) : (
+                    <td key={String(column.key)} className={cellClassName}>
+                      {content}
+                    </td>
+                  );
+                })}
               </tr>
             ))}
           </tbody>
