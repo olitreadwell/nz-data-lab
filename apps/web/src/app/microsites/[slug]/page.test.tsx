@@ -196,6 +196,16 @@ describe('MicrositePage', () => {
     expect(html).toContain('5,122,600');
   });
 
+  it('renders the industry employment story', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'industry-employment' })} />,
+    );
+    const html = await new Response(stream).text();
+    expect(html).toContain('biggest employer');
+    expect(html).toContain('2,450,600');
+    expect(html).toContain('Health care (Feb 2025)');
+  });
+
   it('renders the region density story', async () => {
     const stream = await renderToReadableStream(
       <MicrositePage params={Promise.resolve({ slug: 'region-density' })} />,

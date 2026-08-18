@@ -924,4 +924,32 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+
+  {
+    slug: 'industry-employment',
+    label: 'Industry employment',
+    eyebrow: '🏭 the industry employment',
+    title: "Health care is New Zealand's biggest employer.",
+    description:
+      "Stats NZ counted 293,600 employees in health care and social assistance at February 2025, 12% of the 2,450,600 employees covered by the business demography statistics. It is the country's biggest industry employer, ahead of manufacturing.",
+    paragraphs: [
+      'Manufacturing still employed 231,100 people, but its share slipped from 10.2% at February 2020 to 9.4% at February 2025. Retail trade sits close behind at 227,900.',
+      "The marimekko scales each column to that year's employee total and each block's height to an industry's share. Hover a block to read an industry across both years, or switch to equal columns to compare shares directly.",
+    ],
+    accent: 'violet',
+    dataNote:
+      'Data: Stats NZ "New Zealand business demography statistics: At February 2020" and "...At February 2025", Table 1, enterprises, geographic units, and employee count by industry (ANZSIC06). The February 2025 counts are provisional and have noise added or subtracted to protect individual businesses, so industry counts can differ from the published total by a few employees.',
+    references: [
+      {
+        label: 'New Zealand business demography statistics: At February 2025 (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/new-zealand-business-demography-statistics-at-february-2025/',
+        kind: 'data',
+      },
+      {
+        label: 'New Zealand business demography statistics: At February 2020 (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/new-zealand-business-demography-statistics-at-february-2020/',
+        kind: 'data',
+      },
+    ],
+  },
 ]);

@@ -10,6 +10,7 @@ import { BackyardSpeciesCensus } from '@/components/BackyardSpeciesCensus';
 import { CanterburyRain } from '@/components/CanterburyRain';
 import { DeerBoomBustChart } from '@/components/DeerBoomBustChart';
 import { DigitisedMemorySearch } from '@/components/DigitisedMemorySearch';
+import { EmploymentMarimekko } from '@/components/EmploymentMarimekko';
 import { EvCharging } from '@/components/EvCharging';
 import { ForestryChart } from '@/components/ForestryChart';
 import { HamiltonPlaygrounds } from '@/components/HamiltonPlaygrounds';
@@ -38,6 +39,7 @@ import { VehicleFleet } from '@/components/VehicleFleet';
 import { WhatTheWorldReads } from '@/components/WhatTheWorldReads';
 import { env } from '@/env';
 import { CENSUS_RANK_HIGHLIGHTS, formatRankOrdinal } from '@/lib/census-rank-data';
+import { EMPLOYMENT_INDUSTRY_ROWS, EMPLOYMENT_TOTAL_2025 } from '@/lib/employment-data';
 import { fetchForestrySeries, summarizeForestry } from '@/lib/forestry-data';
 import { formatHectares, formatMillions } from '@/lib/format';
 import {
@@ -679,6 +681,43 @@ function renderStoryContent(
           </dl>
         ),
       };
+    case 'industry-employment': {
+      const health = EMPLOYMENT_INDUSTRY_ROWS.find(
+        (row) => row.key === 'health-care-social-assistance',
+      );
+      const manufacturing = EMPLOYMENT_INDUSTRY_ROWS.find((row) => row.key === 'manufacturing');
+      if (health === undefined || manufacturing === undefined) {
+        throw new Error('missing employment industry row');
+      }
+      return {
+        chart: <EmploymentMarimekko />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Employees, Feb 2025"
+              value={EMPLOYMENT_TOTAL_2025.toLocaleString('en-NZ')}
+              accent="violet"
+              testId="employment-2025-total"
+              dataValue={EMPLOYMENT_TOTAL_2025}
+            />
+            <StatCard
+              label="Health care (Feb 2025)"
+              value={health.employees2025.toLocaleString('en-NZ')}
+              accent="violet"
+              testId="employment-health"
+              dataValue={health.employees2025}
+            />
+            <StatCard
+              label="Manufacturing (Feb 2025)"
+              value={manufacturing.employees2025.toLocaleString('en-NZ')}
+              accent="violet"
+              testId="employment-manufacturing"
+              dataValue={manufacturing.employees2025}
+            />
+          </dl>
+        ),
+      };
+    }
     case 'region-density': {
       const auckland = regionDensityRowByKey('auckland');
       const westCoast = regionDensityRowByKey('west-coast');

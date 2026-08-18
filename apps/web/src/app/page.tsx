@@ -196,6 +196,11 @@ export default async function HomePage(): Promise<React.ReactElement> {
       statLabel: 'People per km², NZ',
       statValue: '18.9',
     },
+    {
+      config: getMicrosite('industry-employment'),
+      statLabel: 'Employees, Feb 2025',
+      statValue: '2,450,600',
+    },
   ].filter(
     (card): card is { config: MicrositeConfig; statLabel: string; statValue: string } =>
       card.config !== undefined,
