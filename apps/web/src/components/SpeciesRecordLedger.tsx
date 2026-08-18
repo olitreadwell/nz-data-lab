@@ -123,7 +123,14 @@ export function SpeciesRecordLedger(): React.ReactElement {
     return [first, second];
   }, [visibleKingdoms]);
 
-  const chartLabel = 'New Zealand species records by kingdom, 2014 to 2024, from GBIF';
+  const chartLabel = useMemo(() => {
+    const base = 'New Zealand species records by kingdom, 2014 to 2024, from GBIF';
+    if (hiddenKingdoms.size === 0) {
+      return base;
+    }
+    const hidden = [...hiddenKingdoms].sort().join(', ');
+    return `${base}. Hidden: ${hidden}`;
+  }, [hiddenKingdoms]);
   const tableColumns: ChartDataColumn<LiveGbifKingdom>[] = [
     { key: 'kingdom', header: 'Kingdom' },
     { key: 'count2014', header: '2014 records', format: (value) => value.toLocaleString('en-NZ') },
@@ -188,7 +195,7 @@ export function SpeciesRecordLedger(): React.ReactElement {
           <ChartDataTable
             summary="View the ledger as a table"
             columns={tableColumns}
-            rows={kingdoms}
+            rows={visibleKingdoms}
           />
         </div>
       )}

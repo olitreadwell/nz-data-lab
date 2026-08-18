@@ -103,7 +103,14 @@ export function BackyardSpeciesCensus(): React.ReactElement {
     });
   }, []);
 
-  const chartLabel = 'New Zealand species by observations, species, and observers on iNaturalist';
+  const chartLabel = useMemo(() => {
+    const base = 'New Zealand species by observations, species, and observers on iNaturalist';
+    if (hiddenTaxa.size === 0) {
+      return base;
+    }
+    const hidden = [...hiddenTaxa].sort().join(', ');
+    return `${base}. Hidden: ${hidden}`;
+  }, [hiddenTaxa]);
   const tableColumns: ChartDataColumn<LiveInaturalistTaxon>[] = [
     { key: 'taxon', header: 'Group' },
     { key: 'speciesCount', header: 'Species', format: (value) => value.toLocaleString('en-NZ') },
@@ -183,7 +190,11 @@ export function BackyardSpeciesCensus(): React.ReactElement {
               </ScatterChart>
             </ResponsiveContainer>
           </div>
-          <ChartDataTable summary="View the census as a table" columns={tableColumns} rows={taxa} />
+          <ChartDataTable
+            summary="View the census as a table"
+            columns={tableColumns}
+            rows={visibleTaxa}
+          />
         </div>
       )}
     </div>
