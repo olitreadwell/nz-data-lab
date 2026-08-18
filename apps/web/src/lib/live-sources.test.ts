@@ -5,6 +5,7 @@ import {
   fetchLiveGbifKingdoms,
   fetchLiveInaturalistTaxa,
   parseAucklandParkBoards,
+  parseDataGovtNzSearch,
   parseGbifKingdomFacet,
   parseInaturalistTotal,
   parseNzorNamesXml,
@@ -157,6 +158,27 @@ describe('parseNzorNamesXml', () => {
   <Results />
 </NamesSearchResponse>`;
     expect(parseNzorNamesXml(payload)).toEqual([]);
+  });
+});
+
+describe('parseDataGovtNzSearch', () => {
+  it('parses CKAN package_search results', () => {
+    const datasets = parseDataGovtNzSearch({
+      result: {
+        results: [
+          { name: 'water-quality', title: 'Water quality', organization: { title: 'MfE' } },
+          { name: 'rainfall', title: 'Rainfall', organization: null },
+        ],
+      },
+    });
+    expect(datasets).toEqual([
+      { name: 'water-quality', title: 'Water quality', organization: 'MfE' },
+      { name: 'rainfall', title: 'Rainfall', organization: undefined },
+    ]);
+  });
+
+  it('returns an empty list when there are no results', () => {
+    expect(parseDataGovtNzSearch({ result: { results: [] } })).toEqual([]);
   });
 });
 
