@@ -97,6 +97,49 @@ function unhideMicrosite(slug) {
   run('git', ['commit', '-m', `fix: un-hide ${slug} microsite, bug is fixed`]);
 }
 
+/** Removes worktrees whose branch is already merged into main and whose tree is clean. */
+function pruneMergedWorktrees() {
+  const lines = runCapture('git', ['worktree', 'list', '--porcelain']).split('\n');
+  const entries = [];
+  let current = null;
+  for (const line of lines) {
+    if (line.startsWith('worktree ')) {
+      current = { path: line.slice('worktree '.length) };
+      entries.push(current);
+    } else if (line.startsWith('branch ')) {
+      current.branch = line.slice('branch refs/heads/'.length);
+    }
+  }
+  let pruned = 0;
+  for (const entry of entries) {
+    if (entry.path === ROOT || entry.branch === undefined) {
+      continue;
+    }
+    let merged = false;
+    try {
+      runCapture('git', ['merge-base', '--is-ancestor', entry.branch, 'main']);
+      merged = true;
+    } catch {
+      merged = false;
+    }
+    if (!merged) {
+      continue;
+    }
+    const dirty = runCapture('git', ['-C', entry.path, 'status', '--porcelain']).length > 0;
+    if (dirty) {
+      console.log(`skip prune ${entry.branch}: worktree has uncommitted changes`);
+      continue;
+    }
+    run('git', ['worktree', 'remove', '--force', entry.path]);
+    run('git', ['branch', '-d', entry.branch]);
+    pruned += 1;
+    console.log(`pruned merged worktree: ${entry.branch}`);
+  }
+  if (pruned === 0) {
+    console.log('no merged worktrees to prune');
+  }
+}
+
 function codexExec(cwd, prompt) {
   const child = spawn(
     'codex',
@@ -462,6 +505,8 @@ if (mode === 'generate') {
   generateIssues(count);
 } else if (mode === 'triage') {
   await triageIssues();
+} else if (mode === 'prune') {
+  pruneMergedWorktrees();
 } else if (mode === 'fanout') {
   if (rest.length === 0) {
     console.error('usage: node scripts/quality-loop.mjs fanout <issue-number>...');
@@ -469,6 +514,7 @@ if (mode === 'generate') {
   }
   await fanout(rest.map(Number));
 } else if (mode === 'full') {
+  pruneMergedWorktrees();
   const created = generateIssues(5);
   await triageIssues();
   const rank = { high: 0, medium: 1, low: 2 };
@@ -503,6 +549,6 @@ if (mode === 'generate') {
       .join(', ')}).`,
   );
 } else {
-  console.error('usage: node scripts/quality-loop.mjs generate|triage|fanout|full');
+  console.error('usage: node scripts/quality-loop.mjs generate|triage|prune|fanout|full');
   process.exit(1);
 }

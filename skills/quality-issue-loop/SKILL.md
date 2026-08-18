@@ -34,6 +34,9 @@ every iteration makes the next one faster.
 
 ## Loop contract (one iteration, ~10 minutes)
 
+0. **Prune (30 s)**: remove worktrees whose branch is already merged into
+   `main` and whose tree is clean (`node scripts/quality-loop.mjs prune`).
+   Keeps `.worktrees/` from accumulating after failed or interrupted runs.
 1. **Generate (2 min)**: scan the repo against the checklists, write detailed
    issues (repro steps, checklist reference, acceptance criteria), create
    them with `gh issue create --label quality-loop`. Score by severity and
