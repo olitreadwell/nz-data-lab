@@ -853,4 +853,37 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+
+  {
+    slug: 'quake-years',
+    label: 'Quake years',
+    eyebrow: '🌋 the quake years',
+    title: "2016 was New Zealand's busiest quake year since 2001.",
+    description:
+      'GeoNet located 7,265 earthquakes at magnitude 4.0 or stronger between 2001 and 2024. The busiest year was 2016, when the 7.8 Kaikoura earthquake and its aftershocks brought 772.',
+    paragraphs: [
+      'The quietest year was 2018 with 118. Most years land between 150 and 500, so the peak years stand out: 2003 (561) around the Fiordland 7.1, 2009 (487) around the Dusky Sound 7.8, and 2021 (483) around the Te Araroa 7.2.',
+      'The 6.3 Christchurch earthquake of February 2011 made 2011 a busy year too, with 447 quakes at 4.0 or stronger. Drag the slider to 6.0 and only the biggest shakes remain.',
+    ],
+    accent: 'rose',
+    dataNote:
+      'Data: GeoNet FDSN event service, earthquakes of magnitude 4.0 or stronger located in the New Zealand region (latitude -50 to -29, longitude 166 to 180, plus the Kermadec arc from -180 to -175), 1 January 2001 to 31 December 2024. The counts are a committed snapshot of the GeoNet catalog taken 19 August 2026.',
+    references: [
+      {
+        label: 'GeoNet',
+        url: 'https://www.geonet.org.nz/',
+        kind: 'data',
+      },
+      {
+        label: 'Earthquake FAQ (GeoNet)',
+        url: 'https://www.geonet.org.nz/earthquake/faq',
+        kind: 'data',
+      },
+      {
+        label: 'Kaikōura earthquake, 13 November 2016 (GeoNet)',
+        url: 'https://www.geonet.org.nz/earthquake/2016p858000',
+        kind: 'news',
+      },
+    ],
+  },
 ]);

@@ -186,6 +186,11 @@ export default async function HomePage(): Promise<React.ReactElement> {
       statLabel: `Rabbits per km (${rabbit.latest.year})`,
       statValue: formatRabbitsPerKm(rabbit.latest.rabbitsPerKm),
     },
+    {
+      config: getMicrosite('quake-years'),
+      statLabel: 'Quakes at M4+, 2001-2024',
+      statValue: '7,265',
+    },
   ].filter(
     (card): card is { config: MicrositeConfig; statLabel: string; statValue: string } =>
       card.config !== undefined,

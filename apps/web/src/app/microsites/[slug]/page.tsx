@@ -22,6 +22,7 @@ import { PeakHeights } from '@/components/PeakHeights';
 import { PopulationRankBump } from '@/components/PopulationRankBump';
 import { QuakeMagnitudeHistogram } from '@/components/QuakeMagnitudeHistogram';
 import { QuakeMap } from '@/components/QuakeMap';
+import { QuakeYearStripChart } from '@/components/QuakeYearStripChart';
 import { RabbitChart } from '@/components/RabbitChart';
 import { ReportIssueButton } from '@/components/ReportIssueButton';
 import { RiverLengths } from '@/components/RiverLengths';
@@ -58,6 +59,7 @@ import { MICROSITES } from '@/lib/microsites';
 import { fetchRecentQuakeCatalog } from '@/lib/quake-catalog';
 import type { QuakeCatalogEvent } from '@/lib/quake-catalog';
 import { fetchRecentQuakes } from '@/lib/quake-data';
+import { QUAKE_YEAR_PEAK, QUAKE_YEAR_QUIET, QUAKE_YEAR_TOTAL } from '@/lib/quake-year-data';
 import { fetchRabbitSpotlightSeries } from '@/lib/rabbit-data';
 import type { RabbitSpotlightSeries } from '@/lib/rabbit-data';
 import { formatRabbitsPerKm } from '@/lib/rabbit-format';
@@ -675,6 +677,36 @@ function renderStoryContent(
           </dl>
         ),
       };
+    case 'quake-years': {
+      return {
+        chart: <QuakeYearStripChart />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Quakes at M4+, 2001-2024"
+              value={QUAKE_YEAR_TOTAL.toLocaleString('en-NZ')}
+              accent="rose"
+              testId="quake-years-total"
+              dataValue={QUAKE_YEAR_TOTAL}
+            />
+            <StatCard
+              label={`Busiest year (${QUAKE_YEAR_PEAK.year})`}
+              value={String(QUAKE_YEAR_PEAK.count)}
+              accent="rose"
+              testId="quake-years-peak"
+              dataValue={QUAKE_YEAR_PEAK.count}
+            />
+            <StatCard
+              label={`Quietest year (${QUAKE_YEAR_QUIET.year})`}
+              value={String(QUAKE_YEAR_QUIET.count)}
+              accent="rose"
+              testId="quake-years-quiet"
+              dataValue={QUAKE_YEAR_QUIET.count}
+            />
+          </dl>
+        ),
+      };
+    }
     case 'shake-index': {
       const summary = summarizeGeoNetQuakes(data.quakes);
       const strongest = summary.strongest;

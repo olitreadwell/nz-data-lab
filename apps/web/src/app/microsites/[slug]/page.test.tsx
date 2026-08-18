@@ -13,6 +13,25 @@ vi.mock('next/navigation', () => ({
   },
 }));
 
+const { QUAKE_MOCK_EVENTS } = vi.hoisted(() => ({
+  QUAKE_MOCK_EVENTS: [
+    { y: 2016, m: 7.8, d: 15.1, t: 1478988176, p: '15 km north-east of Culverden' },
+    { y: 2018, m: 4.2, d: 40, t: 1515000000, p: '30 km south of Seddon' },
+  ],
+}));
+
+vi.mock('@/lib/quake-year-data', () => ({
+  QUAKE_YEAR_START: 2001,
+  QUAKE_YEAR_END: 2024,
+  QUAKE_YEAR_EVENTS: QUAKE_MOCK_EVENTS,
+  QUAKE_YEAR_COUNTS: { 2016: 1, 2018: 1 },
+  QUAKE_YEAR_TOTAL: 7265,
+  QUAKE_YEAR_PEAK: { year: 2016, count: 772 },
+  QUAKE_YEAR_QUIET: { year: 2018, count: 118 },
+  filterQuakeYearsByMinMagnitude: (minMagnitude: number) =>
+    QUAKE_MOCK_EVENTS.filter((event) => event.m >= minMagnitude),
+}));
+
 vi.mock('@/lib/quake-catalog', () => ({
   fetchRecentQuakeCatalog: vi.fn().mockResolvedValue([
     { timeEpochSec: 1780000000, magnitude: 1.4 },
@@ -175,6 +194,16 @@ describe('MicrositePage', () => {
     const html = await new Response(stream).text();
     expect(html).toContain('Women outnumber men from age 30 up');
     expect(html).toContain('5,122,600');
+  });
+
+  it('renders the quake years story', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'quake-years' })} />,
+    );
+    const html = await new Response(stream).text();
+    expect(html).toContain('busiest quake year since 2001');
+    expect(html).toContain('7,265');
+    expect(html).toContain('Quakes at M4+, 2001-2024');
   });
 
   it('renders the quake magnitudes story', async () => {
