@@ -154,21 +154,43 @@ fi
 agent_pid=$!
 
 waited=0
+killed=0
 while kill -0 "$agent_pid" 2>/dev/null; do
   sleep 30
   waited=$((waited + 30))
   if [ "$waited" -ge "$((RUN_TIME_MAX_MINUTES * 60))" ]; then
+    # kill -0 reports success on a zombie too, so only count a real stall:
+    # a zombie (or vanished) process means the agent already exited and wait
+    # will report its true status below.
+    stat=$(ps -o stat= -p "$agent_pid" 2>/dev/null || true)
+    case "$stat" in
+      ""|Z*) break ;;
+    esac
     log "killing stalled agent after ${RUN_TIME_MAX_MINUTES}min"
     kill "$agent_pid" 2>/dev/null || true
+    killed=1
     break
   fi
 done
 
 if wait "$agent_pid"; then
-  log "loop iteration finished ok"
-  reset_state
+  status=0
 else
   status=$?
-  log "loop iteration FAILED (exit $status)"
-  exit "$status"
 fi
+
+if [ "$killed" -eq 1 ]; then
+  log "loop iteration STALLED: agent killed at the ${RUN_TIME_MAX_MINUTES}min cap"
+  skip "agent stalled at the time cap"
+  maybe_heal
+  exit 1
+fi
+
+if [ "$status" -eq 0 ]; then
+  log "loop iteration finished ok"
+  reset_state
+  exit 0
+fi
+
+log "loop iteration FAILED (exit $status)"
+exit "$status"
