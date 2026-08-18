@@ -104,6 +104,20 @@ describe('TradeMeTree', () => {
     expect(results.queryByText('Trade Me Motors')).not.toBeInTheDocument();
   });
 
+  it('announces the filtered result count in the live region', async () => {
+    render(<TradeMeTree />);
+    await screen.findByText(/categories in the tree/);
+    fireEvent.change(screen.getByLabelText(/Filter Trade Me categories/), {
+      target: { value: 'furniture' },
+    });
+    expect(screen.getByText('1 category matches your filter.')).toBeInTheDocument();
+  });
+
+  it('announces the total count when no filter is active', async () => {
+    render(<TradeMeTree />);
+    expect(await screen.findByText('7 categories in the tree.')).toBeInTheDocument();
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = render(<TradeMeTree />);
     await screen.findByText(/categories in the tree/);
