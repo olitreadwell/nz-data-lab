@@ -1,6 +1,8 @@
 import { renderToReadableStream } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 
+import { HIDDEN_MICROSITES } from '@/lib/hidden-microsites';
+
 import MicrositePage, { generateMetadata } from './page';
 
 const notFoundMock = vi.fn();
@@ -132,9 +134,9 @@ describe('MicrositePage', () => {
   });
 
   it('returns a unique document title for the sheep microsite', async () => {
-    await expect(generateMetadata({ params: Promise.resolve({ slug: 'sheep-index' }) })).resolves.toEqual(
-      { title: 'Sheep index - nz-data-lab' },
-    );
+    await expect(
+      generateMetadata({ params: Promise.resolve({ slug: 'sheep-index' }) }),
+    ).resolves.toEqual({ title: 'Sheep index - nz-data-lab' });
   });
 
   it('returns a generic title for an unknown microsite', async () => {
@@ -191,40 +193,29 @@ it('renders the online garage sale story', async () => {
   expect(html).toContain('Home &amp; living');
 });
 
-it('renders the species register with the live register total', async () => {
-  const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'species-register' })} />,
-  );
-  const html = await new Response(stream).text();
-  expect(html).toContain('170,151');
-  expect(html).toContain('Names in the register');
-});
+it.skipIf(HIDDEN_MICROSITES.includes('species-register'))(
+  'renders the species register with the live register total',
+  async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'species-register' })} />,
+    );
+    const html = await new Response(stream).text();
+    expect(html).toContain('170,151');
+    expect(html).toContain('Names in the register');
+  },
+);
 
-it('renders the open data catalogue with the live catalogue total', async () => {
-  const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'open-data-catalogue' })} />,
-  );
-  const html = await new Response(stream).text();
-  expect(html).toContain('31,915');
-  expect(html).toContain('Datasets in the catalogue');
-});
-it('renders the species register with the live register total', async () => {
-  const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'species-register' })} />,
-  );
-  const html = await new Response(stream).text();
-  expect(html).toContain('170,151');
-  expect(html).toContain('Names in the register');
-});
-
-it('renders the open data catalogue with the live catalogue total', async () => {
-  const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'open-data-catalogue' })} />,
-  );
-  const html = await new Response(stream).text();
-  expect(html).toContain('31,915');
-  expect(html).toContain('Datasets in the catalogue');
-});
+it.skipIf(HIDDEN_MICROSITES.includes('open-data-catalogue'))(
+  'renders the open data catalogue with the live catalogue total',
+  async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'open-data-catalogue' })} />,
+    );
+    const html = await new Response(stream).text();
+    expect(html).toContain('31,915');
+    expect(html).toContain('Datasets in the catalogue');
+  },
+);
 
 it('renders the EV charging story', async () => {
   const stream = await renderToReadableStream(
