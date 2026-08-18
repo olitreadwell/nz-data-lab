@@ -1,3 +1,28 @@
+## 2026-08-18 23:15 (NZST) - loop 8
+
+- Handed off (unmerged, awaiting review): quake-depth-scatter (viz-032,
+  branch feat/microsite-loop-8, review issue #210), quake-frequency-magnitude
+  (viz-040, branch feat/microsite-loop-8, review issue #211), and
+  quake-depth-distribution (viz-090, branch feat/microsite-loop-8, review
+  issue #212). All three draw on the GeoNet FDSN catalog: a magnitude-depth
+  scatter with a day-window filter, a Gutenberg-Richter log-log scatter with
+  a log/linear toggle, and a radial depth-band chart with a magnitude
+  filter. The quake catalog now carries depth, so the committed snapshot was
+  regenerated with it.
+- Sources: GeoNet FDSN event service (service.geonet.org.nz), earthquakes of
+  magnitude 1 or stronger in the three months to 18 August 2026, fetched at
+  build time and falling back to a committed snapshot of that catalog. All
+  reference URLs return 200. Chart types used so far: line, area, bar,
+  scatter, donut, treemap, map, histogram, radial, bubble, slope, timeline,
+  funnel, waterfall, sunburst, lollipop, heatmap.
+- Loop review: the viz-090 spec story (deep quakes under the South Island)
+  contradicted the data, which shows deep quakes clustering under the North
+  Island, so the copy tells the honest version. The skill now says to check
+  a spec's story claims against the fetched data before writing copy. The
+  build also regenerated the committed CSP nonce files in the worktree,
+  which blocked the rebase until they were restored; fix #205 has since
+  stopped committing the nonce, so that friction is gone.
+
 ## 2026-08-18 22:20 (NZST) - loop 7
 
 - Handed off (unmerged, awaiting review): regional-population-ranks (viz-091,
