@@ -39,6 +39,8 @@ jobs:
         run: |
           url=$(npx vercel@59.1.4 deploy --prebuilt)
           echo "url=$url" >> "$GITHUB_OUTPUT"
+      - name: Verify security headers on deployed site
+        run: node apps/web/scripts/check-deployed-security-headers.mjs "${{ steps.deploy.outputs.url }}"
       - name: Comment PR with preview URL
         uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7.1.0
         with:

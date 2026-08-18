@@ -51,6 +51,8 @@ jobs:
         run: |
           url=$(npx vercel@59.1.4 deploy --prebuilt)
           echo "url=$url" >> "$GITHUB_OUTPUT"
+      - name: Verify security headers on deployed site
+        run: node apps/web/scripts/check-deployed-security-headers.mjs "${{ steps.deploy.outputs.url }}"
       # Optional: alias the pre-production deploy to a stable URL.
       # Requires VERCEL_SLUG_TEAM secret and a chosen preview domain.
       # - name: Set domain alias
