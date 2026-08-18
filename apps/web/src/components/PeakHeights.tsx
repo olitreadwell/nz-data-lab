@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Funnel, FunnelChart, LabelList, Tooltip } from 'recharts';
+import { Funnel, FunnelChart, LabelList, ResponsiveContainer, Tooltip } from 'recharts';
 import type { TooltipContentProps } from 'recharts';
 
 import { fetchLiveWikidataPeaks } from '@/lib/live-sources';
@@ -114,19 +114,21 @@ export function PeakHeights(): React.ReactElement {
               </button>
             ))}
           </div>
-          <div className="h-[320px]">
-            <FunnelChart width={720} height={320} role="img" aria-label={chartLabel}>
-              <Tooltip content={PeakTooltip} />
-              <Funnel dataKey="elevationM" nameKey="name" data={data} isAnimationActive={false}>
-                <LabelList
-                  position="right"
-                  fill="var(--color-fg)"
-                  stroke="none"
-                  dataKey="name"
-                  fontSize={11}
-                />
-              </Funnel>
-            </FunnelChart>
+          <div role="img" aria-label={chartLabel} className="h-[320px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <FunnelChart>
+                <Tooltip content={PeakTooltip} />
+                <Funnel dataKey="elevationM" nameKey="name" data={data} isAnimationActive={false}>
+                  <LabelList
+                    position="right"
+                    fill="var(--color-fg)"
+                    stroke="none"
+                    dataKey="name"
+                    fontSize={11}
+                  />
+                </Funnel>
+              </FunnelChart>
+            </ResponsiveContainer>
           </div>
           <p className="numeral-paragraph-sm mt-1 text-[var(--color-muted)]">
             The widest segment is the highest peak. Each lower peak narrows the funnel.

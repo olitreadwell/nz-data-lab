@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Cell, Pie, PieChart, Tooltip } from 'recharts';
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 import type { TooltipContentProps } from 'recharts';
 
 import { fetchLiveAucklandParkBoards } from '@/lib/live-sources';
@@ -155,24 +155,26 @@ export function AucklandParks(): React.ReactElement {
               />
             </label>
           </div>
-          <div className="h-[320px]">
-            <PieChart width={720} height={320} role="img" aria-label={chartLabel}>
-              <Tooltip content={ParkTooltip} />
-              <Pie
-                data={data}
-                dataKey="areaM2"
-                nameKey="name"
-                isAnimationActive={false}
-                outerRadius="80%"
-              >
-                {data.map((entry, index) => (
-                  <Cell
-                    key={entry.name}
-                    fill={PIE_COLORS[index % PIE_COLORS.length] ?? 'var(--color-fg)'}
-                  />
-                ))}
-              </Pie>
-            </PieChart>
+          <div role="img" aria-label={chartLabel} className="h-[320px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Tooltip content={ParkTooltip} />
+                <Pie
+                  data={data}
+                  dataKey="areaM2"
+                  nameKey="name"
+                  isAnimationActive={false}
+                  outerRadius="80%"
+                >
+                  {data.map((entry, index) => (
+                    <Cell
+                      key={entry.name}
+                      fill={PIE_COLORS[index % PIE_COLORS.length] ?? 'var(--color-fg)'}
+                    />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
           </div>
           <p className="numeral-paragraph-sm mt-1 text-[var(--color-muted)]">
             Each slice is one local board's share of the park land shown.
