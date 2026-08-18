@@ -652,4 +652,91 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+
+  {
+    slug: 'census-rank-shift',
+    label: 'Census rank shift',
+    eyebrow: '📈 the census rank shift',
+    title: 'Selwyn and Queenstown raced up the census ranks.',
+    description:
+      'Between the 2013 and 2023 censuses, Selwyn district jumped 10 places to become the 13th-biggest territorial authority. Queenstown-Lakes jumped 9 places to 27th.',
+    paragraphs: [
+      "Selwyn's usual residents grew from 44,595 in 2013 to 78,144 in 2023, up 75%. Queenstown-Lakes grew from 28,224 to 47,808, up 69%.",
+      'At the other end, Invercargill fell 6 places to 23rd and Timaru fell 5 places to 29th. Wellington held 3rd place, but its count dipped from 202,737 in 2018 to 202,689 in 2023.',
+    ],
+    accent: 'amber',
+    dataNote:
+      'Data: Stats NZ, "2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts", Table 2, census usually resident population count by territorial authority, 2013, 2018, and 2023 Censuses. Counts have fixed random rounding to base 3 applied, so they may not sum to stated totals. The series is final, so this snapshot does not go stale.',
+    references: [
+      {
+        label: '2023 Census population counts (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
+        kind: 'data',
+      },
+      {
+        label: '2023 Census (Stats NZ)',
+        url: 'https://www.stats.govt.nz/2023-census/',
+        kind: 'data',
+      },
+      {
+        label: '2023 New Zealand census (Wikipedia)',
+        url: 'https://en.wikipedia.org/wiki/2023_New_Zealand_census',
+        kind: 'history',
+      },
+    ],
+  },
+  {
+    slug: 'age-pyramid',
+    label: 'Age pyramid',
+    eyebrow: '👥 the age pyramid',
+    title: 'Women outnumber men from age 30 up.',
+    description:
+      "New Zealand's population estimates for 1 July 2021 put 5,122,600 people in the country. The biggest five-year band is 30-34 with 384,110 people, and women outnumber men in every band from 30 up.",
+    paragraphs: [
+      'The gap widens with age. In the 85-89 band there are 32,880 women to 23,540 men, and at 90+ it is 22,570 women to 12,010 men.',
+      'Below 30 the numbers flip. The 25-29 band has 190,640 men against 181,390 women.',
+    ],
+    accent: 'cyan',
+    dataNote:
+      'Data: UN Statistics Division Demographic and Social Statistics, population estimates by sex and age group for 1 July 2021 (provisional, rounded), as tabulated in the Wikipedia "Demographics of New Zealand" article. Because of rounding, the bands may not sum to the stated total.',
+    references: [
+      {
+        label: 'UNSD Demographic and Social Statistics',
+        url: 'https://unstats.un.org/unsd/demographic-social/products/dyb/#statistics',
+        kind: 'data',
+      },
+      {
+        label: 'Demographics of New Zealand (Wikipedia)',
+        url: 'https://en.wikipedia.org/wiki/Demographics_of_New_Zealand',
+        kind: 'data',
+      },
+    ],
+  },
+  {
+    slug: 'quake-magnitudes',
+    label: 'Quake magnitudes',
+    eyebrow: '📉 the quake magnitudes',
+    title: 'Small quakes drown out the big ones.',
+    description:
+      'In the three months to 18 August 2026, GeoNet located 5,148 earthquakes of magnitude 1 or stronger. 2,436 came in under magnitude 2, and just 10 reached 5 or more.',
+    paragraphs: [
+      'From magnitude 2 up, each step holds roughly a quarter of the quakes of the step below: 2,159 quakes measured 2 to 3, 452 measured 3 to 4, and 91 measured 4 to 5.',
+      'The biggest was a 6.3 on 16 July 2026, 45 km north of Te Anau. GeoNet also located a 6.2 north of Te Araroa and a 5.9 near Taumarunui in the same three months.',
+    ],
+    accent: 'rose',
+    dataNote:
+      'Data: GeoNet FDSN event service (service.geonet.org.nz), earthquakes of magnitude 1 or stronger in the three months to 18 August 2026, fetched at build time and falling back to a committed snapshot of that catalog. The site redeploys daily.',
+    references: [
+      {
+        label: 'GeoNet FDSN event service',
+        url: 'https://service.geonet.org.nz/fdsnws/event/1/',
+        kind: 'data',
+      },
+      {
+        label: 'GeoNet FDSN usage',
+        url: 'https://www.geonet.org.nz/data/tools/FDSN',
+        kind: 'data',
+      },
+    ],
+  },
 ]);

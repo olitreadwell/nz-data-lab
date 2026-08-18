@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { AgePyramid } from '@/components/AgePyramid';
 import { AucklandParks } from '@/components/AucklandParks';
 import { BackyardSpeciesCensus } from '@/components/BackyardSpeciesCensus';
 import { CanterburyRain } from '@/components/CanterburyRain';
@@ -17,6 +18,8 @@ import { LivestockChart } from '@/components/LivestockChart';
 import { MicrositeStory } from '@/components/MicrositeStory';
 import { OpenDataSearch } from '@/components/OpenDataSearch';
 import { PeakHeights } from '@/components/PeakHeights';
+import { PopulationRankBump } from '@/components/PopulationRankBump';
+import { QuakeMagnitudeHistogram } from '@/components/QuakeMagnitudeHistogram';
 import { QuakeMap } from '@/components/QuakeMap';
 import { RiverLengths } from '@/components/RiverLengths';
 import { SchoolRoll } from '@/components/SchoolRoll';
@@ -27,6 +30,7 @@ import { StatCard } from '@/components/StatCard';
 import { TradeMeTree } from '@/components/TradeMeTree';
 import { WhatTheWorldReads } from '@/components/WhatTheWorldReads';
 import { env } from '@/env';
+import { CENSUS_RANK_HIGHLIGHTS, formatRankOrdinal } from '@/lib/census-rank-data';
 import { fetchForestrySeries, summarizeForestry } from '@/lib/forestry-data';
 import { formatHectares, formatMillions } from '@/lib/format';
 import {
@@ -46,6 +50,8 @@ import {
 import { fetchHorticultureSeries, summarizeHorticulture } from '@/lib/horticulture-data';
 import { fetchLivestockSeries, summarizeLivestock } from '@/lib/livestock-data';
 import { MICROSITES } from '@/lib/microsites';
+import { fetchRecentQuakeCatalog } from '@/lib/quake-catalog';
+import type { QuakeCatalogEvent } from '@/lib/quake-catalog';
 import { fetchRecentQuakes } from '@/lib/quake-data';
 import { fetchSheepSeries } from '@/lib/sheep-data';
 import { formatMillions as formatMillionsSheep } from '@/lib/sheep-format';
@@ -78,16 +84,25 @@ export default async function MicrositePage({
     notFound();
   }
 
-  const [sheep, livestock, horticulture, forestry, quakes, registerTotal, catalogueTotal] =
-    await Promise.all([
-      fetchSheepSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
-      fetchLivestockSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
-      fetchHorticultureSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
-      fetchForestrySeries(env.STATS_NZ_SUBSCRIPTION_KEY),
-      fetchRecentQuakes(),
-      fetchRegisterTotal(),
-      fetchCatalogueTotal(),
-    ]);
+  const [
+    sheep,
+    livestock,
+    horticulture,
+    forestry,
+    quakes,
+    registerTotal,
+    catalogueTotal,
+    quakeCatalog,
+  ] = await Promise.all([
+    fetchSheepSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
+    fetchLivestockSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
+    fetchHorticultureSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
+    fetchForestrySeries(env.STATS_NZ_SUBSCRIPTION_KEY),
+    fetchRecentQuakes(),
+    fetchRegisterTotal(),
+    fetchCatalogueTotal(),
+    fetchRecentQuakeCatalog(3),
+  ]);
 
   const livestockStats = summarizeLivestock(livestock);
   const horticultureStats = summarizeHorticulture(horticulture);
@@ -111,6 +126,7 @@ export default async function MicrositePage({
     apples,
     newPlanting,
     quakes,
+    quakeCatalog,
     registerTotal,
     catalogueTotal,
   });
@@ -155,6 +171,7 @@ interface StoryData {
   apples: { latest?: number } | undefined;
   newPlanting: { latest?: number; first?: number; changeFromFirstPercent?: number } | undefined;
   quakes: Awaited<ReturnType<typeof fetchRecentQuakes>>;
+  quakeCatalog: QuakeCatalogEvent[];
   registerTotal: number;
   catalogueTotal: number;
 }
@@ -499,6 +516,94 @@ function renderStoryContent(
           </dl>
         ),
       };
+    case 'census-rank-shift': {
+      return {
+        chart: <PopulationRankBump />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            {CENSUS_RANK_HIGHLIGHTS.map((highlight) => (
+              <StatCard
+                key={highlight.slug}
+                label={highlight.label}
+                value={`${formatRankOrdinal(highlight.fromRank)} to ${formatRankOrdinal(highlight.toRank)}`}
+                accent="amber"
+                testId={`${highlight.slug}-rank-change`}
+                dataValue={highlight.change}
+              />
+            ))}
+          </dl>
+        ),
+      };
+    }
+    case 'age-pyramid': {
+      return {
+        chart: <AgePyramid />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="People, 1 July 2021 estimates"
+              value="5,122,600"
+              accent="cyan"
+              testId="pyramid-total"
+              dataValue={5122600}
+            />
+            <StatCard
+              label="Women at 90 and over"
+              value="22,570"
+              accent="cyan"
+              testId="pyramid-women-90"
+              dataValue={22570}
+            />
+            <StatCard
+              label="Men at 90 and over"
+              value="12,010"
+              accent="cyan"
+              testId="pyramid-men-90"
+              dataValue={12010}
+            />
+          </dl>
+        ),
+      };
+    }
+    case 'quake-magnitudes': {
+      const underTwo = data.quakeCatalog.filter((event) => event.magnitude < 2).length;
+      const strongest = data.quakeCatalog.reduce<QuakeCatalogEvent | undefined>(
+        (best, event) => (best === undefined || event.magnitude > best.magnitude ? event : best),
+        undefined,
+      );
+      const underTwoPercent =
+        data.quakeCatalog.length === 0
+          ? 0
+          : Math.round((underTwo / data.quakeCatalog.length) * 100);
+      return {
+        chart: <QuakeMagnitudeHistogram events={data.quakeCatalog} />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Quakes located, 3 months"
+              value={data.quakeCatalog.length.toLocaleString('en-NZ')}
+              accent="rose"
+              testId="quake-catalog-total"
+              dataValue={data.quakeCatalog.length}
+            />
+            <StatCard
+              label="Share under magnitude 2"
+              value={`${underTwoPercent}%`}
+              accent="rose"
+              testId="quake-under-two-percent"
+              dataValue={underTwoPercent}
+            />
+            <StatCard
+              label="Biggest located"
+              value={strongest === undefined ? 'n/a' : `M ${strongest.magnitude.toFixed(1)}`}
+              accent="rose"
+              testId="quake-catalog-strongest"
+              dataValue={strongest?.magnitude}
+            />
+          </dl>
+        ),
+      };
+    }
     case 'shake-index': {
       const summary = summarizeGeoNetQuakes(data.quakes);
       const strongest = summary.strongest;
