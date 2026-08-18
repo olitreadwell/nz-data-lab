@@ -191,6 +191,12 @@ export default async function HomePage(): Promise<React.ReactElement> {
       statLabel: 'Auckland share, 2023',
       statValue: '33.2%',
     },
+
+    {
+      config: getMicrosite('export-market-bump'),
+      statLabel: 'Top market, YE Mar 2020',
+      statValue: 'China, $19.9b',
+    },
   ].filter(
     (card): card is { config: MicrositeConfig; statLabel: string; statValue: string } =>
       card.config !== undefined,

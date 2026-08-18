@@ -11,6 +11,7 @@ import { CanterburyRain } from '@/components/CanterburyRain';
 import { DeerBoomBustChart } from '@/components/DeerBoomBustChart';
 import { DigitisedMemorySearch } from '@/components/DigitisedMemorySearch';
 import { EvCharging } from '@/components/EvCharging';
+import { ExportRankBump } from '@/components/ExportRankBump';
 import { ForestryChart } from '@/components/ForestryChart';
 import { HamiltonPlaygrounds } from '@/components/HamiltonPlaygrounds';
 import { HorticultureChart } from '@/components/HorticultureChart';
@@ -728,6 +729,34 @@ function renderStoryContent(
               accent="teal"
               testId="region-waffle-total"
               dataValue={4993290}
+            />
+          </dl>
+        ),
+      };
+    case 'export-market-bump':
+      return {
+        chart: <ExportRankBump />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="China exports, YE Mar 2020"
+              value="$19.9b"
+              accent="sky"
+              testId="export-bump-china-2020"
+              dataValue={19888.1}
+            />
+            <StatCard
+              label="Australia exports, YE Mar 2020"
+              value="$14.2b"
+              accent="sky"
+              dataValue={14166.6}
+            />
+            <StatCard
+              label="China exports, YE Mar 2015"
+              value="$10.8b"
+              accent="sky"
+              testId="export-bump-china-2015"
+              dataValue={10762.0}
             />
           </dl>
         ),

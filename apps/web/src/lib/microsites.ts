@@ -886,4 +886,32 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+
+  {
+    slug: 'export-market-bump',
+    label: 'Top export markets',
+    eyebrow: '🚢 the export handover',
+    title: 'China overtook Australia as the top export market.',
+    description:
+      "In the year ended March 2015, Australia was New Zealand's biggest export market at $12.9 billion, ahead of China at $10.8 billion. By the year ended March 2018, China had taken the top spot, and by March 2020 it bought $19.9 billion of New Zealand goods and services.",
+    paragraphs: [
+      'The United States held third place in every year of the series. Japan and the United Kingdom held fourth and fifth, and below them the ranks churned: Singapore and Germany traded places at the edge of the top ten.',
+      'The numbers are total exports of goods and services in New Zealand dollars, so the ranks move with exchange rates as well as volumes.',
+    ],
+    accent: 'sky',
+    dataNote:
+      'Data: Stats NZ "Goods and services trade by country: Year ended March 2020" (map data table), total exports of goods and services by destination country in NZ$ millions for the years ended March 2015 to 2020. Ranks are computed from the full country list in that table. Hover a line to highlight it, or toggle between the top 8 and top 5 markets.',
+    references: [
+      {
+        label: 'Goods and services trade by country release (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/goods-and-services-trade-by-country-year-ended-march-2020/',
+        kind: 'data',
+      },
+      {
+        label: 'International trade: December 2025 quarter (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/international-trade-december-2025-quarter',
+        kind: 'data',
+      },
+    ],
+  },
 ]);

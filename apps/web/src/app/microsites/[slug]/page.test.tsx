@@ -278,3 +278,13 @@ it('renders the population waffle story', async () => {
   expect(html).toContain('4,993,290');
   expect(html).toContain('2023 Census population counts release (Stats NZ)');
 });
+
+it('renders the export market bump story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'export-market-bump' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('China overtook Australia as the top export market');
+  expect(html).toContain('$19.9b');
+  expect(html).toContain('Goods and services trade by country release (Stats NZ)');
+});
