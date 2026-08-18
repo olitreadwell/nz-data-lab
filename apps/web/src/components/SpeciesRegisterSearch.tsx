@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 import type { TooltipContentProps } from 'recharts';
 
@@ -79,17 +79,29 @@ export function SpeciesRegisterSearch({
   const [names, setNames] = useState<LiveNzorName[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const requestIdRef = useRef(0);
 
   const runSearch = useCallback(async (searchQuery: string) => {
+    const requestId = requestIdRef.current + 1;
+    requestIdRef.current = requestId;
     setIsLoading(true);
     setError(null);
     try {
-      setNames(await searchLiveNzorNames(searchQuery));
+      const next = await searchLiveNzorNames(searchQuery);
+      if (requestIdRef.current !== requestId) {
+        return;
+      }
+      setNames(next);
     } catch {
+      if (requestIdRef.current !== requestId) {
+        return;
+      }
       setError('The register did not answer. Try again in a moment.');
       setNames([]);
     } finally {
-      setIsLoading(false);
+      if (requestIdRef.current === requestId) {
+        setIsLoading(false);
+      }
     }
   }, []);
 

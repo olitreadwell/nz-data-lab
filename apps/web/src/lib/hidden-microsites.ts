@@ -13,7 +13,6 @@ export const HIDDEN_MICROSITES: string[] = [
   'backyard-species-census',
   'species-record-ledger',
   'what-the-world-reads',
-  'open-data-catalogue',
   'vineyard-boom',
   'species-register',
 ];

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ResponsiveContainer, Treemap } from 'recharts';
 
 import { searchLiveDataGovtNz } from '@/lib/live-sources';
@@ -55,17 +55,29 @@ export function OpenDataSearch({ initialQuery }: OpenDataSearchProps): React.Rea
   const [datasets, setDatasets] = useState<LiveDataGovtNzDataset[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const requestIdRef = useRef(0);
 
   const runSearch = useCallback(async (searchQuery: string) => {
+    const requestId = requestIdRef.current + 1;
+    requestIdRef.current = requestId;
     setIsLoading(true);
     setError(null);
     try {
-      setDatasets(await searchLiveDataGovtNz(searchQuery));
+      const next = await searchLiveDataGovtNz(searchQuery);
+      if (requestIdRef.current !== requestId) {
+        return;
+      }
+      setDatasets(next);
     } catch {
+      if (requestIdRef.current !== requestId) {
+        return;
+      }
       setError('The catalogue did not answer. Try again in a moment.');
       setDatasets([]);
     } finally {
-      setIsLoading(false);
+      if (requestIdRef.current === requestId) {
+        setIsLoading(false);
+      }
     }
   }, []);
 
