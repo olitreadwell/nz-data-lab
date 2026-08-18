@@ -108,6 +108,21 @@ fix the guard or the skill rather than working around it by hand.
   intact. If the loop skips for a dirty main again, the wrapper logs the
   dirty file list, so read that line before changing the guard.
 
+- Completed work left uncommitted on main blocks every tick: an interactive
+  experiment session built the rabbit-boom microsite directly on main and
+  handed off with "commit when ready", but nothing committed it, so the
+  dirty-main guard skipped for over an hour. When the heal session sees
+  "main has uncommitted changes", tell stale completed work from a live
+  concurrent lane before touching anything: check for a running agent
+  touching those files (ps for codex/claude, session file mtimes), and
+  check whether the work is idle and verified (type-check, vitest, lint).
+  If it is stale and verified, commit it with a Conventional Commit message
+  and stage only the files that belong to that change; never stage another
+  lane's dirty files (LOOP-NOTES.md stays excluded). Scratch files from the
+  verification pass (tmp-*.mjs and similar) are not part of the
+  deliverable; remove them rather than committing them. If an agent is
+  actively working, do not fight it: document the situation and exit.
+
 - Spec stories can contradict the data: viz-090's spec claimed deep quakes
   cluster under the South Island, but the catalog shows them clustering under
   the North Island (the Hikurangi subduction story). Check a spec's story
