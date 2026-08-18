@@ -7,7 +7,7 @@
  * hidden microsite disappears from the home grid and its page stops being
  * generated (direct URLs 404).
  */
-export const HIDDEN_MICROSITES: string[] = ['shake-index'];
+export const HIDDEN_MICROSITES: string[] = ['shake-index', 'digitised-memory'];
 
 /**
  * Filters a microsite list down to the ones that are not hidden.
