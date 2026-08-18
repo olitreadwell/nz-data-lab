@@ -10,6 +10,7 @@ import { AucklandParks } from '@/components/AucklandParks';
 import { BackyardSpeciesCensus } from '@/components/BackyardSpeciesCensus';
 import { CanterburyRain } from '@/components/CanterburyRain';
 import { CityRankSlope } from '@/components/CityRankSlope';
+import { CompanySizePareto } from '@/components/CompanySizePareto';
 import { DeerBoomBustChart } from '@/components/DeerBoomBustChart';
 import { DigitisedMemorySearch } from '@/components/DigitisedMemorySearch';
 import { EvCharging } from '@/components/EvCharging';
@@ -33,6 +34,7 @@ import { QuakeMonthRose } from '@/components/QuakeMonthRose';
 import { RabbitChart } from '@/components/RabbitChart';
 import { RegionalRankSlope } from '@/components/RegionalRankSlope';
 import { ReportIssueButton } from '@/components/ReportIssueButton';
+import { RetailSalesStreamgraph } from '@/components/RetailSalesStreamgraph';
 import { RiverLengths } from '@/components/RiverLengths';
 import { RoadCrashTrend } from '@/components/RoadCrashTrend';
 import { SchoolRoll } from '@/components/SchoolRoll';
@@ -40,6 +42,7 @@ import { SheepChart } from '@/components/SheepChart';
 import { SpeciesRecordLedger } from '@/components/SpeciesRecordLedger';
 import { SpeciesRegisterSearch } from '@/components/SpeciesRegisterSearch';
 import { StatCard } from '@/components/StatCard';
+import { TourismArrivalsCyclePlot } from '@/components/TourismArrivalsCyclePlot';
 import { TradeMeTree } from '@/components/TradeMeTree';
 import { VehicleFleet } from '@/components/VehicleFleet';
 import { VisitorRankSlope } from '@/components/VisitorRankSlope';
@@ -1047,6 +1050,94 @@ function renderStoryContent(
               accent="sky"
               testId="visitor-biggest-climbers"
               dataValue={5}
+            />
+          </dl>
+        ),
+      };
+
+    case 'company-size-distribution':
+      return {
+        chart: <CompanySizePareto />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Enterprises with no employees"
+              value="455,730"
+              accent="amber"
+              testId="company-size-no-employees"
+              dataValue={455730}
+            />
+            <StatCard
+              label="Enterprises with 100+ employees"
+              value="2,838"
+              accent="amber"
+              testId="company-size-large"
+              dataValue={2838}
+            />
+            <StatCard
+              label="Share of employees in 100+ firms"
+              value="50%"
+              accent="amber"
+              testId="company-size-large-share"
+              dataValue={50}
+            />
+          </dl>
+        ),
+      };
+    case 'tourism-arrivals-by-month':
+      return {
+        chart: <TourismArrivalsCyclePlot />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="December 2019 arrivals"
+              value="528,219"
+              accent="sky"
+              testId="tourism-dec-2019"
+              dataValue={528219}
+            />
+            <StatCard
+              label="June 2019 arrivals"
+              value="213,536"
+              accent="sky"
+              testId="tourism-jun-2019"
+              dataValue={213536}
+            />
+            <StatCard
+              label="December 2024 vs 2019"
+              value="-11%"
+              accent="sky"
+              testId="tourism-dec-2024-change"
+              dataValue={-11}
+            />
+          </dl>
+        ),
+      };
+    case 'retail-sales-by-month':
+      return {
+        chart: <RetailSalesStreamgraph />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Card spending in December 2024"
+              value="$11,392m"
+              accent="rose"
+              testId="retail-dec-2024"
+              dataValue={11392}
+            />
+            <StatCard
+              label="Change from November 2024"
+              value="+12%"
+              accent="rose"
+              testId="retail-dec-2024-change"
+              dataValue={12}
+            />
+            <StatCard
+              label="Card spending in January 2025"
+              value="$9,959m"
+              accent="rose"
+              testId="retail-jan-2025"
+              dataValue={9959}
             />
           </dl>
         ),
