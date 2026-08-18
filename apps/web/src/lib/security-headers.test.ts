@@ -48,6 +48,11 @@ describe('security headers', () => {
   const vercelHeaders = readVercelHeaders();
   const csp = vercelHeaders.find((header) => header.key === 'Content-Security-Policy')?.value ?? '';
 
+  it('does not allow unsafe-inline in script-src', () => {
+    const scriptSrc = cspDirective(csp, 'script-src');
+    expect(scriptSrc).not.toContain("'unsafe-inline'");
+  });
+
   it('allows every live API host in connect-src', () => {
     const connectSrc = cspDirective(csp, 'connect-src');
     for (const host of LIVE_API_HOSTS) {
