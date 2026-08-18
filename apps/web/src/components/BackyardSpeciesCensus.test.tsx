@@ -44,6 +44,22 @@ describe('BackyardSpeciesCensus', () => {
     expect(avesButton).toHaveAttribute('aria-pressed', 'false');
   });
 
+  it('lists only visible taxa in the data table and labels hidden groups', async () => {
+    const { container } = render(<BackyardSpeciesCensus />);
+    await screen.findByText(/3 iconic groups, fetched live/);
+    fireEvent.click(screen.getByRole('button', { name: /Aves/ }));
+    expect(screen.getByRole('img')).toHaveAccessibleName(/Hidden: Aves/);
+    const summary = container.querySelector('summary');
+    if (summary === null) {
+      throw new Error('Expected a chart data table summary');
+    }
+    fireEvent.click(summary);
+    const table = screen.getByRole('table');
+    expect(table).toHaveTextContent('Plantae');
+    expect(table).toHaveTextContent('Insecta');
+    expect(table).not.toHaveTextContent('Aves');
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = render(<BackyardSpeciesCensus />);
     await screen.findByText(/3 iconic groups, fetched live/);

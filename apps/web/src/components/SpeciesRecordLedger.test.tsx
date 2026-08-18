@@ -42,6 +42,22 @@ describe('SpeciesRecordLedger', () => {
     expect(fungiButton).toHaveAttribute('aria-pressed', 'false');
   });
 
+  it('lists only visible kingdoms in the data table and labels hidden groups', async () => {
+    const { container } = render(<SpeciesRecordLedger />);
+    await screen.findByText(/3 kingdoms, fetched live/);
+    fireEvent.click(screen.getByRole('button', { name: /Fungi/ }));
+    expect(screen.getByRole('img')).toHaveAccessibleName(/Hidden: Fungi/);
+    const summary = container.querySelector('summary');
+    if (summary === null) {
+      throw new Error('Expected a chart data table summary');
+    }
+    fireEvent.click(summary);
+    const table = screen.getByRole('table');
+    expect(table).toHaveTextContent('Animalia');
+    expect(table).toHaveTextContent('Plantae');
+    expect(table).not.toHaveTextContent('Fungi');
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = render(<SpeciesRecordLedger />);
     await screen.findByText(/3 kingdoms, fetched live/);
