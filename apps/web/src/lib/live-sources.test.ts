@@ -5,9 +5,12 @@ import {
   fetchLiveGbifKingdoms,
   fetchLiveInaturalistTaxa,
   parseAucklandParkBoards,
+  parseCanterburyRainGauges,
   parseDataGovtNzSearch,
   parseGbifKingdomFacet,
+  parseHamiltonPlaygrounds,
   parseInaturalistTotal,
+  parseNzSchools,
   parseNzorNamesXml,
   parseWikidataPeaks,
   parseWikidataRivers,
@@ -304,5 +307,84 @@ describe('parseAucklandParkBoards', () => {
 
   it('returns an empty list when there are no features', () => {
     expect(parseAucklandParkBoards({ features: [] })).toEqual([]);
+  });
+});
+
+describe('parseNzSchools', () => {
+  it('parses Overpass convert rows with name, years, and authority', () => {
+    const payload = {
+      elements: [
+        { type: 'school', id: 1, tags: { name: 'Burnside High School', years: '9-13', authority: 'state' } },
+        { type: 'school', id: 2, tags: { name: 'Kura Kaupapa Māori o Te Rau Aroha' } },
+      ],
+    };
+    expect(parseNzSchools(payload)).toEqual([
+      { name: 'Burnside High School', years: '9-13', authority: 'state' },
+      { name: 'Kura Kaupapa Māori o Te Rau Aroha', years: undefined, authority: undefined },
+    ]);
+  });
+
+  it('returns an empty list when there are no elements', () => {
+    expect(parseNzSchools({ elements: [] })).toEqual([]);
+  });
+});
+
+describe('parseCanterburyRainGauges', () => {
+  it('parses gauge rows with the last eight days of rain', () => {
+    const payload = {
+      features: [
+        {
+          attributes: {
+            SITENAME: 'Mount Byrne',
+            RAIN_TODAY: 40.5,
+            RAIN_1_DAY_AGO: 0,
+            RAIN_2_DAYS_AGO: 1.6,
+            RAIN_3_DAYS_AGO: 2.5,
+            RAIN_4_DAYS_AGO: 0,
+            RAIN_5_DAYS_AGO: 0.5,
+            RAIN_6_DAYS_AGO: 1,
+            RAIN_7_DAYS_AGO: 0.4,
+            TOTAL_RAINFALL: 86,
+          },
+        },
+      ],
+    };
+    expect(parseCanterburyRainGauges(payload)).toEqual([
+      {
+        siteName: 'Mount Byrne',
+        rainByDayAgoMm: [40.5, 0, 1.6, 2.5, 0, 0.5, 1, 0.4],
+        totalRainfallMm: 86,
+      },
+    ]);
+  });
+
+  it('treats missing readings as null', () => {
+    const payload = { features: [{ attributes: { SITENAME: 'Dry' } }] };
+    expect(parseCanterburyRainGauges(payload)).toEqual([
+      {
+        siteName: 'Dry',
+        rainByDayAgoMm: [null, null, null, null, null, null, null, null],
+        totalRainfallMm: null,
+      },
+    ]);
+  });
+});
+
+describe('parseHamiltonPlaygrounds', () => {
+  it('parses playground rows with type and decade', () => {
+    const payload = {
+      features: [
+        { attributes: { Park_Name: 'Galloway Park', Type: 'Old Neighbourhood', Decade: 2000 } },
+        { attributes: { Park_Name: 'Unknown Park', Type: null, Decade: null } },
+      ],
+    };
+    expect(parseHamiltonPlaygrounds(payload)).toEqual([
+      { parkName: 'Galloway Park', type: 'Old Neighbourhood', decade: 2000 },
+      { parkName: 'Unknown Park', type: 'Unknown', decade: null },
+    ]);
+  });
+
+  it('returns an empty list when there are no features', () => {
+    expect(parseHamiltonPlaygrounds({ features: [] })).toEqual([]);
   });
 });

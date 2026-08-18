@@ -6,9 +6,11 @@ import { notFound } from 'next/navigation';
 
 import { AucklandParks } from '@/components/AucklandParks';
 import { BackyardSpeciesCensus } from '@/components/BackyardSpeciesCensus';
+import { CanterburyRain } from '@/components/CanterburyRain';
 import { DeerBoomBustChart } from '@/components/DeerBoomBustChart';
 import { DigitisedMemorySearch } from '@/components/DigitisedMemorySearch';
 import { ForestryChart } from '@/components/ForestryChart';
+import { HamiltonPlaygrounds } from '@/components/HamiltonPlaygrounds';
 import { HorticultureChart } from '@/components/HorticultureChart';
 import { KiwifruitOvertakeChart } from '@/components/KiwifruitOvertakeChart';
 import { LivestockChart } from '@/components/LivestockChart';
@@ -17,6 +19,7 @@ import { OpenDataSearch } from '@/components/OpenDataSearch';
 import { PeakHeights } from '@/components/PeakHeights';
 import { QuakeMap } from '@/components/QuakeMap';
 import { RiverLengths } from '@/components/RiverLengths';
+import { SchoolRoll } from '@/components/SchoolRoll';
 import { SheepChart } from '@/components/SheepChart';
 import { SpeciesRecordLedger } from '@/components/SpeciesRecordLedger';
 import { SpeciesRegisterSearch } from '@/components/SpeciesRegisterSearch';
@@ -460,6 +463,39 @@ function renderStoryContent(
             <StatCard label="Parks in Auckland" value="3,953" accent="emerald" />
             <StatCard label="Park land" value="53,677 ha" accent="emerald" />
             <StatCard label="Franklin + Waitākere share" value="72%" accent="emerald" />
+          </dl>
+        ),
+      };
+    case 'open-school-map':
+      return {
+        chart: <SchoolRoll />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard label="Schools mapped" value="2,604" accent="amber" />
+            <StatCard label="Primary schools" value="1,713" accent="amber" />
+            <StatCard label="State schools" value="2,075" accent="amber" />
+          </dl>
+        ),
+      };
+    case 'canterbury-rain':
+      return {
+        chart: <CanterburyRain />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard label="Rain gauges" value="109" accent="sky" />
+            <StatCard label="Wettest gauge today" value="40.5 mm" accent="sky" />
+            <StatCard label="Wettest gauge total" value="86 mm" accent="sky" />
+          </dl>
+        ),
+      };
+    case 'hamilton-playgrounds':
+      return {
+        chart: <HamiltonPlaygrounds />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard label="Playgrounds" value="85" accent="emerald" />
+            <StatCard label="Neighbourhood playgrounds" value="77" accent="emerald" />
+            <StatCard label="Built in the 2000s" value="35" accent="emerald" />
           </dl>
         ),
       };
