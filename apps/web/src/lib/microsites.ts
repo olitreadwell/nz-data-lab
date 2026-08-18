@@ -772,6 +772,38 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
     ],
   },
   {
+    slug: 'quake-frequency-magnitude',
+    label: 'Quake frequency by magnitude',
+    eyebrow: '📉 the quake frequency',
+    title: 'Small quakes vastly outnumber big ones.',
+    description:
+      'In the three months to 18 August 2026, GeoNet located 5,148 earthquakes of magnitude 1 or stronger. 2,712 were magnitude 2 or stronger, 101 were magnitude 4 or stronger, and just 2 reached magnitude 6.',
+    paragraphs: [
+      'The pattern is the Gutenberg-Richter law, named for the seismologists who first described it. The count falls steeply with each step up in magnitude: 2,712 quakes of magnitude 2 or stronger, 552 of 3 or stronger, 101 of 4 or stronger, 10 of 5 or stronger, and 2 of 6 or stronger.',
+      'The log view draws the law as a straight line. Toggle between linear and log to see how the small quakes dominate the count.',
+    ],
+    accent: 'indigo',
+    dataNote:
+      'Data: GeoNet FDSN event service (service.geonet.org.nz), earthquakes of magnitude 1 or stronger in the three months to 18 August 2026, fetched at build time and falling back to a committed snapshot of that catalog. The site redeploys daily.',
+    references: [
+      {
+        label: 'GeoNet FDSN event service',
+        url: 'https://service.geonet.org.nz/fdsnws/event/1/',
+        kind: 'data',
+      },
+      {
+        label: 'GeoNet FDSN usage',
+        url: 'https://www.geonet.org.nz/data/tools/FDSN',
+        kind: 'data',
+      },
+      {
+        label: 'Gutenberg-Richter law (Wikipedia)',
+        url: 'https://en.wikipedia.org/wiki/Gutenberg%E2%80%93Richter_law',
+        kind: 'history',
+      },
+    ],
+  },
+  {
     slug: 'ev-charging',
     label: 'EV charging',
     eyebrow: '🔌 the ev charging map',
