@@ -53,6 +53,22 @@ describe('AgePyramid', () => {
     expect(checked[0]).toHaveTextContent('Male and female');
   });
 
+  it('moves focus to the newly selected radio on arrow keys and keeps only the checked radio in the tab order', () => {
+    render(<AgePyramid />);
+    const both = screen.getByRole('radio', { name: 'Male and female' });
+    const male = screen.getByRole('radio', { name: 'Male only' });
+    const female = screen.getByRole('radio', { name: 'Female only' });
+    expect(both).toHaveAttribute('tabindex', '0');
+    expect(male).toHaveAttribute('tabindex', '-1');
+    expect(female).toHaveAttribute('tabindex', '-1');
+
+    fireEvent.keyDown(both, { key: 'ArrowDown' });
+    expect(male).toHaveFocus();
+    expect(male).toHaveAttribute('aria-checked', 'true');
+    expect(male).toHaveAttribute('tabindex', '0');
+    expect(both).toHaveAttribute('tabindex', '-1');
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = render(<AgePyramid />);
     const results = await axe(container);

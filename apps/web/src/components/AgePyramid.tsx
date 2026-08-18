@@ -70,6 +70,7 @@ export function AgePyramid(): React.ReactElement {
             type="button"
             role="radio"
             aria-checked={view === value}
+            tabIndex={view === value ? 0 : -1}
             onClick={() => setView(value)}
             onKeyDown={(event) =>
               handleRadioGroupKeyDown(event, index, SEX_OPTIONS, ([value]) => setView(value))

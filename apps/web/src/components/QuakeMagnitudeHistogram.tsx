@@ -137,6 +137,7 @@ export function QuakeMagnitudeHistogram({
               type="button"
               role="radio"
               aria-checked={maxDays === days}
+              tabIndex={maxDays === days ? 0 : -1}
               onClick={() => setMaxDays(days)}
               onKeyDown={(event) =>
                 handleRadioGroupKeyDown(event, index, DAY_OPTIONS, setMaxDays)

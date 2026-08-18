@@ -45,6 +45,22 @@ describe('QuakeMagnitudeHistogram', () => {
     expect(checked[0]).toHaveTextContent('90 days');
   });
 
+  it('moves focus to the newly selected radio on arrow keys and keeps only the checked radio in the tab order', () => {
+    render(<QuakeMagnitudeHistogram events={EVENTS} />);
+    const thirty = screen.getByRole('radio', { name: '30 days' });
+    const sixty = screen.getByRole('radio', { name: '60 days' });
+    const ninety = screen.getByRole('radio', { name: '90 days' });
+    expect(thirty).toHaveAttribute('tabindex', '-1');
+    expect(sixty).toHaveAttribute('tabindex', '-1');
+    expect(ninety).toHaveAttribute('tabindex', '0');
+
+    fireEvent.keyDown(ninety, { key: 'ArrowUp' });
+    expect(sixty).toHaveFocus();
+    expect(sixty).toHaveAttribute('aria-checked', 'true');
+    expect(sixty).toHaveAttribute('tabindex', '0');
+    expect(ninety).toHaveAttribute('tabindex', '-1');
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = render(<QuakeMagnitudeHistogram events={EVENTS} />);
     const results = await axe(container);
