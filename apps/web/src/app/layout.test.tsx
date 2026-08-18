@@ -31,4 +31,17 @@ describe('RootLayout', () => {
     expect(html).toContain('<main id="main"');
     expect(html).toContain('</main>');
   });
+
+  it('injects the dark theme init script into the head', async () => {
+    const stream = await renderToReadableStream(
+      <RootLayout>
+        <p>content</p>
+      </RootLayout>,
+    );
+    const html = await new Response(stream).text();
+
+    expect(html).toContain('<head>');
+    expect(html).toContain('prefers-color-scheme');
+    expect(html).toContain("classList.toggle('dark'");
+  });
 });

@@ -5,6 +5,7 @@ import { Geist } from 'next/font/google';
 
 import { SiteFooter } from '@/components/SiteFooter';
 import { SiteHeader } from '@/components/SiteHeader';
+import { getDarkThemeInitScript } from '@/lib/dark-theme-init';
 
 import './globals.css';
 
@@ -22,6 +23,9 @@ export default function RootLayout({
 }>): React.ReactElement {
   return (
     <html lang="en-NZ" suppressHydrationWarning className={cn('font-sans', geist.variable)}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: getDarkThemeInitScript() }} />
+      </head>
       <body className="flex min-h-screen flex-col">
         <a
           href="#main"
