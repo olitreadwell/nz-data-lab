@@ -70,6 +70,22 @@ describe('DigitisedMemorySearch', () => {
     expect(screen.getByText('Gold Coast cartoon')).toBeInTheDocument();
   });
 
+  it('excludes undated records when a decade range is active', async () => {
+    SEARCH_MOCK.mockResolvedValueOnce({
+      ...RESULT,
+      records: [
+        ...RESULT.records,
+        { id: 3, title: 'Undated treasure', contentPartner: 'Puke Ariki', url: 'https://example.com/3', year: null },
+      ],
+    });
+    render(<DigitisedMemorySearch initialQuery="gold" />);
+    await screen.findByText(/1,977,021 records match/);
+    expect(screen.queryByText('Undated treasure')).not.toBeInTheDocument();
+    const earliest = screen.getByRole('slider', { name: /Earliest decade/ });
+    fireEvent.change(earliest, { target: { value: '1900' } });
+    expect(screen.queryByText('Undated treasure')).not.toBeInTheDocument();
+  });
+
   it('announces the decade unit via aria-valuetext on both sliders', async () => {
     render(<DigitisedMemorySearch initialQuery="gold" />);
     await screen.findByText(/1,977,021 records match/);

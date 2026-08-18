@@ -104,7 +104,7 @@ export function DigitisedMemorySearch({
     }
     return result.records.filter((record) => {
       if (record.year === null) {
-        return true;
+        return false;
       }
       const decade = decadeOfYear(record.year);
       return decade >= minDecade && decade <= maxDecade;
