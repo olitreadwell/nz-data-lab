@@ -147,6 +147,21 @@ export default async function HomePage(): Promise<React.ReactElement> {
       statLabel: 'Playgrounds in Hamilton',
       statValue: '85',
     },
+    {
+      config: getMicrosite('census-rank-shift'),
+      statLabel: 'Selwyn rank jump',
+      statValue: '+10 places',
+    },
+    {
+      config: getMicrosite('age-pyramid'),
+      statLabel: 'People, 1 July 2021',
+      statValue: '5,122,600',
+    },
+    {
+      config: getMicrosite('quake-magnitudes'),
+      statLabel: 'Quakes located, 3 months',
+      statValue: '5,148',
+    },
   ].filter(
     (card): card is { config: MicrositeConfig; statLabel: string; statValue: string } =>
       card.config !== undefined,
