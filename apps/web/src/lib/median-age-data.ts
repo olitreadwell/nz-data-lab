@@ -61,7 +61,7 @@ function rankByYear(
   const rankByName = new Map<string, number>();
   sorted.forEach((row, index) => {
     const previous = sorted[index - 1];
-    const tied = previous !== undefined && previous[`medianAge${year}`] === row[`medianAge${year}`];
+    const tied = previous?.[`medianAge${year}`] === row[`medianAge${year}`];
     rankByName.set(row.name, tied ? (rankByName.get(previous.name) ?? 0) : index + 1);
   });
   return rankByName;

@@ -60,7 +60,9 @@ export function MedianAgeRankSlope(): React.ReactElement {
         highlightNames={HIGHLIGHT_REGIONS}
         moverThreshold={1}
         chartLabel="Regional council median age ranks across the 2013, 2018, and 2023 censuses"
-        moverSummary={(moverCount) => `${moverCount} regions moved median age rank between 2013 and 2023.`}
+        moverSummary={(moverCount) =>
+          `${moverCount} regions moved median age rank between 2013 and 2023.`
+        }
         rowSummary={formatRegionSummary}
       />
       <ChartDataTable

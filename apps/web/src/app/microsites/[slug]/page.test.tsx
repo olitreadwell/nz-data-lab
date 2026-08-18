@@ -279,3 +279,14 @@ it('renders the age distribution story', async () => {
   expect(html).toContain('data-value="4993923"');
   expect(html).toContain('Sources and further reading');
 });
+
+it('renders the median age ranks story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'median-age-ranks' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('The upper South Island is where New Zealand ages fastest.');
+  expect(html).toContain('West Coast, 48.1 years');
+  expect(html).toContain('data-value="48.1"');
+  expect(html).toContain('Sources and further reading');
+});

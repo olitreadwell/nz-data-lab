@@ -17,6 +17,7 @@ import { HamiltonPlaygrounds } from '@/components/HamiltonPlaygrounds';
 import { HorticultureChart } from '@/components/HorticultureChart';
 import { KiwifruitOvertakeChart } from '@/components/KiwifruitOvertakeChart';
 import { LivestockChart } from '@/components/LivestockChart';
+import { MedianAgeRankSlope } from '@/components/MedianAgeRankSlope';
 import { MicrositeStory } from '@/components/MicrositeStory';
 import { OpenDataSearch } from '@/components/OpenDataSearch';
 import { PeakHeights } from '@/components/PeakHeights';
@@ -727,6 +728,35 @@ function renderStoryContent(
               accent="teal"
               testId="age-bulge-2013"
               dataValue={560178}
+            />
+          </dl>
+        ),
+      };
+    case 'median-age-ranks':
+      return {
+        chart: <MedianAgeRankSlope />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Oldest region, 2023"
+              value="West Coast, 48.1 years"
+              accent="amber"
+              testId="oldest-region-median-age"
+              dataValue={48.1}
+            />
+            <StatCard
+              label="Youngest region, 2023"
+              value="Auckland, 35.9 years"
+              accent="amber"
+              testId="youngest-region-median-age"
+              dataValue={35.9}
+            />
+            <StatCard
+              label="Biggest rank climb"
+              value="Southland, 10th to 6th"
+              accent="amber"
+              testId="median-age-biggest-climb"
+              dataValue={4}
             />
           </dl>
         ),

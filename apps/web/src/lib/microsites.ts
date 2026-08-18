@@ -882,4 +882,32 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+
+  {
+    slug: 'median-age-ranks',
+    label: 'Median age ranks',
+    eyebrow: '📊 the median age ranks',
+    title: 'The upper South Island is where New Zealand ages fastest.',
+    description:
+      'West Coast was the oldest region in the 2023 census, at a median age of 48.1 years. Tasman (46.8), Marlborough (46.1) and Nelson (44.0) followed. Auckland stayed the youngest in all three censuses, at 35.9.',
+    paragraphs: [
+      'West Coast climbed from 3rd-oldest in 2013 to oldest in 2023. Southland climbed 4 places to 6th-oldest, and Taranaki and Manawatu-Whanganui each climbed 2.',
+      'Marlborough went the other way, from oldest in 2013 (45.0) to 3rd in 2023 (46.1). Canterbury and Bay of Plenty each fell 3 places. The whole range is small: 35.9 to 48.1 years.',
+    ],
+    accent: 'amber',
+    dataNote:
+      'Data: Stats NZ "2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts", Table 7, median age by regional council area, 2013, 2018, and 2023 Censuses. Median age is calculated using single-year-of-age data. Ranks are computed among the 16 regions, with tied medians sharing a rank.',
+    references: [
+      {
+        label: '2023 Census population counts (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
+        kind: 'data',
+      },
+      {
+        label: '2023 Census (Stats NZ)',
+        url: 'https://www.stats.govt.nz/2023-census/',
+        kind: 'data',
+      },
+    ],
+  },
 ]);

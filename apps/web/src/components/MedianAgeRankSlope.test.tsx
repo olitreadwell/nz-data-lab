@@ -16,7 +16,9 @@ describe('MedianAgeRankSlope', () => {
       'aria-pressed',
       'true',
     );
-    expect(screen.getByText(/regions moved median age rank between 2013 and 2023/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/regions moved median age rank between 2013 and 2023/),
+    ).toBeInTheDocument();
   });
 
   it('switches to showing every region', () => {
