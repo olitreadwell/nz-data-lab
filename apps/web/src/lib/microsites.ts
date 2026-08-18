@@ -3,6 +3,67 @@ import type { MicrositeReference } from '@/components/MicrositeReferences';
 
 import { withHiddenMicrositesRemoved } from './hidden-microsites';
 
+/** Who publishes the underlying data for a microsite story. */
+export type MicrositeDataSource =
+  | 'Stats NZ'
+  | 'GeoNet'
+  | 'NZ Organisms Register (NZOR)'
+  | 'data.govt.nz'
+  | 'DigitalNZ (National Library)'
+  | 'Trade Me'
+  | 'iNaturalist'
+  | 'GBIF'
+  | 'Wikipedia & Wikidata'
+  | 'United Nations'
+  | 'Auckland Council'
+  | 'OpenStreetMap'
+  | 'Environment Canterbury'
+  | 'Hamilton City Council'
+  | 'NZ Transport Agency (NZTA)'
+  | 'Landcare Research';
+
+/** The main visualisation used by a microsite story. */
+export type MicrositeChartType =
+  | 'Line chart'
+  | 'Bar chart'
+  | 'Rank / slope'
+  | 'Map'
+  | 'Search & table'
+  | 'Tree'
+  | 'Pyramid'
+  | 'Histogram'
+  | 'Scatter'
+  | 'Rose / polar'
+  | 'Sunburst'
+  | 'Streamgraph'
+  | 'Cycle plot'
+  | 'Dumbbell'
+  | 'Ridgeline'
+  | 'Waffle'
+  | 'Parallel coordinates'
+  | 'Tile grid'
+  | 'Dot plot'
+  | 'Choropleth'
+  | 'Marimekko'
+  | 'Pareto'
+  | 'Heatmap'
+  | 'Strip chart'
+  | 'Bar-in-bar';
+
+/** The subject area a microsite story belongs to. */
+export type MicrositeCategory =
+  | 'Agriculture & farming'
+  | 'Earthquakes & geology'
+  | 'Biodiversity & nature'
+  | 'Environment & geography'
+  | 'Census & population'
+  | 'Economy & business'
+  | 'Tourism & travel'
+  | 'Transport'
+  | 'Education'
+  | 'Open data & digital'
+  | 'Society & community';
+
 export interface MicrositeConfig {
   slug: string;
   label: string;
@@ -11,6 +72,9 @@ export interface MicrositeConfig {
   description: string;
   paragraphs: string[];
   accent: MicrositeAccent;
+  dataSource: MicrositeDataSource;
+  chartType: MicrositeChartType;
+  category: MicrositeCategory;
   dataNote: string;
   references: MicrositeReference[];
 }
@@ -28,6 +92,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'In 2016 there were still six sheep for every person. By 2024 that was down to about four.',
     ],
     accent: 'amber',
+    dataSource: 'Stats NZ',
+    chartType: 'Line chart',
+    category: 'Agriculture & farming',
     dataNote:
       'Data: Stats NZ Aotearoa Data Explorer, table AGR_AGR_003 (Livestock Numbers by Regional Council), national sheep total, fetched at deploy time via @nzlab/stats-nz, falling back to a committed snapshot when the API blocks the build runner; the site redeploys daily. Hover or drag across the chart to read the flock at any year.',
     references: [
@@ -65,6 +132,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       "Canterbury led the way. The region's lamb flock gave way to dairy cows, and the same story played out across the country.",
     ],
     accent: 'sky',
+    dataSource: 'Stats NZ',
+    chartType: 'Line chart',
+    category: 'Agriculture & farming',
     dataNote:
       'Data: Stats NZ Aotearoa Data Explorer, table AGR_AGR_003 (Livestock Numbers by Regional Council), national totals for sheep, dairy cattle, beef cattle, and deer. Hover or drag across the chart to read any year.',
     references: [
@@ -102,6 +172,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'For decades, tough licensing laws and a taste for fortified wine kept the industry small. Sauvignon Blanc changed that.',
     ],
     accent: 'purple',
+    dataSource: 'Stats NZ',
+    chartType: 'Line chart',
+    category: 'Agriculture & farming',
     dataNote:
       'Data: Stats NZ Aotearoa Data Explorer, table AGR_AGR_002 (Horticulture by Regional Council), national area in hectares for wine grapes, kiwifruit, apples, and avocados. Hover or drag across the chart to read any year.',
     references: [
@@ -139,6 +212,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'Some forest land is now being converted back to farms. The One Billion Trees programme is trying to reverse the trend.',
     ],
     accent: 'emerald',
+    dataSource: 'Stats NZ',
+    chartType: 'Line chart',
+    category: 'Agriculture & farming',
     dataNote:
       'Data: Stats NZ Aotearoa Data Explorer, table AGR_AGR_001 (Forestry by Regional Council), national new planting and exotic timber harvested area in hectares. Hover or drag across the chart to read any year.',
     references: [
@@ -171,6 +247,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'The apple orchard shrank as land moved to kiwifruit and other crops. The kiwifruit boom survived a bacterial disease, PSA, that hit green vines in 2010 and pushed growers into the gold variety.',
     ],
     accent: 'lime',
+    dataSource: 'Stats NZ',
+    chartType: 'Line chart',
+    category: 'Agriculture & farming',
     dataNote:
       'Data: Stats NZ Aotearoa Data Explorer, table AGR_AGR_002 (Horticulture by Regional Council), national area in hectares for kiwifruit, apples, and avocados. Hover or drag across the chart to read any year.',
     references: [
@@ -203,6 +282,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'The bust came as returns fell and paddocks switched to dairy. The deer herd has now shrunk for two decades straight.',
     ],
     accent: 'violet',
+    dataSource: 'Stats NZ',
+    chartType: 'Line chart',
+    category: 'Agriculture & farming',
     dataNote:
       'Data: Stats NZ Aotearoa Data Explorer, table AGR_AGR_003 (Livestock Numbers by Regional Council), national farmed deer total. Hover or drag across the chart to read any year.',
     references: [
@@ -235,6 +317,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'Each bubble on the map is one recent quake. Drag the sliders to set the smallest magnitude and the deepest quake you want to see. Colour shows how strongly the quake was felt.',
     ],
     accent: 'rose',
+    dataSource: 'GeoNet',
+    chartType: 'Map',
+    category: 'Earthquakes & geology',
     dataNote:
       'Data: GeoNet API (api.geonet.org.nz/quake?MMI=3), recent felt quakes, fetched at deploy time via @nzlab/nz-sources, falling back to a committed snapshot when the API blocks the build runner. The site redeploys daily.',
     references: [
@@ -267,6 +352,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'Type a name and the register returns the matches, grouped by class. The donut shows which groups they belong to.',
     ],
     accent: 'teal',
+    dataSource: 'NZ Organisms Register (NZOR)',
+    chartType: 'Search & table',
+    category: 'Biodiversity & nature',
     dataNote:
       'Data: NZ Organisms Register (data.nzor.org.nz), searched live from the browser. The register holds 170,151 names.',
     references: [
@@ -299,6 +387,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'Type a topic and the catalogue returns matching datasets. The treemap shows which agencies publish them.',
     ],
     accent: 'indigo',
+    dataSource: 'data.govt.nz',
+    chartType: 'Search & table',
+    category: 'Open data & digital',
     dataNote:
       'Data: data.govt.nz CKAN API (catalogue.data.govt.nz), searched live from the browser. The catalogue holds 31,915 datasets.',
     references: [
@@ -326,6 +417,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       "Search 'gold' and the histogram peaks in the 1890s, with 427,164 matching records. The 1860s, 1870s, and 1880s each hold more than 100,000 matching records too.",
     ],
     accent: 'cyan',
+    dataSource: 'DigitalNZ (National Library)',
+    chartType: 'Search & table',
+    category: 'Open data & digital',
     dataNote:
       "Data: DigitalNZ (National Library) v3 API, searched live from the browser. 'gold' matches 1,977,021 records; the 1890s hold 427,164 of them. Drag the sliders to narrow the decades.",
     references: [
@@ -358,6 +452,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'Type to filter the tree, or click a branch to expand it. The radial chart shows the top-level branches by leaf count.',
     ],
     accent: 'fuchsia',
+    dataSource: 'Trade Me',
+    chartType: 'Tree',
+    category: 'Open data & digital',
     dataNote:
       'Data: Trade Me public category tree (api.trademe.co.nz/v1/Categories.json), fetched live from the browser. The tree holds 5,589 leaf categories.',
     references: [
@@ -390,6 +487,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'Birds punch above their weight: 657 species drew 544,818 observations, the most per species of any group.',
     ],
     accent: 'emerald',
+    dataSource: 'iNaturalist',
+    chartType: 'Bar chart',
+    category: 'Biodiversity & nature',
     dataNote:
       'Data: iNaturalist API, New Zealand place (id 6803), fetched live from the browser. Bubble size shows how many observers logged each group.',
     references: [
@@ -422,6 +522,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'Animal records grew from 208,004 to 1,496,447, a 7.2-fold rise, as museums and citizen science projects digitised their collections.',
     ],
     accent: 'indigo',
+    dataSource: 'GBIF',
+    chartType: 'Bar chart',
+    category: 'Biodiversity & nature',
     dataNote:
       'Data: GBIF occurrence search API, country NZ, records by kingdom for 2014 and 2024, fetched live from the browser.',
     references: [
@@ -449,6 +552,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'Drag the slider to widen or narrow the window. The dot marks the latest day.',
     ],
     accent: 'sky',
+    dataSource: 'Wikipedia & Wikidata',
+    chartType: 'Bar chart',
+    category: 'Open data & digital',
     dataNote:
       'Data: English Wikipedia pageviews API, last 60 days, fetched live from the browser. Each line spans the lowest to highest daily views in the window.',
     references: [
@@ -477,6 +583,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'The waterfall chart adds each river to the running total. Toggle the top-N buttons to widen or narrow the list.',
     ],
     accent: 'cyan',
+    dataSource: 'Wikipedia & Wikidata',
+    chartType: 'Bar chart',
+    category: 'Environment & geography',
     dataNote:
       'Data: Wikidata SPARQL query for New Zealand rivers (P31 river, P17 New Zealand, P2043 length), fetched live from the browser. Values outside 50-500 km are dropped as bad entries. The top-10 total is 2,603 km.',
     references: [
@@ -509,6 +618,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'The funnel narrows from the highest peak down. Toggle the top-N buttons to widen or narrow the list.',
     ],
     accent: 'violet',
+    dataSource: 'Wikipedia & Wikidata',
+    chartType: 'Bar chart',
+    category: 'Environment & geography',
     dataNote:
       'Data: Wikidata SPARQL query for New Zealand peaks (P31 mountain, P17 New Zealand, P2044 elevation), fetched live from the browser. Values outside 1,000-4,000 m are dropped as bad entries. The top-10 total is 33,278 m.',
     references: [
@@ -541,6 +653,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       "The pie shows each local board's share. Toggle the top-N buttons to widen the view, or type to filter boards by name.",
     ],
     accent: 'emerald',
+    dataSource: 'Auckland Council',
+    chartType: 'Bar chart',
+    category: 'Environment & geography',
     dataNote:
       'Data: Auckland Council Park Extents dataset (ArcGIS REST service), grouped by local board, fetched live from the browser. Park land is the maintained extent, not the legal reserve boundary.',
     references: [
@@ -573,6 +688,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'State schools dominate with 2,075. Another 324 are state-integrated and 96 are private. Type a name to filter the map, or toggle an authority to hide it.',
     ],
     accent: 'amber',
+    dataSource: 'OpenStreetMap',
+    chartType: 'Bar chart',
+    category: 'Education',
     dataNote:
       'Data: OpenStreetMap via the Overpass API, amenity=school in New Zealand, fetched live from the browser. 2,309 of the 2,604 schools carry Ministry of Education year tags (MOE:years).',
     references: [
@@ -605,6 +723,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'Most of the region stayed dry today. The rain came two and three days ago, when the median gauge caught 1.6 mm and 2.5 mm.',
     ],
     accent: 'sky',
+    dataSource: 'Environment Canterbury',
+    chartType: 'Bar chart',
+    category: 'Environment & geography',
     dataNote:
       'Data: Environment Canterbury open data (Canterbury - Rain last hour), fetched live from the browser. Values are millimetres of rain in the last day.',
     references: [
@@ -632,6 +753,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'Destination playgrounds only appeared in the 2000s. Toggle a type to hide it, and the heatmap recalculates.',
     ],
     accent: 'emerald',
+    dataSource: 'Hamilton City Council',
+    chartType: 'Heatmap',
+    category: 'Society & community',
     dataNote:
       'Data: Hamilton City Council open data (Playgrounds), fetched live from the browser. The heatmap shows playground type by installation decade.',
     references: [
@@ -665,6 +789,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'At the other end, Invercargill fell 6 places to 23rd and Timaru fell 5 places to 29th. Wellington held 3rd place, but its count dipped from 202,737 in 2018 to 202,689 in 2023.',
     ],
     accent: 'amber',
+    dataSource: 'Stats NZ',
+    chartType: 'Rank / slope',
+    category: 'Census & population',
     dataNote:
       'Data: Stats NZ, "2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts", Table 2, census usually resident population count by territorial authority, 2013, 2018, and 2023 Censuses. Counts have fixed random rounding to base 3 applied, so they may not sum to stated totals. The series is final, so this snapshot does not go stale.',
     references: [
@@ -697,6 +824,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'Below 30 the numbers flip. The 25-29 band has 190,640 men against 181,390 women.',
     ],
     accent: 'cyan',
+    dataSource: 'United Nations',
+    chartType: 'Pyramid',
+    category: 'Census & population',
     dataNote:
       'Data: UN Statistics Division Demographic and Social Statistics, population estimates by sex and age group for 1 July 2021 (provisional, rounded), as tabulated in the Wikipedia "Demographics of New Zealand" article. Because of rounding, the bands may not sum to the stated total.',
     references: [
@@ -724,6 +854,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'The biggest was a 6.3 on 16 July 2026, 45 km north of Te Anau. GeoNet also located a 6.2 north of Te Araroa and a 5.9 near Taumarunui in the same three months.',
     ],
     accent: 'rose',
+    dataSource: 'GeoNet',
+    chartType: 'Histogram',
+    category: 'Earthquakes & geology',
     dataNote:
       'Data: GeoNet FDSN event service (service.geonet.org.nz), earthquakes of magnitude 1 or stronger in the three months to 18 August 2026, fetched at build time and falling back to a committed snapshot of that catalog. The site redeploys daily.',
     references: [
@@ -751,6 +884,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'The autumn tilt holds at magnitude 4 and stronger, where April is again the busiest month (108) and November the quietest (44). At magnitude 5 and stronger the pattern shifts: October was the busiest month with 16, while November stayed the quietest with 2.',
     ],
     accent: 'rose',
+    dataSource: 'GeoNet',
+    chartType: 'Rose / polar',
+    category: 'Earthquakes & geology',
     dataNote:
       'Data: GeoNet FDSN event service (service.geonet.org.nz), earthquakes of magnitude 3 or stronger in the two years to 19 August 2026, fetched at build time and falling back to a committed snapshot of that catalog. The site redeploys daily.',
     references: [
@@ -778,6 +914,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'Each dot is one quake. Depth runs down the chart, so the shallow quakes sit at the top. Use the day buttons to narrow the window, and hover a dot to read its magnitude and depth.',
     ],
     accent: 'rose',
+    dataSource: 'GeoNet',
+    chartType: 'Scatter',
+    category: 'Earthquakes & geology',
     dataNote:
       'Data: GeoNet FDSN event service (service.geonet.org.nz), earthquakes of magnitude 1 or stronger in the three months to 18 August 2026, fetched at build time and falling back to a committed snapshot of that catalog. The site redeploys daily.',
     references: [
@@ -810,6 +949,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'The log view draws the law as a straight line. Toggle between linear and log to see how the small quakes dominate the count.',
     ],
     accent: 'indigo',
+    dataSource: 'GeoNet',
+    chartType: 'Bar chart',
+    category: 'Earthquakes & geology',
     dataNote:
       'Data: GeoNet FDSN event service (service.geonet.org.nz), earthquakes of magnitude 1 or stronger in the three months to 18 August 2026, fetched at build time and falling back to a committed snapshot of that catalog. The site redeploys daily.',
     references: [
@@ -842,6 +984,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       "The South Island's quakes are almost all shallow: 697 of 870, 80%, ruptured shallower than 40 km. The radial chart shows the depth bands. Use the magnitude buttons to filter.",
     ],
     accent: 'teal',
+    dataSource: 'GeoNet',
+    chartType: 'Histogram',
+    category: 'Earthquakes & geology',
     dataNote:
       'Data: GeoNet FDSN event service (service.geonet.org.nz), earthquakes of magnitude 1 or stronger in the three months to 18 August 2026, fetched at build time and falling back to a committed snapshot of that catalog. The site redeploys daily.',
     references: [
@@ -874,6 +1019,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'ChargeNet runs 307 stations, Meridian 104, and Z Energy 63. Toggle the view to see the stations by current type, or type to filter operators by name.',
     ],
     accent: 'emerald',
+    dataSource: 'NZ Transport Agency (NZTA)',
+    chartType: 'Bar chart',
+    category: 'Transport',
     dataNote:
       'Data: NZTA EV Roam charging stations (ArcGIS REST service), grouped by operator and current type, fetched live from the browser. The register holds 639 stations.',
     references: [
@@ -901,6 +1049,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'Fatal crashes tell a similar story: 350 in 2006, 259 in 2025. Toggle between all crashes and fatal crashes, or drag the slider to narrow the year window.',
     ],
     accent: 'rose',
+    dataSource: 'NZ Transport Agency (NZTA)',
+    chartType: 'Heatmap',
+    category: 'Transport',
     dataNote:
       'Data: NZTA Crash Analysis System (CAS) public dataset (ArcGIS REST service), crashes by region and year, fetched live from the browser. The series covers 2006 to 2026 and holds 705,609 crashes.',
     references: [
@@ -928,6 +1079,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'The sunburst shows the fleet by fuel or by vehicle type. Passenger cars and vans make up 3.69 million of the 5.9 million vehicles.',
     ],
     accent: 'sky',
+    dataSource: 'NZ Transport Agency (NZTA)',
+    chartType: 'Sunburst',
+    category: 'Transport',
     dataNote:
       'Data: NZTA Motor Vehicle Register (ArcGIS REST service), grouped by motive power and vehicle type, fetched live from the browser. 882,333 vehicles have no motive power recorded; 881,263 of them are trailers or caravans, grouped as Unknown.',
     references: [
@@ -956,6 +1110,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'Counts wobble with control operations and rabbit disease, but the decade trend is unambiguous: from 2.35 rabbits per kilometre in 2012 to a peak of 13.26 in 2021. The dataset backs a 2024 Wildlife Research study on whether rabbit abundance rises after predator control.',
     ],
     accent: 'emerald',
+    dataSource: 'Landcare Research',
+    chartType: 'Line chart',
+    category: 'Agriculture & farming',
     dataNote:
       'Data: Manaaki Whenua Landcare Research HawkesBayRabbits dataset (data.govt.nz, CC-BY-4.0), spotlight counts by farm site and year, pooled into rabbits per kilometre, fetched at deploy time with a committed snapshot fallback. Hover or drag across the chart to read any year.',
     references: [
@@ -988,6 +1145,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'Ranks hide absolute change, so the table keeps the counts. Every region grew between 2018 and 2023, and Tasman grew fastest at 10.3 percent.',
     ],
     accent: 'teal',
+    dataSource: 'Stats NZ',
+    chartType: 'Rank / slope',
+    category: 'Census & population',
     dataNote:
       'Data: Stats NZ 2023 Census population counts release (Table 1, published 29 May 2024), usually resident population counts by regional council. Counts have fixed random rounding to base 3 applied. The series is final: censuses run every five years.',
     references: [
@@ -1015,6 +1175,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       "The slope chart ranks the top ten destinations in 2015, 2020, and 2026. The order has barely moved since 2015; the story is the size of China's lead, not the ranking.",
     ],
     accent: 'indigo',
+    dataSource: 'Stats NZ',
+    chartType: 'Rank / slope',
+    category: 'Economy & business',
     dataNote:
       'Data: Stats NZ goods and services trade by country releases. The 2015 and 2020 figures are from the year ended March 2020 release; the 2026 figures are aggregated from the monthly series in the International trade: December 2025 quarter release (April 2025 to March 2026). Goods exports, NZ$ millions.',
     references: [
@@ -1042,6 +1205,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'The ranks below are among the ten biggest city councils, not all 67 territorial authorities. City boundaries changed little over the three censuses, so the comparison is consistent.',
     ],
     accent: 'cyan',
+    dataSource: 'Stats NZ',
+    chartType: 'Rank / slope',
+    category: 'Census & population',
     dataNote:
       'Data: Stats NZ 2023 Census population counts release (Table 2, published 29 May 2024), usually resident population counts by territorial authority, ranked among the ten biggest city councils. Counts have fixed random rounding to base 3 applied.',
     references: [
@@ -1071,6 +1237,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'The 25-34 band was the hollow in 2013 at 514,689 people, the smallest ten-year band between 20 and 49. Drag the slider to follow the bands across the three censuses.',
     ],
     accent: 'teal',
+    dataSource: 'Stats NZ',
+    chartType: 'Histogram',
+    category: 'Census & population',
     dataNote:
       'Data: Stats NZ "2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts", Table 6, census usually resident population count by five-year age group, 2013, 2018, and 2023 Censuses. Counts have fixed random rounding to base 3 applied, so the bands may not sum to the stated total. The series is final, so this snapshot does not go stale.',
     references: [
@@ -1099,6 +1268,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'Marlborough went the other way, from oldest in 2013 (45.0) to 3rd in 2023 (46.1). Canterbury and Bay of Plenty each fell 3 places. The whole range is small: 35.9 to 48.1 years.',
     ],
     accent: 'amber',
+    dataSource: 'Stats NZ',
+    chartType: 'Rank / slope',
+    category: 'Census & population',
     dataNote:
       'Data: Stats NZ "2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts", Table 7, median age by regional council area, 2013, 2018, and 2023 Censuses. Median age is calculated using single-year-of-age data. Ranks are computed among the 16 regions, with tied medians sharing a rank.',
     references: [
@@ -1127,6 +1299,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'New Caledonia fell 5 places to 25th and Switzerland fell 4 to 23rd. Total visitor arrivals reached 3,888,473 in the December 2019 year, the last full year before the border closed.',
     ],
     accent: 'sky',
+    dataSource: 'Stats NZ',
+    chartType: 'Rank / slope',
+    category: 'Tourism & travel',
     dataNote:
       'Data: Stats NZ, International travel: December 2019, Table 4, visitor arrivals by country of residence, years ended December 2015 and 2019. Ranks are computed among the top 30 countries of residence. The 2019 endpoint is the last full pre-pandemic year.',
     references: [
@@ -1156,6 +1331,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'The register counts economically significant enterprises, mostly those with GST turnover over $30,000 a year, and it counts dormant companies too. Pick an industry to see the shape change: rental, hiring, and real estate is almost all no-employee firms, while education and health lean the other way.',
     ],
     accent: 'amber',
+    dataSource: 'Stats NZ',
+    chartType: 'Pareto',
+    category: 'Economy & business',
     dataNote:
       'Data: Stats NZ "New Zealand business demography statistics: At February 2025", Table 1, enterprises and employee count by industry (ANZSIC06) and employee count size group. Counts are provisional and have noise added or subtracted to protect individual businesses, so bands may not sum to the stated totals.',
     references: [
@@ -1189,6 +1367,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'Toggle the year buttons to compare the summer peak month by month. The 2017 and 2025 lines are partial years.',
     ],
     accent: 'sky',
+    dataSource: 'Stats NZ',
+    chartType: 'Cycle plot',
+    category: 'Tourism & travel',
     dataNote:
       'Data: Stats NZ "International travel" releases, Table 2, estimated short-term travel, overseas visitor arrivals by month. The 2017-2019 months come from the December 2018 and December 2019 releases; the 2023-2025 months come from the June 2025 release. Arrivals are counted by month of arrival.',
     references: [
@@ -1222,6 +1403,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'Toggle the industry layers to watch the Christmas wave travel through the stream. Values include GST.',
     ],
     accent: 'rose',
+    dataSource: 'Stats NZ',
+    chartType: 'Streamgraph',
+    category: 'Economy & business',
     dataNote:
       'Data: Stats NZ "Electronic card transactions" releases, Table 1, actual monthly values by industry (series ECTM). The June 2023 release covers June 2021 to June 2023 and the June 2025 release covers June 2023 to June 2025. The retail trade survey itself is quarterly, so the card series is used for the monthly pulse. Component series are rounded independently and may not sum to the stated total.',
     references: [
@@ -1255,6 +1439,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'The bottom of the country grew much more slowly. The West Coast added 1,242 people in the decade, and Southland grew 7.3 percent. Canterbury was the exception to the south: it added 111,594 people, the second-largest gain of any region.',
     ],
     accent: 'emerald',
+    dataSource: 'Stats NZ',
+    chartType: 'Dumbbell',
+    category: 'Census & population',
     dataNote:
       'Data: Stats NZ 2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts, Table 1 (census usually resident population count by regional council area, 2013 and 2023 censuses). The chart plots population on a log scale, so the gap between the dots shows the growth rate. Hover a row to read both counts.',
     references: [
@@ -1288,6 +1475,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'The original baby boom is now in its 60s and 70s. People aged 65 and over grew from 607,035 in 2013 to 828,585 in 2023, and their share of everyone rose from 14.3 to 16.6 percent. The median age moved from 38.0 to 38.1 years.',
     ],
     accent: 'cyan',
+    dataSource: 'Stats NZ',
+    chartType: 'Ridgeline',
+    category: 'Census & population',
     dataNote:
       'Data: Stats NZ 2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts, Table 6 (usually resident population by five-year age group, 2013, 2018, and 2023 censuses). Each ridge is one census year; hover or tap a band to read the count in all three years. Census counts have fixed random rounding applied, so the bands can differ from the published total by a few people.',
     references: [
@@ -1321,6 +1511,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'The diversity is concentrated. Auckland is the only region where fewer than half of people stated a European ethnicity: 49.8 percent in 2023, against 67.8 percent nationally. Gisborne is next lowest at 56.5 percent.',
     ],
     accent: 'fuchsia',
+    dataSource: 'Stats NZ',
+    chartType: 'Waffle',
+    category: 'Census & population',
     dataNote:
       'Data: Stats NZ 2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts, Table 4 (ethnic group grouped total responses by regional council area, 2013, 2018, and 2023 censuses). Each row of the chart is 100 people who stated an ethnicity, and the filled cells show how many identified with that group. Rows add past 100 because people can choose more than one ethnic group. In 2013, 5.4 percent of people did not state an ethnicity, so that year is measured against the 94.6 percent who did.',
     references: [
@@ -1354,6 +1547,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'Canterbury is the second-biggest region with 651,027 people, 13.0 percent of the country, and Wellington third with 520,971, 10.4 percent. Auckland has held near a third through every census since 2013: 33.4 percent in 2013, 33.2 percent in 2023.',
     ],
     accent: 'teal',
+    dataSource: 'Stats NZ',
+    chartType: 'Waffle',
+    category: 'Census & population',
     dataNote:
       'Data: Stats NZ 2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts, Table 1 (census usually resident population count by regional council area, 2013, 2018, and 2023 censuses). Each cell is one percent of the census usually resident population count, allocated so the grid always sums to 100 cells. Counts have fixed random rounding to base 3 applied. Hover a cell, search for a region, or toggle the census year.',
     references: [
@@ -1387,6 +1583,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'The numbers are total exports of goods and services in New Zealand dollars, so the ranks move with exchange rates as well as volumes.',
     ],
     accent: 'sky',
+    dataSource: 'Stats NZ',
+    chartType: 'Rank / slope',
+    category: 'Economy & business',
     dataNote:
       'Data: Stats NZ "Goods and services trade by country: Year ended March 2020" (map data table), total exports of goods and services by destination country in NZ$ millions for the years ended March 2015 to 2020. Ranks are computed from the full country list in that table. Hover a line to highlight it, or toggle between the top 8 and top 5 markets.',
     references: [
@@ -1415,6 +1614,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'Two industries shrank: agriculture, forestry, and fishing fell 3.9 percent and wholesale trade fell 3.2 percent. The register counts every economically significant business, so the biggest block mixes active traders with companies that still file but do little.',
     ],
     accent: 'indigo',
+    dataSource: 'Stats NZ',
+    chartType: 'Bar-in-bar',
+    category: 'Economy & business',
     dataNote:
       'Data: Stats NZ "New Zealand business demography statistics" releases, Table 1, enterprises by industry (ANZSIC06) at February 2020 (published 29 October 2020) and February 2025 (published 30 October 2025). The 2025 counts are provisional and have noise added or subtracted to protect individual businesses. Hover a row, search for an industry, or toggle the sort order.',
     references: [
@@ -1448,6 +1650,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       "The Household Labour Force Survey is a sample, so small regions carry wide margins of error. Northland's December 2025 rate of 5.2 percent has a sampling error of about 2.7 percentage points.",
     ],
     accent: 'rose',
+    dataSource: 'Stats NZ',
+    chartType: 'Parallel coordinates',
+    category: 'Economy & business',
     dataNote:
       'Data: Stats NZ Household Labour Force Survey, December 2025 quarter (Table 6, people employed, unemployed, and not in the labour force, by regional council area), unadjusted quarterly unemployment rates for December 2023 to December 2025. Rank 1 is the highest unemployment rate that quarter; ties keep workbook order. Regional estimates carry wide sampling errors, especially for smaller regions.',
     references: [
@@ -1480,6 +1685,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'The other direction is smaller. Bay of Plenty, Otago, and Canterbury were each younger in 2023 than in 2013, and Gisborne barely moved.',
     ],
     accent: 'indigo',
+    dataSource: 'Stats NZ',
+    chartType: 'Tile grid',
+    category: 'Census & population',
     dataNote:
       'Data: Stats NZ 2023 Census release "2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts", Table 7 (age in five-year groups for the census usually resident population by regional council area). Median ages are interpolated within the five-year band holding the midpoint of each regional population, so they are estimates, not published medians.',
     references: [
@@ -1514,6 +1722,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       '2019 is the last full year before the border closed. The series stops there on purpose, so the pandemic does not distort the rankings.',
     ],
     accent: 'sky',
+    dataSource: 'Stats NZ',
+    chartType: 'Dot plot',
+    category: 'Tourism & travel',
     dataNote:
       'Data: Stats NZ International travel: December 2019 (Table 4, visitor arrivals by country of residence, years ended December 2015 and 2019). 2019 is the last full pre-pandemic year, so the series stops before the 2020-21 border closures.',
     references: [
@@ -1547,6 +1758,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'The 6.3 Christchurch earthquake of February 2011 made 2011 a busy year too, with 447 quakes at 4.0 or stronger. Drag the slider to 6.0 and only the biggest shakes remain.',
     ],
     accent: 'rose',
+    dataSource: 'GeoNet',
+    chartType: 'Strip chart',
+    category: 'Earthquakes & geology',
     dataNote:
       'Data: GeoNet FDSN event service, earthquakes of magnitude 4.0 or stronger located in the New Zealand region (latitude -50 to -29, longitude 166 to 180, plus the Kermadec arc from -180 to -175), 1 January 2001 to 31 December 2024. The counts are a committed snapshot of the GeoNet catalog taken 19 August 2026.',
     references: [
@@ -1580,6 +1794,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       'Nelson is the next busiest council at 124.6 per square kilometre, a pocket of 52,584 people on just 422 square kilometres. The West Coast is the emptiest at 1.4 people per square kilometre. Toggle the census year to watch the 2013 to 2023 shift.',
     ],
     accent: 'indigo',
+    dataSource: 'Stats NZ',
+    chartType: 'Choropleth',
+    category: 'Census & population',
     dataNote:
       'Data: Stats NZ "2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts", Table 1, usually resident population by regional council area, 2013, 2018, and 2023 Censuses. Land areas are Stats NZ regional council land areas as tabulated on Wikipedia\'s "Regions of New Zealand" page, which cites the Stats NZ "Regional Council 2020 Clipped (generalised)" boundary layer. Boundaries shown are the 2023 regional council areas. Counts have fixed random rounding to base 3 applied.',
     references: [
@@ -1618,6 +1835,9 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       "The marimekko scales each column to that year's employee total and each block's height to an industry's share. Hover a block to read an industry across both years, or switch to equal columns to compare shares directly.",
     ],
     accent: 'violet',
+    dataSource: 'Stats NZ',
+    chartType: 'Marimekko',
+    category: 'Economy & business',
     dataNote:
       'Data: Stats NZ "New Zealand business demography statistics: At February 2020" and "...At February 2025", Table 1, enterprises, geographic units, and employee count by industry (ANZSIC06). The February 2025 counts are provisional and have noise added or subtracted to protect individual businesses, so industry counts can differ from the published total by a few employees.',
     references: [

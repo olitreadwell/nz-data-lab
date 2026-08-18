@@ -1,6 +1,6 @@
 import { Container, Stack } from '@nzlab/ui';
 
-import { MicrositeCard } from '@/components/MicrositeCard';
+import { MicrositeGallery } from '@/components/MicrositeGallery';
 import { ReportIssueButton } from '@/components/ReportIssueButton';
 import { env } from '@/env';
 import { fetchForestrySeries, summarizeForestry } from '@/lib/forestry-data';
@@ -254,19 +254,21 @@ export default async function HomePage(): Promise<React.ReactElement> {
             browser.
           </p>
         </Stack>
-        <div className="grid gap-6 pb-[var(--spacing-3xl)] sm:grid-cols-2 lg:grid-cols-3">
-          {cards.map((card) => (
-            <MicrositeCard
-              key={card.config.slug}
-              slug={card.config.slug}
-              eyebrow={card.config.eyebrow}
-              title={card.config.title}
-              description={card.config.description}
-              statLabel={card.statLabel}
-              statValue={card.statValue}
-              accent={card.config.accent}
-            />
-          ))}
+        <div className="pb-[var(--spacing-3xl)]">
+          <MicrositeGallery
+            cards={cards.map((card) => ({
+              slug: card.config.slug,
+              eyebrow: card.config.eyebrow,
+              title: card.config.title,
+              description: card.config.description,
+              statLabel: card.statLabel,
+              statValue: card.statValue,
+              accent: card.config.accent,
+              dataSource: card.config.dataSource,
+              chartType: card.config.chartType,
+              category: card.config.category,
+            }))}
+          />
         </div>
       </Container>
       <ReportIssueButton />
