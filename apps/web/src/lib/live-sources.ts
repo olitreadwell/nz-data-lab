@@ -644,3 +644,138 @@ export async function fetchLiveAucklandParkBoards(): Promise<LiveAucklandParkBoa
   }
   return parseAucklandParkBoards(await response.json());
 }
+
+export interface LiveNzSchool {
+  name: string;
+  years: string | undefined;
+  authority: string | undefined;
+}
+
+/** Parses an Overpass convert payload of New Zealand schools into rows. */
+export function parseNzSchools(payload: unknown): LiveNzSchool[] {
+  const elements = (payload as { elements?: unknown[] }).elements ?? [];
+  return elements.map((element) => {
+    const tags = (element as { tags?: Record<string, unknown> }).tags ?? {};
+    const name = typeof tags.name === 'string' ? tags.name : '';
+    const years = typeof tags.years === 'string' ? tags.years : undefined;
+    const authority = typeof tags.authority === 'string' ? tags.authority : undefined;
+    return { name, years, authority };
+  });
+}
+
+/**
+ * Fetches New Zealand schools from OpenStreetMap via the Overpass API (CORS
+ * is open). The convert step keeps only the name and Ministry of Education
+ * tags, so the payload stays small enough for a browser fetch.
+ */
+export async function fetchLiveNzSchools(): Promise<LiveNzSchool[]> {
+  const query = `[out:json][timeout:60];
+area["ISO3166-1"="NZ"]["boundary"="administrative"]->.nz;
+(node["amenity"="school"](area.nz);way["amenity"="school"](area.nz);)->.schools;
+.schools convert school ::id=id(), name=t["name"], years=t["MOE:years"], authority=t["MOE:authority"];
+out;`;
+  const url = new URL('https://overpass-api.de/api/interpreter');
+  const controller = createLiveSearchAbortController();
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: `data=${encodeURIComponent(query)}`,
+    signal: controller.signal,
+  });
+  if (!response.ok) {
+    throw new Error(`Overpass HTTP ${response.status}`);
+  }
+  return parseNzSchools(await response.json());
+}
+
+export interface LiveCanterburyRainGauge {
+  siteName: string;
+  rainByDayAgoMm: (number | null)[];
+  totalRainfallMm: number | null;
+}
+
+/** Parses an Environment Canterbury rain gauge payload into rows. */
+export function parseCanterburyRainGauges(payload: unknown): LiveCanterburyRainGauge[] {
+  const features = (payload as { features?: unknown[] }).features ?? [];
+  return features.map((feature) => {
+    const attributes = (feature as { attributes?: Record<string, unknown> }).attributes ?? {};
+    const siteName = typeof attributes.SITENAME === 'string' ? attributes.SITENAME : '';
+    const rainByDayAgoMm = [0, 1, 2, 3, 4, 5, 6, 7].map((day) => {
+      const field =
+        day === 0 ? 'RAIN_TODAY' : day === 1 ? 'RAIN_1_DAY_AGO' : `RAIN_${day}_DAYS_AGO`;
+      const raw = attributes[field];
+      return typeof raw === 'number' && Number.isFinite(raw) ? raw : null;
+    });
+    const rawTotal = attributes.TOTAL_RAINFALL;
+    return {
+      siteName,
+      rainByDayAgoMm,
+      totalRainfallMm:
+        typeof rawTotal === 'number' && Number.isFinite(rawTotal) ? rawTotal : null,
+    };
+  });
+}
+
+/**
+ * Fetches Environment Canterbury rain gauges from the ArcGIS REST service
+ * (CORS is open). Each gauge carries the last eight days of rainfall.
+ */
+export async function fetchLiveCanterburyRainGauges(): Promise<LiveCanterburyRainGauge[]> {
+  const url = new URL(
+    'https://services1.arcgis.com/RNxkQaMWQcgbiF98/arcgis/rest/services/Canterbury_Rain_last_hour/FeatureServer/0/query',
+  );
+  url.searchParams.set('where', '1=1');
+  url.searchParams.set('returnGeometry', 'false');
+  url.searchParams.set('f', 'json');
+  url.searchParams.set('resultRecordCount', '200');
+  url.searchParams.set('orderByFields', 'SITENAME ASC');
+  const controller = createLiveSearchAbortController();
+  const response = await fetch(url, { signal: controller.signal });
+  if (!response.ok) {
+    throw new Error(`Environment Canterbury HTTP ${response.status}`);
+  }
+  return parseCanterburyRainGauges(await response.json());
+}
+
+export interface LiveHamiltonPlayground {
+  parkName: string;
+  type: string;
+  decade: number | null;
+}
+
+/** Parses a Hamilton City Council playground payload into rows. */
+export function parseHamiltonPlaygrounds(payload: unknown): LiveHamiltonPlayground[] {
+  const features = (payload as { features?: unknown[] }).features ?? [];
+  return features.map((feature) => {
+    const attributes = (feature as { attributes?: Record<string, unknown> }).attributes ?? {};
+    const parkName = typeof attributes.Park_Name === 'string' ? attributes.Park_Name : '';
+    const type = typeof attributes.Type === 'string' ? attributes.Type : 'Unknown';
+    const rawDecade = attributes.Decade;
+    return {
+      parkName,
+      type,
+      decade: typeof rawDecade === 'number' && Number.isFinite(rawDecade) ? rawDecade : null,
+    };
+  });
+}
+
+/**
+ * Fetches Hamilton City Council playgrounds from the ArcGIS REST service
+ * (CORS is open). Each playground carries its type and installation decade.
+ */
+export async function fetchLiveHamiltonPlaygrounds(): Promise<LiveHamiltonPlayground[]> {
+  const url = new URL(
+    'https://services1.arcgis.com/R6s0QqCMQdwKY6yp/arcgis/rest/services/HCC_Playgrounds/FeatureServer/0/query',
+  );
+  url.searchParams.set('where', '1=1');
+  url.searchParams.set('returnGeometry', 'false');
+  url.searchParams.set('f', 'json');
+  url.searchParams.set('resultRecordCount', '200');
+  url.searchParams.set('outFields', 'Park_Name,Type,Decade');
+  const controller = createLiveSearchAbortController();
+  const response = await fetch(url, { signal: controller.signal });
+  if (!response.ok) {
+    throw new Error(`Hamilton City Council HTTP ${response.status}`);
+  }
+  return parseHamiltonPlaygrounds(await response.json());
+}

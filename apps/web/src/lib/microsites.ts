@@ -561,4 +561,95 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+  {
+    slug: 'open-school-map',
+    label: 'Open school map',
+    eyebrow: '🏫 the open school map',
+    title: "New Zealand has 2,604 schools mapped on OpenStreetMap.",
+    description:
+      'OpenStreetMap maps 2,604 schools in New Zealand, from kura to universities. Most carry Ministry of Education tags, so the map reads like a school directory.',
+    paragraphs: [
+      'Primary schools lead with 1,713. Secondary schools number 323, and 131 composite schools span both primary and secondary years.',
+      'State schools dominate with 2,075. Another 324 are state-integrated and 96 are private. Type a name to filter the map, or toggle an authority to hide it.',
+    ],
+    accent: 'amber',
+    dataNote:
+      'Data: OpenStreetMap via the Overpass API, amenity=school in New Zealand, fetched live from the browser. 2,309 of the 2,604 schools carry Ministry of Education year tags (MOE:years).',
+    references: [
+      {
+        label: 'OpenStreetMap',
+        url: 'https://www.openstreetmap.org/',
+        kind: 'data',
+      },
+      {
+        label: 'Overpass API',
+        url: 'https://overpass-api.de/',
+        kind: 'data',
+      },
+      {
+        label: 'School tag (OpenStreetMap wiki)',
+        url: 'https://wiki.openstreetmap.org/wiki/Tag:amenity%3Dschool',
+        kind: 'history',
+      },
+    ],
+  },
+  {
+    slug: 'canterbury-rain',
+    label: 'Canterbury rain',
+    eyebrow: '🌧️ the canterbury rain',
+    title: "Canterbury's rain gauges caught up to 40.5 mm in a day.",
+    description:
+      'Environment Canterbury runs 109 rain gauges across the region. The wettest gauge, Mount Byrne, recorded 40.5 mm in the last day and 86 mm in total.',
+    paragraphs: [
+      'The box plot shows the spread across all gauges for each of the last eight days. The box holds the middle half of gauges, the line is the median, and the whiskers reach the wettest and driest.',
+      'Most of the region stayed dry today. The rain came two and three days ago, when the median gauge caught 1.6 mm and 2.5 mm.',
+    ],
+    accent: 'sky',
+    dataNote:
+      'Data: Environment Canterbury open data (Canterbury - Rain last hour), fetched live from the browser. Values are millimetres of rain in the last day.',
+    references: [
+      {
+        label: 'Environment Canterbury open data',
+        url: 'https://opendata.canterburymaps.govt.nz/',
+        kind: 'data',
+      },
+      {
+        label: 'Rainfall data (Environment Canterbury)',
+        url: 'https://www.ecan.govt.nz/data/rainfall-data/',
+        kind: 'data',
+      },
+    ],
+  },
+  {
+    slug: 'hamilton-playgrounds',
+    label: 'Hamilton playgrounds',
+    eyebrow: '🛝 the hamilton playgrounds',
+    title: 'Hamilton has 85 playgrounds.',
+    description:
+      'Hamilton City Council maps every playground it owns. The 85 playgrounds range from basic neighbourhood swings to destination playgrounds.',
+    paragraphs: [
+      'Most are neighbourhood playgrounds: 33 old, 23 basic, and 21 recent. The 2000s were the busiest decade, with 35 playgrounds built.',
+      'Destination playgrounds only appeared in the 2000s. Toggle a type to hide it, and the heatmap recalculates.',
+    ],
+    accent: 'emerald',
+    dataNote:
+      'Data: Hamilton City Council open data (Playgrounds), fetched live from the browser. The heatmap shows playground type by installation decade.',
+    references: [
+      {
+        label: 'Playgrounds dataset (Hamilton City Council)',
+        url: 'https://data-hcc.opendata.arcgis.com/datasets/f518a92384b1438eb848f839ca4262bd',
+        kind: 'data',
+      },
+      {
+        label: 'Hamilton City Council open data',
+        url: 'https://data-hcc.opendata.arcgis.com/',
+        kind: 'data',
+      },
+      {
+        label: 'Hamilton City Council',
+        url: 'https://www.hamilton.govt.nz/',
+        kind: 'history',
+      },
+    ],
+  },
 ]);
