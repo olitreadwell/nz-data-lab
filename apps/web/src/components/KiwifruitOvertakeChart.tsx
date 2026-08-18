@@ -6,6 +6,9 @@ import type { TooltipContentProps } from 'recharts';
 import { formatHectares } from '@/lib/format';
 import type { HorticultureSeriesPoint } from '@/lib/horticulture-data';
 
+import { ChartDataTable } from './ChartDataTable';
+import type { ChartDataColumn } from './ChartDataTable';
+
 interface KiwifruitOvertakeChartProps {
   points: HorticultureSeriesPoint[];
 }
@@ -105,6 +108,19 @@ export function KiwifruitOvertakeChart({
     data.length === 0
       ? 'Orchard area before and after'
       : `Orchard area, ${firstYear ?? ''} and ${latestYear ?? ''}: kiwifruit overtook apples`;
+  const tableColumns: ChartDataColumn<BeforeAfterDatum>[] = [
+    { key: 'crop', header: 'Crop' },
+    {
+      key: 'first',
+      header: firstYear === undefined ? '' : String(firstYear),
+      format: (value) => formatHectares(Number(value)),
+    },
+    {
+      key: 'latest',
+      header: latestYear === undefined ? '' : String(latestYear),
+      format: (value) => formatHectares(Number(value)),
+    },
+  ];
 
   if (data.length === 0) {
     return (
@@ -165,6 +181,11 @@ export function KiwifruitOvertakeChart({
           </BarChart>
         </ResponsiveContainer>
       </div>
+      <ChartDataTable
+        summary="View orchard areas as a table"
+        columns={tableColumns}
+        rows={data}
+      />
     </div>
   );
 }

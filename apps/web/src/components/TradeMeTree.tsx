@@ -7,6 +7,9 @@ import type { TooltipContentProps } from 'recharts';
 import { fetchLiveTradeMeTree } from '@/lib/live-sources';
 import type { LiveTradeMeCategory } from '@/lib/live-sources';
 
+import { ChartDataTable } from './ChartDataTable';
+import type { ChartDataColumn } from './ChartDataTable';
+
 const RADIAL_COLOR = '#d946ef';
 const RADIAL_BAR_SIZE = 10;
 const TOP_CATEGORIES_SHOWN = 12;
@@ -192,6 +195,10 @@ export function TradeMeTree(): React.ReactElement {
   }, []);
 
   const chartLabel = 'Top-level Trade Me categories by leaf count';
+  const tableColumns: ChartDataColumn<FlatCategory>[] = [
+    { key: 'name', header: 'Category' },
+    { key: 'leafCount', header: 'Leaf count' },
+  ];
 
   return (
     <div>
@@ -220,22 +227,29 @@ export function TradeMeTree(): React.ReactElement {
       </p>
       {!isLoading && error === null && tree !== null && (
         <div className="grid gap-4 sm:grid-cols-2">
-          <div role="img" aria-label={chartLabel} className="h-[220px] sm:h-[260px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <RadialBarChart
-                data={topCategories}
-                innerRadius="15%"
-                outerRadius="100%"
-                barSize={RADIAL_BAR_SIZE}
-              >
-                <RadialBar
-                  dataKey="leafCount"
-                  fill={RADIAL_COLOR}
-                  background={{ fill: 'var(--color-muted)' }}
-                />
-                <Tooltip content={(props) => <CategoryTooltip {...props} />} />
-              </RadialBarChart>
-            </ResponsiveContainer>
+          <div>
+            <div role="img" aria-label={chartLabel} className="h-[220px] sm:h-[260px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <RadialBarChart
+                  data={topCategories}
+                  innerRadius="15%"
+                  outerRadius="100%"
+                  barSize={RADIAL_BAR_SIZE}
+                >
+                  <RadialBar
+                    dataKey="leafCount"
+                    fill={RADIAL_COLOR}
+                    background={{ fill: 'var(--color-muted)' }}
+                  />
+                  <Tooltip content={(props) => <CategoryTooltip {...props} />} />
+                </RadialBarChart>
+              </ResponsiveContainer>
+            </div>
+            <ChartDataTable
+              summary="View the top categories as a table"
+              columns={tableColumns}
+              rows={topCategories}
+            />
           </div>
           <div className="max-h-[260px] overflow-y-auto pr-1">
             {searchResults === null ? (

@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { describe, expect, it } from 'vitest';
 
@@ -24,6 +24,22 @@ describe('KiwifruitOvertakeChart', () => {
     const { container } = render(<KiwifruitOvertakeChart points={POINTS} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
+  });
+
+  it('exposes the data in a keyboard-reachable table', () => {
+    const { container } = render(<KiwifruitOvertakeChart points={POINTS} />);
+    const summary = container.querySelector('summary');
+    if (summary === null) {
+      throw new Error('Expected a chart data table summary');
+    }
+    fireEvent.click(summary);
+    const table = screen.getByRole('table');
+    expect(table).toHaveTextContent('Crop');
+    expect(table).toHaveTextContent('Kiwifruit');
+    expect(table).toHaveTextContent('Apples');
+    expect(table).toHaveTextContent('Avocados');
+    expect(table).toHaveTextContent('12,174 ha');
+    expect(table).toHaveTextContent('14,514 ha');
   });
 
   it('renders a fallback label for empty data', () => {

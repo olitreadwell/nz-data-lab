@@ -60,6 +60,22 @@ describe('DigitisedMemorySearch', () => {
     expect(screen.getByText('Gold Coast cartoon')).toBeInTheDocument();
   });
 
+  it('exposes the decade counts in a keyboard-reachable table', async () => {
+    const { container } = render(<DigitisedMemorySearch initialQuery="gold" />);
+    await screen.findByText(/1,977,021 records match/);
+    const summary = container.querySelector('summary');
+    if (summary === null) {
+      throw new Error('Expected a chart data table summary');
+    }
+    fireEvent.click(summary);
+    const table = screen.getByRole('table');
+    expect(table).toHaveTextContent('Decade');
+    expect(table).toHaveTextContent('Count');
+    expect(table).toHaveTextContent('1860s');
+    expect(table).toHaveTextContent('108,375');
+    expect(table).toHaveTextContent('427,164');
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = render(<DigitisedMemorySearch initialQuery="gold" />);
     await screen.findByText(/1,977,021 records match/);

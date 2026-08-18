@@ -5,7 +5,10 @@ import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxi
 import type { TooltipContentProps } from 'recharts';
 
 import { searchLiveDigitalNz } from '@/lib/live-sources';
-import type { LiveDigitalNzSearchResult } from '@/lib/live-sources';
+import type { LiveDigitalNzDecade, LiveDigitalNzSearchResult } from '@/lib/live-sources';
+
+import { ChartDataTable } from './ChartDataTable';
+import type { ChartDataColumn } from './ChartDataTable';
 
 interface DigitisedMemorySearchProps {
   initialQuery: string;
@@ -113,6 +116,10 @@ export function DigitisedMemorySearch({
   const lastDecade = decades[decades.length - 1]?.decade ?? 0;
   const hasDecades = decades.length > 0;
   const chartLabel = `Records matching "${submittedQuery}" by decade`;
+  const tableColumns: ChartDataColumn<LiveDigitalNzDecade>[] = [
+    { key: 'decade', header: 'Decade', format: (value) => `${value}s` },
+    { key: 'count', header: 'Count', format: (value) => value.toLocaleString('en-NZ') },
+  ];
 
   return (
     <div>
@@ -166,6 +173,11 @@ export function DigitisedMemorySearch({
                 </BarChart>
               </ResponsiveContainer>
             </div>
+            <ChartDataTable
+              summary="View the decade counts as a table"
+              columns={tableColumns}
+              rows={decades}
+            />
             {hasDecades && minDecade !== null && maxDecade !== null && (
               <div className="mt-3 grid gap-2 sm:grid-cols-2">
                 <label className="numeral-paragraph-sm text-[var(--color-muted)]">

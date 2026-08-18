@@ -35,6 +35,23 @@ describe('HorticultureChart', () => {
     expect(tooltip).toHaveTextContent('Kiwifruit');
   });
 
+  it('exposes the data in a keyboard-reachable table', () => {
+    const { container } = render(<HorticultureChart points={POINTS} />);
+    const summary = container.querySelector('summary');
+    if (summary === null) {
+      throw new Error('Expected a chart data table summary');
+    }
+    fireEvent.click(summary);
+    const table = screen.getByRole('table');
+    expect(table).toHaveTextContent('Year');
+    expect(table).toHaveTextContent('Wine grapes');
+    expect(table).toHaveTextContent('Kiwifruit');
+    expect(table).toHaveTextContent('Apples');
+    expect(table).toHaveTextContent('Avocados');
+    expect(table).toHaveTextContent('1994');
+    expect(table).toHaveTextContent('7,160 ha');
+  });
+
   it('renders a fallback label for empty data', () => {
     render(<HorticultureChart points={[]} />);
     expect(screen.getByRole('img')).toHaveAccessibleName(/horticulture area over time/i);

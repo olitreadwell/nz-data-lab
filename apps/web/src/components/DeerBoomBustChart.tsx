@@ -6,6 +6,9 @@ import type { TooltipContentProps } from 'recharts';
 import { formatMillions } from '@/lib/format';
 import type { LivestockSeriesPoint } from '@/lib/livestock-data';
 
+import { ChartDataTable } from './ChartDataTable';
+import type { ChartDataColumn } from './ChartDataTable';
+
 interface DeerBoomBustChartProps {
   points: LivestockSeriesPoint[];
 }
@@ -57,6 +60,10 @@ export function DeerBoomBustChart({ points }: DeerBoomBustChartProps): React.Rea
     data.length === 0
       ? 'Farmed deer over time'
       : `Farmed deer, ${firstYear ?? ''} to ${lastYear ?? ''}: the herd boomed to 2004, then more than halved`;
+  const tableColumns: ChartDataColumn<LivestockSeriesPoint>[] = [
+    { key: 'year', header: 'Year' },
+    { key: 'deer', header: 'Deer', format: formatMillions },
+  ];
 
   if (data.length === 0) {
     return (
@@ -112,6 +119,11 @@ export function DeerBoomBustChart({ points }: DeerBoomBustChartProps): React.Rea
           </AreaChart>
         </ResponsiveContainer>
       </div>
+      <ChartDataTable
+        summary="View farmed deer numbers as a table"
+        columns={tableColumns}
+        rows={points}
+      />
     </div>
   );
 }
