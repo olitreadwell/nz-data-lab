@@ -315,3 +315,36 @@ it('renders the vehicle fleet story', async () => {
   expect(html).toContain('3.18 million');
   expect(html).toContain('Motor Vehicle Register (NZTA)');
 });
+
+it('renders the age distribution story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'age-distribution' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('The baby boom bulge moved up the age ladder.');
+  expect(html).toContain('4,993,923');
+  expect(html).toContain('data-value="4993923"');
+  expect(html).toContain('Sources and further reading');
+});
+
+it('renders the median age ranks story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'median-age-ranks' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('The upper South Island is where New Zealand ages fastest.');
+  expect(html).toContain('West Coast, 48.1 years');
+  expect(html).toContain('data-value="48.1"');
+  expect(html).toContain('Sources and further reading');
+});
+
+it('renders the visitor arrival ranks story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'visitor-arrival-ranks' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('Indonesia and the Philippines climbed the visitor ranks.');
+  expect(html).toContain('3,888,473');
+  expect(html).toContain('data-value="3888473"');
+  expect(html).toContain('Sources and further reading');
+});

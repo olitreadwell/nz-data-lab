@@ -1057,4 +1057,89 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+
+  {
+    slug: 'age-distribution',
+    label: 'Age distribution',
+    eyebrow: '👵 the age distribution',
+    title: 'The baby boom bulge moved up the age ladder.',
+    description:
+      'In the 2013 census the 50-59 band held 560,178 people, more than the 20-29 band (548,826). By 2023 the biggest ten-year band was 30-39 at 719,616, and the baby boomers sat in 60-69.',
+    paragraphs: [
+      'New Zealand counted 4,993,923 people in the 2023 census, up from 4,242,048 in 2013. The median age moved only slightly, from 38.0 to 38.1 years.',
+      'The bulge aged in step with the census. The 60-69 band of 2023 held 548,910 people, nearly the same as the 50-59 band of 2013. The 20-29 band of 2013 (548,826) became the 30-39 band of 2023, the largest ten-year band of all.',
+      'The 25-34 band was the hollow in 2013 at 514,689 people, the smallest ten-year band between 20 and 49. Drag the slider to follow the bands across the three censuses.',
+    ],
+    accent: 'teal',
+    dataNote:
+      'Data: Stats NZ "2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts", Table 6, census usually resident population count by five-year age group, 2013, 2018, and 2023 Censuses. Counts have fixed random rounding to base 3 applied, so the bands may not sum to the stated total. The series is final, so this snapshot does not go stale.',
+    references: [
+      {
+        label: '2023 Census population counts (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
+        kind: 'data',
+      },
+      {
+        label: '2023 Census (Stats NZ)',
+        url: 'https://www.stats.govt.nz/2023-census/',
+        kind: 'data',
+      },
+    ],
+  },
+
+  {
+    slug: 'median-age-ranks',
+    label: 'Median age ranks',
+    eyebrow: '📊 the median age ranks',
+    title: 'The upper South Island is where New Zealand ages fastest.',
+    description:
+      'West Coast was the oldest region in the 2023 census, at a median age of 48.1 years. Tasman (46.8), Marlborough (46.1) and Nelson (44.0) followed. Auckland stayed the youngest in all three censuses, at 35.9.',
+    paragraphs: [
+      'West Coast climbed from 3rd-oldest in 2013 to oldest in 2023. Southland climbed 4 places to 6th-oldest, and Taranaki and Manawatu-Whanganui each climbed 2.',
+      'Marlborough went the other way, from oldest in 2013 (45.0) to 3rd in 2023 (46.1). Canterbury and Bay of Plenty each fell 3 places. The whole range is small: 35.9 to 48.1 years.',
+    ],
+    accent: 'amber',
+    dataNote:
+      'Data: Stats NZ "2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts", Table 7, median age by regional council area, 2013, 2018, and 2023 Censuses. Median age is calculated using single-year-of-age data. Ranks are computed among the 16 regions, with tied medians sharing a rank.',
+    references: [
+      {
+        label: '2023 Census population counts (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
+        kind: 'data',
+      },
+      {
+        label: '2023 Census (Stats NZ)',
+        url: 'https://www.stats.govt.nz/2023-census/',
+        kind: 'data',
+      },
+    ],
+  },
+
+  {
+    slug: 'visitor-arrival-ranks',
+    label: 'Visitor arrival ranks',
+    eyebrow: '✈️ the visitor arrival ranks',
+    title: 'Indonesia and the Philippines climbed the visitor ranks.',
+    description:
+      'Australia, China, the United States and the United Kingdom held the top four spots for visitor arrivals in 2015 and 2019. The churn happened below them: Indonesia rose from 24th to 19th and the Philippines from 25th to 20th.',
+    paragraphs: [
+      'India overtook Singapore for 9th place, with 66,775 arrivals in the December 2019 year against 64,574. Germany and Japan swapped 5th and 6th.',
+      'New Caledonia fell 5 places to 25th and Switzerland fell 4 to 23rd. Total visitor arrivals reached 3,888,473 in the December 2019 year, the last full year before the border closed.',
+    ],
+    accent: 'sky',
+    dataNote:
+      'Data: Stats NZ, International travel: December 2019, Table 4, visitor arrivals by country of residence, years ended December 2015 and 2019. Ranks are computed among the top 30 countries of residence. The 2019 endpoint is the last full pre-pandemic year.',
+    references: [
+      {
+        label: 'International travel: December 2019 (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/international-travel-december-2019/',
+        kind: 'data',
+      },
+      {
+        label: 'Tourism (Stats NZ)',
+        url: 'https://www.stats.govt.nz/topics/tourism/',
+        kind: 'data',
+      },
+    ],
+  },
 ]);

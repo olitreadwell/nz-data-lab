@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { AgeDistributionHistogram } from '@/components/AgeDistributionHistogram';
 import { AgePyramid } from '@/components/AgePyramid';
 import { AucklandParks } from '@/components/AucklandParks';
 import { BackyardSpeciesCensus } from '@/components/BackyardSpeciesCensus';
@@ -18,6 +19,7 @@ import { HamiltonPlaygrounds } from '@/components/HamiltonPlaygrounds';
 import { HorticultureChart } from '@/components/HorticultureChart';
 import { KiwifruitOvertakeChart } from '@/components/KiwifruitOvertakeChart';
 import { LivestockChart } from '@/components/LivestockChart';
+import { MedianAgeRankSlope } from '@/components/MedianAgeRankSlope';
 import { MicrositeStory } from '@/components/MicrositeStory';
 import { OpenDataSearch } from '@/components/OpenDataSearch';
 import { PeakHeights } from '@/components/PeakHeights';
@@ -40,6 +42,7 @@ import { SpeciesRegisterSearch } from '@/components/SpeciesRegisterSearch';
 import { StatCard } from '@/components/StatCard';
 import { TradeMeTree } from '@/components/TradeMeTree';
 import { VehicleFleet } from '@/components/VehicleFleet';
+import { VisitorRankSlope } from '@/components/VisitorRankSlope';
 import { WhatTheWorldReads } from '@/components/WhatTheWorldReads';
 import { env } from '@/env';
 import { CENSUS_RANK_HIGHLIGHTS, formatRankOrdinal } from '@/lib/census-rank-data';
@@ -961,6 +964,93 @@ function renderStoryContent(
         ),
       };
     }
+    case 'age-distribution':
+      return {
+        chart: <AgeDistributionHistogram />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="People counted, 2023 census"
+              value="4,993,923"
+              accent="teal"
+              testId="age-total-2023"
+              dataValue={4993923}
+            />
+            <StatCard
+              label="Biggest band, 2023"
+              value="30-39: 719,616"
+              accent="teal"
+              testId="age-biggest-band-2023"
+              dataValue={719616}
+            />
+            <StatCard
+              label="50-59 band, 2013"
+              value="560,178"
+              accent="teal"
+              testId="age-bulge-2013"
+              dataValue={560178}
+            />
+          </dl>
+        ),
+      };
+    case 'median-age-ranks':
+      return {
+        chart: <MedianAgeRankSlope />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Oldest region, 2023"
+              value="West Coast, 48.1 years"
+              accent="amber"
+              testId="oldest-region-median-age"
+              dataValue={48.1}
+            />
+            <StatCard
+              label="Youngest region, 2023"
+              value="Auckland, 35.9 years"
+              accent="amber"
+              testId="youngest-region-median-age"
+              dataValue={35.9}
+            />
+            <StatCard
+              label="Biggest rank climb"
+              value="Southland, 10th to 6th"
+              accent="amber"
+              testId="median-age-biggest-climb"
+              dataValue={4}
+            />
+          </dl>
+        ),
+      };
+    case 'visitor-arrival-ranks':
+      return {
+        chart: <VisitorRankSlope />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Visitor arrivals, Dec 2019 year"
+              value="3,888,473"
+              accent="sky"
+              testId="visitor-arrivals-2019"
+              dataValue={3888473}
+            />
+            <StatCard
+              label="Top source, 2019"
+              value="Australia, 1,537,988"
+              accent="sky"
+              testId="visitor-top-source"
+              dataValue={1537988}
+            />
+            <StatCard
+              label="Biggest rank climbers"
+              value="Indonesia and Philippines, 5 places"
+              accent="sky"
+              testId="visitor-biggest-climbers"
+              dataValue={5}
+            />
+          </dl>
+        ),
+      };
     default:
       return { chart: null, stats: null };
   }

@@ -30,17 +30,23 @@ const QUIET_COLOR = '#cbd5e1';
 
 type SlopeMode = 'movers' | 'all';
 
-function rankRows(rows: SlopeChartRow[]): number[][] {
+/**
+ * Ranks each row at every time point, returned as one rank array per row
+ * (row[0] holds that row's rank at each time point).
+ */
+function rankRowsPerSeries(rows: SlopeChartRow[]): number[][] {
   const timePointCount = rows[0]?.values.length ?? 0;
-  const ranks: number[][] = [];
+  const ranksByTimePoint: number[][] = [];
   for (let timeIndex = 0; timeIndex < timePointCount; timeIndex += 1) {
     const sorted = [...rows].sort(
       (a, b) => (b.values[timeIndex] ?? 0) - (a.values[timeIndex] ?? 0),
     );
     const rankByName = new Map(sorted.map((row, index) => [row.name, index + 1]));
-    ranks.push(rows.map((row) => rankByName.get(row.name) ?? 0));
+    ranksByTimePoint.push(rows.map((row) => rankByName.get(row.name) ?? 0));
   }
-  return ranks;
+  return rows.map((_, rowIndex) =>
+    ranksByTimePoint.map((ranksAtTimePoint) => ranksAtTimePoint[rowIndex] ?? 0),
+  );
 }
 
 function rankChange(ranks: number[]): number {
@@ -117,7 +123,7 @@ export function SlopeChart({
   const [mode, setMode] = useState<SlopeMode>('movers');
   const [highlightedIndex, setHighlightedIndex] = useState<number | null>(null);
 
-  const ranks = useMemo(() => rankRows(rows), [rows]);
+  const ranks = useMemo(() => rankRowsPerSeries(rows), [rows]);
   const changes = useMemo(
     () => rows.map((row, index) => rankChange(ranks[index] ?? [])),
     [rows, ranks],
