@@ -4,6 +4,7 @@
 // them (e.g. GitHub Pages) fails loudly instead of silently passing.
 const REQUIRED_HEADERS = [
   'Content-Security-Policy',
+  'Strict-Transport-Security',
   'X-Content-Type-Options',
   'Referrer-Policy',
   'X-Frame-Options',

@@ -232,6 +232,11 @@ describe('security headers', () => {
     );
   });
 
+  it('carries CSP and HSTS on Vercel', () => {
+    const keys = vercelHeaders.map((header) => header.key);
+    expect(keys).toEqual(expect.arrayContaining(['Content-Security-Policy', 'Strict-Transport-Security']));
+  });
+
   it('mirrors the headers in the static _headers file', () => {
     const staticHeaders = readStaticHeaders();
     for (const header of vercelHeaders) {

@@ -47,4 +47,9 @@ jobs:
       - name: Build
         run: npx vercel@59.1.4 build --prod
       - name: Deploy
-        run: npx vercel@59.1.4 deploy --prebuilt --prod
+        id: deploy
+        run: |
+          url=$(npx vercel@59.1.4 deploy --prebuilt --prod)
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+      - name: Verify security headers on deployed site
+        run: node apps/web/scripts/check-deployed-security-headers.mjs "${{ steps.deploy.outputs.url }}"
