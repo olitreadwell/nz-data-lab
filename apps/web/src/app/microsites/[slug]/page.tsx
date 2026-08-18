@@ -32,6 +32,7 @@ import { SpeciesRecordLedger } from '@/components/SpeciesRecordLedger';
 import { SpeciesRegisterSearch } from '@/components/SpeciesRegisterSearch';
 import { StatCard } from '@/components/StatCard';
 import { TradeMeTree } from '@/components/TradeMeTree';
+import { UnemploymentParallelCoordinates } from '@/components/UnemploymentParallelCoordinates';
 import { VehicleFleet } from '@/components/VehicleFleet';
 import { WhatTheWorldReads } from '@/components/WhatTheWorldReads';
 import { env } from '@/env';
@@ -63,6 +64,7 @@ import type { RabbitSpotlightSeries } from '@/lib/rabbit-data';
 import { formatRabbitsPerKm } from '@/lib/rabbit-format';
 import { fetchSheepSeries } from '@/lib/sheep-data';
 import { formatMillions as formatMillionsSheep } from '@/lib/sheep-format';
+import { NATIONAL_UNEMPLOYMENT_RATE, UNEMPLOYMENT_RANK_ROWS } from '@/lib/unemployment-rank-data';
 
 interface MicrositePageProps {
   params: Promise<{ slug: string }>;
@@ -699,6 +701,38 @@ function renderStoryContent(
               dataValue={strongest?.magnitude}
             />
             <StatCard label="Felt quakes per year" value={FELT_QUAKES_PER_YEAR} accent="rose" />
+          </dl>
+        ),
+      };
+    }
+    case 'unemployment-ranks': {
+      const aucklandRow = UNEMPLOYMENT_RANK_ROWS.find((row) => row.key === 'auckland');
+      const otagoRow = UNEMPLOYMENT_RANK_ROWS.find((row) => row.key === 'otago');
+      return {
+        chart: <UnemploymentParallelCoordinates />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="National unemployment rate (Dec 2025)"
+              value={`${NATIONAL_UNEMPLOYMENT_RATE.toFixed(1)}%`}
+              accent="rose"
+              testId="unemployment-national"
+              dataValue={NATIONAL_UNEMPLOYMENT_RATE}
+            />
+            <StatCard
+              label="Auckland's rank, Dec 2023 to Dec 2025"
+              value={`#${aucklandRow?.ranks[0]} to #${aucklandRow?.ranks.at(-1)}`}
+              accent="rose"
+              testId="auckland-rank"
+              dataValue={aucklandRow?.ranks.at(-1)}
+            />
+            <StatCard
+              label="Otago's rate (Dec 2025)"
+              value={`${otagoRow?.rates.at(-1)?.toFixed(1)}%`}
+              accent="rose"
+              testId="otago-rate"
+              dataValue={otagoRow?.rates.at(-1)}
+            />
           </dl>
         ),
       };

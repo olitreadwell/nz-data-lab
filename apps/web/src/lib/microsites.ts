@@ -853,4 +853,37 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+  {
+    slug: 'unemployment-ranks',
+    label: 'Unemployment ranks',
+    eyebrow: '📈 the unemployment shuffle',
+    title: 'The unemployment pecking order reshuffles every year.',
+    description:
+      'Between December 2023 and December 2025, Auckland went from the fifth-highest regional unemployment rate to the highest, and Wellington from ninth to third. Otago stayed the tightest labour market in the country throughout.',
+    paragraphs: [
+      'The national unemployment rate rose from 4.0 percent in December 2023 to 5.3 percent in December 2025. Auckland moved most, from 4.2 to 6.4 percent, and its rank climbed from fifth to first. Wellington went from 3.3 to 5.8 percent.',
+      'Northland, Waikato, and Manawat\u016b-Whanganui swapped the top spots early in the period. Taranaki drifted the other way, from the seventh-highest rate to the tenth, while its rate barely moved.',
+      "The Household Labour Force Survey is a sample, so small regions carry wide margins of error. Northland's December 2025 rate of 5.2 percent has a sampling error of about 2.7 percentage points.",
+    ],
+    accent: 'rose',
+    dataNote:
+      'Data: Stats NZ Household Labour Force Survey, December 2025 quarter (Table 6, people employed, unemployed, and not in the labour force, by regional council area), unadjusted quarterly unemployment rates for December 2023 to December 2025. Rank 1 is the highest unemployment rate that quarter; ties keep workbook order. Regional estimates carry wide sampling errors, especially for smaller regions.',
+    references: [
+      {
+        label: 'Labour market statistics: December 2025 quarter (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/labour-market-statistics-december-2025-quarter/',
+        kind: 'data',
+      },
+      {
+        label: 'HLFS regional tables workbook (Stats NZ)',
+        url: 'https://www.stats.govt.nz/assets/Uploads/Labour-market-statistics/Labour-market-statistics-December-2025-quarter/Download-data/household-labour-force-survey-december-2025-quarter.xlsx',
+        kind: 'data',
+      },
+      {
+        label: 'Unemployment (Stats NZ)',
+        url: 'https://www.stats.govt.nz/topics/labour-market/',
+        kind: 'history',
+      },
+    ],
+  },
 ]);

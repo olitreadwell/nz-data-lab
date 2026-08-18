@@ -268,3 +268,13 @@ it('renders the vehicle fleet story', async () => {
   expect(html).toContain('3.18 million');
   expect(html).toContain('Motor Vehicle Register (NZTA)');
 });
+
+it('renders the unemployment ranks story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'unemployment-ranks' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('The unemployment pecking order reshuffles every year');
+  expect(html).toContain('National unemployment rate (Dec 2025)');
+  expect(html).toContain('Labour market statistics: December 2025 quarter (Stats NZ)');
+});

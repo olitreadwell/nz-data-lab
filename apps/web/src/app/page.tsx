@@ -186,6 +186,11 @@ export default async function HomePage(): Promise<React.ReactElement> {
       statLabel: `Rabbits per km (${rabbit.latest.year})`,
       statValue: formatRabbitsPerKm(rabbit.latest.rabbitsPerKm),
     },
+    {
+      config: getMicrosite('unemployment-ranks'),
+      statLabel: 'National unemployment rate (Dec 2025)',
+      statValue: '5.3%',
+    },
   ].filter(
     (card): card is { config: MicrositeConfig; statLabel: string; statValue: string } =>
       card.config !== undefined,
