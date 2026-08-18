@@ -70,6 +70,15 @@ describe('DigitisedMemorySearch', () => {
     expect(screen.getByText('Gold Coast cartoon')).toBeInTheDocument();
   });
 
+  it('announces the filtered record count when a slider changes', async () => {
+    render(<DigitisedMemorySearch initialQuery="gold" />);
+    await screen.findByText(/1,977,021 records match/);
+    expect(screen.queryByText(/Showing .* of .* records/)).not.toBeInTheDocument();
+    const earliest = screen.getByRole('slider', { name: /Earliest decade/ });
+    fireEvent.change(earliest, { target: { value: '1900' } });
+    expect(screen.getByText('Showing 1 of 1,977,021 records')).toBeInTheDocument();
+  });
+
   it('excludes undated records when a decade range is active', async () => {
     SEARCH_MOCK.mockResolvedValueOnce({
       ...RESULT,
