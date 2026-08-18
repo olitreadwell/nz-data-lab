@@ -8,7 +8,6 @@
  * generated (direct URLs 404).
  */
 export const HIDDEN_MICROSITES: string[] = [
-  'shake-index',
   'digitised-memory',
   'backyard-species-census',
   'species-record-ledger',
