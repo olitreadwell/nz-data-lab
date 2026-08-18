@@ -1,5 +1,6 @@
 import { summarizeGeoNetQuakes } from '@nzlab/nz-sources';
 import { Container } from '@nzlab/ui';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -52,6 +53,17 @@ interface MicrositePageProps {
 
 export function generateStaticParams(): { slug: string }[] {
   return MICROSITES.map((microsite) => ({ slug: microsite.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: MicrositePageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const microsite = MICROSITES.find((candidate) => candidate.slug === slug);
+  if (microsite === undefined) {
+    return { title: 'nz-data-lab' };
+  }
+  return { title: `${microsite.label} - nz-data-lab` };
 }
 
 export default async function MicrositePage({

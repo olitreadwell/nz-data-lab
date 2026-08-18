@@ -1,7 +1,7 @@
 import { renderToReadableStream } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 
-import MicrositePage from './page';
+import MicrositePage, { generateMetadata } from './page';
 
 const notFoundMock = vi.fn();
 vi.mock('next/navigation', () => ({
@@ -106,6 +106,33 @@ describe('MicrositePage', () => {
     expect(html).toContain('Sources and further reading');
     expect(html).toContain('Sheep number falls to six for each person');
     expect(html).toContain('All microsites');
+    expect(html.match(/<h1[^>]*>/g) ?? []).toHaveLength(1);
+  });
+
+  it('renders exactly one h1 with the microsite title before any h2', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'sheep-index' })} />,
+    );
+    const html = await new Response(stream).text();
+    const h1s = html.match(/<h1[^>]*>(.*?)<\/h1>/g) ?? [];
+    expect(h1s).toHaveLength(1);
+    expect(h1s[0]).toContain('national animal is in freefall');
+    const headingIndexes = ['<h1', '<h2', '<h3', '<h4', '<h5', '<h6']
+      .map((tag) => html.indexOf(tag))
+      .filter((index) => index !== -1);
+    expect(Math.min(...headingIndexes)).toBe(html.indexOf('<h1'));
+  });
+
+  it('returns a unique document title for the sheep microsite', async () => {
+    await expect(generateMetadata({ params: Promise.resolve({ slug: 'sheep-index' }) })).resolves.toEqual(
+      { title: 'Sheep index - nz-data-lab' },
+    );
+  });
+
+  it('returns a generic title for an unknown microsite', async () => {
+    await expect(generateMetadata({ params: Promise.resolve({ slug: 'nope' }) })).resolves.toEqual({
+      title: 'nz-data-lab',
+    });
   });
 
   it('renders the dairy story with the livestock chart', async () => {
