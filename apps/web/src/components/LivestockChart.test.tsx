@@ -38,6 +38,14 @@ describe('LivestockChart', () => {
     expect(tooltip).toHaveTextContent('Deer');
   });
 
+  it('does not announce the hover tooltip as a live region', async () => {
+    render(<LivestockChart points={POINTS} />);
+    fireEvent.mouseMove(screen.getByRole('img'), { clientX: 100, clientY: 100 });
+    const tooltip = await screen.findByTestId('livestock-tooltip');
+    expect(tooltip).not.toHaveAttribute('role', 'status');
+    expect(tooltip).not.toHaveAttribute('aria-live');
+  });
+
   it('exposes all four species in a keyboard-reachable table', () => {
     const { container } = render(<LivestockChart points={POINTS} />);
     const summary = container.querySelector('summary');
