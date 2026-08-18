@@ -5,6 +5,7 @@ import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxi
 import type { TooltipContentProps } from 'recharts';
 
 import type { QuakeCatalogEvent } from '@/lib/quake-catalog';
+import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
 import { ChartDataTable } from './ChartDataTable';
 import type { ChartDataColumn } from './ChartDataTable';
@@ -92,6 +93,7 @@ export function QuakeMagnitudeHistogram({
 }: {
   events: QuakeCatalogEvent[];
 }): React.ReactElement {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [binSize, setBinSize] = useState<number>(DEFAULT_BIN_SIZE);
   const [maxDays, setMaxDays] = useState<number>(DEFAULT_DAYS);
 
@@ -148,7 +150,11 @@ export function QuakeMagnitudeHistogram({
             <XAxis dataKey="label" stroke="var(--color-muted)" />
             <YAxis tickFormatter={formatCount} stroke="var(--color-muted)" />
             <Tooltip content={(props) => <BinTooltip {...props} />} />
-            <Bar dataKey="count" fill="#be123c" />
+            <Bar
+              dataKey="count"
+              fill="#be123c"
+              isAnimationActive={!prefersReducedMotion}
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>

@@ -6,6 +6,7 @@ import type { TooltipContentProps } from 'recharts';
 
 import { searchLiveDigitalNz } from '@/lib/live-sources';
 import type { LiveDigitalNzDecade, LiveDigitalNzSearchResult } from '@/lib/live-sources';
+import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
 import { ChartDataTable } from './ChartDataTable';
 import type { ChartDataColumn } from './ChartDataTable';
@@ -72,6 +73,7 @@ export function DigitisedMemorySearch({
 }: DigitisedMemorySearchProps): React.ReactElement {
   const [query, setQuery] = useState(initialQuery);
   const [submittedQuery, setSubmittedQuery] = useState(initialQuery);
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [result, setResult] = useState<LiveDigitalNzSearchResult | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -185,7 +187,11 @@ export function DigitisedMemorySearch({
                   />
                   <YAxis tickFormatter={formatCount} stroke="var(--color-muted)" />
                   <Tooltip content={(props) => <DecadeTooltip {...props} />} />
-                  <Bar dataKey="count" fill={DECADE_COLOR} />
+                  <Bar
+                    dataKey="count"
+                    fill={DECADE_COLOR}
+                    isAnimationActive={!prefersReducedMotion}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </div>

@@ -14,6 +14,7 @@ import type { TooltipContentProps } from 'recharts';
 
 import { fetchLiveGbifKingdoms } from '@/lib/live-sources';
 import type { LiveGbifKingdom } from '@/lib/live-sources';
+import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
 import { ChartDataTable } from './ChartDataTable';
 import type { ChartDataColumn } from './ChartDataTable';
@@ -74,6 +75,7 @@ function KingdomTooltip({ active, payload }: TooltipContentProps): React.ReactEl
  * hide or show its line.
  */
 export function SpeciesRecordLedger(): React.ReactElement {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [kingdoms, setKingdoms] = useState<LiveGbifKingdom[]>([]);
   const [hiddenKingdoms, setHiddenKingdoms] = useState<ReadonlySet<string>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
@@ -184,6 +186,7 @@ export function SpeciesRecordLedger(): React.ReactElement {
                     key={kingdom.kingdom}
                     type="linear"
                     dataKey={kingdom.kingdom}
+                    isAnimationActive={!prefersReducedMotion}
                     stroke={KINGDOM_COLORS[kingdom.kingdom] ?? '#64748b'}
                     strokeWidth={2}
                     dot={{ r: 4 }}

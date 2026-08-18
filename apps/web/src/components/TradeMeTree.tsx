@@ -6,6 +6,7 @@ import type { TooltipContentProps } from 'recharts';
 
 import { fetchLiveTradeMeTree } from '@/lib/live-sources';
 import type { LiveTradeMeCategory } from '@/lib/live-sources';
+import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
 import { ChartDataTable } from './ChartDataTable';
 import type { ChartDataColumn } from './ChartDataTable';
@@ -131,6 +132,7 @@ function CategoryList({
  */
 export function TradeMeTree(): React.ReactElement {
   const [tree, setTree] = useState<LiveTradeMeCategory | null>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState('');
@@ -255,6 +257,7 @@ export function TradeMeTree(): React.ReactElement {
                 >
                   <RadialBar
                     dataKey="leafCount"
+                    isAnimationActive={!prefersReducedMotion}
                     fill={RADIAL_COLOR}
                     background={{ fill: 'var(--color-muted)' }}
                   />

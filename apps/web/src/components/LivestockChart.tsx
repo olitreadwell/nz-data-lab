@@ -5,6 +5,7 @@ import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'rec
 
 import { formatMillions } from '@/lib/format';
 import type { LivestockSeriesPoint } from '@/lib/livestock-data';
+import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
 import { ChartDataTable } from './ChartDataTable';
 import type { ChartDataColumn } from './ChartDataTable';
@@ -27,6 +28,7 @@ function formatAxisTick(value: number): string {
 }
 
 export function LivestockChart({ points }: LivestockChartProps): React.ReactElement {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [sheepVisible, setSheepVisible] = useState(true);
   const firstYear = points[0]?.year;
   const lastYear = points[points.length - 1]?.year;
@@ -130,6 +132,7 @@ export function LivestockChart({ points }: LivestockChartProps): React.ReactElem
                 key={definition.key}
                 type="monotone"
                 dataKey={definition.key}
+                isAnimationActive={!prefersReducedMotion}
                 stroke={definition.color}
                 strokeWidth={2.5}
                 dot={false}

@@ -5,6 +5,7 @@ import type { TooltipContentProps } from 'recharts';
 
 import type { SheepSeriesPoint } from '@/lib/sheep-data';
 import { formatMillions } from '@/lib/sheep-format';
+import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
 import { ChartDataTable } from './ChartDataTable';
 
@@ -54,6 +55,7 @@ function SheepTooltip({ active, label, payload }: TooltipContentProps): React.Re
 }
 
 export function SheepChart({ points }: SheepChartProps): React.ReactElement {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const sheepValues = points.map((point) => point.sheep);
   const minSheep = Math.min(...sheepValues);
   const maxSheep = Math.max(...sheepValues);
@@ -104,6 +106,7 @@ export function SheepChart({ points }: SheepChartProps): React.ReactElement {
           <Line
             type="monotone"
             dataKey="sheep"
+            isAnimationActive={!prefersReducedMotion}
             stroke="var(--color-fg)"
             strokeWidth={2}
             dot={false}

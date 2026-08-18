@@ -5,6 +5,7 @@ import { ResponsiveContainer, Treemap } from 'recharts';
 
 import { searchLiveDataGovtNz } from '@/lib/live-sources';
 import type { LiveDataGovtNzDataset } from '@/lib/live-sources';
+import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
 import { ChartDataTable } from './ChartDataTable';
 
@@ -81,6 +82,7 @@ function groupByOrganization(datasets: LiveDataGovtNzDataset[]): OrgDatum[] {
 export function OpenDataSearch({ initialQuery }: OpenDataSearchProps): React.ReactElement {
   const [query, setQuery] = useState(initialQuery);
   const [submittedQuery, setSubmittedQuery] = useState(initialQuery);
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [datasets, setDatasets] = useState<LiveDataGovtNzDataset[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -164,6 +166,7 @@ export function OpenDataSearch({ initialQuery }: OpenDataSearchProps): React.Rea
                   data={byOrg}
                   dataKey="size"
                   nameKey="name"
+                  isAnimationActive={!prefersReducedMotion}
                   stroke="var(--color-bg)"
                   fill="#0ea5e9"
                   content={(props) => {
