@@ -94,6 +94,21 @@ describe('RoadCrashTrend', () => {
     expect(checked[0]).toHaveTextContent('All crashes');
   });
 
+  it('moves focus to the newly selected radio on arrow keys and keeps only the checked radio in the tab order', async () => {
+    render(<RoadCrashTrend />);
+    await screen.findByText(/40,618 crashes in view/);
+    const allCrashes = screen.getByRole('radio', { name: 'All crashes' });
+    const fatal = screen.getByRole('radio', { name: 'Fatal crashes' });
+    expect(allCrashes).toHaveAttribute('tabindex', '0');
+    expect(fatal).toHaveAttribute('tabindex', '-1');
+
+    fireEvent.keyDown(allCrashes, { key: 'ArrowDown' });
+    expect(fatal).toHaveFocus();
+    expect(fatal).toHaveAttribute('aria-checked', 'true');
+    expect(fatal).toHaveAttribute('tabindex', '0');
+    expect(allCrashes).toHaveAttribute('tabindex', '-1');
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = render(<RoadCrashTrend />);
     await screen.findByText(/40,618 crashes in view/);

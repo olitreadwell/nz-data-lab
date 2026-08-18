@@ -138,6 +138,7 @@ export function RoadCrashTrend(): React.ReactElement {
                   type="button"
                   role="radio"
                   aria-checked={mode === option}
+                  tabIndex={mode === option ? 0 : -1}
                   onClick={() => setMode(option)}
                   onKeyDown={(event) =>
                     handleRadioGroupKeyDown(event, index, CRASH_OPTIONS, setMode)

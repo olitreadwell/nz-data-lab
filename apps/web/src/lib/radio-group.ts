@@ -3,7 +3,8 @@ import type { KeyboardEvent } from 'react';
 /**
  * Handles arrow-key navigation for a radio group: ArrowDown/ArrowRight move
  * to the next option and ArrowUp/ArrowLeft to the previous one, wrapping at
- * the ends. The newly focused option is selected immediately.
+ * the ends. The newly selected option is selected immediately and focus
+ * moves to it, matching the WAI-ARIA radio pattern.
  *
  * @param event - the keydown event from a radio option
  * @param currentIndex - index of the option that received the event
@@ -32,5 +33,8 @@ export function handleRadioGroupKeyDown<T>(
   const option = options[nextIndex];
   if (option !== undefined) {
     onSelect(option);
+    const group = event.currentTarget.closest('[role="radiogroup"]');
+    const radios = group?.querySelectorAll<HTMLElement>('[role="radio"]');
+    radios?.[nextIndex]?.focus();
   }
 }
