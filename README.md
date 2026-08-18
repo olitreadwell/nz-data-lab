@@ -120,28 +120,35 @@ server-rendered previews and production deploys.
 ### Security headers
 
 The static export ships no server, so `headers()` in `next.config.ts` is
-ignored. Security headers are instead configured per host:
+ignored. The build output is served with no server, so the CSP and other
+security headers are applied per host:
 
-- `apps/web/public/_headers` is the committed source of the headers. The build
-  copies it into the export and `apps/web/scripts/generate-csp.mjs` rewrites
-  `out/_headers` with a fresh per-build CSP nonce, so the served CSP always
-  matches the nonce injected into the inline scripts. `_headers`-aware static
-  hosts (Netlify, Cloudflare Pages, and similar) honor it; GitHub Pages does
-  not serve custom headers.
-- `apps/web/vercel.json` carries the non-CSP headers for Vercel. It holds no
-  CSP and no nonce, so source control never contains a public nonce.
+- `apps/web/vercel.ts` is what Vercel serves. Vercel evaluates it at build
+  time, so it computes a fresh per-build CSP nonce and serves a strict
+  `script-src` that names only that nonce (no `'unsafe-inline'`). The nonce
+  is written to `apps/web/.vercel/csp-nonce` (gitignored) so
+  `apps/web/scripts/generate-csp.mjs` stamps the same value into the exported
+  HTML's inline scripts. Source control never contains a literal nonce.
+- `apps/web/public/_headers` is the committed source for `_headers`-aware
+  static hosts (Netlify, Cloudflare Pages, and similar). The build copies it
+  into the export and `generate-csp.mjs` rewrites `out/_headers` with the
+  same per-build nonce so those hosts also serve a matching CSP. GitHub Pages
+  does not serve custom headers.
 
 ### Deploy-host decision (issue #213)
 
-The site deploys to Vercel, a `_headers`-aware host, so the served responses
-carry the strict CSP and the other security headers. The served-response check
-in the deploy workflow fails the deploy loudly if any required header is
-missing.
+The site deploys to Vercel, so the served responses carry the strict CSP and
+the other security headers. The served-response check in the deploy workflow
+fails the deploy loudly if a required header is missing or if the served CSP
+does not actually permit the inline scripts to run.
 
-`apps/web/scripts/check-deployed-security-headers.mjs` hits a deployed URL and
+`apps/web/scripts/check-deployed-security-headers.mjs` hits a deployed URL,
 asserts `Content-Security-Policy`, `Strict-Transport-Security`,
 `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`, and
-`Permissions-Policy` are present in the served response.
+`Permissions-Policy` are present in the served response, then fetches the
+HTML and verifies every inline-script nonce appears in the served CSP's
+`script-src`, so a nonce/hash round-trip that blocks hydration fails the
+deploy instead of silently passing.
 `apps/web/src/lib/security-headers.test.ts` serves the generated export locally
 and asserts the same headers on the served response, keeping the CSP in sync
 with the live API hosts and asserting no committed file carries a nonce.

@@ -1,8 +1,9 @@
 /* global process */
-import { randomBytes } from 'node:crypto';
 import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import { readCspNonce } from './csp-nonce.mjs';
 
 const WEB_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // The output directory is configurable so tests can generate into a temp dir;
@@ -13,7 +14,9 @@ const OUT_HEADERS_PATH = path.join(OUT_DIR, '_headers');
 
 // A fresh nonce per build lets the strict script-src allow only the inline
 // scripts Next.js emits for this build (bootstrap + self.__next_f flight data).
-const nonce = randomBytes(16).toString('base64');
+// On Vercel the nonce is generated first by vercel.ts and read back here so the
+// CSP the platform serves matches the inline scripts; elsewhere one is created.
+const nonce = readCspNonce();
 
 function htmlFiles(dir) {
   const files = [];
@@ -50,5 +53,5 @@ function withNonce(csp) {
 }
 
 // The CSP is generated only into the untracked build output; the committed
-// vercel.json and public/_headers never carry a nonce.
+// vercel.ts and public/_headers never carry a literal nonce.
 writeFileSync(OUT_HEADERS_PATH, withNonce(readFileSync(STATIC_HEADERS_PATH, 'utf8')));

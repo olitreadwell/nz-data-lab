@@ -42,8 +42,9 @@ jobs:
         run: |
           url=$(npx vercel@59.1.4 deploy --prebuilt --prod)
           echo "url=$url" >> "$GITHUB_OUTPUT"
-      # Vercel is a `_headers`-aware host, so the served response must carry
-      # every required security header. A missing header fails the deploy
-      # loudly instead of silently passing.
+      # Vercel serves the headers built into apps/web/vercel.ts, so the served
+      # response must carry every required security header AND its CSP must
+      # permit the inline scripts (the nonce round-trip). A missing header or a
+      # blocked inline script fails the deploy loudly instead of silently passing.
       - name: Verify security headers on deployed site
         run: node apps/web/scripts/check-deployed-security-headers.mjs "${{ steps.deploy.outputs.url }}"
