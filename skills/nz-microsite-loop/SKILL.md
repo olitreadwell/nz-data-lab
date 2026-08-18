@@ -35,20 +35,25 @@ commit per microsite, then one merge and one deploy.
    accent system. Add a unit test per new component.
 4. **Verify (3 min)**: `npx tsc --noEmit` and `npx vitest run` in
    `apps/web`, lint the changed files. Fix errors before merging.
-5. **Ship (2 min)**: worktree + branch, one Conventional Commit per
-   microsite, merge to `main`, push, watch the Pages deploy, curl each new
-   page for 200 and for a content marker. Before merging, run `git fetch
-origin` and rebase the branch onto `origin/main` if it moved while you
-   built: the launchd quality loop commits to `main` concurrently, and a
-   stale base makes the merge fight the new code. Push fast-forward when
-   `origin/main` is an ancestor of your branch; only rebase when the tree is
-   clean, and never rebase with unstaged changes. In a fresh worktree, run
-   `npm install` before the checks: symlinking the main repo's `node_modules`
-   into the worktree breaks vitest's esbuild with "too many levels of
-   symbolic links". Close each shipped issue with a comment linking the
-   microsite (`gh issue close <num> --comment "shipped as /microsites/<slug>"`).
+5. **Hand off (2 min)**: worktree + branch, one Conventional Commit per
+   microsite, verify, then push the branch to `origin` and file one
+   `microsite-review` issue per microsite instead of merging. The issue body
+   names the branch, the spec doc, what was verified, and the smoke
+   assertions; the quality loop reviews and merges it. Do not merge to
+   `main`, do not close the `data-viz-idea` issue, do not deploy. Before
+   pushing, run `git fetch origin` and rebase the branch onto `origin/main`
+   if it moved while you built: the launchd quality loop commits to `main`
+   concurrently, and a stale base makes the merge fight the new code. Push
+   fast-forward when `origin/main` is an ancestor of your branch; only
+   rebase when the tree is clean, and never rebase with unstaged changes.
+   In a fresh worktree, run `npm install` before the checks: symlinking the
+   main repo's `node_modules` into the worktree breaks vitest's esbuild
+   with "too many levels of symbolic links". After pushing, `cd` to the
+   main repo and remove the worktree so the next iteration starts clean.
+   Issue template:
+   `gh issue create --label microsite-review --label priority-<tier> --title "microsite-review: <slug> (<viz-id>)" --body "Branch: <branch>\nSpec: docs/backlog/data-viz-ideas/<viz-id>-<slug>.md\nVerified: tsc, vitest, lint\nSmoke: <assertions>\nReview and merge to main, curl the page for 200, then close this issue and the data-viz-idea issue."`
 6. **Changelog (1 min)**: append one dated entry to `CHANGELOG.md` listing
-   every microsite shipped in the loop.
+   every microsite handed off in the loop, with its branch and issue number.
 7. **Prune (1 min)**: before the wrap-up (compact), run
    `scripts/prune-loop-artifacts.sh` once. It removes merged
    `feat/microsite-loop-*` worktrees and branches and kills stale agent
@@ -64,6 +69,8 @@ origin` and rebase the branch onto `origin/main` if it moved while you
 
 - Every microsite must come from an open `data-viz-idea` issue; never build
   a microsite outside the issue queue.
+- Microsites are handed off unmerged as `microsite-review` issues; the
+  quality loop merges them. Never merge a microsite to `main` yourself.
 - 2-3 microsites per loop, one chart type per microsite, no repeated chart
   types across the site unless the story demands it. Keep a running list of
   chart types used in the changelog so the next loop picks a fresh one.

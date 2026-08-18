@@ -54,7 +54,7 @@ function sleep(ms) {
 }
 
 /** Labels the loop must never touch: curated backlogs, not bugs. */
-const PROTECTED_LABELS = ['data-viz-idea', 'data-tutorial'];
+const PROTECTED_LABELS = ['data-viz-idea', 'data-tutorial', 'microsite-review'];
 
 const HIDDEN_FILE = path.join(ROOT, 'apps/web/src/lib/hidden-microsites.ts');
 
