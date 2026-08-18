@@ -44,7 +44,7 @@ export function MicrositeStory({
             className={`numeral-text-eyebrow ${styles.eyebrow}`}
             eyebrow={eyebrow}
           />
-          <h2 className="numeral-heading-2xl">{title}</h2>
+          <h1 className="numeral-heading-2xl">{title}</h1>
           <p className="numeral-paragraph-lg text-[var(--color-muted)]">{description}</p>
           {paragraphs.map((paragraph) => (
             <p key={paragraph} className="numeral-paragraph-md text-[var(--color-muted)]">
