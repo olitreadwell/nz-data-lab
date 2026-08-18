@@ -7,7 +7,7 @@
  * hidden microsite disappears from the home grid and its page stops being
  * generated (direct URLs 404).
  */
-export const HIDDEN_MICROSITES: string[] = [];
+export const HIDDEN_MICROSITES: string[] = ['backyard-species-census', 'species-record-ledger'];
 
 /**
  * Filters a microsite list down to the ones that are not hidden.
