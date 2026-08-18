@@ -68,7 +68,9 @@ export function VisitorRankSlope(): React.ReactElement {
         highlightNames={HIGHLIGHT_COUNTRIES}
         moverThreshold={1}
         chartLabel="Visitor arrival ranks by country of residence for 2015 and 2019"
-        moverSummary={(moverCount) => `${moverCount} countries moved visitor arrival rank between 2015 and 2019.`}
+        moverSummary={(moverCount) =>
+          `${moverCount} countries moved visitor arrival rank between 2015 and 2019.`
+        }
         rowSummary={formatCountrySummary}
       />
       <ChartDataTable

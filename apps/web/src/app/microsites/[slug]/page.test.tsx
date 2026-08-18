@@ -290,3 +290,14 @@ it('renders the median age ranks story', async () => {
   expect(html).toContain('data-value="48.1"');
   expect(html).toContain('Sources and further reading');
 });
+
+it('renders the visitor arrival ranks story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'visitor-arrival-ranks' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('Indonesia and the Philippines climbed the visitor ranks.');
+  expect(html).toContain('3,888,473');
+  expect(html).toContain('data-value="3888473"');
+  expect(html).toContain('Sources and further reading');
+});

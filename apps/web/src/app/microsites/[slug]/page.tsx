@@ -4,8 +4,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import { AgePyramid } from '@/components/AgePyramid';
 import { AgeDistributionHistogram } from '@/components/AgeDistributionHistogram';
+import { AgePyramid } from '@/components/AgePyramid';
 import { AucklandParks } from '@/components/AucklandParks';
 import { BackyardSpeciesCensus } from '@/components/BackyardSpeciesCensus';
 import { CanterburyRain } from '@/components/CanterburyRain';
@@ -34,6 +34,7 @@ import { SpeciesRegisterSearch } from '@/components/SpeciesRegisterSearch';
 import { StatCard } from '@/components/StatCard';
 import { TradeMeTree } from '@/components/TradeMeTree';
 import { VehicleFleet } from '@/components/VehicleFleet';
+import { VisitorRankSlope } from '@/components/VisitorRankSlope';
 import { WhatTheWorldReads } from '@/components/WhatTheWorldReads';
 import { env } from '@/env';
 import { CENSUS_RANK_HIGHLIGHTS, formatRankOrdinal } from '@/lib/census-rank-data';
@@ -757,6 +758,35 @@ function renderStoryContent(
               accent="amber"
               testId="median-age-biggest-climb"
               dataValue={4}
+            />
+          </dl>
+        ),
+      };
+    case 'visitor-arrival-ranks':
+      return {
+        chart: <VisitorRankSlope />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Visitor arrivals, Dec 2019 year"
+              value="3,888,473"
+              accent="sky"
+              testId="visitor-arrivals-2019"
+              dataValue={3888473}
+            />
+            <StatCard
+              label="Top source, 2019"
+              value="Australia, 1,537,988"
+              accent="sky"
+              testId="visitor-top-source"
+              dataValue={1537988}
+            />
+            <StatCard
+              label="Biggest rank climbers"
+              value="Indonesia and Philippines, 5 places"
+              accent="sky"
+              testId="visitor-biggest-climbers"
+              dataValue={5}
             />
           </dl>
         ),

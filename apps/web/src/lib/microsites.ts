@@ -910,4 +910,32 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+
+  {
+    slug: 'visitor-arrival-ranks',
+    label: 'Visitor arrival ranks',
+    eyebrow: '✈️ the visitor arrival ranks',
+    title: 'Indonesia and the Philippines climbed the visitor ranks.',
+    description:
+      'Australia, China, the United States and the United Kingdom held the top four spots for visitor arrivals in 2015 and 2019. The churn happened below them: Indonesia rose from 24th to 19th and the Philippines from 25th to 20th.',
+    paragraphs: [
+      'India overtook Singapore for 9th place, with 66,775 arrivals in the December 2019 year against 64,574. Germany and Japan swapped 5th and 6th.',
+      'New Caledonia fell 5 places to 25th and Switzerland fell 4 to 23rd. Total visitor arrivals reached 3,888,473 in the December 2019 year, the last full year before the border closed.',
+    ],
+    accent: 'sky',
+    dataNote:
+      'Data: Stats NZ, International travel: December 2019, Table 4, visitor arrivals by country of residence, years ended December 2015 and 2019. Ranks are computed among the top 30 countries of residence. The 2019 endpoint is the last full pre-pandemic year.',
+    references: [
+      {
+        label: 'International travel: December 2019 (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/international-travel-december-2019/',
+        kind: 'data',
+      },
+      {
+        label: 'Tourism (Stats NZ)',
+        url: 'https://www.stats.govt.nz/topics/tourism/',
+        kind: 'data',
+      },
+    ],
+  },
 ]);

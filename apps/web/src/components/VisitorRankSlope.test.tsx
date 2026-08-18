@@ -16,7 +16,9 @@ describe('VisitorRankSlope', () => {
       'aria-pressed',
       'true',
     );
-    expect(screen.getByText(/countries moved visitor arrival rank between 2015 and 2019/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/countries moved visitor arrival rank between 2015 and 2019/),
+    ).toBeInTheDocument();
   });
 
   it('switches to showing every country', () => {
