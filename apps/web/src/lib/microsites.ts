@@ -1534,4 +1534,103 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+
+  {
+    slug: 'quake-years',
+    label: 'Quake years',
+    eyebrow: '🌋 the quake years',
+    title: "2016 was New Zealand's busiest quake year since 2001.",
+    description:
+      'GeoNet located 7,265 earthquakes at magnitude 4.0 or stronger between 2001 and 2024. The busiest year was 2016, when the 7.8 Kaikoura earthquake and its aftershocks brought 772.',
+    paragraphs: [
+      'The quietest year was 2018 with 118. Most years land between 150 and 500, so the peak years stand out: 2003 (561) around the Fiordland 7.1, 2009 (487) around the Dusky Sound 7.8, and 2021 (483) around the Te Araroa 7.2.',
+      'The 6.3 Christchurch earthquake of February 2011 made 2011 a busy year too, with 447 quakes at 4.0 or stronger. Drag the slider to 6.0 and only the biggest shakes remain.',
+    ],
+    accent: 'rose',
+    dataNote:
+      'Data: GeoNet FDSN event service, earthquakes of magnitude 4.0 or stronger located in the New Zealand region (latitude -50 to -29, longitude 166 to 180, plus the Kermadec arc from -180 to -175), 1 January 2001 to 31 December 2024. The counts are a committed snapshot of the GeoNet catalog taken 19 August 2026.',
+    references: [
+      {
+        label: 'GeoNet',
+        url: 'https://www.geonet.org.nz/',
+        kind: 'data',
+      },
+      {
+        label: 'Earthquake FAQ (GeoNet)',
+        url: 'https://www.geonet.org.nz/earthquake/faq',
+        kind: 'data',
+      },
+      {
+        label: 'Kaikōura earthquake, 13 November 2016 (GeoNet)',
+        url: 'https://www.geonet.org.nz/earthquake/2016p858000',
+        kind: 'news',
+      },
+    ],
+  },
+
+  {
+    slug: 'region-density',
+    label: 'Region density',
+    eyebrow: '🗺️ the region density',
+    title: 'Auckland holds a third of the people on 2% of the land.',
+    description:
+      "New Zealand's 16 regional councils cover 264,091 square kilometres of land. At the 2023 census, Auckland held 1,656,486 people, a third of the country, on 4,941 square kilometres, under 2% of it.",
+    paragraphs: [
+      'The 2023 census counted 4,993,923 people by regional council, about 18.9 per square kilometre. Auckland runs at 335.3 per square kilometre, more than 17 times the national density.',
+      'Nelson is the next busiest council at 124.6 per square kilometre, a pocket of 52,584 people on just 422 square kilometres. The West Coast is the emptiest at 1.4 people per square kilometre. Toggle the census year to watch the 2013 to 2023 shift.',
+    ],
+    accent: 'indigo',
+    dataNote:
+      'Data: Stats NZ "2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts", Table 1, usually resident population by regional council area, 2013, 2018, and 2023 Censuses. Land areas are Stats NZ regional council land areas as tabulated on Wikipedia\'s "Regions of New Zealand" page, which cites the Stats NZ "Regional Council 2020 Clipped (generalised)" boundary layer. Boundaries shown are the 2023 regional council areas. Counts have fixed random rounding to base 3 applied.',
+    references: [
+      {
+        label: '2023 Census population counts (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
+        kind: 'data',
+      },
+      {
+        label: '2023 Census (Stats NZ)',
+        url: 'https://www.stats.govt.nz/2023-census/',
+        kind: 'data',
+      },
+      {
+        label: 'Regions of New Zealand (Wikipedia)',
+        url: 'https://en.wikipedia.org/wiki/Regions_of_New_Zealand',
+        kind: 'data',
+      },
+      {
+        label: 'Regional Council 2020 Clipped (generalised) (Stats NZ)',
+        url: 'https://datafinder.stats.govt.nz/layer/104253-regional-council-2020-clipped-generalised/',
+        kind: 'data',
+      },
+    ],
+  },
+
+  {
+    slug: 'industry-employment',
+    label: 'Industry employment',
+    eyebrow: '🏭 the industry employment',
+    title: "Health care is New Zealand's biggest employer.",
+    description:
+      "Stats NZ counted 293,600 employees in health care and social assistance at February 2025, 12% of the 2,450,600 employees covered by the business demography statistics. It is the country's biggest industry employer, ahead of manufacturing.",
+    paragraphs: [
+      'Manufacturing still employed 231,100 people, but its share slipped from 10.2% at February 2020 to 9.4% at February 2025. Retail trade sits close behind at 227,900.',
+      "The marimekko scales each column to that year's employee total and each block's height to an industry's share. Hover a block to read an industry across both years, or switch to equal columns to compare shares directly.",
+    ],
+    accent: 'violet',
+    dataNote:
+      'Data: Stats NZ "New Zealand business demography statistics: At February 2020" and "...At February 2025", Table 1, enterprises, geographic units, and employee count by industry (ANZSIC06). The February 2025 counts are provisional and have noise added or subtracted to protect individual businesses, so industry counts can differ from the published total by a few employees.',
+    references: [
+      {
+        label: 'New Zealand business demography statistics: At February 2025 (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/new-zealand-business-demography-statistics-at-february-2025/',
+        kind: 'data',
+      },
+      {
+        label: 'New Zealand business demography statistics: At February 2020 (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/new-zealand-business-demography-statistics-at-february-2020/',
+        kind: 'data',
+      },
+    ],
+  },
 ]);

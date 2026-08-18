@@ -14,6 +14,7 @@ import { CityRankSlope } from '@/components/CityRankSlope';
 import { CompanySizePareto } from '@/components/CompanySizePareto';
 import { DeerBoomBustChart } from '@/components/DeerBoomBustChart';
 import { DigitisedMemorySearch } from '@/components/DigitisedMemorySearch';
+import { EmploymentMarimekko } from '@/components/EmploymentMarimekko';
 import { EthnicityWaffle } from '@/components/EthnicityWaffle';
 import { EvCharging } from '@/components/EvCharging';
 import { ExportDestinationSlope } from '@/components/ExportDestinationSlope';
@@ -36,9 +37,11 @@ import { QuakeFrequencyMagnitude } from '@/components/QuakeFrequencyMagnitude';
 import { QuakeMagnitudeHistogram } from '@/components/QuakeMagnitudeHistogram';
 import { QuakeMap } from '@/components/QuakeMap';
 import { QuakeMonthRose } from '@/components/QuakeMonthRose';
+import { QuakeYearStripChart } from '@/components/QuakeYearStripChart';
 import { RabbitChart } from '@/components/RabbitChart';
 import { RegionalGrowthDumbbell } from '@/components/RegionalGrowthDumbbell';
 import { RegionalRankSlope } from '@/components/RegionalRankSlope';
+import { RegionDensityChoropleth } from '@/components/RegionDensityChoropleth';
 import { RegionWaffle } from '@/components/RegionWaffle';
 import { ReportIssueButton } from '@/components/ReportIssueButton';
 import { RetailSalesStreamgraph } from '@/components/RetailSalesStreamgraph';
@@ -60,6 +63,7 @@ import { env } from '@/env';
 import { ageBulgeSixtyFivePlus } from '@/lib/age-bulge-data';
 import { CENSUS_RANK_HIGHLIGHTS, formatRankOrdinal } from '@/lib/census-rank-data';
 import { CITY_RANK_ROWS } from '@/lib/city-rank-data';
+import { EMPLOYMENT_INDUSTRY_ROWS, EMPLOYMENT_TOTAL_2025 } from '@/lib/employment-data';
 import { ethnicityAnswersPerHundred } from '@/lib/ethnicity-mix-data';
 import { EXPORT_DESTINATION_ROWS } from '@/lib/export-destination-data';
 import { fetchForestrySeries, summarizeForestry } from '@/lib/forestry-data';
@@ -90,9 +94,11 @@ import {
   fetchQuakeMonthCatalog,
   summarizeQuakeMonths,
 } from '@/lib/quake-month-data';
+import { QUAKE_YEAR_PEAK, QUAKE_YEAR_QUIET, QUAKE_YEAR_TOTAL } from '@/lib/quake-year-data';
 import { fetchRabbitSpotlightSeries } from '@/lib/rabbit-data';
 import type { RabbitSpotlightSeries } from '@/lib/rabbit-data';
 import { formatRabbitsPerKm } from '@/lib/rabbit-format';
+import { densityFor, nationalDensity, regionDensityRowByKey } from '@/lib/region-density-data';
 import { REGIONAL_CENSUS_ROWS } from '@/lib/regional-census-data';
 import { fetchSheepSeries } from '@/lib/sheep-data';
 import { formatMillions as formatMillionsSheep } from '@/lib/sheep-format';
@@ -856,6 +862,105 @@ function renderStoryContent(
           </dl>
         ),
       };
+    case 'industry-employment': {
+      const health = EMPLOYMENT_INDUSTRY_ROWS.find(
+        (row) => row.key === 'health-care-social-assistance',
+      );
+      const manufacturing = EMPLOYMENT_INDUSTRY_ROWS.find((row) => row.key === 'manufacturing');
+      if (health === undefined || manufacturing === undefined) {
+        throw new Error('missing employment industry row');
+      }
+      return {
+        chart: <EmploymentMarimekko />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Employees, Feb 2025"
+              value={EMPLOYMENT_TOTAL_2025.toLocaleString('en-NZ')}
+              accent="violet"
+              testId="employment-2025-total"
+              dataValue={EMPLOYMENT_TOTAL_2025}
+            />
+            <StatCard
+              label="Health care (Feb 2025)"
+              value={health.employees2025.toLocaleString('en-NZ')}
+              accent="violet"
+              testId="employment-health"
+              dataValue={health.employees2025}
+            />
+            <StatCard
+              label="Manufacturing (Feb 2025)"
+              value={manufacturing.employees2025.toLocaleString('en-NZ')}
+              accent="violet"
+              testId="employment-manufacturing"
+              dataValue={manufacturing.employees2025}
+            />
+          </dl>
+        ),
+      };
+    }
+    case 'region-density': {
+      const auckland = regionDensityRowByKey('auckland');
+      const westCoast = regionDensityRowByKey('west-coast');
+      return {
+        chart: <RegionDensityChoropleth />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="People per km², NZ (2023)"
+              value={nationalDensity(2023).toFixed(1)}
+              accent="indigo"
+              testId="region-density-national"
+              dataValue={Math.round(nationalDensity(2023))}
+            />
+            <StatCard
+              label="Auckland (2023)"
+              value={`${densityFor(auckland, 2023).toFixed(1)} per km²`}
+              accent="indigo"
+              testId="region-density-auckland"
+              dataValue={Math.round(densityFor(auckland, 2023))}
+            />
+            <StatCard
+              label="West Coast (2023)"
+              value={`${densityFor(westCoast, 2023).toFixed(1)} per km²`}
+              accent="indigo"
+              testId="region-density-west-coast"
+              dataValue={Math.round(densityFor(westCoast, 2023))}
+            />
+          </dl>
+        ),
+      };
+    }
+    case 'quake-years': {
+      return {
+        chart: <QuakeYearStripChart />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Quakes at M4+, 2001-2024"
+              value={QUAKE_YEAR_TOTAL.toLocaleString('en-NZ')}
+              accent="rose"
+              testId="quake-years-total"
+              dataValue={QUAKE_YEAR_TOTAL}
+            />
+            <StatCard
+              label={`Busiest year (${QUAKE_YEAR_PEAK.year})`}
+              value={String(QUAKE_YEAR_PEAK.count)}
+              accent="rose"
+              testId="quake-years-peak"
+              dataValue={QUAKE_YEAR_PEAK.count}
+            />
+            <StatCard
+              label={`Quietest year (${QUAKE_YEAR_QUIET.year})`}
+              value={String(QUAKE_YEAR_QUIET.count)}
+              accent="rose"
+              testId="quake-years-quiet"
+              dataValue={QUAKE_YEAR_QUIET.count}
+            />
+          </dl>
+        ),
+      };
+    }
     case 'shake-index': {
       const summary = summarizeGeoNetQuakes(data.quakes);
       const strongest = summary.strongest;
