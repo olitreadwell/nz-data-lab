@@ -116,7 +116,6 @@ export function DigitisedMemorySearch({
   const lastDecade = decades[decades.length - 1]?.decade ?? 0;
   const hasDecades = decades.length > 0;
   const chartLabel = `Records matching "${submittedQuery}" by decade`;
-
   const decadeColumns: ChartDataColumn<LiveDigitalNzDecade>[] = [
     { key: 'decade', header: 'Decade', format: (value) => `${value}s` },
     { key: 'count', header: 'Records', format: (value) => value.toLocaleString('en-NZ') },

@@ -118,6 +118,23 @@ describe('TradeMeTree', () => {
     expect(await screen.findByText('7 categories in the tree.')).toBeInTheDocument();
   });
 
+  it('exposes the top categories in a keyboard-reachable table', async () => {
+    const { container } = render(<TradeMeTree />);
+    await screen.findByText(/categories in the tree/);
+    const summary = container.querySelector('summary');
+    if (summary === null) {
+      throw new Error('Expected a chart data table summary');
+    }
+    fireEvent.click(summary);
+    const table = screen.getByRole('table');
+    expect(table).toHaveTextContent('Category');
+    expect(table).toHaveTextContent('Leaf count');
+    expect(table).toHaveTextContent('Home & living');
+    expect(table).toHaveTextContent('Trade Me Motors');
+    expect(table).toHaveTextContent('2');
+    expect(table).toHaveTextContent('1');
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = render(<TradeMeTree />);
     await screen.findByText(/categories in the tree/);

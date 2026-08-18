@@ -7,6 +7,8 @@ import type { HorticultureSeriesPoint } from '@/lib/horticulture-data';
 
 import { EmojiActiveDot, SeriesTooltip } from './chart-utils';
 import type { ChartSeriesDef } from './chart-utils';
+import { ChartDataTable } from './ChartDataTable';
+import type { ChartDataColumn } from './ChartDataTable';
 
 interface HorticultureChartProps {
   points: HorticultureSeriesPoint[];
@@ -26,6 +28,14 @@ export function HorticultureChart({ points }: HorticultureChartProps): React.Rea
     points.length === 0
       ? 'Horticulture area over time'
       : `Horticulture area, ${firstYear ?? ''} to ${lastYear ?? ''}: wine grapes overtook every other crop`;
+  const tableColumns: ChartDataColumn<HorticultureSeriesPoint>[] = [
+    { key: 'year', header: 'Year' },
+    ...SERIES.map((definition) => ({
+      key: definition.key as keyof HorticultureSeriesPoint,
+      header: definition.label,
+      format: formatHectares,
+    })),
+  ];
 
   if (points.length === 0) {
     return (
@@ -114,6 +124,11 @@ export function HorticultureChart({ points }: HorticultureChartProps): React.Rea
           </LineChart>
         </ResponsiveContainer>
       </div>
+      <ChartDataTable
+        summary="View horticulture area as a table"
+        columns={tableColumns}
+        rows={points}
+      />
     </div>
   );
 }
