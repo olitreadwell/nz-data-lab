@@ -199,6 +199,23 @@ export function OpenDataSearch({ initialQuery }: OpenDataSearchProps): React.Rea
                 />
               </ResponsiveContainer>
             </div>
+            <ul className="mt-2 mb-3 flex flex-wrap gap-x-4 gap-y-2" aria-label="Chart legend">
+              {byOrg.map((datum, index) => (
+                <li
+                  key={datum.name}
+                  className="flex items-center gap-2 text-sm text-[var(--color-fg)]"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="h-3 w-3 rounded-[var(--radius-sm)]"
+                    style={{
+                      backgroundColor: ORG_COLORS[index % ORG_COLORS.length] ?? '#94a3b8',
+                    }}
+                  />
+                  {datum.name}
+                </li>
+              ))}
+            </ul>
             <ChartDataTable
               summary="View datasets by publisher as a table"
               columns={[

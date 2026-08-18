@@ -52,6 +52,14 @@ describe('OpenDataSearch', () => {
     expect(table).toHaveTextContent('NIWA');
   });
 
+  it('shows a legend pairing each publisher with its color', async () => {
+    render(<OpenDataSearch initialQuery="water" />);
+    await screen.findByText(/3 datasets match "water"/);
+    const legend = screen.getByRole('list', { name: 'Chart legend' });
+    expect(legend).toHaveTextContent('Ministry for the Environment');
+    expect(legend).toHaveTextContent('NIWA');
+  });
+
   it('discards a stale response from an earlier search', async () => {
     let resolveFirst: (value: LiveDataGovtNzSearchResult) => void = () => undefined;
     const first = new Promise<LiveDataGovtNzSearchResult>((resolve) => {
