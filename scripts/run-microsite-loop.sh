@@ -90,6 +90,18 @@ PY
 
 maybe_heal() {
   if [ "$(consecutive_skips)" -ge "$MAX_CONSECUTIVE_SKIPS" ]; then
+    # A heal session is itself spawned by a wrapper run. If one is already
+    # running (e.g. the wrapper that spawned us is still waiting on it), do
+    # not pile on a second one: a heal session that runs the wrapper manually
+    # while its parent wrapper is alive skips on the lock and then spawns a
+    # nested heal session, recursing until the chain unwinds.
+    # ps sees processes pgrep misses (launchd-spawned wrappers and codex
+    # sessions with very long argv), so scan ps output; the bracket trick
+    # keeps the guard from matching its own grep process.
+    if ps -axo command= | grep "[h]eal the loop itself" >/dev/null; then
+      log "healing: heal session already running; skipping spawn"
+      return 0
+    fi
     log "healing: spawning fix session for repeated blocker"
     "$CODEX_BIN" exec --cd "$REPO" -c 'approval_policy="never"' -c 'sandbox_mode="danger-full-access"' "$(cat "$HEAL_PROMPT")" >> "$LOG" 2>&1 || true
     reset_state

@@ -97,6 +97,17 @@ This is why the review step is not only for shipped loops: a loop that
 cannot ship must still be able to improve itself. If a blocker repeats,
 fix the guard or the skill rather than working around it by hand.
 
+A heal session is itself spawned by a wrapper run, so it must not run the
+wrapper while the launchd wrapper that spawned it is still alive: the lock
+guard sees the parent wrapper's PID and skips, and the accumulated skips
+then spawn a nested heal session (wrapper -> heal A -> manual wrapper run
+-> heal B), recursing until the chain unwinds. The wrapper refuses to
+spawn a second heal session while one is running, but the heal session
+should still avoid the manual run: verify the guards (bash -n, guard
+logic, clean main) and exit; the parent wrapper resets the skip state and
+the next launchd tick runs the iteration. Only run the wrapper yourself
+when no wrapper is already running (check the lock file first).
+
 ## Known blockers
 
 - The quality loop appends its daily notes to
@@ -107,6 +118,13 @@ fix the guard or the skill rather than working around it by hand.
   refuses a merge that would overwrite a dirty file, so the safety net stays
   intact. If the loop skips for a dirty main again, the wrapper logs the
   dirty file list, so read that line before changing the guard.
+
+- A heal session that runs the wrapper manually while its parent wrapper is
+  still alive recurses: the manual run skips on the lock (the parent holds
+  it) and the accumulated skips spawn a nested heal session. The wrapper
+  now guards against a second heal session, and the heal session should
+  verify the guards and exit instead of running the wrapper when the
+  launchd wrapper that spawned it is still running (see Self-healing).
 
 - Completed work left uncommitted on main blocks every tick: an interactive
   experiment session built the rabbit-boom microsite directly on main and
