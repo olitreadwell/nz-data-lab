@@ -14,6 +14,26 @@ describe('AgePyramid', () => {
     expect(screen.getAllByText('90+').length).toBeGreaterThan(0);
   });
 
+  it('shows a legend identifying both sexes by default', () => {
+    render(<AgePyramid />);
+    const legend = screen.getByRole('list', { name: 'Chart legend' });
+    expect(legend).toHaveTextContent('Male');
+    expect(legend).toHaveTextContent('Female');
+  });
+
+  it('keeps the legend correct in single-sex views', () => {
+    render(<AgePyramid />);
+    fireEvent.click(screen.getByRole('button', { name: 'Male only' }));
+    const maleLegend = screen.getByRole('list', { name: 'Chart legend' });
+    expect(maleLegend).toHaveTextContent('Male');
+    expect(maleLegend).not.toHaveTextContent('Female');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Female only' }));
+    const femaleLegend = screen.getByRole('list', { name: 'Chart legend' });
+    expect(femaleLegend).toHaveTextContent('Female');
+    expect(femaleLegend).not.toHaveTextContent('Male');
+  });
+
   it('switches to a single sex view', () => {
     render(<AgePyramid />);
     fireEvent.click(screen.getByRole('button', { name: 'Male only' }));
