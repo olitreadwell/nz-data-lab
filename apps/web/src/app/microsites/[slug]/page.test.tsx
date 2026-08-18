@@ -197,6 +197,15 @@ describe('MicrositePage', () => {
     expect(html).toContain('Quakes located, 3 months');
   });
 
+  it('renders the quake months story', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'quake-months' })} />,
+    );
+    const html = await new Response(stream).text();
+    expect(html).toContain('Quakes of magnitude 3+ cluster in autumn');
+    expect(html).toContain('Quakes M3+, 2 years');
+  });
+
   it('renders the rabbit boom story with the spotlight chart', async () => {
     const stream = await renderToReadableStream(
       <MicrositePage params={Promise.resolve({ slug: 'rabbit-boom' })} />,
