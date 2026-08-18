@@ -191,3 +191,47 @@ it('renders the online garage sale story', async () => {
   expect(html).toContain('Home &amp; living');
 });
 
+it('renders the species register with the live register total', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'species-register' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('170,151');
+  expect(html).toContain('Names in the register');
+});
+
+it('renders the open data catalogue with the live catalogue total', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'open-data-catalogue' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('31,915');
+  expect(html).toContain('Datasets in the catalogue');
+});
+it('renders the species register with the live register total', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'species-register' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('170,151');
+  expect(html).toContain('Names in the register');
+});
+
+it('renders the open data catalogue with the live catalogue total', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'open-data-catalogue' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('31,915');
+  expect(html).toContain('Datasets in the catalogue');
+});
+
+it('renders the EV charging story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'ev-charging' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('639 public EV charging stations');
+  expect(html).toContain('ChargeNet runs 307');
+  expect(html).toContain('EV Roam charging stations (NZTA)');
+});

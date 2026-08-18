@@ -10,6 +10,7 @@ import { BackyardSpeciesCensus } from '@/components/BackyardSpeciesCensus';
 import { CanterburyRain } from '@/components/CanterburyRain';
 import { DeerBoomBustChart } from '@/components/DeerBoomBustChart';
 import { DigitisedMemorySearch } from '@/components/DigitisedMemorySearch';
+import { EvCharging } from '@/components/EvCharging';
 import { ForestryChart } from '@/components/ForestryChart';
 import { HamiltonPlaygrounds } from '@/components/HamiltonPlaygrounds';
 import { HorticultureChart } from '@/components/HorticultureChart';
@@ -604,6 +605,17 @@ function renderStoryContent(
         ),
       };
     }
+    case 'ev-charging':
+      return {
+        chart: <EvCharging />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard label="Public charging stations" value="639" accent="emerald" />
+            <StatCard label="ChargeNet share" value="307" accent="emerald" />
+            <StatCard label="DC stations" value="566" accent="emerald" />
+          </dl>
+        ),
+      };
     case 'shake-index': {
       const summary = summarizeGeoNetQuakes(data.quakes);
       const strongest = summary.strongest;

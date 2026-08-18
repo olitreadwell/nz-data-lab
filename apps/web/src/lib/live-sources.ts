@@ -779,3 +779,178 @@ export async function fetchLiveHamiltonPlaygrounds(): Promise<LiveHamiltonPlaygr
   }
   return parseHamiltonPlaygrounds(await response.json());
 }
+
+export interface LiveEvChargingOperator {
+  operator: string;
+  count: number;
+}
+
+export interface LiveEvChargingCurrentType {
+  currentType: string;
+  count: number;
+}
+
+export interface LiveCasCrashCell {
+  region: string;
+  year: number;
+  count: number;
+}
+
+export interface LiveMvrFleetRow {
+  label: string;
+  count: number;
+}
+
+/** One row from an ArcGIS group-by statistics payload. */
+export type LiveArcgisGroupByRow = Record<string, string | number | null>;
+
+/** Parses an ArcGIS group-by statistics payload into attribute rows. */
+export function parseArcgisGroupByRows(payload: unknown): LiveArcgisGroupByRow[] {
+  const features = (payload as { features?: unknown[] }).features ?? [];
+  return features.map((feature) => {
+    const attributes = (feature as { attributes?: Record<string, unknown> }).attributes ?? {};
+    const row: LiveArcgisGroupByRow = {};
+    for (const [key, value] of Object.entries(attributes)) {
+      if (typeof value === 'string' || typeof value === 'number' || value === null) {
+        row[key] = value;
+      }
+    }
+    return row;
+  });
+}
+
+/**
+ * Fetches a count group-by from an ArcGIS REST FeatureServer layer (CORS is
+ * open on the NZTA and Auckland Council services). The MVR layer holds 5.9
+ * million rows, so its group-by can take several seconds on a cold cache;
+ * pass a longer timeout for it.
+ */
+async function fetchArcgisGroupBy(
+  serviceUrl: string,
+  groupByFields: string[],
+  where = '1=1',
+  timeoutMs = LIVE_SEARCH_TIMEOUT_MS,
+): Promise<unknown> {
+  const url = new URL(`${serviceUrl}/query`);
+  url.searchParams.set('where', where);
+  url.searchParams.set('returnGeometry', 'false');
+  url.searchParams.set('groupByFieldsForStatistics', groupByFields.join(','));
+  url.searchParams.set(
+    'outStatistics',
+    JSON.stringify([
+      { statisticType: 'count', onStatisticField: 'OBJECTID', outStatisticFieldName: 'count' },
+    ]),
+  );
+  url.searchParams.set('f', 'json');
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    if (!response.ok) {
+      throw new Error(`ArcGIS HTTP ${response.status}`);
+    }
+    return await response.json();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/** How long the MVR group-by may take before it is aborted (cold cache). */
+const MVR_GROUP_BY_TIMEOUT_MS = 20_000;
+
+const NZTA_ARCGIS_BASE_URL = 'https://services.arcgis.com/CXBb7LAjgIIdcsPt/arcgis/rest/services';
+const EV_ROAM_SERVICE_URL = `${NZTA_ARCGIS_BASE_URL}/EV_Roam_charging_stations/FeatureServer/0`;
+const CAS_SERVICE_URL = `${NZTA_ARCGIS_BASE_URL}/CAS_Data_Public/FeatureServer/0`;
+const MVR_SERVICE_URL = `${NZTA_ARCGIS_BASE_URL}/MVR_Mar26/FeatureServer/0`;
+
+/** Parses an ArcGIS count group-by payload into EV charging operator rows. */
+export function parseEvChargingOperators(payload: unknown): LiveEvChargingOperator[] {
+  return parseArcgisGroupByRows(payload)
+    .map((row) => ({
+      operator: typeof row.operator === 'string' ? row.operator : '',
+      count: typeof row.count === 'number' ? row.count : 0,
+    }))
+    .filter((entry) => entry.operator !== '')
+    .sort((a, b) => b.count - a.count);
+}
+
+/** Fetches EV charging station counts by operator from NZTA EV Roam. */
+export async function fetchLiveEvChargingOperators(): Promise<LiveEvChargingOperator[]> {
+  return parseEvChargingOperators(await fetchArcgisGroupBy(EV_ROAM_SERVICE_URL, ['operator']));
+}
+
+/** Parses an ArcGIS count group-by payload into EV charging current-type rows. */
+export function parseEvChargingCurrentTypes(payload: unknown): LiveEvChargingCurrentType[] {
+  return parseArcgisGroupByRows(payload)
+    .map((row) => ({
+      currentType: typeof row.currentType === 'string' ? row.currentType : '',
+      count: typeof row.count === 'number' ? row.count : 0,
+    }))
+    .filter((entry) => entry.currentType !== '')
+    .sort((a, b) => b.count - a.count);
+}
+
+/** Fetches EV charging station counts by current type from NZTA EV Roam. */
+export async function fetchLiveEvChargingCurrentTypes(): Promise<LiveEvChargingCurrentType[]> {
+  return parseEvChargingCurrentTypes(
+    await fetchArcgisGroupBy(EV_ROAM_SERVICE_URL, ['currentType']),
+  );
+}
+
+/** Parses an ArcGIS count group-by payload into region-by-year crash cells. */
+export function parseCasCrashCells(payload: unknown): LiveCasCrashCell[] {
+  return parseArcgisGroupByRows(payload)
+    .map((row) => ({
+      region: typeof row.region === 'string' ? row.region : '',
+      year: typeof row.crashYear === 'number' ? row.crashYear : 0,
+      count: typeof row.count === 'number' ? row.count : 0,
+    }))
+    .filter((entry) => entry.region !== '' && entry.year > 0)
+    .sort((a, b) => a.year - b.year || a.region.localeCompare(b.region));
+}
+
+/**
+ * Fetches crash counts by region and year from the NZTA Crash Analysis
+ * System. Pass fatalOnly to count only crashes with at least one death.
+ */
+export async function fetchLiveCasCrashes(fatalOnly = false): Promise<LiveCasCrashCell[]> {
+  const where = fatalOnly ? 'fatalCount>0' : '1=1';
+  return parseCasCrashCells(
+    await fetchArcgisGroupBy(CAS_SERVICE_URL, ['region', 'crashYear'], where),
+  );
+}
+
+/**
+ * Parses an ArcGIS count group-by payload into Motor Vehicle Register rows.
+ * Rows without a value for the label field (mostly trailers) are grouped as
+ * Unknown.
+ */
+export function parseMvrFleetRows(
+  payload: unknown,
+  labelField: 'MOTIVE_POWER' | 'VEHICLE_TYPE',
+): LiveMvrFleetRow[] {
+  return parseArcgisGroupByRows(payload)
+    .map((row) => {
+      const rawLabel = row[labelField];
+      return {
+        label: typeof rawLabel === 'string' && rawLabel !== '' ? rawLabel : 'Unknown',
+        count: typeof row.count === 'number' ? row.count : 0,
+      };
+    })
+    .filter((entry) => entry.count > 0)
+    .sort((a, b) => b.count - a.count);
+}
+
+/**
+ * Fetches fleet counts from the NZTA Motor Vehicle Register, grouped by
+ * motive power or vehicle type. The layer holds 5.9 million rows, so the
+ * group-by gets a longer timeout.
+ */
+export async function fetchLiveMvrFleet(
+  labelField: 'MOTIVE_POWER' | 'VEHICLE_TYPE',
+): Promise<LiveMvrFleetRow[]> {
+  return parseMvrFleetRows(
+    await fetchArcgisGroupBy(MVR_SERVICE_URL, [labelField], '1=1', MVR_GROUP_BY_TIMEOUT_MS),
+    labelField,
+  );
+}

@@ -739,4 +739,47 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+  {
+    slug: 'ev-charging',
+    label: 'EV charging',
+    eyebrow: '🔌 the ev charging map',
+    title: 'New Zealand has 639 public EV charging stations.',
+    description:
+      'The NZTA EV Roam register lists every public EV charging station in New Zealand. ChargeNet runs 307 of them, more than any other operator.',
+    paragraphs: [
+      'The register counts 639 stations, from fast DC chargers on the main highways to slow AC chargers in town centres. 566 stations offer DC charging.',
+      'ChargeNet runs 307 stations, Meridian 104, and Z Energy 63. Toggle the view to see the stations by current type, or type to filter operators by name.',
+    ],
+    accent: 'emerald',
+    dataNote:
+      'Data: NZTA EV Roam charging stations (ArcGIS REST service), grouped by operator and current type, fetched live from the browser. The register holds 639 stations.',
+    references: [
+      {
+        label: 'EV Roam charging stations (NZTA)',
+        url: 'https://opendata-nzta.opendata.arcgis.com/datasets/NZTA::ev-roam-charging-stations',
+        kind: 'data',
+      },
+      {
+        label: 'EV Roam (NZTA)',
+        url: 'https://www.nzta.govt.nz/vehicles/electric-vehicles/ev-roam/',
+        kind: 'data',
+      },
+    ],
+  },
+
+      {
+        label: 'Road safety data (NZTA)',
+        url: 'https://www.nzta.govt.nz/safety/data/',
+        kind: 'data',
+      },
+    ],
+  },
+
+      {
+        label: 'New Zealand Motor Vehicle Register statistics (NZTA)',
+        url: 'https://www.nzta.govt.nz/resources/new-zealand-motor-vehicle-register-statistics/',
+        kind: 'data',
+      },
+    ],
+  },
 ]);
