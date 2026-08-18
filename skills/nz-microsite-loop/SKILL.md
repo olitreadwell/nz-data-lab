@@ -42,7 +42,14 @@ origin` and rebase the branch onto `origin/main` if it moved while you
    symbolic links".
 6. **Changelog (1 min)**: append one dated entry to `CHANGELOG.md` listing
    every microsite shipped in the loop.
-7. **Review (1 min)**: read the last loop's notes, list what slowed it down,
+7. **Prune (1 min)**: before the wrap-up (compact), run
+   `scripts/prune-loop-artifacts.sh` once. It removes merged
+   `feat/microsite-loop-*` worktrees and branches and kills stale agent
+   processes left inside them by stalled runs. It never touches `fix/*`
+   (the quality loop's active lane) or `main`, and it skips dirty worktrees
+   so a stalled agent's in-progress work is never destroyed. Make sure any
+   subagents you spawned have finished before you wrap up.
+8. **Review (1 min)**: read the last loop's notes, list what slowed it down,
    and update this skill with one concrete improvement. Keep the skill
    short; delete rules that no longer pay for themselves.
 
@@ -74,7 +81,7 @@ This is why the review step is not only for shipped loops: a loop that
 cannot ship must still be able to improve itself. If a blocker repeats,
 fix the guard or the skill rather than working around it by hand.
 
-## Loop review checklist (step 7)
+## Loop review checklist (step 8)
 
 - What took longest? (research, build, verify, deploy)
 - Did the chart type repeat? Did the copy need rewriting?
