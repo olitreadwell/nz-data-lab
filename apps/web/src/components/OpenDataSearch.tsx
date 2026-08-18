@@ -160,7 +160,7 @@ export function OpenDataSearch({ initialQuery }: OpenDataSearchProps): React.Rea
       {!isLoading && error === null && datasets.length > 0 && (
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <div role="img" aria-label={label} className="h-[220px] sm:h-[260px]">
+            <div role="group" aria-label={label} className="h-[220px] sm:h-[260px]">
               <ResponsiveContainer width="100%" height="100%">
                 <Treemap
                   data={byOrg}
@@ -170,17 +170,28 @@ export function OpenDataSearch({ initialQuery }: OpenDataSearchProps): React.Rea
                   stroke="var(--color-bg)"
                   fill="#0ea5e9"
                   content={(props) => {
-                    const { x, y, width, height, index, name } = props as {
+                    const { x, y, width, height, index, name, size, children } = props as {
                       x: number;
                       y: number;
                       width: number;
                       height: number;
                       index?: number;
                       name?: string;
+                      size?: number;
+                      children?: readonly unknown[] | null;
                     };
                     const color = ORG_COLORS[(index ?? 0) % ORG_COLORS.length] ?? '#94a3b8';
+                    // The root node carries the children; only leaf cells
+                    // represent a publisher, so only those get an accessible
+                    // name (the root is a plain background rect).
+                    const isLeaf =
+                      children === undefined || children === null || children.length === 0;
+                    const countLabel = `${size ?? 0} ${size === 1 ? 'dataset' : 'datasets'}`;
+                    const cellLabel = isLeaf
+                      ? `${name ?? 'Unknown publisher'}, ${countLabel}`
+                      : undefined;
                     return (
-                      <g>
+                      <g role={cellLabel === undefined ? undefined : 'img'} aria-label={cellLabel}>
                         <rect x={x} y={y} width={width} height={height} fill={color} rx={2} />
                         {width > 40 && height > 20 && (
                           <text
