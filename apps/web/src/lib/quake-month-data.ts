@@ -104,11 +104,11 @@ export function loadQuakeMonthFixture(): QuakeCatalogEvent[] {
     throw new NzSourceParseError('GeoNet FDSN', 'month fixture is not an array');
   }
   return parsed.map((row) => {
-    const event = row as { t?: unknown; m?: unknown };
-    if (typeof event.t !== 'number' || typeof event.m !== 'number') {
+    const event = row as { t?: unknown; m?: unknown; d?: unknown };
+    if (typeof event.t !== 'number' || typeof event.m !== 'number' || typeof event.d !== 'number') {
       throw new NzSourceParseError('GeoNet FDSN', 'month fixture row is malformed');
     }
-    return { timeEpochSec: event.t, magnitude: event.m };
+    return { timeEpochSec: event.t, magnitude: event.m, depthKm: event.d };
   });
 }
 

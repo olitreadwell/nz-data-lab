@@ -13,14 +13,14 @@ function epochUtc(year: number, month: number, day = 15): number {
 }
 
 const EVENTS: QuakeCatalogEvent[] = [
-  { timeEpochSec: epochUtc(2025, 1), magnitude: 3.2 },
-  { timeEpochSec: epochUtc(2025, 1), magnitude: 3.4 },
-  { timeEpochSec: epochUtc(2025, 4), magnitude: 3.1 },
-  { timeEpochSec: epochUtc(2025, 4), magnitude: 4.2 },
-  { timeEpochSec: epochUtc(2025, 4), magnitude: 3.6 },
-  { timeEpochSec: epochUtc(2025, 11), magnitude: 3.3 },
-  { timeEpochSec: epochUtc(2026, 4), magnitude: 3.5 },
-  { timeEpochSec: epochUtc(2026, 4), magnitude: 3.0 },
+  { timeEpochSec: epochUtc(2025, 1), magnitude: 3.2, depthKm: 12 },
+  { timeEpochSec: epochUtc(2025, 1), magnitude: 3.4, depthKm: 24 },
+  { timeEpochSec: epochUtc(2025, 4), magnitude: 3.1, depthKm: 8 },
+  { timeEpochSec: epochUtc(2025, 4), magnitude: 4.2, depthKm: 41 },
+  { timeEpochSec: epochUtc(2025, 4), magnitude: 3.6, depthKm: 15 },
+  { timeEpochSec: epochUtc(2025, 11), magnitude: 3.3, depthKm: 30 },
+  { timeEpochSec: epochUtc(2026, 4), magnitude: 3.5, depthKm: 18 },
+  { timeEpochSec: epochUtc(2026, 4), magnitude: 3.0, depthKm: 6 },
 ];
 
 describe('QuakeMonthRose', () => {
