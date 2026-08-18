@@ -60,6 +60,17 @@ describe('DigitisedMemorySearch', () => {
     expect(screen.getByText('Gold Coast cartoon')).toBeInTheDocument();
   });
 
+  it('announces the decade unit via aria-valuetext on both sliders', async () => {
+    render(<DigitisedMemorySearch initialQuery="gold" />);
+    await screen.findByText(/1,977,021 records match/);
+    const earliest = screen.getByRole('slider', { name: /Earliest decade/ });
+    const latest = screen.getByRole('slider', { name: /Latest decade/ });
+    expect(earliest).toHaveAttribute('aria-valuetext', '1860s');
+    expect(latest).toHaveAttribute('aria-valuetext', '1900s');
+    fireEvent.change(earliest, { target: { value: '1890' } });
+    expect(earliest).toHaveAttribute('aria-valuetext', '1890s');
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = render(<DigitisedMemorySearch initialQuery="gold" />);
     await screen.findByText(/1,977,021 records match/);

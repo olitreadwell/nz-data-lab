@@ -77,6 +77,18 @@ describe('QuakeMap', () => {
     expect(await screen.findAllByTestId('quake-marker')).toHaveLength(1);
   });
 
+  it('announces units via aria-valuetext on both sliders', () => {
+    render(<QuakeMap quakes={QUAKES} />);
+    const magnitude = screen.getByRole('slider', { name: /minimum magnitude/i });
+    const depth = screen.getByRole('slider', { name: /maximum depth/i });
+    expect(magnitude).toHaveAttribute('aria-valuetext', '2.0 magnitude');
+    expect(depth).toHaveAttribute('aria-valuetext', '100 km');
+    fireEvent.change(magnitude, { target: { value: '5' } });
+    fireEvent.change(depth, { target: { value: '40' } });
+    expect(magnitude).toHaveAttribute('aria-valuetext', '5.0 magnitude');
+    expect(depth).toHaveAttribute('aria-valuetext', '40 km');
+  });
+
   it('lists every visible quake with its data for keyboard users', () => {
     render(<QuakeMap quakes={QUAKES} />);
     const table = screen.getByRole('table', { name: /visible quakes/i });
