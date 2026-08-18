@@ -16,11 +16,15 @@ next one faster.
 Aim for 2-3 microsites per loop, batched in one worktree branch with one
 commit per microsite, then one merge and one deploy.
 
-1. **Research (5 min)**: pick 2-3 NZ data sources from `@nzlab/nz-sources`
-   adapters (GeoNet, DigitalNZ, data.govt.nz, TradeMe, NZOR, LINZ) or Stats
-   NZ tables already wired in `apps/web/src/lib/`. Fan out with parallel
-   subagents when the stories need external facts. Verify every reference
-   URL returns 200 before linking it. Never fabricate a stat.
+1. **Research (5 min)**: pick 2-3 open `data-viz-idea` issues
+   (`gh issue list --label data-viz-idea --state open`), highest priority
+   first (`priority-high`, then `priority-medium`, then `priority-low`;
+   tie-break by the order in `docs/backlog/data-viz-ideas-smoke-ranked.md`).
+   Read the issue's own spec doc under `docs/backlog/data-viz-ideas/`
+   (`viz-0XX-<slug>.md`) for the full spec; the issue body is the summary.
+   Fan out with parallel subagents when the stories need external facts.
+   Verify every reference URL returns 200 before linking it. Never fabricate
+   a stat.
 2. **Stories (2 min)**: one short story per microsite, oli-style copy (no
    em dashes, no puffery, real verified numbers, named sources).
 3. **Build (8 min)**: one new microsite per source under
@@ -41,7 +45,8 @@ origin` and rebase the branch onto `origin/main` if it moved while you
    clean, and never rebase with unstaged changes. In a fresh worktree, run
    `npm install` before the checks: symlinking the main repo's `node_modules`
    into the worktree breaks vitest's esbuild with "too many levels of
-   symbolic links".
+   symbolic links". Close each shipped issue with a comment linking the
+   microsite (`gh issue close <num> --comment "shipped as /microsites/<slug>"`).
 6. **Changelog (1 min)**: append one dated entry to `CHANGELOG.md` listing
    every microsite shipped in the loop.
 7. **Prune (1 min)**: before the wrap-up (compact), run
@@ -57,6 +62,8 @@ origin` and rebase the branch onto `origin/main` if it moved while you
 
 ## Hard rules
 
+- Every microsite must come from an open `data-viz-idea` issue; never build
+  a microsite outside the issue queue.
 - 2-3 microsites per loop, one chart type per microsite, no repeated chart
   types across the site unless the story demands it. Keep a running list of
   chart types used in the changelog so the next loop picks a fresh one.

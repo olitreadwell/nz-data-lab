@@ -88,9 +88,10 @@ every iteration makes the next one faster.
   `apps/web/src/lib/hidden-microsites.ts` and deploy (hide it). The microsite
   stays hidden until the fix ships; the fix removes the slug. Hiding is the
   highest-priority action, done during triage, before any fan-out.
-- Never touch `data-viz-idea` issues (`viz-0XX`): they are a curated idea
-  backlog, not bugs. Triage must not close, edit, or relabel them; the
-  script skips them as a hard guard.
+- Never touch issues carrying a protected label (`data-viz-idea`, `viz-0XX`
+  idea backlog; `data-tutorial`): they are curated backlogs, not bugs.
+  Triage must not close, edit, or relabel them; the script skips them as a
+  hard guard (`PROTECTED_LABELS`).
 - If a loop fails three times on the same blocker, stop, document the
   blocker in `LOOP-NOTES.md`, and ask the user one precise question.
 

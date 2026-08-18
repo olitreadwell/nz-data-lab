@@ -53,6 +53,9 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+/** Labels the loop must never touch: curated backlogs, not bugs. */
+const PROTECTED_LABELS = ['data-viz-idea', 'data-tutorial'];
+
 const HIDDEN_FILE = path.join(ROOT, 'apps/web/src/lib/hidden-microsites.ts');
 
 function readHiddenSlugs() {
@@ -283,8 +286,9 @@ async function triageIssues() {
     '`gh issue view <number> --repo olitreadwell/nz-data-lab --json body` to read',
     'the full body of any issue you need to judge deeply.',
     'For EACH issue:',
-    '- NEVER touch issues labeled data-viz-idea: they are a curated idea',
-    '  backlog (viz-0XX), not bugs. Do not close, edit, or relabel them.',
+    '- NEVER touch issues carrying a protected label (data-viz-idea,',
+    '  data-tutorial): they are curated backlogs, not bugs. Do not close,',
+    '  edit, or relabel them.',
     '- skip bot/dependency-dashboard issues (e.g. renovate, Dependency Dashboard)',
     '- read the code it references and decide whether the finding is STILL VALID',
     '- if it is already fixed, obsolete, or out of scope, mark action "close"',
@@ -327,8 +331,10 @@ async function triageIssues() {
   for (const verdict of verdicts) {
     const number = String(verdict.number);
     const issueLabels = open.find((issue) => String(issue.number) === number)?.labels ?? [];
-    if (issueLabels.some((label) => label.name === 'data-viz-idea')) {
-      console.log(`skip #${number}: data-viz-idea backlog is never touched`);
+    if (issueLabels.some((label) => PROTECTED_LABELS.includes(label.name))) {
+      console.log(
+        `skip #${number}: protected label ${PROTECTED_LABELS.filter((name) => issueLabels.some((label) => label.name === name)).join('/')} is never touched`,
+      );
       continue;
     }
     if (verdict.action === 'close') {

@@ -1,13 +1,13 @@
 Run one iteration of the nz-microsite-loop skill at skills/nz-microsite-loop/SKILL.md in this repo.
 
 Follow the loop contract exactly:
-1. Research 2-3 fresh NZ data stories from sources not already used (check CHANGELOG.md for the chart-type and source registry). Verify every reference URL returns 200 before linking.
+1. Research: pick 2-3 open data-viz-idea issues (gh issue list --label data-viz-idea --state open), highest priority first (priority-high, then priority-medium, then priority-low; tie-break by docs/backlog/data-viz-ideas-smoke-ranked.md). Read each issue's own spec doc under docs/backlog/data-viz-ideas/ (viz-0XX-<slug>.md) for the full spec. Verify every reference URL returns 200 before linking.
 2. Build 2-3 microsites in a git worktree branch (one commit per microsite, Conventional Commits), each with a chart type not already used on the site and at least one interaction (slider, toggle, search, filter).
 3. Oli-style copy only: no em dashes, no puffery, real verified numbers, named sources.
 4. Test: npx tsc --noEmit and npx vitest run in apps/web; lint the changed files. Fix errors before merging.
-5. Merge to main, push, watch the GitHub Pages deploy, curl each new page for 200 and a content marker. Push fast-forward when origin/main is an ancestor of your branch; only rebase when the tree is clean, never with unstaged changes.
+5. Merge to main, push, watch the GitHub Pages deploy, curl each new page for 200 and a content marker. Push fast-forward when origin/main is an ancestor of your branch; only rebase when the tree is clean, never with unstaged changes. Close each shipped issue with a comment linking the microsite (gh issue close <num> --comment "shipped as /microsites/<slug>").
 6. Append a dated entry to CHANGELOG.md for the loop.
 7. Prune before wrapping up: run scripts/prune-loop-artifacts.sh once to remove merged feat/microsite-loop-* worktrees, branches, and stale agents (it skips dirty worktrees and never touches fix/* branches or main). Reap any subagents you spawned.
 8. Review the loop: note what slowed it down and update the skill with one concrete improvement.
 
-Hard rules: never fabricate data or stats; never delete or weaken a failing test; no console.log, no any, explicit return types; npm only. Stop when the batch is shipped. If the same blocker fails three times, stop, log the blocker in CHANGELOG.md, and exit non-zero.
+Hard rules: every microsite must come from an open data-viz-idea issue; never fabricate data or stats; never delete or weaken a failing test; no console.log, no any, explicit return types; npm only. Stop when the batch is shipped. If the same blocker fails three times, stop, log the blocker in CHANGELOG.md, and exit non-zero.
