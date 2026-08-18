@@ -45,17 +45,17 @@ jobs:
       - name: Install Vercel CLI
         run: npm install -g vercel
       - name: Pull Vercel environment
-        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel pull --yes --environment=preview
       - name: Build
-        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel build
       - name: Deploy
         id: deploy
         run: |
-          url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+          url=$(vercel deploy --prebuilt)
           echo "url=$url" >> "$GITHUB_OUTPUT"
       # Optional: alias the pre-production deploy to a stable URL.
       # Requires VERCEL_SLUG_TEAM secret and a chosen preview domain.
       # - name: Set domain alias
       #   run: |
       #     vercel alias set ${{ steps.deploy.outputs.url }} <project>-preview.vercel.app \
-      #       --token=${{ secrets.VERCEL_TOKEN }} --scope ${{ secrets.VERCEL_SLUG_TEAM }}
+      #       --scope ${{ secrets.VERCEL_SLUG_TEAM }}
