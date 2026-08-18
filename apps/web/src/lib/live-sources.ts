@@ -272,32 +272,57 @@ export function parseInaturalistTotal(payload: unknown): number {
   return typeof total === 'number' && Number.isFinite(total) ? total : 0;
 }
 
+/** How many iNaturalist taxa may be fetched at once. */
+const INATURALIST_CONCURRENCY = 3;
+
+/** Runs an async mapper over items with at most `limit` in flight at once. */
+async function mapWithConcurrency<T, R>(
+  items: readonly T[],
+  limit: number,
+  mapper: (item: T) => Promise<R>,
+): Promise<R[]> {
+  const results: R[] = new Array(items.length);
+  let nextIndex = 0;
+  const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (nextIndex < items.length) {
+      const index = nextIndex;
+      nextIndex += 1;
+      const item = items[index];
+      if (item === undefined) {
+        break;
+      }
+      results[index] = await mapper(item);
+    }
+  });
+  await Promise.all(workers);
+  return results;
+}
+
 /**
  * Fetches per-taxon species, observation, and observer counts for New
  * Zealand from iNaturalist (CORS is open). Three small list calls per taxon,
- * all in parallel.
+ * capped at a few taxa in flight; a failed sub-request yields a zero count
+ * for that taxon instead of failing the whole chart.
  */
 export async function fetchLiveInaturalistTaxa(): Promise<LiveInaturalistTaxon[]> {
-  const results = await Promise.all(
-    INATURALIST_TAXA.map(async (taxon) => {
-      const base = 'https://api.inaturalist.org/v1/observations';
-      const placeQuery = `place_id=${INATURALIST_NZ_PLACE_ID}`;
-      const [species, observations, observers] = await Promise.all([
-        fetchJson(
-          `${base}/species_counts?${placeQuery}&hrank=species&iconic_taxa=${taxon}&per_page=1`,
-        ),
-        fetchJson(`${base}?${placeQuery}&iconic_taxa=${taxon}&per_page=1`),
-        fetchJson(`${base}/observers?${placeQuery}&iconic_taxa=${taxon}&per_page=1`),
-      ]);
-      return {
-        taxon,
-        speciesCount: parseInaturalistTotal(species),
-        observationCount: parseInaturalistTotal(observations),
-        observerCount: parseInaturalistTotal(observers),
-      };
-    }),
-  );
-  return results;
+  return mapWithConcurrency(INATURALIST_TAXA, INATURALIST_CONCURRENCY, async (taxon) => {
+    const base = 'https://api.inaturalist.org/v1/observations';
+    const placeQuery = `place_id=${INATURALIST_NZ_PLACE_ID}`;
+    const [species, observations, observers] = await Promise.allSettled([
+      fetchJson(
+        `${base}/species_counts?${placeQuery}&hrank=species&iconic_taxa=${taxon}&per_page=1`,
+      ),
+      fetchJson(`${base}?${placeQuery}&iconic_taxa=${taxon}&per_page=1`),
+      fetchJson(`${base}/observers?${placeQuery}&iconic_taxa=${taxon}&per_page=1`),
+    ]);
+    return {
+      taxon,
+      speciesCount: species.status === 'fulfilled' ? parseInaturalistTotal(species.value) : 0,
+      observationCount:
+        observations.status === 'fulfilled' ? parseInaturalistTotal(observations.value) : 0,
+      observerCount: observers.status === 'fulfilled' ? parseInaturalistTotal(observers.value) : 0,
+    };
+  });
 }
 
 export interface LiveGbifKingdom {
@@ -338,16 +363,18 @@ export function parseGbifKingdomFacet(payload: unknown): Record<string, number> 
  * GBIF (CORS is open), for the species-record-ledger slope chart.
  */
 export async function fetchLiveGbifKingdoms(): Promise<LiveGbifKingdom[]> {
-  const [counts2014, counts2024] = await Promise.all([
+  const [counts2014, counts2024] = await Promise.allSettled([
     fetchGbifKingdomCounts(2014),
     fetchGbifKingdomCounts(2024),
   ]);
-  const keys = new Set([...Object.keys(counts2014), ...Object.keys(counts2024)]);
+  const year2014 = counts2014.status === 'fulfilled' ? counts2014.value : {};
+  const year2024 = counts2024.status === 'fulfilled' ? counts2024.value : {};
+  const keys = new Set([...Object.keys(year2014), ...Object.keys(year2024)]);
   return [...keys]
     .map((key) => ({
       kingdom: GBIF_KINGDOM_NAMES[key] ?? key,
-      count2014: counts2014[key] ?? 0,
-      count2024: counts2024[key] ?? 0,
+      count2014: year2014[key] ?? 0,
+      count2024: year2024[key] ?? 0,
     }))
     .filter((entry) => entry.kingdom !== 'Unknown')
     .sort((a, b) => b.count2024 - a.count2024);

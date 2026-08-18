@@ -2,6 +2,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   LIVE_SEARCH_TIMEOUT_MS,
+  fetchLiveGbifKingdoms,
+  fetchLiveInaturalistTaxa,
   parseAucklandParkBoards,
   parseGbifKingdomFacet,
   parseInaturalistTotal,
@@ -58,6 +60,60 @@ describe('live-sources fetchers', () => {
       expect.stringContaining('catalogue.data.govt.nz'),
       expect.objectContaining({ signal: expect.any(AbortSignal) }),
     );
+  });
+});
+
+describe('fetchLiveInaturalistTaxa', () => {
+  it('keeps other taxa when one sub-request rejects', async () => {
+    const fetchMock = vi.fn((input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes('iconic_taxa=Aves')) {
+        return Promise.reject(new Error('rate limited'));
+      }
+      return Promise.resolve({
+        ok: true,
+        json: async () => ({ total_results: 42 }),
+      } as Response);
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const results = await fetchLiveInaturalistTaxa();
+    const aves = results.find((entry) => entry.taxon === 'Aves');
+    expect(aves?.speciesCount).toBe(0);
+    expect(aves?.observationCount).toBe(0);
+    expect(aves?.observerCount).toBe(0);
+    const others = results.filter((entry) => entry.taxon !== 'Aves');
+    expect(others.length).toBeGreaterThan(0);
+    expect(others.every((entry) => entry.speciesCount === 42)).toBe(true);
+  });
+});
+
+describe('fetchLiveGbifKingdoms', () => {
+  it('keeps the other year when one year fetch rejects', async () => {
+    const fetchMock = vi.fn((input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes('year=2014')) {
+        return Promise.reject(new Error('gbif down'));
+      }
+      return Promise.resolve({
+        ok: true,
+        json: async () => ({
+          facets: [
+            {
+              field: 'KINGDOM_KEY',
+              counts: [{ name: '1', count: 100 }],
+            },
+          ],
+        }),
+      } as Response);
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const results = await fetchLiveGbifKingdoms();
+    expect(results).toHaveLength(1);
+    expect(results[0]?.kingdom).toBe('Animalia');
+    expect(results[0]?.count2014).toBe(0);
+    expect(results[0]?.count2024).toBe(100);
   });
 });
 

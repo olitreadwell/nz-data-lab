@@ -8,8 +8,6 @@
  * generated (direct URLs 404).
  */
 export const HIDDEN_MICROSITES: string[] = [
-  'backyard-species-census',
-  'species-record-ledger',
   'open-data-catalogue',
   'vineyard-boom',
   'species-register',
