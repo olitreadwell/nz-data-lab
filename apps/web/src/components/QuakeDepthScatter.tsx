@@ -124,7 +124,7 @@ export function QuakeDepthScatter({ events }: { events: QuakeCatalogEvent[] }): 
           </button>
         ))}
       </div>
-      <div role="img" aria-label={chartLabel} className="h-[220px] sm:h-[260px]">
+      <div role="img" aria-label={chartLabel} className="h-[clamp(200px,28vh,300px)]">
         <ResponsiveContainer width="100%" height="100%">
           <ScatterChart margin={{ top: 16, right: 8, bottom: 0, left: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--color-muted)" />

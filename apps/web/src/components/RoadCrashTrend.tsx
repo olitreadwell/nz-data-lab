@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { fetchLiveCasCrashes } from '@/lib/live-sources';
-import { handleRadioGroupKeyDown } from '@/lib/radio-group';
 import type { LiveCasCrashCell } from '@/lib/live-sources';
+import { handleRadioGroupKeyDown } from '@/lib/radio-group';
 
 import { ChartDataTable } from './ChartDataTable';
 import type { ChartDataColumn } from './ChartDataTable';
@@ -170,7 +170,7 @@ export function RoadCrashTrend(): React.ReactElement {
             role="img"
             aria-label={chartLabel}
             viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
-            className="h-auto w-full"
+            className="mx-auto h-auto max-h-[clamp(320px,46vh,560px)] w-full"
           >
             <title>{chartLabel}</title>
             {years.map((year, columnIndex) => {

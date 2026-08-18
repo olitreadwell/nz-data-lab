@@ -155,7 +155,7 @@ export function PopulationRankBump(): React.ReactElement {
           Little change
         </li>
       </ul>
-      <div role="img" aria-label={chartLabel} className="h-[460px]">
+      <div role="img" aria-label={chartLabel} className="h-[clamp(320px,46vh,540px)]">
         <svg
           viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
           className="h-full w-full"

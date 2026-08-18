@@ -174,7 +174,7 @@ export function SpeciesRecordLedger(): React.ReactElement {
               );
             })}
           </ul>
-          <div role="img" aria-label={chartLabel} className="h-[240px] sm:h-[300px]">
+          <div role="img" aria-label={chartLabel} className="h-[clamp(220px,30vh,320px)]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData} margin={{ top: 16, right: 16, bottom: 8, left: 8 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-muted)" />

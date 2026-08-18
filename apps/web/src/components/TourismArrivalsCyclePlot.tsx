@@ -144,7 +144,7 @@ export function TourismArrivalsCyclePlot(): React.ReactElement {
       <div
         role="img"
         aria-label="Monthly overseas visitor arrivals by year, one line per year"
-        className="h-[440px]"
+        className="h-[clamp(320px,44vh,520px)]"
       >
         <svg viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`} className="h-full w-full">
           {Array.from({ length: 6 }, (_, index) => {

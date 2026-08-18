@@ -114,7 +114,7 @@ export function PeakHeights(): React.ReactElement {
               </button>
             ))}
           </div>
-          <div role="img" aria-label={chartLabel} className="h-[320px]">
+          <div role="img" aria-label={chartLabel} className="h-[clamp(280px,38vh,400px)]">
             <ResponsiveContainer width="100%" height="100%">
               <FunnelChart>
                 <Tooltip content={PeakTooltip} />

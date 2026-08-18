@@ -76,7 +76,7 @@ export function SheepChart({ points }: SheepChartProps): React.ReactElement {
   }
 
   return (
-    <div className="h-[200px] sm:h-[240px] lg:h-[280px]">
+    <div className="h-[clamp(180px,28vh,300px)]">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           role="img"

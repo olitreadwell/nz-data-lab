@@ -155,7 +155,7 @@ export function AucklandParks(): React.ReactElement {
               />
             </label>
           </div>
-          <div role="img" aria-label={chartLabel} className="h-[320px]">
+          <div role="img" aria-label={chartLabel} className="h-[clamp(280px,38vh,400px)]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Tooltip content={ParkTooltip} />

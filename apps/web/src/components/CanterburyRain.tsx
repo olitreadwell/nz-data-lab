@@ -141,10 +141,7 @@ export function CanterburyRain(): React.ReactElement {
   }, [gauges, query]);
 
   const stats = useMemo(() => buildRainBoxStats(filteredGauges), [filteredGauges]);
-  const maxValue = useMemo(
-    () => Math.max(0, ...stats.map((box) => box.max)),
-    [stats],
-  );
+  const maxValue = useMemo(() => Math.max(0, ...stats.map((box) => box.max)), [stats]);
   const ticks = useMemo(() => buildRainTicks(maxValue), [maxValue]);
   const plotWidth = SVG_WIDTH - CHART_LEFT - CHART_RIGHT;
   const plotHeight = SVG_HEIGHT - CHART_TOP - CHART_BOTTOM;
@@ -178,7 +175,10 @@ export function CanterburyRain(): React.ReactElement {
       {!isLoading && error === null && gauges.length > 0 && (
         <div>
           <div className="mb-2 flex flex-wrap items-center gap-2">
-            <label className="numeral-paragraph-sm text-[var(--color-muted)]" htmlFor="gauge-search">
+            <label
+              className="numeral-paragraph-sm text-[var(--color-muted)]"
+              htmlFor="gauge-search"
+            >
               Filter by gauge
             </label>
             <input
@@ -193,7 +193,7 @@ export function CanterburyRain(): React.ReactElement {
             role="img"
             aria-label={chartLabel}
             viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
-            className="h-auto w-full"
+            className="mx-auto h-auto max-h-[clamp(320px,46vh,560px)] w-full"
           >
             <title>{chartLabel}</title>
             {ticks.map((tick) => {

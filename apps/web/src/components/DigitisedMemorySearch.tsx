@@ -177,7 +177,7 @@ export function DigitisedMemorySearch({
       {!isLoading && error === null && result !== null && (
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <div role="img" aria-label={chartLabel} className="h-[220px] sm:h-[260px]">
+            <div role="img" aria-label={chartLabel} className="h-[clamp(200px,28vh,300px)]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={decades}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--color-muted)" />

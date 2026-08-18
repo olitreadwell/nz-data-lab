@@ -150,7 +150,7 @@ export function EmploymentMarimekko(): React.ReactElement {
         role="img"
         aria-label={chartLabel}
         viewBox={`0 0 ${SVG_WIDTH} ${chartHeight}`}
-        className="h-auto w-full"
+        className="mx-auto h-auto max-h-[clamp(320px,46vh,560px)] w-full"
       >
         <g>
           {renderColumn(2020, PLOT_LEFT, column2020Width, sortedRows, focusedKey, setFocusedKey)}

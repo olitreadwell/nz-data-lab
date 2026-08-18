@@ -150,7 +150,7 @@ export function SpeciesRegisterSearch({
       {!isLoading && error === null && names.length > 0 && (
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <div className="h-[220px] sm:h-[260px]">
+            <div className="h-[clamp(200px,28vh,300px)]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart role="img" aria-label={label}>
                   <Pie

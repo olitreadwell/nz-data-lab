@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { SunburstChart, Tooltip } from 'recharts';
+import { ResponsiveContainer, SunburstChart, Tooltip } from 'recharts';
 import type { SunburstData, TooltipContentProps } from 'recharts';
 
 import { fetchLiveMvrFleet } from '@/lib/live-sources';
@@ -172,10 +172,12 @@ export function VehicleFleet(): React.ReactElement {
               </button>
             ))}
           </div>
-          <div className="h-[420px]" role="img" aria-label={chartLabel}>
-            <SunburstChart data={sunburstData} width={720} height={420}>
-              <Tooltip content={FleetTooltip} />
-            </SunburstChart>
+          <div className="h-[clamp(300px,42vh,480px)]" role="img" aria-label={chartLabel}>
+            <ResponsiveContainer width="100%" height="100%">
+              <SunburstChart data={sunburstData}>
+                <Tooltip content={FleetTooltip} />
+              </SunburstChart>
+            </ResponsiveContainer>
           </div>
           <ul
             className="mt-2 mb-2 flex flex-wrap gap-x-4 gap-y-1 text-sm"

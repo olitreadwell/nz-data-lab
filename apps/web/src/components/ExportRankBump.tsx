@@ -119,7 +119,7 @@ export function ExportRankBump(): React.ReactElement {
       <div role="img" aria-label={chartLabel}>
         <svg
           viewBox={`0 0 ${SVG_WIDTH} ${chartHeight}`}
-          className="h-auto w-full"
+          className="mx-auto h-auto max-h-[clamp(320px,46vh,560px)] w-full"
           aria-hidden="true"
         >
           {Array.from({ length: MAX_RANK }, (_, rankIndex) => {

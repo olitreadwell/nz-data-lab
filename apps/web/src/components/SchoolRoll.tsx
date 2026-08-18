@@ -1,15 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { TooltipContentProps } from 'recharts';
 
 import { fetchLiveNzSchools } from '@/lib/live-sources';
@@ -19,12 +11,7 @@ import { ChartDataTable } from './ChartDataTable';
 import type { ChartDataColumn } from './ChartDataTable';
 
 export type SchoolType =
-  | 'primary'
-  | 'intermediate'
-  | 'secondary'
-  | 'composite'
-  | 'special'
-  | 'other';
+  'primary' | 'intermediate' | 'secondary' | 'composite' | 'special' | 'other';
 
 export type SchoolAuthority = 'state' | 'integrated' | 'private' | 'other';
 
@@ -227,10 +214,7 @@ export function SchoolRoll(): React.ReactElement {
     return buildSchoolTypeData(visible);
   }, [filteredSchools, hiddenAuthorities]);
 
-  const totalSchools = useMemo(
-    () => data.reduce((sum, row) => sum + row.total, 0),
-    [data],
-  );
+  const totalSchools = useMemo(() => data.reduce((sum, row) => sum + row.total, 0), [data]);
 
   const toggleAuthority = (authority: SchoolAuthority): void => {
     setHiddenAuthorities((previous) => {
@@ -270,7 +254,10 @@ export function SchoolRoll(): React.ReactElement {
       {!isLoading && error === null && schools.length > 0 && (
         <div>
           <div className="mb-2 flex flex-wrap items-center gap-2">
-            <label className="numeral-paragraph-sm text-[var(--color-muted)]" htmlFor="school-search">
+            <label
+              className="numeral-paragraph-sm text-[var(--color-muted)]"
+              htmlFor="school-search"
+            >
               Filter by name
             </label>
             <input
@@ -301,7 +288,7 @@ export function SchoolRoll(): React.ReactElement {
               );
             })}
           </div>
-          <div role="img" aria-label={chartLabel} className="h-[320px]">
+          <div role="img" aria-label={chartLabel} className="h-[clamp(280px,38vh,400px)]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data}>
                 <CartesianGrid strokeDasharray="2 4" stroke="var(--color-border)" />

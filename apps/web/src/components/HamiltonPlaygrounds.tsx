@@ -208,7 +208,8 @@ export function HamiltonPlaygrounds(): React.ReactElement {
       <p className="numeral-paragraph-sm mb-2 text-[var(--color-muted)]" aria-live="polite">
         {isLoading
           ? 'Mapping the playgrounds...'
-          : (error ?? `${playgrounds.length} playgrounds, fetched live from Hamilton City Council.`)}
+          : (error ??
+            `${playgrounds.length} playgrounds, fetched live from Hamilton City Council.`)}
       </p>
       {!isLoading && error === null && playgrounds.length > 0 && (
         <div>
@@ -236,7 +237,7 @@ export function HamiltonPlaygrounds(): React.ReactElement {
             role="img"
             aria-label={chartLabel}
             viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
-            className="h-auto w-full"
+            className="mx-auto h-auto max-h-[clamp(320px,46vh,560px)] w-full"
           >
             <title>{chartLabel}</title>
             {heatmap.types.map((type, rowIndex) => (

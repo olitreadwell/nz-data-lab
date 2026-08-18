@@ -7,10 +7,10 @@ import { formatMillions } from '@/lib/format';
 import type { LivestockSeriesPoint } from '@/lib/livestock-data';
 import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
-import { ChartDataTable } from './ChartDataTable';
-import type { ChartDataColumn } from './ChartDataTable';
 import { EmojiActiveDot, SeriesTooltip } from './chart-utils';
 import type { ChartSeriesDef } from './chart-utils';
+import { ChartDataTable } from './ChartDataTable';
+import type { ChartDataColumn } from './ChartDataTable';
 
 interface LivestockChartProps {
   points: LivestockSeriesPoint[];
@@ -93,7 +93,7 @@ export function LivestockChart({ points }: LivestockChartProps): React.ReactElem
           {sheepVisible ? 'Hide sheep' : 'Show sheep'}
         </button>
       </div>
-      <div className="h-[220px] sm:h-[260px] lg:h-[300px]">
+      <div className="h-[clamp(200px,30vh,320px)]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             role="img"

@@ -143,7 +143,7 @@ export function AgeBulgeRidgeline(): React.ReactElement {
       <div role="img" aria-label={chartLabel}>
         <svg
           viewBox={`0 0 ${SVG_WIDTH} ${chartHeight}`}
-          className="h-auto w-full"
+          className="mx-auto h-auto max-h-[clamp(320px,46vh,560px)] w-full"
           aria-hidden="true"
         >
           {AGE_BULGE_BANDS.map((band, index) => {

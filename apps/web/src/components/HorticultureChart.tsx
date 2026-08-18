@@ -63,7 +63,7 @@ export function HorticultureChart({ points }: HorticultureChartProps): React.Rea
           </li>
         ))}
       </ul>
-      <div className="h-[220px] sm:h-[260px] lg:h-[300px]">
+      <div className="h-[clamp(200px,30vh,320px)]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             role="img"

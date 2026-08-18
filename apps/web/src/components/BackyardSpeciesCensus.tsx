@@ -159,7 +159,7 @@ export function BackyardSpeciesCensus(): React.ReactElement {
               );
             })}
           </ul>
-          <div role="img" aria-label={chartLabel} className="h-[260px] sm:h-[320px]">
+          <div role="img" aria-label={chartLabel} className="h-[clamp(240px,34vh,360px)]">
             <ResponsiveContainer width="100%" height="100%">
               <ScatterChart margin={{ top: 16, right: 16, bottom: 8, left: 8 }}>
                 <XAxis

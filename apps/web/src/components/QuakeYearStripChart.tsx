@@ -125,7 +125,7 @@ export function QuakeYearStripChart(): React.ReactElement {
         role="img"
         aria-label={chartLabel}
         viewBox={`0 0 ${SVG_WIDTH} ${chartHeight}`}
-        className="h-auto w-full"
+        className="mx-auto h-auto max-h-[clamp(320px,46vh,560px)] w-full"
       >
         {Array.from({ length: yearSpan + 1 }, (_, index) => {
           const year = QUAKE_YEAR_START + index;

@@ -72,7 +72,7 @@ export function RabbitChart({ points }: RabbitChartProps): React.ReactElement {
 
   return (
     <div>
-      <div className="h-[220px] sm:h-[260px] lg:h-[300px]">
+      <div className="h-[clamp(200px,30vh,320px)]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             role="img"

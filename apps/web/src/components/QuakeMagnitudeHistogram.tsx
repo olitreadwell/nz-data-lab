@@ -139,9 +139,7 @@ export function QuakeMagnitudeHistogram({
               aria-checked={maxDays === days}
               tabIndex={maxDays === days ? 0 : -1}
               onClick={() => setMaxDays(days)}
-              onKeyDown={(event) =>
-                handleRadioGroupKeyDown(event, index, DAY_OPTIONS, setMaxDays)
-              }
+              onKeyDown={(event) => handleRadioGroupKeyDown(event, index, DAY_OPTIONS, setMaxDays)}
               className="rounded-[var(--radius-sm)] border border-[var(--color-border)] px-2 py-1 text-sm text-[var(--color-muted)] hover:text-[var(--color-fg)] aria-checked:bg-[var(--color-border)]"
             >
               {days} days
@@ -149,18 +147,14 @@ export function QuakeMagnitudeHistogram({
           ))}
         </div>
       </div>
-      <div role="img" aria-label={chartLabel} className="h-[220px] sm:h-[260px]">
+      <div role="img" aria-label={chartLabel} className="h-[clamp(200px,28vh,300px)]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={bins}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--color-muted)" />
             <XAxis dataKey="label" stroke="var(--color-muted)" />
             <YAxis tickFormatter={formatCount} stroke="var(--color-muted)" />
             <Tooltip content={(props) => <BinTooltip {...props} />} />
-            <Bar
-              dataKey="count"
-              fill="#be123c"
-              isAnimationActive={!prefersReducedMotion}
-            />
+            <Bar dataKey="count" fill="#be123c" isAnimationActive={!prefersReducedMotion} />
           </BarChart>
         </ResponsiveContainer>
       </div>

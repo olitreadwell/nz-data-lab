@@ -160,7 +160,7 @@ export function OpenDataSearch({ initialQuery }: OpenDataSearchProps): React.Rea
       {!isLoading && error === null && datasets.length > 0 && (
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <div role="group" aria-label={label} className="h-[220px] sm:h-[260px]">
+            <div role="group" aria-label={label} className="h-[clamp(200px,28vh,300px)]">
               <ResponsiveContainer width="100%" height="100%">
                 <Treemap
                   data={byOrg}

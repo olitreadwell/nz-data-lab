@@ -136,7 +136,7 @@ export function EvCharging(): React.ReactElement {
             role="img"
             aria-label={chartLabel}
             viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
-            className="h-auto w-full"
+            className="mx-auto h-auto max-h-[clamp(320px,46vh,560px)] w-full"
           >
             <title>{chartLabel}</title>
             {data.map((row, index) => {

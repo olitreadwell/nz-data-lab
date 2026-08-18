@@ -110,7 +110,11 @@ export function AgeDistributionHistogram(): React.ReactElement {
         />
         <span className="numeral-paragraph-sm text-[var(--color-fg)]">{year}</span>
       </div>
-      <div role="img" aria-label={`Age distribution in the ${year} census`} className="h-[360px]">
+      <div
+        role="img"
+        aria-label={`Age distribution in the ${year} census`}
+        className="h-[clamp(300px,40vh,440px)]"
+      >
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartRows} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
             <CartesianGrid stroke="var(--color-border)" vertical={false} />

@@ -123,7 +123,7 @@ export function QuakeMonthRose({ events }: { events: QuakeCatalogEvent[] }): Rea
           ))}
         </div>
       </div>
-      <div role="img" aria-label={chartLabel} className="h-[260px] sm:h-[300px]">
+      <div role="img" aria-label={chartLabel} className="h-[clamp(220px,30vh,320px)]">
         <ResponsiveContainer width="100%" height="100%">
           <RadialBarChart
             data={bins}
