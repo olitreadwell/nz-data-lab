@@ -18,4 +18,21 @@ describe('parseNzorNames', () => {
   it('returns an empty result for an empty payload', () => {
     expect(() => parseNzorNames('not xml')).toThrow(NzSourceParseError);
   });
+
+  it('throws when Total is not a finite number', () => {
+    expect(() =>
+      parseNzorNames('<Response><Total>not-a-number</Total><Names/></Response>'),
+    ).toThrow(NzSourceParseError);
+  });
+
+  it('returns an empty names list when Names is absent', () => {
+    const result = parseNzorNames('<Response><Total>170151</Total></Response>');
+    expect(result).toEqual({ total: 170151, names: [] });
+  });
+
+  it('throws when Names is present but not an object or array', () => {
+    expect(() =>
+      parseNzorNames('<Response><Total>170151</Total><Names>broken</Names></Response>'),
+    ).toThrow(NzSourceParseError);
+  });
 });

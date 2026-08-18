@@ -25,14 +25,22 @@ const NZOR_XML_PARSER = new XMLParser({
 /** Parses an NZOR /names XML payload into a search result. */
 export function parseNzorNames(payload: string): NzorSearchResult {
   const parsed = NZOR_XML_PARSER.parse(payload) as {
-    Response?: { Total?: string; Names?: { Name?: unknown[] } };
+    Response?: { Total?: string; Names?: unknown };
   };
-  if (parsed.Response?.Total === undefined) {
+  const rawTotal = parsed.Response?.Total;
+  if (rawTotal === undefined) {
     throw new NzSourceParseError('NZOR', 'missing Response/Total in XML payload');
   }
-  const total = Number(parsed.Response.Total);
-  const rawNames = parsed.Response?.Names?.Name ?? [];
-  const names = (Array.isArray(rawNames) ? rawNames : [rawNames]).map((raw) => {
+  const total = Number(rawTotal);
+  if (!Number.isFinite(total)) {
+    throw new NzSourceParseError('NZOR', 'invalid Response/Total in XML payload');
+  }
+  const namesNode = parsed.Response?.Names;
+  if (namesNode !== undefined && (namesNode === null || typeof namesNode !== 'object')) {
+    throw new NzSourceParseError('NZOR', 'invalid Response/Names in XML payload');
+  }
+  const nameList = (namesNode as { Name?: unknown } | undefined)?.Name ?? [];
+  const names = (Array.isArray(nameList) ? nameList : [nameList]).map((raw) => {
     const name = raw as { NameId?: string; Class?: string; FullName?: string };
     return {
       nameId: name.NameId ?? '',
