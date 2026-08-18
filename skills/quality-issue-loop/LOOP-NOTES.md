@@ -119,3 +119,16 @@ Loop fixes this iteration:
   conflict because every branch is based on the same old main. Resolving
   each conflict by hand is mechanical; the script could merge the hidden
   list itself (union of removals) before merging branches.
+
+## 2026-08-18 (merge + cleanup)
+
+Merged the preserved data-viz branch feat/microsite-loop-8 after rebasing
+onto main and fixing its stale tests and one lint error: shipped
+open-school-map, canterbury-rain, and hamilton-playgrounds microsites, plus
+hub cards for all three (home page now shows all 20 microsites). Cleaned up
+every merged worktree and branch: 14 fix/* branches (#148-#171) and
+feat/microsite-loop-8 removed via git and Orca. Left preserved:
+feat/microsite-loop-7 (broken WIP: microsites.ts has orphaned reference
+blocks and missing configs for road-crash and vehicle-fleet) and
+feat/microsite-loop-9 (dirty WIP: uncommitted AgePyramid work; its committed
+hide commit is already in main).
