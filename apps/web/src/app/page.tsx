@@ -197,6 +197,12 @@ export default async function HomePage(): Promise<React.ReactElement> {
       statLabel: 'Top market, YE Mar 2020',
       statValue: 'China, $19.9b',
     },
+
+    {
+      config: getMicrosite('enterprise-bar-in-bar'),
+      statLabel: 'Enterprises, Feb 2025',
+      statValue: '617,334',
+    },
   ].filter(
     (card): card is { config: MicrositeConfig; statLabel: string; statValue: string } =>
       card.config !== undefined,

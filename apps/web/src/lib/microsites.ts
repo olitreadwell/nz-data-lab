@@ -914,4 +914,37 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+
+  {
+    slug: 'enterprise-bar-in-bar',
+    label: 'Business register',
+    eyebrow: '🏢 the business register',
+    title: 'Rental and real estate is the biggest block of the business register.',
+    description:
+      'At February 2025, New Zealand had 617,334 economically significant enterprises. Rental, hiring, and real estate services led with 129,120, construction was second with 81,249, and professional, scientific, and technical services third with 70,938.',
+    paragraphs: [
+      'The register grew 10.7 percent from February 2020, when it held 557,685 enterprises. Financial and insurance services grew fastest at 25.8 percent, health care and social assistance grew 22.1 percent, and construction grew 20.8 percent.',
+      'Two industries shrank: agriculture, forestry, and fishing fell 3.9 percent and wholesale trade fell 3.2 percent. The register counts every economically significant business, so the biggest block mixes active traders with companies that still file but do little.',
+    ],
+    accent: 'indigo',
+    dataNote:
+      'Data: Stats NZ "New Zealand business demography statistics" releases, Table 1, enterprises by industry (ANZSIC06) at February 2020 (published 29 October 2020) and February 2025 (published 30 October 2025). The 2025 counts are provisional and have noise added or subtracted to protect individual businesses. Hover a row, search for an industry, or toggle the sort order.',
+    references: [
+      {
+        label: 'Business demography: At February 2025 (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/new-zealand-business-demography-statistics-at-february-2025/',
+        kind: 'data',
+      },
+      {
+        label: 'Business demography: At February 2020 (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/new-zealand-business-demography-statistics-at-february-2020/',
+        kind: 'data',
+      },
+      {
+        label: 'Business (Stats NZ)',
+        url: 'https://www.stats.govt.nz/topics/business',
+        kind: 'history',
+      },
+    ],
+  },
 ]);

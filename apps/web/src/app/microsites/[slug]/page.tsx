@@ -15,6 +15,7 @@ import { ExportRankBump } from '@/components/ExportRankBump';
 import { ForestryChart } from '@/components/ForestryChart';
 import { HamiltonPlaygrounds } from '@/components/HamiltonPlaygrounds';
 import { HorticultureChart } from '@/components/HorticultureChart';
+import { IndustryBarInBar } from '@/components/IndustryBarInBar';
 import { KiwifruitOvertakeChart } from '@/components/KiwifruitOvertakeChart';
 import { LivestockChart } from '@/components/LivestockChart';
 import { MicrositeStory } from '@/components/MicrositeStory';
@@ -761,7 +762,35 @@ function renderStoryContent(
           </dl>
         ),
       };
-
+    case 'enterprise-bar-in-bar':
+      return {
+        chart: <IndustryBarInBar />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Enterprises, Feb 2025"
+              value="617,334"
+              accent="indigo"
+              testId="enterprise-total"
+              dataValue={617334}
+            />
+            <StatCard
+              label="Biggest industry, Feb 2025"
+              value="Rental & real estate, 129,120"
+              accent="indigo"
+              testId="enterprise-biggest"
+              dataValue={129120}
+            />
+            <StatCard
+              label="Change, Feb 2020 to 2025"
+              value="+10.7%"
+              accent="indigo"
+              testId="enterprise-change"
+              dataValue={10.7}
+            />
+          </dl>
+        ),
+      };
     default:
       return { chart: null, stats: null };
   }
