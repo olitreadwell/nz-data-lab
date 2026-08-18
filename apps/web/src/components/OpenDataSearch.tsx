@@ -18,7 +18,7 @@ interface OrgDatum {
   [key: string]: string | number;
 }
 
-const ORG_COLORS = [
+export const ORG_COLORS = [
   '#0ea5e9',
   '#22c55e',
   '#f59e0b',
@@ -30,6 +30,35 @@ const ORG_COLORS = [
   '#6366f1',
   '#eab308',
 ];
+
+/**
+ * Relative luminance of a hex color, per the WCAG 2.2 formula.
+ */
+function relativeLuminance(hex: string): number {
+  const r = parseInt(hex.slice(1, 3), 16) / 255;
+  const g = parseInt(hex.slice(3, 5), 16) / 255;
+  const b = parseInt(hex.slice(5, 7), 16) / 255;
+  const linearR = r <= 0.03928 ? r / 12.92 : ((r + 0.055) / 1.055) ** 2.4;
+  const linearG = g <= 0.03928 ? g / 12.92 : ((g + 0.055) / 1.055) ** 2.4;
+  const linearB = b <= 0.03928 ? b / 12.92 : ((b + 0.055) / 1.055) ** 2.4;
+  return 0.2126 * linearR + 0.7152 * linearG + 0.0722 * linearB;
+}
+
+function contrastRatio(first: string, second: string): number {
+  const firstLuminance = relativeLuminance(first);
+  const secondLuminance = relativeLuminance(second);
+  const lighter = Math.max(firstLuminance, secondLuminance);
+  const darker = Math.min(firstLuminance, secondLuminance);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+/**
+ * Label color that keeps at least 4.5:1 contrast against a treemap fill,
+ * satisfying WCAG 1.4.3 AA.
+ */
+export function getOrgLabelColor(fill: string): string {
+  return contrastRatio(fill, '#ffffff') >= contrastRatio(fill, '#000000') ? '#ffffff' : '#000000';
+}
 
 const MAX_DATASETS_SHOWN = 20;
 
@@ -149,7 +178,7 @@ export function OpenDataSearch({ initialQuery }: OpenDataSearchProps): React.Rea
                           <text
                             x={x + 4}
                             y={y + 14}
-                            fill="var(--color-bg)"
+                            fill={getOrgLabelColor(color)}
                             fontSize={11}
                             fontWeight={600}
                           >

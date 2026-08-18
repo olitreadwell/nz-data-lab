@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import type { LiveDataGovtNzDataset } from '@/lib/live-sources';
 
-import { OpenDataSearch } from './OpenDataSearch';
+import { getOrgLabelColor, OpenDataSearch, ORG_COLORS } from './OpenDataSearch';
 
 expect.extend(toHaveNoViolations);
 
@@ -84,4 +84,28 @@ describe('OpenDataSearch', () => {
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
+
+  it('keeps label contrast at 4.5:1 against every org fill', () => {
+    for (const fill of ORG_COLORS) {
+      expect(contrastRatio(fill, getOrgLabelColor(fill))).toBeGreaterThanOrEqual(4.5);
+    }
+  });
 });
+
+function relativeLuminance(hex: string): number {
+  const r = parseInt(hex.slice(1, 3), 16) / 255;
+  const g = parseInt(hex.slice(3, 5), 16) / 255;
+  const b = parseInt(hex.slice(5, 7), 16) / 255;
+  const linearR = r <= 0.03928 ? r / 12.92 : ((r + 0.055) / 1.055) ** 2.4;
+  const linearG = g <= 0.03928 ? g / 12.92 : ((g + 0.055) / 1.055) ** 2.4;
+  const linearB = b <= 0.03928 ? b / 12.92 : ((b + 0.055) / 1.055) ** 2.4;
+  return 0.2126 * linearR + 0.7152 * linearG + 0.0722 * linearB;
+}
+
+function contrastRatio(first: string, second: string): number {
+  const firstLuminance = relativeLuminance(first);
+  const secondLuminance = relativeLuminance(second);
+  const lighter = Math.max(firstLuminance, secondLuminance);
+  const darker = Math.min(firstLuminance, secondLuminance);
+  return (lighter + 0.05) / (darker + 0.05);
+}
