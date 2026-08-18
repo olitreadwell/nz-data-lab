@@ -853,4 +853,37 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+
+  {
+    slug: 'population-waffle',
+    label: 'Population by region',
+    eyebrow: '🧱 the population grid',
+    title: "Auckland is a third of the country's population.",
+    description:
+      'At the 2023 Census, 1,656,486 of the 4,993,290 people counted in regional council areas lived in Auckland, 33.2 percent of the country. The waffle chart draws one cell per 1 percent of the census population, so Auckland fills a third of the grid.',
+    paragraphs: [
+      'The North Island holds most of the rest. Its 3,808,005 people are 76.3 percent of the total, and the South Island has 1,185,282, 23.7 percent.',
+      'Canterbury is the second-biggest region with 651,027 people, 13.0 percent of the country, and Wellington third with 520,971, 10.4 percent. Auckland has held near a third through every census since 2013: 33.4 percent in 2013, 33.2 percent in 2023.',
+    ],
+    accent: 'teal',
+    dataNote:
+      'Data: Stats NZ 2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts, Table 1 (census usually resident population count by regional council area, 2013, 2018, and 2023 censuses). Each cell is one percent of the census usually resident population count, allocated so the grid always sums to 100 cells. Counts have fixed random rounding to base 3 applied. Hover a cell, search for a region, or toggle the census year.',
+    references: [
+      {
+        label: '2023 Census population counts release (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
+        kind: 'data',
+      },
+      {
+        label: '2023 Census (Stats NZ)',
+        url: 'https://www.stats.govt.nz/2023-census/',
+        kind: 'data',
+      },
+      {
+        label: 'Population (Stats NZ)',
+        url: 'https://www.stats.govt.nz/topics/population',
+        kind: 'history',
+      },
+    ],
+  },
 ]);

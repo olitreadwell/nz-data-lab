@@ -268,3 +268,13 @@ it('renders the vehicle fleet story', async () => {
   expect(html).toContain('3.18 million');
   expect(html).toContain('Motor Vehicle Register (NZTA)');
 });
+
+it('renders the population waffle story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'population-waffle' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('Auckland is a third of the country');
+  expect(html).toContain('4,993,290');
+  expect(html).toContain('2023 Census population counts release (Stats NZ)');
+});

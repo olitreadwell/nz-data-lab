@@ -186,6 +186,11 @@ export default async function HomePage(): Promise<React.ReactElement> {
       statLabel: `Rabbits per km (${rabbit.latest.year})`,
       statValue: formatRabbitsPerKm(rabbit.latest.rabbitsPerKm),
     },
+    {
+      config: getMicrosite('population-waffle'),
+      statLabel: 'Auckland share, 2023',
+      statValue: '33.2%',
+    },
   ].filter(
     (card): card is { config: MicrositeConfig; statLabel: string; statValue: string } =>
       card.config !== undefined,

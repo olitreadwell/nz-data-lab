@@ -23,6 +23,7 @@ import { PopulationRankBump } from '@/components/PopulationRankBump';
 import { QuakeMagnitudeHistogram } from '@/components/QuakeMagnitudeHistogram';
 import { QuakeMap } from '@/components/QuakeMap';
 import { RabbitChart } from '@/components/RabbitChart';
+import { RegionWaffle } from '@/components/RegionWaffle';
 import { ReportIssueButton } from '@/components/ReportIssueButton';
 import { RiverLengths } from '@/components/RiverLengths';
 import { RoadCrashTrend } from '@/components/RoadCrashTrend';
@@ -703,6 +704,35 @@ function renderStoryContent(
         ),
       };
     }
+    case 'population-waffle':
+      return {
+        chart: <RegionWaffle />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Auckland share, 2023"
+              value="33.2%"
+              accent="teal"
+              testId="region-waffle-auckland-share"
+              dataValue={33.2}
+            />
+            <StatCard
+              label="North Island share, 2023"
+              value="76.3%"
+              accent="teal"
+              dataValue={76.3}
+            />
+            <StatCard
+              label="Census population, 2023"
+              value="4,993,290"
+              accent="teal"
+              testId="region-waffle-total"
+              dataValue={4993290}
+            />
+          </dl>
+        ),
+      };
+
     default:
       return { chart: null, stats: null };
   }
