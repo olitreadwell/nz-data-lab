@@ -61,6 +61,25 @@ describe('WhatTheWorldReads', () => {
     expect(slider).toHaveAttribute('aria-valuetext', '7 days');
   });
 
+  it('renders no NaN coordinates when every page has a max of 1 view', async () => {
+    FETCH_MOCK.mockResolvedValueOnce([
+      { title: 'Quiet page', dailyViews: [1, 1, 1] },
+      { title: 'Quieter page', dailyViews: [1, 1, 1] },
+    ]);
+    const { container } = render(<WhatTheWorldReads />);
+    await screen.findByText(/2 pages, fetched live/);
+    const svg = container.querySelector('svg');
+    if (svg === null) {
+      throw new Error('Expected a timeline svg');
+    }
+    const coordinates = [...svg.querySelectorAll('line, circle')].flatMap((element) => [
+      element.getAttribute('x1'),
+      element.getAttribute('x2'),
+      element.getAttribute('cx'),
+    ]);
+    expect(coordinates.some((value) => value === 'NaN')).toBe(false);
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = render(<WhatTheWorldReads />);
     await screen.findByText(/3 pages, fetched live/);

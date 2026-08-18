@@ -49,6 +49,9 @@ function computeRows(pages: LiveWikipediaPage[], windowDays: number): TimelineRo
 function logPosition(value: number, maxValue: number, chartWidth: number): number {
   const logMin = Math.log(1) / Math.log(LOG_BASE);
   const logMax = Math.log(maxValue) / Math.log(LOG_BASE);
+  if (logMax === logMin) {
+    return 0;
+  }
   const logValue = Math.log(Math.max(value, 1)) / Math.log(LOG_BASE);
   return ((logValue - logMin) / (logMax - logMin)) * chartWidth;
 }
