@@ -135,7 +135,17 @@ export interface LiveDigitalNzSearchResult {
   records: LiveDigitalNzRecord[];
 }
 
-/** Extracts a year from a DigitalNZ record's date fields, or null when absent. */
+/** Leading window of a display date that may hold the record's real year. */
+const DISPLAY_DATE_LEADING_WINDOW = 30;
+
+/**
+ * Extracts a year from a DigitalNZ record's date fields, or null when absent.
+ *
+ * Prefers the ISO `date` array. When only `display_date` is available, only a
+ * year token near the start of the string is trusted, so editorial/licence/
+ * scan years appended to the end (e.g. "scanned 2021") are not mistaken for
+ * the record's date.
+ */
 function parseDigitalNzRecordYear(record: {
   date?: string[];
   display_date?: string | null;
@@ -147,8 +157,13 @@ function parseDigitalNzRecordYear(record: {
       return parsedDate.getUTCFullYear();
     }
   }
-  const displayMatch = record.display_date?.match(/\b(1[5-9]\d\d|20\d\d)\b/);
-  if (displayMatch !== undefined && displayMatch !== null) {
+  const displayDate = record.display_date;
+  if (displayDate === undefined || displayDate === null) {
+    return null;
+  }
+  const leading = displayDate.slice(0, DISPLAY_DATE_LEADING_WINDOW);
+  const displayMatch = /\b(1[5-9]\d\d|20\d\d)\b/.exec(leading);
+  if (displayMatch !== null) {
     return Number(displayMatch[1]);
   }
   return null;

@@ -10,7 +10,6 @@
 export const HIDDEN_MICROSITES: string[] = [
   'backyard-species-census',
   'species-record-ledger',
-  'digitised-memory',
 ];
 
 /**
