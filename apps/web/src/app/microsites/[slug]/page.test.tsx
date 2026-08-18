@@ -21,6 +21,17 @@ vi.mock('@/lib/quake-catalog', () => ({
   ]),
 }));
 
+vi.mock('@/lib/quake-month-data', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/quake-month-data')>();
+  return {
+    ...actual,
+    fetchQuakeMonthCatalog: vi.fn().mockResolvedValue([
+      { timeEpochSec: 1780000000, magnitude: 3.2 },
+      { timeEpochSec: 1780000001, magnitude: 4.1 },
+    ]),
+  };
+});
+
 vi.mock('@/lib/headline-stats', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/lib/headline-stats')>();
   return {

@@ -740,6 +740,33 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
     ],
   },
   {
+    slug: 'quake-months',
+    label: 'Quake months',
+    eyebrow: '📅 the quake months',
+    title: 'Quakes of magnitude 3+ cluster in autumn.',
+    description:
+      'In the two years to 19 August 2026, GeoNet located 6,883 earthquakes of magnitude 3 or stronger. April was the busiest month with 675, November the quietest with 488.',
+    paragraphs: [
+      'The seasonal swing is real but modest: the busiest month runs about 40% higher than the quietest. In the full year 2025, April had 316 quakes of magnitude 3 or stronger and September just 214.',
+      'The autumn tilt holds at magnitude 4 and stronger, where April is again the busiest month (314) and November the quietest (205). At magnitude 5 and stronger the pattern shifts: July was the busiest month with 129, while November stayed the quietest with 66.',
+    ],
+    accent: 'rose',
+    dataNote:
+      'Data: GeoNet FDSN event service (service.geonet.org.nz), earthquakes of magnitude 3 or stronger in the two years to 19 August 2026, fetched at build time and falling back to a committed snapshot of that catalog. The site redeploys daily.',
+    references: [
+      {
+        label: 'GeoNet FDSN event service',
+        url: 'https://service.geonet.org.nz/fdsnws/event/1/',
+        kind: 'data',
+      },
+      {
+        label: 'GeoNet FDSN usage',
+        url: 'https://www.geonet.org.nz/data/tools/FDSN',
+        kind: 'data',
+      },
+    ],
+  },
+  {
     slug: 'ev-charging',
     label: 'EV charging',
     eyebrow: '🔌 the ev charging map',
