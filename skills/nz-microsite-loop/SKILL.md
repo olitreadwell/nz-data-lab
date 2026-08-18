@@ -108,6 +108,13 @@ fix the guard or the skill rather than working around it by hand.
   intact. If the loop skips for a dirty main again, the wrapper logs the
   dirty file list, so read that line before changing the guard.
 
+- Spec stories can contradict the data: viz-090's spec claimed deep quakes
+  cluster under the South Island, but the catalog shows them clustering under
+  the North Island (the Hikurangi subduction story). Check a spec's story
+  claims against the fetched data before writing copy, and tell the honest
+  version when they disagree. The smoke-ranked doc's assertions are the safer
+  guide than the one-line story.
+
 - Stats NZ ADE data is not keyless beyond the AGR_* tables: census and trade
   dataflows return 401 without a subscription key. For those, pull the
   numbers from the release page instead: fetch the release HTML, read the
