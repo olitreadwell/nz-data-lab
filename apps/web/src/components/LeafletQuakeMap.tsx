@@ -47,7 +47,10 @@ export function LeafletQuakeMap({ quakes, label }: LeafletQuakeMapProps): React.
         minZoom={MIN_ZOOM}
         maxZoom={MAX_ZOOM}
         scrollWheelZoom={false}
-        className="h-full w-full"
+        // Leaflet's own stylesheet sets a 1px outline-offset on
+        // .leaflet-container outside any cascade layer, which would beat
+        // Tailwind's layered utilities; the `!` keeps the 2px offset.
+        className="h-full w-full focus-visible:outline-2 focus-visible:outline-offset-2! focus-visible:outline-[var(--color-border)]"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
