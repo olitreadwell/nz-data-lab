@@ -56,8 +56,6 @@ export function SeriesTooltip({
   return (
     <div
       data-testid={testId}
-      role="status"
-      aria-live="polite"
       className="rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-bg)] px-2 py-1"
     >
       <p className="numeral-text-eyebrow text-[10px] text-[var(--color-muted)]">{label}</p>
