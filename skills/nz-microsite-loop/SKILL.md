@@ -189,6 +189,18 @@ when no wrapper is already running (check the lock file first).
   lag the changelog (it still calls slope unused after loop 5 shipped one),
   so trust the codebase over the doc when they disagree.
 
+- The 2023 Census topic releases published after May 2024 (religion, ethnicity,
+  commuting, birthplace, income) carry no workbook downloads: their release
+  pages have no `BlockDocuments` in `pageViewData` and point at the Aotearoa
+  Data Explorer, which needs a subscription key. Check a release page for a
+  `BlockDocuments` workbook before committing to a spec, and prefer the
+  "2023 Census population counts (by ethnic group, age, and Maori descent)
+  and dwelling counts" workbook (published 29 May 2024), which still ships
+  17 tables covering region and TA population (Tables 1-2), ethnicity by
+  region (Tables 4-5), age bands national and by region (Tables 6-7), and
+  Maori descent (Tables 10-11). Loop 12 built three microsites from that one
+  workbook with verified numbers.
+
 - The keyless monthly series map: the retail trade survey is quarterly and its ADE
   tables need a subscription key, so the monthly retail pulse is Stats NZ's
   "Electronic card transactions" releases (Table 1, series ECTM, ~2 years per
