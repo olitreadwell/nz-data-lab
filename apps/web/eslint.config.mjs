@@ -16,6 +16,7 @@ export default [
             'postcss.config.mjs',
             'playwright.config.ts',
             'scripts/generate-csp.mjs',
+            'scripts/check-deployed-security-headers.mjs',
           ],
         },
       },
@@ -29,6 +30,7 @@ export default [
       'postcss.config.mjs',
       'playwright.config.ts',
       'scripts/generate-csp.mjs',
+      'scripts/check-deployed-security-headers.mjs',
     ],
     rules: {
       '@typescript-eslint/no-unsafe-assignment': 'off',

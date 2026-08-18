@@ -1,9 +1,10 @@
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { createServer, type Server } from 'node:http';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 // The test lives at apps/web/src/lib, so the workspace root is two levels up.
 const WEB_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -24,9 +25,23 @@ const LIVE_API_HOSTS = [
 
 const TILE_HOST = 'tile.openstreetmap.org';
 
+/** The security headers every served response must carry. */
+const REQUIRED_HEADERS = [
+  'Content-Security-Policy',
+  'X-Content-Type-Options',
+  'Referrer-Policy',
+  'X-Frame-Options',
+  'Permissions-Policy',
+];
+
 interface SecurityHeader {
   key: string;
   value: string;
+}
+
+interface HeaderRule {
+  path: string;
+  headers: Record<string, string>;
 }
 
 function readVercelHeaders(): SecurityHeader[] {
@@ -49,50 +64,138 @@ function cspDirective(csp: string, name: string): string {
   return value;
 }
 
-function staticHeaderValue(headers: string, key: string): string {
-  const match = new RegExp(`^\\s*${key}:\\s*(.+)$`, 'm').exec(headers);
-  const value = match?.[1];
-  if (value === undefined) {
-    throw new Error(`_headers is missing the ${key} header`);
-  }
-  return value;
-}
-
 interface GeneratedCsp {
+  dir: string;
   headers: string;
   html: string;
 }
 
-/** Runs the real build-time CSP generator into a temp dir and returns its output. */
+/**
+ * Runs the real build-time CSP generator into a temp dir and returns its output.
+ *
+ * @returns the generated `_headers` contents, the rewritten HTML, and the temp dir
+ */
 function generateCspOutput(): GeneratedCsp {
-  const tmp = mkdtempSync(path.join(tmpdir(), 'csp-'));
-  try {
-    writeFileSync(
-      path.join(tmp, 'index.html'),
-      '<html><body><script>window.__cspTest = true;</script></body></html>',
-    );
-    execFileSync('node', [GENERATE_CSP_SCRIPT, tmp], { cwd: WEB_ROOT });
-    return {
-      headers: readFileSync(path.join(tmp, '_headers'), 'utf8'),
-      html: readFileSync(path.join(tmp, 'index.html'), 'utf8'),
-    };
-  } finally {
-    rmSync(tmp, { recursive: true, force: true });
+  const dir = mkdtempSync(path.join(tmpdir(), 'csp-'));
+  writeFileSync(
+    path.join(dir, 'index.html'),
+    '<html><body><script>window.__cspTest = true;</script></body></html>',
+  );
+  execFileSync('node', [GENERATE_CSP_SCRIPT, dir], { cwd: WEB_ROOT });
+  return {
+    dir,
+    headers: readFileSync(path.join(dir, '_headers'), 'utf8'),
+    html: readFileSync(path.join(dir, 'index.html'), 'utf8'),
+  };
+}
+
+/**
+ * Parses a Netlify-style `_headers` file into path -> header rules. Path lines
+ * start at column zero; header lines are indented beneath their path.
+ *
+ * @param content - the raw `_headers` file contents
+ * @returns the parsed path -> header rules
+ */
+function parseHeadersFile(content: string): HeaderRule[] {
+  const rules: HeaderRule[] = [];
+  let current: HeaderRule | null = null;
+  for (const line of content.split('\n')) {
+    const trimmed = line.trim();
+    if (trimmed === '' || trimmed.startsWith('#')) continue;
+    if (!line.startsWith(' ') && !line.startsWith('\t')) {
+      current = { path: trimmed, headers: {} };
+      rules.push(current);
+    } else if (current) {
+      const colon = trimmed.indexOf(':');
+      if (colon === -1) continue;
+      current.headers[trimmed.slice(0, colon).trim()] = trimmed.slice(colon + 1).trim();
+    }
   }
+  return rules;
+}
+
+interface ServedSite {
+  url: string;
+  close: () => Promise<void>;
+}
+
+/**
+ * Serves a static directory over HTTP, applying its `_headers` file the way a
+ * `_headers`-aware host (Netlify, Cloudflare Pages) would.
+ *
+ * @param root - the static directory to serve
+ * @returns the served site URL and a close handle
+ */
+function serveStaticSite(root: string): Promise<ServedSite> {
+  const rules = parseHeadersFile(readFileSync(path.join(root, '_headers'), 'utf8'));
+  return new Promise((resolve) => {
+    const server: Server = createServer((req, res) => {
+      const urlPath = new URL(req.url ?? '/', 'http://localhost').pathname;
+      const rule = rules.find((candidate) => candidate.path === '/*' || candidate.path === urlPath);
+      if (rule) {
+        for (const [key, value] of Object.entries(rule.headers)) {
+          res.setHeader(key, value);
+        }
+      }
+      const filePath = path.join(root, urlPath === '/' ? 'index.html' : urlPath);
+      try {
+        res.statusCode = 200;
+        res.end(readFileSync(filePath));
+      } catch {
+        res.statusCode = 404;
+        res.end('Not found');
+      }
+    });
+    server.listen(0, '127.0.0.1', () => {
+      const address = server.address();
+      if (address && typeof address === 'object') {
+        resolve({
+          url: `http://127.0.0.1:${address.port}`,
+          close: () => new Promise((done) => server.close(() => done())),
+        });
+      }
+    });
+  });
 }
 
 describe('security headers', () => {
   const vercelHeaders = readVercelHeaders();
   const generated = generateCspOutput();
-  const csp = staticHeaderValue(generated.headers, 'Content-Security-Policy');
+  let servedCsp: string;
+
+  beforeAll(async () => {
+    const served = await serveStaticSite(generated.dir);
+    try {
+      const response = await fetch(served.url);
+      servedCsp = response.headers.get('Content-Security-Policy') ?? '';
+    } finally {
+      await served.close();
+    }
+  });
+
+  afterAll(() => {
+    rmSync(generated.dir, { recursive: true, force: true });
+  });
+
+  it('serves every security header in the HTTP response', async () => {
+    const served = await serveStaticSite(generated.dir);
+    try {
+      const response = await fetch(served.url);
+      for (const header of REQUIRED_HEADERS) {
+        expect(response.headers.get(header), `missing ${header}`).not.toBeNull();
+      }
+    } finally {
+      await served.close();
+    }
+  });
 
   it('does not allow unsafe-inline in script-src', () => {
-    const scriptSrc = cspDirective(csp, 'script-src');
+    const scriptSrc = cspDirective(servedCsp, 'script-src');
     expect(scriptSrc).not.toContain("'unsafe-inline'");
   });
 
   it('injects a fresh nonce into the generated _headers and the inline scripts', () => {
-    const scriptSrc = cspDirective(csp, 'script-src');
+    const scriptSrc = cspDirective(servedCsp, 'script-src');
     const nonce = /'nonce-([^']+)'/.exec(scriptSrc)?.[1];
     if (nonce === undefined) {
       throw new Error('CSP script-src is missing a nonce');
@@ -107,14 +210,14 @@ describe('security headers', () => {
   });
 
   it('allows every live API host in connect-src', () => {
-    const connectSrc = cspDirective(csp, 'connect-src');
+    const connectSrc = cspDirective(servedCsp, 'connect-src');
     for (const host of LIVE_API_HOSTS) {
       expect(connectSrc).toContain(`https://${host}`);
     }
   });
 
   it('allows the OpenStreetMap tile host in img-src', () => {
-    expect(cspDirective(csp, 'img-src')).toContain(`https://${TILE_HOST}`);
+    expect(cspDirective(servedCsp, 'img-src')).toContain(`https://${TILE_HOST}`);
   });
 
   it('ships the other security headers on Vercel', () => {
