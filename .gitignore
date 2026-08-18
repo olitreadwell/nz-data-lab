@@ -53,3 +53,5 @@ apps/web/next-env.d.ts
 
 # Vercel CLI project dir (holds ephemeral per-build state, incl. the CSP nonce)
 .vercel/
+.vercel
+.env*

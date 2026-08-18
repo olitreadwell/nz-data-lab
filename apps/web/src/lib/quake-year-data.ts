@@ -1,5 +1,4 @@
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
+import quakeYearFixture from './fixtures/geonet-m4-2001-2024.json';
 
 /** One earthquake in the yearly GeoNet catalog snapshot, reduced to what the chart needs. */
 export interface QuakeYearEvent {
@@ -15,12 +14,7 @@ export interface QuakeYearEvent {
   p: string;
 }
 
-const QUAKE_YEAR_FIXTURE_PATH = path.join(
-  process.cwd(),
-  'src/lib/fixtures/geonet-m4-2001-2024.json',
-);
-
-const parsed = JSON.parse(readFileSync(QUAKE_YEAR_FIXTURE_PATH, 'utf8')) as unknown;
+const parsed: unknown = quakeYearFixture;
 if (!Array.isArray(parsed)) {
   throw new Error('quake year fixture is not an array');
 }

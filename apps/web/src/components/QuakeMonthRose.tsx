@@ -12,7 +12,7 @@ import {
 import type { TooltipContentProps } from 'recharts';
 
 import type { QuakeCatalogEvent } from '@/lib/quake-catalog';
-import { buildQuakeMonthBins, summarizeQuakeMonths } from '@/lib/quake-month-data';
+import { buildQuakeMonthBins, summarizeQuakeMonths } from '@/lib/quake-month-bins';
 import type { QuakeMonthBin } from '@/lib/quake-month-data';
 import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 

@@ -1,5 +1,4 @@
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
+import regionShapeFixture from './fixtures/regional-council-2023-simplified.json';
 
 /** One regional council row: census populations and Stats NZ land area. */
 export interface RegionDensityRow {
@@ -196,11 +195,6 @@ export function densityBucketIndex(density: number): number {
   return index === -1 ? DENSITY_BUCKETS.length - 1 : index;
 }
 
-const REGION_SHAPE_FIXTURE_PATH = path.join(
-  process.cwd(),
-  'src/lib/fixtures/regional-council-2023-simplified.geojson',
-);
-
 /** An SVG-drawable region shape, projected from lon/lat to x/y. */
 export interface RegionShape {
   key: string;
@@ -246,7 +240,7 @@ export const REGION_MAP_VIEW: { width: number; height: number } = {
 export const REGION_SHAPES: RegionShape[] = buildRegionShapes();
 
 function parseFixtureFeatures(): { name: string; ref: string; rings: Shape[][] }[] {
-  const parsed = JSON.parse(readFileSync(REGION_SHAPE_FIXTURE_PATH, 'utf8')) as unknown;
+  const parsed: unknown = regionShapeFixture;
   const features =
     (
       parsed as {
