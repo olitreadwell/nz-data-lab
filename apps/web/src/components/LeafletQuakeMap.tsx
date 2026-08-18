@@ -31,8 +31,10 @@ export function LeafletQuakeMap({ quakes, label }: LeafletQuakeMapProps): React.
     container.setAttribute('aria-label', label);
     // Make the map a focusable surface with its own keyboard interaction
     // scope; Leaflet's built-in keyboard handler pans with arrow keys and
-    // zooms with +/- once the container is focused.
-    container.setAttribute('role', 'application');
+    // zooms with +/- once the container is focused. `region` keeps screen
+    // readers in browse mode (unlike `application`) so the rest of the page
+    // stays navigable; the visible-quakes table below is the text alternative.
+    container.setAttribute('role', 'region');
     container.tabIndex = 0;
   }, [label]);
 
