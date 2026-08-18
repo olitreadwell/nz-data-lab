@@ -1,21 +1,21 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
-  LIVE_SEARCH_TIMEOUT_MS,
   fetchLiveGbifKingdoms,
   fetchLiveInaturalistTaxa,
+  LIVE_SEARCH_TIMEOUT_MS,
   parseAucklandParkBoards,
   parseCanterburyRainGauges,
-  parseDataGovtNzSearch,
   parseCasCrashCells,
+  parseDataGovtNzSearch,
   parseEvChargingCurrentTypes,
   parseEvChargingOperators,
   parseGbifKingdomFacet,
   parseHamiltonPlaygrounds,
   parseInaturalistTotal,
-  parseNzSchools,
-  parseNzorNamesXml,
   parseMvrFleetRows,
+  parseNzorNamesXml,
+  parseNzSchools,
   parseWikidataPeaks,
   parseWikidataRivers,
   parseWikipediaPageviews,
@@ -169,23 +169,42 @@ describe('parseNzorNamesXml', () => {
 });
 
 describe('parseDataGovtNzSearch', () => {
-  it('parses CKAN package_search results', () => {
-    const datasets = parseDataGovtNzSearch({
+  it('parses CKAN package_search results with the real total count', () => {
+    const search = parseDataGovtNzSearch({
       result: {
+        count: 4236,
         results: [
           { name: 'water-quality', title: 'Water quality', organization: { title: 'MfE' } },
           { name: 'rainfall', title: 'Rainfall', organization: null },
         ],
       },
     });
-    expect(datasets).toEqual([
+    expect(search.totalCount).toBe(4236);
+    expect(search.datasets).toEqual([
       { name: 'water-quality', title: 'Water quality', organization: 'MfE' },
       { name: 'rainfall', title: 'Rainfall', organization: undefined },
     ]);
   });
 
+  it('surfaces the total count even when the returned rows are capped', () => {
+    const search = parseDataGovtNzSearch({
+      result: {
+        count: 4236,
+        results: [
+          { name: 'water-quality', title: 'Water quality', organization: { title: 'MfE' } },
+          { name: 'rainfall', title: 'Rainfall', organization: null },
+        ],
+      },
+    });
+    expect(search.datasets.length).toBe(2);
+    expect(search.totalCount).toBe(4236);
+  });
+
   it('returns an empty list when there are no results', () => {
-    expect(parseDataGovtNzSearch({ result: { results: [] } })).toEqual([]);
+    expect(parseDataGovtNzSearch({ result: { results: [] } })).toEqual({
+      datasets: [],
+      totalCount: 0,
+    });
   });
 });
 
@@ -318,7 +337,11 @@ describe('parseNzSchools', () => {
   it('parses Overpass convert rows with name, years, and authority', () => {
     const payload = {
       elements: [
-        { type: 'school', id: 1, tags: { name: 'Burnside High School', years: '9-13', authority: 'state' } },
+        {
+          type: 'school',
+          id: 1,
+          tags: { name: 'Burnside High School', years: '9-13', authority: 'state' },
+        },
         { type: 'school', id: 2, tags: { name: 'Kura Kaupapa Māori o Te Rau Aroha' } },
       ],
     };

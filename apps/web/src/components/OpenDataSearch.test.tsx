@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { describe, expect, it, vi } from 'vitest';
 
-import type { LiveDataGovtNzDataset } from '@/lib/live-sources';
+import type { LiveDataGovtNzDataset, LiveDataGovtNzSearchResult } from '@/lib/live-sources';
 
 import { getOrgLabelColor, OpenDataSearch, ORG_COLORS } from './OpenDataSearch';
 
@@ -24,7 +24,7 @@ const DATASETS: LiveDataGovtNzDataset[] = [
   { name: 'rainfall-1', title: 'Rainfall records', organization: 'NIWA' },
 ];
 
-SEARCH_MOCK.mockResolvedValue(DATASETS);
+SEARCH_MOCK.mockResolvedValue({ datasets: DATASETS, totalCount: 3 });
 
 vi.mock('@/lib/live-sources', () => ({
   searchLiveDataGovtNz: SEARCH_MOCK,
@@ -53,14 +53,15 @@ describe('OpenDataSearch', () => {
   });
 
   it('discards a stale response from an earlier search', async () => {
-    let resolveFirst: (value: LiveDataGovtNzDataset[]) => void = () => undefined;
-    const first = new Promise<LiveDataGovtNzDataset[]>((resolve) => {
+    let resolveFirst: (value: LiveDataGovtNzSearchResult) => void = () => undefined;
+    const first = new Promise<LiveDataGovtNzSearchResult>((resolve) => {
       resolveFirst = resolve;
     });
     SEARCH_MOCK.mockImplementationOnce(() => first);
-    SEARCH_MOCK.mockImplementationOnce(async () => [
-      { name: 'sheep-counts', title: 'Sheep counts', organization: 'Stats NZ' },
-    ]);
+    SEARCH_MOCK.mockImplementationOnce(async () => ({
+      datasets: [{ name: 'sheep-counts', title: 'Sheep counts', organization: 'Stats NZ' }],
+      totalCount: 1,
+    }));
     render(<OpenDataSearch initialQuery="water" />);
     fireEvent.change(screen.getByLabelText(/Search the open data catalogue/), {
       target: { value: 'sheep' },
@@ -72,10 +73,22 @@ describe('OpenDataSearch', () => {
     fireEvent.submit(form);
     expect(await screen.findByText(/1 datasets match "sheep"/)).toBeInTheDocument();
     expect(screen.getByText('Sheep counts')).toBeInTheDocument();
-    resolveFirst(DATASETS);
+    resolveFirst({ datasets: DATASETS, totalCount: 3 });
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(screen.queryByText('River water quality')).not.toBeInTheDocument();
     expect(screen.getByText('Sheep counts')).toBeInTheDocument();
+  });
+
+  it('shows the real total match count, not the capped row count', async () => {
+    SEARCH_MOCK.mockImplementationOnce(async () => ({
+      datasets: DATASETS,
+      totalCount: 4236,
+    }));
+    render(<OpenDataSearch initialQuery="water" />);
+    expect(
+      await screen.findByText(/4,236 datasets match "water"; showing the first 20/),
+    ).toBeInTheDocument();
+    expect(screen.getByText('River water quality')).toBeInTheDocument();
   });
 
   it('has no accessibility violations', async () => {
