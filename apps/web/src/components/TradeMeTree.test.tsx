@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -70,8 +70,20 @@ describe('TradeMeTree', () => {
   it('loads the tree and shows top-level categories', async () => {
     render(<TradeMeTree />);
     expect(await screen.findByText(/categories in the tree/)).toBeInTheDocument();
-    expect(screen.getByText(/Trade Me Motors/)).toBeInTheDocument();
-    expect(screen.getByText(/Home & living/)).toBeInTheDocument();
+    expect(screen.getAllByText(/Trade Me Motors/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Home & living/).length).toBeGreaterThan(0);
+  });
+
+  it('renders a data table of top-level categories and leaf counts', async () => {
+    render(<TradeMeTree />);
+    await screen.findByText(/categories in the tree/);
+    expect(
+      screen.getAllByText('View top-level categories by leaf count as a table').length,
+    ).toBeGreaterThan(0);
+    expect(screen.getByRole('cell', { name: 'Home & living' })).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: '2' })).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: 'Trade Me Motors' })).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: '1' })).toBeInTheDocument();
   });
 
   it('expands a category to show its subcategories', async () => {
@@ -87,8 +99,9 @@ describe('TradeMeTree', () => {
     fireEvent.change(screen.getByLabelText(/Filter Trade Me categories/), {
       target: { value: 'furniture' },
     });
-    expect(screen.getByText('Furniture')).toBeInTheDocument();
-    expect(screen.queryByText('Trade Me Motors')).not.toBeInTheDocument();
+    const results = within(screen.getByRole('list'));
+    expect(results.getByText('Furniture')).toBeInTheDocument();
+    expect(results.queryByText('Trade Me Motors')).not.toBeInTheDocument();
   });
 
   it('has no accessibility violations', async () => {

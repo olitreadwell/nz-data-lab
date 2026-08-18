@@ -11,9 +11,12 @@ export const HIDDEN_MICROSITES: string[] = [
   'shake-index',
   'digitised-memory',
   'backyard-species-census',
+  'species-record-ledger',
   'what-the-world-reads',
-  'online-garage-sale',
   'open-data-catalogue',
+  'vineyard-boom',
+  'species-register',
+  'auckland-parks',
 ];
 
 /**
