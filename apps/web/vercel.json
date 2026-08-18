@@ -1,11 +1,12 @@
 {
+  "buildCommand": "next build && node scripts/generate-csp.mjs",
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://tile.openstreetmap.org; connect-src 'self' https://data.nzor.org.nz https://catalogue.data.govt.nz https://api.digitalnz.org https://api.trademe.co.nz https://api.inaturalist.org https://api.gbif.org https://en.wikipedia.org https://query.wikidata.org https://services1.arcgis.com https://overpass-api.de; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+          "value": "default-src 'self'; script-src 'self' 'nonce-YDZl7Z4hedbPJLnX/mWU4w=='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://tile.openstreetmap.org; connect-src 'self' https://data.nzor.org.nz https://catalogue.data.govt.nz https://api.digitalnz.org https://api.trademe.co.nz https://api.inaturalist.org https://api.gbif.org https://en.wikipedia.org https://query.wikidata.org https://services1.arcgis.com https://overpass-api.de; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
         },
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },

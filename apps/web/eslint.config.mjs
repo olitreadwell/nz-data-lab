@@ -11,7 +11,12 @@ export default [
       parserOptions: {
         tsconfigRootDir: __dirname,
         projectService: {
-          allowDefaultProject: ['eslint.config.mjs', 'postcss.config.mjs', 'playwright.config.ts'],
+          allowDefaultProject: [
+            'eslint.config.mjs',
+            'postcss.config.mjs',
+            'playwright.config.ts',
+            'scripts/generate-csp.mjs',
+          ],
         },
       },
     },
@@ -19,12 +24,18 @@ export default [
   {
     // Standalone config files aren't part of the TS project, so type-aware
     // unsafe rules can't resolve their imports. They're config, not app code.
-    files: ['eslint.config.mjs', 'postcss.config.mjs', 'playwright.config.ts'],
+    files: [
+      'eslint.config.mjs',
+      'postcss.config.mjs',
+      'playwright.config.ts',
+      'scripts/generate-csp.mjs',
+    ],
     rules: {
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
     },
   },
   {
