@@ -22,9 +22,10 @@ import { PeakHeights } from '@/components/PeakHeights';
 import { PopulationRankBump } from '@/components/PopulationRankBump';
 import { QuakeMagnitudeHistogram } from '@/components/QuakeMagnitudeHistogram';
 import { QuakeMap } from '@/components/QuakeMap';
+import { RegionalRankSlope } from '@/components/RegionalRankSlope';
 import { RiverLengths } from '@/components/RiverLengths';
-import { SchoolRoll } from '@/components/SchoolRoll';
 import { RoadCrashTrend } from '@/components/RoadCrashTrend';
+import { SchoolRoll } from '@/components/SchoolRoll';
 import { SheepChart } from '@/components/SheepChart';
 import { SpeciesRecordLedger } from '@/components/SpeciesRecordLedger';
 import { SpeciesRegisterSearch } from '@/components/SpeciesRegisterSearch';
@@ -56,6 +57,7 @@ import { MICROSITES } from '@/lib/microsites';
 import { fetchRecentQuakeCatalog } from '@/lib/quake-catalog';
 import type { QuakeCatalogEvent } from '@/lib/quake-catalog';
 import { fetchRecentQuakes } from '@/lib/quake-data';
+import { REGIONAL_CENSUS_ROWS } from '@/lib/regional-census-data';
 import { fetchSheepSeries } from '@/lib/sheep-data';
 import { formatMillions as formatMillionsSheep } from '@/lib/sheep-format';
 
@@ -67,9 +69,7 @@ export function generateStaticParams(): { slug: string }[] {
   return MICROSITES.map((microsite) => ({ slug: microsite.slug }));
 }
 
-export async function generateMetadata({
-  params,
-}: MicrositePageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: MicrositePageProps): Promise<Metadata> {
   const { slug } = await params;
   const microsite = MICROSITES.find((candidate) => candidate.slug === slug);
   if (microsite === undefined) {
@@ -664,6 +664,38 @@ function renderStoryContent(
               dataValue={strongest?.magnitude}
             />
             <StatCard label="Felt quakes per year" value={FELT_QUAKES_PER_YEAR} accent="rose" />
+          </dl>
+        ),
+      };
+    }
+    case 'regional-population-ranks': {
+      const auckland = REGIONAL_CENSUS_ROWS.find((row) => row.name === 'Auckland');
+      const westCoast = REGIONAL_CENSUS_ROWS.find((row) => row.name === 'West Coast');
+      return {
+        chart: <RegionalRankSlope />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Auckland region, 2023 census"
+              value={auckland?.population2023.toLocaleString('en-NZ') ?? ''}
+              accent="teal"
+              testId="auckland-region-population"
+              dataValue={auckland?.population2023}
+            />
+            <StatCard
+              label="Auckland rank, 2013 and 2023"
+              value="#1 both censuses"
+              accent="teal"
+              testId="auckland-region-rank"
+              dataValue={auckland?.rank2023}
+            />
+            <StatCard
+              label="West Coast rank, 2023"
+              value="#16"
+              accent="teal"
+              testId="west-coast-rank"
+              dataValue={westCoast?.rank2023}
+            />
           </dl>
         ),
       };

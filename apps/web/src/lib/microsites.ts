@@ -565,7 +565,7 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
     slug: 'open-school-map',
     label: 'Open school map',
     eyebrow: '🏫 the open school map',
-    title: "New Zealand has 2,604 schools mapped on OpenStreetMap.",
+    title: 'New Zealand has 2,604 schools mapped on OpenStreetMap.',
     description:
       'OpenStreetMap maps 2,604 schools in New Zealand, from kura to universities. Most carry Ministry of Education tags, so the map reads like a school directory.',
     paragraphs: [
@@ -817,6 +817,33 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
         label: 'New Zealand Motor Vehicle Register statistics (NZTA)',
         url: 'https://www.nzta.govt.nz/resources/new-zealand-motor-vehicle-register-statistics/',
         kind: 'data',
+      },
+    ],
+  },
+  {
+    slug: 'regional-population-ranks',
+    label: 'Regional population ranks',
+    eyebrow: '🗺️ the regional population ranks',
+    title: 'The regional pecking order is frozen.',
+    description:
+      'Between the 2013 and 2023 censuses, not one of the 16 regions changed rank. Auckland stayed first with 1,656,486 people, and the West Coast stayed last with 33,390.',
+    paragraphs: [
+      'The ranks are stable because the regions grow at similar rates. The West Coast was the only region whose population shrank between 2013 and 2018, from 32,148 to 31,575, before growing again to 33,390 by 2023.',
+      'Ranks hide absolute change, so the table keeps the counts. Every region grew between 2018 and 2023, and Tasman grew fastest at 10.3 percent.',
+    ],
+    accent: 'teal',
+    dataNote:
+      'Data: Stats NZ 2023 Census population counts release (Table 1, published 29 May 2024), usually resident population counts by regional council. Counts have fixed random rounding to base 3 applied. The series is final: censuses run every five years.',
+    references: [
+      {
+        label: '2023 Census population counts release (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
+        kind: 'data',
+      },
+      {
+        label: 'First results from the 2023 Census (Stats NZ)',
+        url: 'https://www.stats.govt.nz/news/first-results-from-the-2023-census-older-more-diverse-population-and-an-extra-300000-people-between-censuses/',
+        kind: 'news',
       },
     ],
   },
