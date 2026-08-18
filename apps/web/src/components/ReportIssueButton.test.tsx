@@ -10,6 +10,7 @@ const OPEN_URL = 'https://github.com/olitreadwell/nz-data-lab/issues/new';
 
 afterEach(() => {
   vi.restoreAllMocks();
+  window.history.pushState({}, '', '/');
 });
 
 describe('ReportIssueButton', () => {
@@ -18,7 +19,9 @@ describe('ReportIssueButton', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Report an issue' }));
     expect(screen.getByRole('dialog', { name: 'Report an issue' })).toBeInTheDocument();
     expect(screen.getByRole('textbox', { name: /what happened/i })).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: /what did you expect/i })).toBeInTheDocument();
     expect(screen.getByRole('combobox', { name: /type/i })).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: /severity/i })).toBeInTheDocument();
     expect(screen.getByRole('combobox', { name: /item/i })).toBeInTheDocument();
   });
 
@@ -26,7 +29,7 @@ describe('ReportIssueButton', () => {
     render(<ReportIssueButton />);
     fireEvent.click(screen.getByRole('button', { name: 'Report an issue' }));
     const dialog = screen.getByRole('dialog');
-    const description = screen.getByText('Opens a prefilled GitHub issue for this page.');
+    const description = screen.getByText("Prefills a GitHub issue with this page's context.");
     expect(dialog).toHaveAttribute('aria-describedby', 'report-issue-description');
     expect(description).toHaveAttribute('id', 'report-issue-description');
   });
@@ -47,8 +50,51 @@ describe('ReportIssueButton', () => {
     expect(params.get('title')).toContain('[Bug]');
     expect(params.get('body')).toContain('Sheep index');
     expect(params.get('body')).toContain('The sheep chart shows the wrong year range.');
-    expect(params.get('body')).not.toContain('User agent');
-    expect(params.get('body')).not.toContain(navigator.userAgent);
+    expect(params.get('body')).toContain('## Environment');
+    expect(params.get('body')).toContain('Severity: Not sure');
+  });
+
+  it('preselects the current microsite from the URL', () => {
+    window.history.pushState({}, '', '/microsites/sheep-index');
+    render(<ReportIssueButton />);
+    fireEvent.click(screen.getByRole('button', { name: 'Report an issue' }));
+    expect(screen.getByRole('combobox', { name: /item/i })).toHaveValue('Sheep index');
+  });
+
+  it('includes the microsite data note when a microsite is selected', () => {
+    const open = vi.spyOn(window, 'open').mockImplementation(() => null);
+    render(<ReportIssueButton />);
+    fireEvent.click(screen.getByRole('button', { name: 'Report an issue' }));
+    fireEvent.change(screen.getByRole('combobox', { name: /item/i }), {
+      target: { value: 'Sheep index' },
+    });
+    fireEvent.change(screen.getByRole('textbox', { name: /what happened/i }), {
+      target: { value: 'The sheep chart shows the wrong year range.' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Open GitHub issue' }));
+
+    const url = open.mock.calls[0]?.[0] as string;
+    const params = new URLSearchParams(url.split('?')[1] ?? '');
+    expect(params.get('body')).toContain('## Data context');
+    expect(params.get('body')).toContain('Stats NZ Aotearoa Data Explorer');
+  });
+
+  it('includes the expected field when filled', () => {
+    const open = vi.spyOn(window, 'open').mockImplementation(() => null);
+    render(<ReportIssueButton />);
+    fireEvent.click(screen.getByRole('button', { name: 'Report an issue' }));
+    fireEvent.change(screen.getByRole('textbox', { name: /what happened/i }), {
+      target: { value: 'The sheep chart shows the wrong year range.' },
+    });
+    fireEvent.change(screen.getByRole('textbox', { name: /what did you expect/i }), {
+      target: { value: 'The chart should start in 1994.' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Open GitHub issue' }));
+
+    const url = open.mock.calls[0]?.[0] as string;
+    const params = new URLSearchParams(url.split('?')[1] ?? '');
+    expect(params.get('body')).toContain('## Expected');
+    expect(params.get('body')).toContain('The chart should start in 1994.');
   });
 
   it('closes on Escape and returns focus to the trigger', () => {
