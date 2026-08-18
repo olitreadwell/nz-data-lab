@@ -196,6 +196,16 @@ describe('MicrositePage', () => {
     expect(html).toContain('5,122,600');
   });
 
+  it('renders the region density story', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'region-density' })} />,
+    );
+    const html = await new Response(stream).text();
+    expect(html).toContain('Auckland holds a third of the people');
+    expect(html).toContain('People per km², NZ (2023)');
+    expect(html).toContain('West Coast (2023)');
+  });
+
   it('renders the quake years story', async () => {
     const stream = await renderToReadableStream(
       <MicrositePage params={Promise.resolve({ slug: 'quake-years' })} />,

@@ -886,4 +886,42 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+
+  {
+    slug: 'region-density',
+    label: 'Region density',
+    eyebrow: '🗺️ the region density',
+    title: 'Auckland holds a third of the people on 2% of the land.',
+    description:
+      "New Zealand's 16 regional councils cover 264,091 square kilometres of land. At the 2023 census, Auckland held 1,656,486 people, a third of the country, on 4,941 square kilometres, under 2% of it.",
+    paragraphs: [
+      'The 2023 census counted 4,993,923 people by regional council, about 18.9 per square kilometre. Auckland runs at 335.3 per square kilometre, more than 17 times the national density.',
+      'Nelson is the next busiest council at 124.6 per square kilometre, a pocket of 52,584 people on just 422 square kilometres. The West Coast is the emptiest at 1.4 people per square kilometre. Toggle the census year to watch the 2013 to 2023 shift.',
+    ],
+    accent: 'indigo',
+    dataNote:
+      'Data: Stats NZ "2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts", Table 1, usually resident population by regional council area, 2013, 2018, and 2023 Censuses. Land areas are Stats NZ regional council land areas as tabulated on Wikipedia\'s "Regions of New Zealand" page, which cites the Stats NZ "Regional Council 2020 Clipped (generalised)" boundary layer. Boundaries shown are the 2023 regional council areas. Counts have fixed random rounding to base 3 applied.',
+    references: [
+      {
+        label: '2023 Census population counts (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
+        kind: 'data',
+      },
+      {
+        label: '2023 Census (Stats NZ)',
+        url: 'https://www.stats.govt.nz/2023-census/',
+        kind: 'data',
+      },
+      {
+        label: 'Regions of New Zealand (Wikipedia)',
+        url: 'https://en.wikipedia.org/wiki/Regions_of_New_Zealand',
+        kind: 'data',
+      },
+      {
+        label: 'Regional Council 2020 Clipped (generalised) (Stats NZ)',
+        url: 'https://datafinder.stats.govt.nz/layer/104253-regional-council-2020-clipped-generalised/',
+        kind: 'data',
+      },
+    ],
+  },
 ]);

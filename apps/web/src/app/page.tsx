@@ -191,6 +191,11 @@ export default async function HomePage(): Promise<React.ReactElement> {
       statLabel: 'Quakes at M4+, 2001-2024',
       statValue: '7,265',
     },
+    {
+      config: getMicrosite('region-density'),
+      statLabel: 'People per km², NZ',
+      statValue: '18.9',
+    },
   ].filter(
     (card): card is { config: MicrositeConfig; statLabel: string; statValue: string } =>
       card.config !== undefined,

@@ -24,6 +24,7 @@ import { QuakeMagnitudeHistogram } from '@/components/QuakeMagnitudeHistogram';
 import { QuakeMap } from '@/components/QuakeMap';
 import { QuakeYearStripChart } from '@/components/QuakeYearStripChart';
 import { RabbitChart } from '@/components/RabbitChart';
+import { RegionDensityChoropleth } from '@/components/RegionDensityChoropleth';
 import { ReportIssueButton } from '@/components/ReportIssueButton';
 import { RiverLengths } from '@/components/RiverLengths';
 import { RoadCrashTrend } from '@/components/RoadCrashTrend';
@@ -63,6 +64,7 @@ import { QUAKE_YEAR_PEAK, QUAKE_YEAR_QUIET, QUAKE_YEAR_TOTAL } from '@/lib/quake
 import { fetchRabbitSpotlightSeries } from '@/lib/rabbit-data';
 import type { RabbitSpotlightSeries } from '@/lib/rabbit-data';
 import { formatRabbitsPerKm } from '@/lib/rabbit-format';
+import { densityFor, nationalDensity, regionDensityRowByKey } from '@/lib/region-density-data';
 import { fetchSheepSeries } from '@/lib/sheep-data';
 import { formatMillions as formatMillionsSheep } from '@/lib/sheep-format';
 
@@ -677,6 +679,38 @@ function renderStoryContent(
           </dl>
         ),
       };
+    case 'region-density': {
+      const auckland = regionDensityRowByKey('auckland');
+      const westCoast = regionDensityRowByKey('west-coast');
+      return {
+        chart: <RegionDensityChoropleth />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="People per km², NZ (2023)"
+              value={nationalDensity(2023).toFixed(1)}
+              accent="indigo"
+              testId="region-density-national"
+              dataValue={Math.round(nationalDensity(2023))}
+            />
+            <StatCard
+              label="Auckland (2023)"
+              value={`${densityFor(auckland, 2023).toFixed(1)} per km²`}
+              accent="indigo"
+              testId="region-density-auckland"
+              dataValue={Math.round(densityFor(auckland, 2023))}
+            />
+            <StatCard
+              label="West Coast (2023)"
+              value={`${densityFor(westCoast, 2023).toFixed(1)} per km²`}
+              accent="indigo"
+              testId="region-density-west-coast"
+              dataValue={Math.round(densityFor(westCoast, 2023))}
+            />
+          </dl>
+        ),
+      };
+    }
     case 'quake-years': {
       return {
         chart: <QuakeYearStripChart />,
