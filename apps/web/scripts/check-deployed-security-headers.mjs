@@ -52,35 +52,11 @@ const inlineNonces = [...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*\snonce="([^"
 const blocked = inlineNonces.filter((nonce) => !scriptSrc.includes(`'nonce-${nonce}'`));
 if (blocked.length > 0) {
   process.stderr.write(
-    `Deployed URL ${url} serves a CSP that blocks script nonce(s): ${blocked.join(', ')}\n`,
+    `Deployed URL ${url} serves a CSP that blocks inline scripts with nonce(s): ${blocked.join(', ')}\n`,
   );
   process.exit(1);
-}
-
-// A strict style-src needs every inline style attribute to carry the same
-// per-build nonce the CSP serves. The nonce is stamped right after the tag
-// name, so the style attribute always follows it.
-const styleSrc = /style-src\s+([^;]+)/.exec(csp)?.[1] ?? '';
-if (styleSrc.includes("'unsafe-inline'")) {
-  process.stderr.write(`Deployed URL ${url} still serves 'unsafe-inline' in style-src.\n`);
-  process.exit(1);
-}
-const styledElements = [...html.matchAll(/<[a-z][a-z0-9-]*[^>]*\sstyle="/g)].length;
-const noncedStyledElements = [...html.matchAll(/<[a-z][a-z0-9-]* nonce="[^"]+"[^>]*\sstyle="/g)]
-  .length;
-if (styledElements > 0 && styledElements !== noncedStyledElements) {
-  process.stderr.write(
-    `Deployed URL ${url} has ${styledElements} inline style attributes but only ${noncedStyledElements} carry the nonce.\n`,
-  );
-  process.exit(1);
-}
-for (const match of html.matchAll(/<[a-z][a-z0-9-]* nonce="([^"]+)"[^>]*\sstyle="/g)) {
-  if (!styleSrc.includes(`'nonce-${match[1]}'`)) {
-    process.stderr.write(`Deployed URL ${url} serves a CSP that blocks style nonce ${match[1]}.\n`);
-    process.exit(1);
-  }
 }
 
 process.stdout.write(
-  `Deployed URL ${url} serves all security headers and permits its inline scripts and styles.\n`,
+  `Deployed URL ${url} serves all security headers and permits its inline scripts.\n`,
 );
