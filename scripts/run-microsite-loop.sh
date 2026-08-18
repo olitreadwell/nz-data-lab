@@ -7,8 +7,8 @@
 # - The lock records the PID; a lock whose PID is dead or older than
 #   LOCK_MAX_MINUTES is stale and gets cleared, so a crashed run never
 #   blocks the loop forever.
-# - Lock skips and stale-lock clears count toward the heal counter, so a
-#   persistently blocked loop spawns a self-healing session.
+# - A lock skip means an iteration or heal is already running, so it never
+#   spawns another heal: a live lock is active work, not a blocker.
 # - Each agent run is capped at RUN_TIMEOUT_MINUTES and killed if it stalls,
 #   then retried on the next tick.
 # - Each iteration prunes merged feat/microsite-loop-* worktrees, branches,
@@ -125,7 +125,6 @@ acquire_lock() {
 }
 
 if ! acquire_lock; then
-  maybe_heal
   exit 0
 fi
 trap 'rm -f "$LOCK"' EXIT

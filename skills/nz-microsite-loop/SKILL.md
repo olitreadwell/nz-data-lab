@@ -123,6 +123,15 @@ fix the guard or the skill rather than working around it by hand.
   deliverable; remove them rather than committing them. If an agent is
   actively working, do not fight it: document the situation and exit.
 
+- A lock skip must never spawn a heal: the wrapper's lock-skip path used to
+  call maybe_heal, so while a heal session held the lock (the wrapper waits
+  on it synchronously), every 20-minute tick saw a live lock, skipped, and
+  spawned another heal. Two heal sessions then diagnosed the same blocker
+  concurrently. A live lock means an iteration or heal is already running,
+  which is active work, not a blocker; the wrapper now exits quietly on a
+  lock skip. If you see a second heal session in the log, let it finish and
+  reconcile its changes rather than fighting it.
+
 - Spec stories can contradict the data: viz-090's spec claimed deep quakes
   cluster under the South Island, but the catalog shows them clustering under
   the North Island (the Hikurangi subduction story). Check a spec's story
