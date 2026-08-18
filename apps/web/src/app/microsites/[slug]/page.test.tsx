@@ -235,3 +235,23 @@ it('renders the EV charging story', async () => {
   expect(html).toContain('ChargeNet runs 307');
   expect(html).toContain('EV Roam charging stations (NZTA)');
 });
+
+it('renders the road crash trend story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'road-crash-trend' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('Road crashes fell 27%');
+  expect(html).toContain('39,778 in 2006');
+  expect(html).toContain('Crash Analysis System data (NZTA)');
+});
+
+it('renders the vehicle fleet story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'vehicle-fleet' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('107,525 electric vehicles');
+  expect(html).toContain('3.18 million');
+  expect(html).toContain('Motor Vehicle Register (NZTA)');
+});

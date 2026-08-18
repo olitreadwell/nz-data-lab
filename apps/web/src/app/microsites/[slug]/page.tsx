@@ -24,11 +24,13 @@ import { QuakeMagnitudeHistogram } from '@/components/QuakeMagnitudeHistogram';
 import { QuakeMap } from '@/components/QuakeMap';
 import { RiverLengths } from '@/components/RiverLengths';
 import { SchoolRoll } from '@/components/SchoolRoll';
+import { RoadCrashTrend } from '@/components/RoadCrashTrend';
 import { SheepChart } from '@/components/SheepChart';
 import { SpeciesRecordLedger } from '@/components/SpeciesRecordLedger';
 import { SpeciesRegisterSearch } from '@/components/SpeciesRegisterSearch';
 import { StatCard } from '@/components/StatCard';
 import { TradeMeTree } from '@/components/TradeMeTree';
+import { VehicleFleet } from '@/components/VehicleFleet';
 import { WhatTheWorldReads } from '@/components/WhatTheWorldReads';
 import { env } from '@/env';
 import { CENSUS_RANK_HIGHLIGHTS, formatRankOrdinal } from '@/lib/census-rank-data';
@@ -613,6 +615,28 @@ function renderStoryContent(
             <StatCard label="Public charging stations" value="639" accent="emerald" />
             <StatCard label="ChargeNet share" value="307" accent="emerald" />
             <StatCard label="DC stations" value="566" accent="emerald" />
+          </dl>
+        ),
+      };
+    case 'road-crash-trend':
+      return {
+        chart: <RoadCrashTrend />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard label="Crashes in 2006" value="39,778" accent="rose" />
+            <StatCard label="Crashes in 2025" value="29,017" accent="rose" />
+            <StatCard label="Change" value="-27%" accent="rose" />
+          </dl>
+        ),
+      };
+    case 'vehicle-fleet':
+      return {
+        chart: <VehicleFleet />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard label="Vehicles in the register" value="5.9 M" accent="sky" />
+            <StatCard label="Electric vehicles" value="107,525" accent="sky" />
+            <StatCard label="Petrol vehicles" value="3.18 M" accent="sky" />
           </dl>
         ),
       };
