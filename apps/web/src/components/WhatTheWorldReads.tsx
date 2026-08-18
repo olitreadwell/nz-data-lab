@@ -129,6 +129,7 @@ export function WhatTheWorldReads(): React.ReactElement {
               max={MAX_WINDOW_DAYS}
               step={1}
               value={windowDays}
+              aria-valuetext={`${windowDays} days`}
               onChange={(event) => setWindowDays(Number(event.target.value))}
               className="mt-1 w-full"
             />

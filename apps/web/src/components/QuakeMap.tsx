@@ -58,6 +58,7 @@ export function QuakeMap({ quakes }: QuakeMapProps): React.ReactElement {
             max={MAX_MAGNITUDE_LIMIT}
             step={MAGNITUDE_STEP}
             value={minMagnitude}
+            aria-valuetext={`${minMagnitude.toFixed(1)} magnitude`}
             onChange={(event) => setMinMagnitude(Number(event.target.value))}
             className="w-full"
           />
@@ -72,6 +73,7 @@ export function QuakeMap({ quakes }: QuakeMapProps): React.ReactElement {
             max={MAX_DEPTH_LIMIT}
             step={DEPTH_STEP}
             value={maxDepthKm}
+            aria-valuetext={`${maxDepthKm} km`}
             onChange={(event) => setMaxDepthKm(Number(event.target.value))}
             className="w-full"
           />

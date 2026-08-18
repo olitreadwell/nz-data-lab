@@ -52,6 +52,15 @@ describe('WhatTheWorldReads', () => {
     expect(screen.getAllByText(/last 7 days/).length).toBeGreaterThan(0);
   });
 
+  it('announces the window unit via aria-valuetext', async () => {
+    render(<WhatTheWorldReads />);
+    await screen.findByText(/3 pages, fetched live/);
+    const slider = screen.getByRole('slider', { name: /Window/ });
+    expect(slider).toHaveAttribute('aria-valuetext', '30 days');
+    fireEvent.change(slider, { target: { value: '7' } });
+    expect(slider).toHaveAttribute('aria-valuetext', '7 days');
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = render(<WhatTheWorldReads />);
     await screen.findByText(/3 pages, fetched live/);

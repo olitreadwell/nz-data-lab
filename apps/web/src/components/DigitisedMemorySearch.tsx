@@ -176,6 +176,7 @@ export function DigitisedMemorySearch({
                     max={lastDecade}
                     step={DECADE_STEP}
                     value={minDecade}
+                    aria-valuetext={`${minDecade}s`}
                     onChange={(event) => {
                       const value = Number(event.target.value);
                       setMinDecade(Math.min(value, maxDecade));
@@ -192,6 +193,7 @@ export function DigitisedMemorySearch({
                     max={lastDecade}
                     step={DECADE_STEP}
                     value={maxDecade}
+                    aria-valuetext={`${maxDecade}s`}
                     onChange={(event) => {
                       const value = Number(event.target.value);
                       setMaxDecade(Math.max(value, minDecade));
