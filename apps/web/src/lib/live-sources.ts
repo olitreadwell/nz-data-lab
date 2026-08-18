@@ -22,6 +22,9 @@ const MAX_NZOR_NAMES = 20;
 /** How long a browser live-search request may take before it is aborted. */
 export const LIVE_SEARCH_TIMEOUT_MS = 10_000;
 
+/** How long the Overpass schools query may take before it is aborted (matches its [timeout:60]). */
+export const OVERPASS_SCHOOLS_TIMEOUT_MS = 60_000;
+
 /** Creates an AbortController that aborts after the live-search timeout.
  * @returns the controller whose signal is passed to fetch.
  */
@@ -692,17 +695,22 @@ area["ISO3166-1"="NZ"]["boundary"="administrative"]->.nz;
 .schools convert school ::id=id(), name=t["name"], years=t["MOE:years"], authority=t["MOE:authority"];
 out;`;
   const url = new URL('https://overpass-api.de/api/interpreter');
-  const controller = createLiveSearchAbortController();
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: `data=${encodeURIComponent(query)}`,
-    signal: controller.signal,
-  });
-  if (!response.ok) {
-    throw new Error(`Overpass HTTP ${response.status}`);
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), OVERPASS_SCHOOLS_TIMEOUT_MS);
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `data=${encodeURIComponent(query)}`,
+      signal: controller.signal,
+    });
+    if (!response.ok) {
+      throw new Error(`Overpass HTTP ${response.status}`);
+    }
+    return parseNzSchools(await response.json());
+  } finally {
+    clearTimeout(timer);
   }
-  return parseNzSchools(await response.json());
 }
 
 export interface LiveCanterburyRainGauge {

@@ -7,7 +7,7 @@
  * hidden microsite disappears from the home grid and its page stops being
  * generated (direct URLs 404).
  */
-export const HIDDEN_MICROSITES: string[] = ['auckland-parks', 'peak-heights', 'open-school-map'];
+export const HIDDEN_MICROSITES: string[] = ['auckland-parks', 'peak-heights'];
 
 /**
  * Filters a microsite list down to the ones that are not hidden.
