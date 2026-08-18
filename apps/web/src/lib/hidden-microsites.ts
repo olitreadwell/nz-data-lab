@@ -14,7 +14,6 @@ export const HIDDEN_MICROSITES: string[] = [
   'what-the-world-reads',
   'online-garage-sale',
   'open-data-catalogue',
-  'auckland-parks',
   'vineyard-boom',
 ];
 

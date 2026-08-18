@@ -38,7 +38,7 @@ describe('AucklandParks', () => {
   it('filters boards by name', async () => {
     render(<AucklandParks />);
     await screen.findByText(/6 local boards, fetched live/);
-    const search = screen.getByRole('searchbox', { name: /Filter/ });
+    const search = screen.getByRole('searchbox', { name: /Filter boards by name/ });
     fireEvent.change(search, { target: { value: 'howick' } });
     expect(screen.getAllByText('Howick').length).toBeGreaterThan(0);
     expect(screen.queryByText('Franklin')).not.toBeInTheDocument();
