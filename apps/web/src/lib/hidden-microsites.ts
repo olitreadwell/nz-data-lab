@@ -9,7 +9,6 @@
  */
 export const HIDDEN_MICROSITES: string[] = [
   'digitised-memory',
-  'open-school-map',
   'auckland-parks',
   'peak-heights',
 ];
