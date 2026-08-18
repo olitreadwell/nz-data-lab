@@ -1435,4 +1435,103 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+  {
+    slug: 'unemployment-ranks',
+    label: 'Unemployment ranks',
+    eyebrow: '📈 the unemployment shuffle',
+    title: 'The unemployment pecking order reshuffles every year.',
+    description:
+      'Between December 2023 and December 2025, Auckland went from the fifth-highest regional unemployment rate to the highest, and Wellington from ninth to third. Otago stayed the tightest labour market in the country throughout.',
+    paragraphs: [
+      'The national unemployment rate rose from 4.0 percent in December 2023 to 5.3 percent in December 2025. Auckland moved most, from 4.2 to 6.4 percent, and its rank climbed from fifth to first. Wellington went from 3.3 to 5.8 percent.',
+      'Northland, Waikato, and Manawat\u016b-Whanganui swapped the top spots early in the period. Taranaki drifted the other way, from the seventh-highest rate to the tenth, while its rate barely moved.',
+      "The Household Labour Force Survey is a sample, so small regions carry wide margins of error. Northland's December 2025 rate of 5.2 percent has a sampling error of about 2.7 percentage points.",
+    ],
+    accent: 'rose',
+    dataNote:
+      'Data: Stats NZ Household Labour Force Survey, December 2025 quarter (Table 6, people employed, unemployed, and not in the labour force, by regional council area), unadjusted quarterly unemployment rates for December 2023 to December 2025. Rank 1 is the highest unemployment rate that quarter; ties keep workbook order. Regional estimates carry wide sampling errors, especially for smaller regions.',
+    references: [
+      {
+        label: 'Labour market statistics: December 2025 quarter (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/labour-market-statistics-december-2025-quarter/',
+        kind: 'data',
+      },
+      {
+        label: 'HLFS regional tables workbook (Stats NZ)',
+        url: 'https://www.stats.govt.nz/assets/Uploads/Labour-market-statistics/Labour-market-statistics-December-2025-quarter/Download-data/household-labour-force-survey-december-2025-quarter.xlsx',
+        kind: 'data',
+      },
+      {
+        label: 'Unemployment (Stats NZ)',
+        url: 'https://www.stats.govt.nz/topics/labour-market/',
+        kind: 'history',
+      },
+    ],
+  },
+  {
+    slug: 'median-age-by-region',
+    label: 'The ageing map',
+    eyebrow: '🧓 the ageing map',
+    title: 'The West Coast aged five years in one decade.',
+    description:
+      'The median age in the West Coast region rose from 42.8 in 2013 to 47.9 in 2023, the biggest jump of any region. Auckland stayed the youngest at 35.9.',
+    paragraphs: [
+      'The national median age was 37.9 in 2013 and 38.2 in 2023, a movement of less than half a year. The map underneath moved far more. West Coast, Tasman, and Marlborough are the three oldest regions, and all three passed 46 by 2023.',
+      'The other direction is smaller. Bay of Plenty, Otago, and Canterbury were each younger in 2023 than in 2013, and Gisborne barely moved.',
+    ],
+    accent: 'indigo',
+    dataNote:
+      'Data: Stats NZ 2023 Census release "2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts", Table 7 (age in five-year groups for the census usually resident population by regional council area). Median ages are interpolated within the five-year band holding the midpoint of each regional population, so they are estimates, not published medians.',
+    references: [
+      {
+        label: '2023 Census population counts release (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
+        kind: 'data',
+      },
+      {
+        label: 'Population counts workbook (Stats NZ)',
+        url: 'https://www.stats.govt.nz/assets/Uploads/2023-Census-population-counts-by-ethnic-group-age-and-Maori-descent-and-dwelling-counts/Downloads/2023-Census-national-and-subnational-usually-resident-population-counts-and-dwelling-counts.xlsx',
+        kind: 'data',
+      },
+      {
+        label: '2023 Census (Stats NZ)',
+        url: 'https://www.stats.govt.nz/2023-census/',
+        kind: 'history',
+      },
+    ],
+  },
+
+  {
+    slug: 'tourist-arrivals',
+    label: 'Tourist arrivals',
+    eyebrow: '✈️ the tourist arrivals',
+    title: 'Australia sends more visitors than the next nine countries combined.',
+    description:
+      'In the year ended December 2019, 1.54 million visitors arrived from Australia. China was second with 407,141, and the United States third with 367,958.',
+    paragraphs: [
+      'The gap was already there in 2015, when Australia sent 1.33 million visitors, again more than the next nine countries combined.',
+      'The fastest growers were the United States, up 51 percent from 2015 to 2019, and India, up 45 percent. Japan grew 12 percent and the United Kingdom 14 percent.',
+      '2019 is the last full year before the border closed. The series stops there on purpose, so the pandemic does not distort the rankings.',
+    ],
+    accent: 'sky',
+    dataNote:
+      'Data: Stats NZ International travel: December 2019 (Table 4, visitor arrivals by country of residence, years ended December 2015 and 2019). 2019 is the last full pre-pandemic year, so the series stops before the 2020-21 border closures.',
+    references: [
+      {
+        label: 'International travel: December 2019 (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/international-travel-december-2019/',
+        kind: 'data',
+      },
+      {
+        label: 'International travel: December 2024 (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/international-travel-december-2024/',
+        kind: 'data',
+      },
+      {
+        label: 'Tourism (Stats NZ)',
+        url: 'https://www.stats.govt.nz/topics/tourism/',
+        kind: 'history',
+      },
+    ],
+  },
 ]);

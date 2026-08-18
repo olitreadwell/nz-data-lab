@@ -438,3 +438,33 @@ it('renders the business register story', async () => {
   expect(html).toContain('617,334');
   expect(html).toContain('Business demography: At February 2025 (Stats NZ)');
 });
+
+it('renders the unemployment ranks story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'unemployment-ranks' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('The unemployment pecking order reshuffles every year');
+  expect(html).toContain('National unemployment rate (Dec 2025)');
+  expect(html).toContain('Labour market statistics: December 2025 quarter (Stats NZ)');
+});
+
+it('renders the median age by region story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'median-age-by-region' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('The West Coast aged five years in one decade');
+  expect(html).toContain('National median age (2023)');
+  expect(html).toContain('2023 Census population counts release (Stats NZ)');
+});
+
+it('renders the tourist arrivals story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'tourist-arrivals' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('Australia sends more visitors than the next nine countries combined');
+  expect(html).toContain('Visitors from Australia (2019)');
+  expect(html).toContain('International travel: December 2019 (Stats NZ)');
+});

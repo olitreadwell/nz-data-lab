@@ -1,3 +1,41 @@
+## 2026-08-19 08:05 (NZST) - loop 14
+
+- Handed off (unmerged, awaiting review): unemployment-ranks (viz-095,
+  branch feat/microsite-loop-14, review issue #264), median-age-by-region
+  (viz-069, branch feat/microsite-loop-14, review issue #265), and
+  tourist-arrivals (viz-016, branch feat/microsite-loop-14, review issue
+  #266). A parallel coordinates chart of regional unemployment ranks across
+  the nine quarters from December 2023 to December 2025 with a movers
+  toggle, a tile grid of regional median ages at the 2013, 2018, and 2023
+  censuses with a census-year toggle, and a Cleveland dot plot of visitor
+  arrivals by country of residence for the years ended December 2015 and
+  2019 with a year toggle and country filter. Chart types parallel
+  coordinates, tile grid, and dot plot are new to the site.
+- Sources: Stats NZ Household Labour Force Survey December 2025 quarter
+  (Table 6, regional unemployment rates), "2023 Census population counts
+  (by ethnic group, age, and Maori descent) and dwelling counts" (Table 7,
+  age in five-year groups by regional council area), and "International
+  travel: December 2019" (Table 4, visitor arrivals by country of
+  residence). Every rate, median age, and arrival count was verified
+  against the release workbooks before committing. All reference URLs
+  return 200. Chart types used so far: line, area, bar, scatter, donut,
+  treemap, map, histogram, radial, bubble, slope, timeline, funnel,
+  waterfall, sunburst, lollipop, heatmap, pareto, cycle plot, streamgraph,
+  dumbbell, ridgeline, unit chart, waffle, bump, bar-in-bar, marimekko,
+  choropleth, strip chart, parallel coordinates, tile grid, dot plot.
+- Loop review: this iteration resumed the stalled loop-14 work (a previous
+  run hit the time cap at 07:26 after committing two microsites but before
+  pushing or filing review issues). The two committed microsites were
+  verified (tsc, vitest, lint) and a third was built from the next open
+  issue whose source is proven in this repo: all priority-high issues are
+  already built, and the top priority-medium candidates map to chart types
+  already on the site or to census topic releases that no longer ship
+  workbooks, so the loop took viz-016 (tourist arrivals by country) as a
+  dot plot from the verified International travel December 2019 workbook.
+  Research took longest: checking which open issues were unbuilt and which
+  Stats NZ releases still ship workbooks. The rebase onto origin/main went
+  cleanly (no file overlap with the quality loop's merges).
+
 ## 2026-08-19 05:23 (NZST) - loop 13
 
 - Handed off (unmerged, awaiting review): population-waffle (viz-053,

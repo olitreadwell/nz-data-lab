@@ -25,6 +25,7 @@ import { IndustryBarInBar } from '@/components/IndustryBarInBar';
 import { KiwifruitOvertakeChart } from '@/components/KiwifruitOvertakeChart';
 import { LivestockChart } from '@/components/LivestockChart';
 import { MedianAgeRankSlope } from '@/components/MedianAgeRankSlope';
+import { MedianAgeTileGrid } from '@/components/MedianAgeTileGrid';
 import { MicrositeStory } from '@/components/MicrositeStory';
 import { OpenDataSearch } from '@/components/OpenDataSearch';
 import { PeakHeights } from '@/components/PeakHeights';
@@ -50,7 +51,9 @@ import { SpeciesRegisterSearch } from '@/components/SpeciesRegisterSearch';
 import { StatCard } from '@/components/StatCard';
 import { TourismArrivalsCyclePlot } from '@/components/TourismArrivalsCyclePlot';
 import { TradeMeTree } from '@/components/TradeMeTree';
+import { UnemploymentParallelCoordinates } from '@/components/UnemploymentParallelCoordinates';
 import { VehicleFleet } from '@/components/VehicleFleet';
+import { VisitorArrivalDotPlot } from '@/components/VisitorArrivalDotPlot';
 import { VisitorRankSlope } from '@/components/VisitorRankSlope';
 import { WhatTheWorldReads } from '@/components/WhatTheWorldReads';
 import { env } from '@/env';
@@ -77,6 +80,7 @@ import {
 } from '@/lib/headline-stats';
 import { fetchHorticultureSeries, summarizeHorticulture } from '@/lib/horticulture-data';
 import { fetchLivestockSeries, summarizeLivestock } from '@/lib/livestock-data';
+import { NATIONAL_MEDIAN_AGE } from '@/lib/median-age-data';
 import { MICROSITES } from '@/lib/microsites';
 import { fetchRecentQuakeCatalog } from '@/lib/quake-catalog';
 import type { QuakeCatalogEvent } from '@/lib/quake-catalog';
@@ -92,6 +96,8 @@ import { formatRabbitsPerKm } from '@/lib/rabbit-format';
 import { REGIONAL_CENSUS_ROWS } from '@/lib/regional-census-data';
 import { fetchSheepSeries } from '@/lib/sheep-data';
 import { formatMillions as formatMillionsSheep } from '@/lib/sheep-format';
+import { NATIONAL_UNEMPLOYMENT_RATE, UNEMPLOYMENT_RANK_ROWS } from '@/lib/unemployment-rank-data';
+import { VISITOR_ARRIVAL_ROWS, visitorArrivalGrowthPercent } from '@/lib/visitor-arrival-data';
 
 interface MicrositePageProps {
   params: Promise<{ slug: string }>;
@@ -1325,6 +1331,103 @@ function renderStoryContent(
           </dl>
         ),
       };
+    case 'unemployment-ranks': {
+      const aucklandRow = UNEMPLOYMENT_RANK_ROWS.find((row) => row.key === 'auckland');
+      const otagoRow = UNEMPLOYMENT_RANK_ROWS.find((row) => row.key === 'otago');
+      return {
+        chart: <UnemploymentParallelCoordinates />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="National unemployment rate (Dec 2025)"
+              value={`${NATIONAL_UNEMPLOYMENT_RATE.toFixed(1)}%`}
+              accent="rose"
+              testId="unemployment-national"
+              dataValue={NATIONAL_UNEMPLOYMENT_RATE}
+            />
+            <StatCard
+              label="Auckland's rank, Dec 2023 to Dec 2025"
+              value={`#${aucklandRow?.ranks[0]} to #${aucklandRow?.ranks.at(-1)}`}
+              accent="rose"
+              testId="auckland-rank"
+              dataValue={aucklandRow?.ranks.at(-1)}
+            />
+            <StatCard
+              label="Otago's rate (Dec 2025)"
+              value={`${otagoRow?.rates.at(-1)?.toFixed(1)}%`}
+              accent="rose"
+              testId="otago-rate"
+              dataValue={otagoRow?.rates.at(-1)}
+            />
+          </dl>
+        ),
+      };
+    }
+    case 'median-age-by-region': {
+      return {
+        chart: <MedianAgeTileGrid />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="National median age (2023)"
+              value="38.2 years"
+              accent="indigo"
+              testId="median-national"
+              dataValue={NATIONAL_MEDIAN_AGE[2023]}
+            />
+            <StatCard
+              label="West Coast median age (2023)"
+              value="47.9 years"
+              accent="indigo"
+              testId="median-west-coast"
+              dataValue={47.9}
+            />
+            <StatCard
+              label="Auckland median age (2023)"
+              value="35.9 years"
+              accent="indigo"
+              testId="median-auckland"
+              dataValue={35.9}
+            />
+          </dl>
+        ),
+      };
+    }
+    case 'tourist-arrivals': {
+      const australiaRow = VISITOR_ARRIVAL_ROWS.find((row) => row.key === 'australia');
+      const unitedStatesRow = VISITOR_ARRIVAL_ROWS.find((row) => row.key === 'united-states');
+      const indiaRow = VISITOR_ARRIVAL_ROWS.find((row) => row.key === 'india');
+      return {
+        chart: <VisitorArrivalDotPlot />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Visitors from Australia (2019)"
+              value={australiaRow?.arrivals2019.toLocaleString('en-NZ') ?? ''}
+              accent="sky"
+              testId="visitor-australia"
+              dataValue={australiaRow?.arrivals2019}
+            />
+            <StatCard
+              label="US growth, 2015 to 2019"
+              value={`+${unitedStatesRow === undefined ? 0 : visitorArrivalGrowthPercent(unitedStatesRow)}%`}
+              accent="sky"
+              testId="visitor-us-growth"
+              dataValue={
+                unitedStatesRow === undefined ? 0 : visitorArrivalGrowthPercent(unitedStatesRow)
+              }
+            />
+            <StatCard
+              label="India growth, 2015 to 2019"
+              value={`+${indiaRow === undefined ? 0 : visitorArrivalGrowthPercent(indiaRow)}%`}
+              accent="sky"
+              testId="visitor-india-growth"
+              dataValue={indiaRow === undefined ? 0 : visitorArrivalGrowthPercent(indiaRow)}
+            />
+          </dl>
+        ),
+      };
+    }
     default:
       return { chart: null, stats: null };
   }
