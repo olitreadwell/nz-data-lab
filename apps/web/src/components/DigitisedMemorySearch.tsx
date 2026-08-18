@@ -123,6 +123,7 @@ export function DigitisedMemorySearch({
       return decade >= minDecade && decade <= maxDecade;
     });
   }, [result, minDecade, maxDecade]);
+  const displayedRecords = visibleRecords.slice(0, MAX_RECORDS_SHOWN);
 
   const decades = result?.decades ?? [];
   const firstDecade = decades[0]?.decade ?? 0;
@@ -240,7 +241,7 @@ export function DigitisedMemorySearch({
             )}
           </div>
           <ul className="max-h-[260px] space-y-1 overflow-y-auto pr-1">
-            {visibleRecords.slice(0, MAX_RECORDS_SHOWN).map((record) => (
+            {displayedRecords.map((record) => (
               <li key={record.id} className="numeral-paragraph-sm text-[var(--color-muted)]">
                 {isSafeRecordUrl(record.url) ? (
                   <a className="text-[var(--color-fg)] underline" href={record.url}>
@@ -256,7 +257,7 @@ export function DigitisedMemorySearch({
           </ul>
           {isDecadeFiltered && (
             <p className="sr-only" aria-live="polite">
-              Showing {visibleRecords.length} of {result.resultCount.toLocaleString('en-NZ')}{' '}
+              Showing {displayedRecords.length} of {result.resultCount.toLocaleString('en-NZ')}{' '}
               records
             </p>
           )}

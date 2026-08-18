@@ -79,6 +79,30 @@ describe('DigitisedMemorySearch', () => {
     expect(screen.getByText('Showing 1 of 1,977,021 records')).toBeInTheDocument();
   });
 
+  it('announces only the rendered row count when filtered records exceed the cap', async () => {
+    const manyRecords = Array.from({ length: 25 }, (_, index) => ({
+      id: index + 1,
+      title: `1900s record ${index + 1}`,
+      contentPartner: 'Puke Ariki',
+      url: 'https://example.com/record',
+      year: 1900,
+    }));
+    SEARCH_MOCK.mockResolvedValueOnce({
+      resultCount: 25,
+      decades: [
+        { decade: 1860, count: 25 },
+        { decade: 1900, count: 25 },
+      ],
+      records: manyRecords,
+    });
+    render(<DigitisedMemorySearch initialQuery="gold" />);
+    await screen.findByText(/25 records match "gold"/);
+    const earliest = screen.getByRole('slider', { name: /Earliest decade/ });
+    fireEvent.change(earliest, { target: { value: '1900' } });
+    expect(screen.getByText('Showing 20 of 25 records')).toBeInTheDocument();
+    expect(screen.getAllByRole('listitem').length).toBe(20);
+  });
+
   it('excludes undated records when a decade range is active', async () => {
     SEARCH_MOCK.mockResolvedValueOnce({
       ...RESULT,
