@@ -11,6 +11,14 @@ vi.mock('next/navigation', () => ({
   },
 }));
 
+vi.mock('@/lib/quake-catalog', () => ({
+  fetchRecentQuakeCatalog: vi.fn().mockResolvedValue([
+    { timeEpochSec: 1780000000, magnitude: 1.4 },
+    { timeEpochSec: 1780000001, magnitude: 2.2 },
+    { timeEpochSec: 1780000002, magnitude: 6.3 },
+  ]),
+}));
+
 vi.mock('@/lib/headline-stats', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/lib/headline-stats')>();
   return {
@@ -133,6 +141,34 @@ describe('MicrositePage', () => {
     await expect(generateMetadata({ params: Promise.resolve({ slug: 'nope' }) })).resolves.toEqual({
       title: 'nz-data-lab',
     });
+  });
+
+  it('renders the census rank shift story', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'census-rank-shift' })} />,
+    );
+    const html = await new Response(stream).text();
+    expect(html).toContain('Selwyn and Queenstown raced up the census ranks');
+    expect(html).toContain('23rd to 13th');
+    expect(html).toContain('Sources and further reading');
+  });
+
+  it('renders the age pyramid story', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'age-pyramid' })} />,
+    );
+    const html = await new Response(stream).text();
+    expect(html).toContain('Women outnumber men from age 30 up');
+    expect(html).toContain('5,122,600');
+  });
+
+  it('renders the quake magnitudes story', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'quake-magnitudes' })} />,
+    );
+    const html = await new Response(stream).text();
+    expect(html).toContain('Small quakes drown out the big ones');
+    expect(html).toContain('Quakes located, 3 months');
   });
 
   it('renders the dairy story with the livestock chart', async () => {
