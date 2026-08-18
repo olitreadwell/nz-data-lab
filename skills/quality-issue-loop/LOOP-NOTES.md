@@ -281,3 +281,13 @@ pruning the worktree/branch), and every merged branch needs a real
   quake-months microsite-review issue (#223), all verified live with HTTP 200
   and stat assertions. Protected labels data-viz-idea/data-tutorial untouched
   beyond these closures.
+
+Addendum (same day): local browser QA caught a cascade-layer gotcha the unit
+suite can't see: _global.scss sets `svg { width:100%; height:auto }` un-layered,
+and Tailwind v4 utilities live inside `@layer utilities`, so un-layered rules
+win -- chart SVGs ignored `h-full` and overflowed their wrappers (742px in a
+368px wrapper). Fixed with an un-layered `svg.h-full { height:100% }` override
+next to the default. Also: the hub chart sweep must assert real rendered
+heights per chart type, not just class presence; choropleth/rose/bump/
+parallel-coordinates all cap at <= 46vh now. Preview deploys (deploy_preview.
+yml) are manual-only going forward to stop burning Vercel builds per PR.

@@ -89,7 +89,7 @@ export function RegionDensityChoropleth(): React.ReactElement {
         role="img"
         aria-label={`Choropleth map of population density by regional council, ${year} census, people per square kilometre`}
         viewBox={`0 0 ${REGION_MAP_VIEW.width + MAP_PADDING * 2} ${REGION_MAP_VIEW.height + MAP_PADDING * 2}`}
-        className="h-auto w-full"
+        className="mx-auto h-auto max-h-[clamp(320px,46vh,560px)] w-full"
       >
         {REGION_SHAPES.map((shape) => {
           const density = densityByKey.get(shape.key);

@@ -53,6 +53,13 @@ svg {
   height: auto;
 }
 
+// Chart SVGs opt back into their wrapper's height with h-full. Tailwind emits
+// utilities inside a cascade layer, so the un-layered rule above would win;
+// an un-layered svg.h-full restores the intended override.
+svg.h-full {
+  height: 100%;
+}
+
 // Reset form border-radius — re-add per component intentionally.
 input,
 select,

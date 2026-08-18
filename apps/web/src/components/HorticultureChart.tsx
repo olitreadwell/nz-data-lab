@@ -41,7 +41,12 @@ export function HorticultureChart({ points }: HorticultureChartProps): React.Rea
 
   if (points.length === 0) {
     return (
-      <svg role="img" aria-label={label} viewBox="0 0 720 260" className="h-auto w-full">
+      <svg
+        role="img"
+        aria-label={label}
+        viewBox="0 0 720 260"
+        className="mx-auto h-auto max-h-[clamp(320px,46vh,560px)] w-full"
+      >
         <title>{label}</title>
       </svg>
     );

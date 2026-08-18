@@ -64,7 +64,12 @@ export function RabbitChart({ points }: RabbitChartProps): React.ReactElement {
 
   if (points.length === 0) {
     return (
-      <svg role="img" aria-label={label} viewBox="0 0 720 240" className="h-auto w-full">
+      <svg
+        role="img"
+        aria-label={label}
+        viewBox="0 0 720 240"
+        className="mx-auto h-auto max-h-[clamp(320px,46vh,560px)] w-full"
+      >
         <title>{label}</title>
       </svg>
     );

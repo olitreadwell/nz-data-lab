@@ -1,11 +1,9 @@
 name: Preview Deploy
 
 on:
-  pull_request:
-    branches:
-      - main
-      - deploy/pre-production
-      - deploy/production
+  # Manual only: every PR was burning a Vercel preview deploy. Run this
+  # workflow_dispatch when a preview is actually wanted.
+  workflow_dispatch:
 
 concurrency:
   group: preview-${{ github.event.pull_request.number }}
@@ -14,10 +12,6 @@ concurrency:
 jobs:
   deploy:
     name: Deploy Preview
-    # Only deploy previews for PRs from the same repository. Fork PRs are
-    # untrusted: they can run attacker-controlled code, so they must never
-    # receive the Vercel secrets or run vercel build/deploy with them.
-    if: github.event.pull_request.head.repo.fork == false
     runs-on: ubuntu-latest
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -41,13 +35,3 @@ jobs:
           echo "url=$url" >> "$GITHUB_OUTPUT"
       - name: Verify security headers on deployed site
         run: node apps/web/scripts/check-deployed-security-headers.mjs "${{ steps.deploy.outputs.url }}"
-      - name: Comment PR with preview URL
-        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7.1.0
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `Preview deployed to: ${{ steps.deploy.outputs.url }}`
-            })
