@@ -1,3 +1,40 @@
+## 2026-08-19 05:23 (NZST) - loop 13
+
+- Handed off (unmerged, awaiting review): population-waffle (viz-053,
+  branch feat/microsite-loop-13, review issue #248), export-market-bump
+  (viz-021, branch feat/microsite-loop-13, review issue #249), and
+  enterprise-bar-in-bar (viz-055, branch feat/microsite-loop-13, review
+  issue #250). A waffle chart of the census usually resident population by
+  regional council area with a census-year toggle and region search, a bump
+  chart of export destination ranks for the years ended March 2015 to 2020
+  with a top-8/top-5 toggle, and a bar-in-bar chart of enterprises by
+  industry at February 2020 and February 2025 with a sort toggle and
+  industry search. Chart types waffle, bump, and bar-in-bar are new to the
+  site.
+- Sources: Stats NZ "2023 Census population counts (by ethnic group, age,
+  and Maori descent) and dwelling counts" (Table 1), "Goods and services
+  trade by country: Year ended March 2020" (map data table, total exports by
+  country for the years ended March 2015 to 2020), and "New Zealand business
+  demography statistics: At February 2020" and "...At February 2025" (Table
+  1, enterprises by industry). Every count and rank was verified against the
+  release workbooks before committing. All reference URLs return 200. Chart
+  types used so far: line, area, bar, scatter, donut, treemap, map,
+  histogram, radial, bubble, slope, timeline, funnel, waterfall, sunburst,
+  lollipop, heatmap, pareto, cycle plot, streamgraph, dumbbell, ridgeline,
+  unit chart, waffle, bump, bar-in-bar.
+- Loop review: research took longest: all priority-high data-viz-idea
+  issues were already built, so the loop took the highest-ranked unbuilt
+  priority-medium ideas whose sources are proven in this repo (viz-053,
+  viz-021, viz-055) and verified the numbers from the release workbooks
+  (the census Table 1 totals, the trade map CSV ranks computed from the full
+  country list, and the two business demography releases). The viz-055 spec
+  story (construction and professional services as the biggest blocks)
+  contradicted the data, which shows rental, hiring, and real estate
+  services leading with 129,120 enterprises, so the copy tells the honest
+  version. The build added home-page cards for the three microsites in the
+  same commits, which loops 11 and 12 omitted, so the handed-off microsites
+  are reachable from the home grid instead of only by direct URL.
+
 ## 2026-08-19 04:30 (NZST) - loop 12
 
 - Handed off (unmerged, awaiting review): regional-population-growth (viz-022,
