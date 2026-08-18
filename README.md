@@ -1,6 +1,6 @@
 # nz-data-lab
 
-[https://olitreadwell.github.io/nz-data-lab](https://olitreadwell.github.io/nz-data-lab)
+[https://nz-data-lab.vercel.app](https://nz-data-lab.vercel.app)
 
 Small experiments digging through New Zealand public data (Stats NZ, Hansard
 transcripts, and whatever else turns up something weird, funny, or surprising).
@@ -97,24 +97,21 @@ CI lint, unit tests, and e2e are advisory (`continue-on-error: true`). Only
 
 ## Deploying
 
-The site deploys to GitHub Pages from `main` via
-`.github/workflows/deploy_github_pages.yml`. The app builds as a static export
-(`output: 'export'` in `apps/web/next.config.ts`), so GitHub Pages serves it
-with no server.
+The site deploys to Vercel from `main` via
+`.github/workflows/deploy_primary.yml`. The app builds as a static export
+(`output: 'export'` in `apps/web/next.config.ts`), so Vercel serves it with no
+server.
 
 - The workflow runs on push to `main`, manual dispatch, and a daily schedule
   (the sheep-index experiment is a build-time snapshot, so the scheduled
   redeploy keeps its Stats NZ numbers fresh).
-- The Pages base path (`/nz-data-lab`) is injected as `NEXT_PUBLIC_BASE_PATH`
-  by the workflow; it stays empty for local dev and Vercel builds.
+- The base path stays empty for Vercel builds, so URLs are root-relative.
 - Static export means no API routes and no dynamic rendering. The
   `/api/health` route was removed for this reason; the sheep index fetches
   Stats NZ data at build time instead of on each request, falling back to a
   committed snapshot when the API blocks the build runner. Add a
   `STATS_NZ_SUBSCRIPTION_KEY` repo secret to make the daily refresh hit the
   live API from CI.
-- One-time setup: in the repo's Settings → Pages, set Source to "GitHub
-  Actions" so the workflow's `actions/deploy-pages` step is allowed to publish.
 
 The Vercel workflows (`.github/workflows/deploy_preview.yml`,
 `deploy_preproduction.yml`, `deploy_production.yml`) remain available for
@@ -136,21 +133,18 @@ ignored. Security headers are instead configured per host:
 
 ### Deploy-host decision (issue #213)
 
-The site actually deploys to GitHub Pages, which cannot serve custom response
-headers at all. The strict CSP and the other security headers are therefore
-not present in the served responses on the current host. To serve them the
-site must move to a `_headers`-aware host (Netlify or Cloudflare Pages) or to
-Vercel with a nonce-less CSP in `vercel.json`. Until that move happens, the
-served-response check in the deploy workflow fails loudly (advisory) rather
-than silently passing, so the gap stays visible.
+The site deploys to Vercel, a `_headers`-aware host, so the served responses
+carry the strict CSP and the other security headers. The served-response check
+in the deploy workflow fails the deploy loudly if any required header is
+missing.
 
 `apps/web/scripts/check-deployed-security-headers.mjs` hits a deployed URL and
-asserts `Content-Security-Policy`, `X-Content-Type-Options`,
-`Referrer-Policy`, `X-Frame-Options`, and `Permissions-Policy` are present in
-the served response. `apps/web/src/lib/security-headers.test.ts` serves the
-generated export locally and asserts the same headers on the served response,
-keeping the CSP in sync with the live API hosts and asserting no committed
-file carries a nonce.
+asserts `Content-Security-Policy`, `Strict-Transport-Security`,
+`X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`, and
+`Permissions-Policy` are present in the served response.
+`apps/web/src/lib/security-headers.test.ts` serves the generated export locally
+and asserts the same headers on the served response, keeping the CSP in sync
+with the live API hosts and asserting no committed file carries a nonce.
 
 ## Optional integrations
 
