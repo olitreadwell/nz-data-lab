@@ -141,6 +141,19 @@ when no wrapper is already running (check the lock file first).
   deliverable; remove them rather than committing them. If an agent is
   actively working, do not fight it: document the situation and exit.
 
+- A lane that dies mid-merge leaves main in a conflicted state (UU files,
+  staged fixes, MERGE_HEAD set) with no process working it. The wrapper's
+  dirty-main guard catches this as dirty on the next tick, but the loop
+  wastes a tick waiting it out, and the stale merge blocks the changelog
+  and prune steps. Treat a stale conflicted merge like stale uncommitted
+  work: check ps for a live agent touching main, then either resolve the
+  conflicts (git diff on the UU files, keep the newer landmark structure
+  when the merge base is old), verify with tsc/vitest/lint/prettier, and
+  commit the merge with `git commit -m "merge: fix #N"` (the repo's
+  configured editor may not exist headless), or `git merge --abort` if the
+  intent is unclear. Never leave a merge half-done when a run is near its
+  time cap: commit or abort before the wrapper kills the session.
+
 - A lock skip must never spawn a heal: the wrapper's lock-skip path used to
   call maybe_heal, so while a heal session held the lock (the wrapper waits
   on it synchronously), every 20-minute tick saw a live lock, skipped, and
