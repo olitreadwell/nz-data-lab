@@ -239,6 +239,36 @@ it.skipIf(HIDDEN_MICROSITES.includes('open-data-catalogue'))(
   },
 );
 
+it('renders the company size distribution story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'company-size-distribution' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('Most businesses have no staff at all.');
+  expect(html).toContain('455,730');
+  expect(html).toContain('Sources and further reading');
+});
+
+it('renders the tourism arrivals by month story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'tourism-arrivals-by-month' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('Visitors flood in every summer.');
+  expect(html).toContain('528,219');
+  expect(html).toContain('Sources and further reading');
+});
+
+it('renders the retail sales by month story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'retail-sales-by-month' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('Card spending peaks every December.');
+  expect(html).toContain('$11,392m');
+  expect(html).toContain('Sources and further reading');
+});
+
 it('renders the EV charging story', async () => {
   const stream = await renderToReadableStream(
     <MicrositePage params={Promise.resolve({ slug: 'ev-charging' })} />,

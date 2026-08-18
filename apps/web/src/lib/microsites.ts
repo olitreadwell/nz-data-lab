@@ -853,4 +853,104 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+
+  {
+    slug: 'company-size-distribution',
+    label: 'Company size distribution',
+    eyebrow: '🏢 the company size distribution',
+    title: 'Most businesses have no staff at all.',
+    description:
+      "Of the 617,334 economically significant enterprises in New Zealand at February 2025, 455,730 had no paid employees. Just 2,838 enterprises employed 100 or more people, and those giants employed half of the country's paid workforce.",
+    paragraphs: [
+      'The business register is a power law. Enterprises with no employees make up 74% of the total, and the 1-5 band adds another 16%, so nine in ten enterprises employ five people or fewer.',
+      'The shape flips for employment. The 2,838 enterprises with 100 or more employees employed 1,209,700 people, half of the 2,443,400 paid employees in the register.',
+      'The register counts economically significant enterprises, mostly those with GST turnover over $30,000 a year, and it counts dormant companies too. Pick an industry to see the shape change: rental, hiring, and real estate is almost all no-employee firms, while education and health lean the other way.',
+    ],
+    accent: 'amber',
+    dataNote:
+      'Data: Stats NZ "New Zealand business demography statistics: At February 2025", Table 1, enterprises and employee count by industry (ANZSIC06) and employee count size group. Counts are provisional and have noise added or subtracted to protect individual businesses, so bands may not sum to the stated totals.',
+    references: [
+      {
+        label: 'New Zealand business demography statistics: At February 2025 (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/new-zealand-business-demography-statistics-at-february-2025/',
+        kind: 'data',
+      },
+      {
+        label: 'Business demography statistics (DataInfo+)',
+        url: 'https://datainfoplus.stats.govt.nz/Item/nz.govt.stats/bdb02aa2-866e-418f-83e8-342234867a0f',
+        kind: 'data',
+      },
+      {
+        label: 'Business (Stats NZ)',
+        url: 'https://www.stats.govt.nz/topics/business/',
+        kind: 'data',
+      },
+    ],
+  },
+  {
+    slug: 'tourism-arrivals-by-month',
+    label: 'Tourism arrivals by month',
+    eyebrow: '✈️ the tourism arrivals by month',
+    title: 'Visitors flood in every summer.',
+    description:
+      'Overseas visitor arrivals peak every December and more than halve by the winter trough. In 2019, December brought 528,219 visitors against 213,536 in June, the deepest month of the year.',
+    paragraphs: [
+      'The summer peak is the same shape in every year on the chart: December is always the biggest month, and May or June is always the smallest.',
+      'The 2020 to 2022 years are missing because border restrictions closed the country. The recovery is still incomplete: December 2024 brought 469,842 visitors, 11% below December 2019.',
+      'Toggle the year buttons to compare the summer peak month by month. The 2017 and 2025 lines are partial years.',
+    ],
+    accent: 'sky',
+    dataNote:
+      'Data: Stats NZ "International travel" releases, Table 2, estimated short-term travel, overseas visitor arrivals by month. The 2017-2019 months come from the December 2018 and December 2019 releases; the 2023-2025 months come from the June 2025 release. Arrivals are counted by month of arrival.',
+    references: [
+      {
+        label: 'International travel: June 2025 (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/international-travel-june-2025/',
+        kind: 'data',
+      },
+      {
+        label: 'International travel: December 2019 (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/international-travel-december-2019/',
+        kind: 'data',
+      },
+      {
+        label: 'Tourism (Stats NZ)',
+        url: 'https://www.stats.govt.nz/topics/tourism/',
+        kind: 'data',
+      },
+    ],
+  },
+  {
+    slug: 'retail-sales-by-month',
+    label: 'Retail sales by month',
+    eyebrow: '🛍️ the retail sales by month',
+    title: 'Card spending peaks every December.',
+    description:
+      'Stats NZ does not publish monthly retail sales, so this page uses the closest monthly retail pulse: electronic card transactions. December 2024 brought $11,392 million of card spending, the biggest month on record, up 12% from November.',
+    paragraphs: [
+      'The December bump is a wave that repeats every year: December 2021, 2022, 2023, and 2024 were each the biggest month of their year, and every one beat the previous month by at least 9%. January then drops back as the wave passes.',
+      'The durables layer, the durable-goods stores behind the December peak, is the one that surges hardest: $2,448 million in December 2024 against $1,522 million the following September.',
+      'Toggle the industry layers to watch the Christmas wave travel through the stream. Values include GST.',
+    ],
+    accent: 'rose',
+    dataNote:
+      'Data: Stats NZ "Electronic card transactions" releases, Table 1, actual monthly values by industry (series ECTM). The June 2023 release covers June 2021 to June 2023 and the June 2025 release covers June 2023 to June 2025. The retail trade survey itself is quarterly, so the card series is used for the monthly pulse. Component series are rounded independently and may not sum to the stated total.',
+    references: [
+      {
+        label: 'Electronic card transactions: June 2025 (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/electronic-card-transactions-june-2025/',
+        kind: 'data',
+      },
+      {
+        label: 'Electronic card transactions: June 2023 (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/electronic-card-transactions-june-2023/',
+        kind: 'data',
+      },
+      {
+        label: 'Business (Stats NZ)',
+        url: 'https://www.stats.govt.nz/topics/business/',
+        kind: 'data',
+      },
+    ],
+  },
 ]);
