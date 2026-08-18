@@ -18,6 +18,7 @@ export const HIDDEN_MICROSITES: string[] = [
   'vineyard-boom',
   'species-register',
   'species-record-ledger',
+  'planting-bust',
 ];
 
 /**
