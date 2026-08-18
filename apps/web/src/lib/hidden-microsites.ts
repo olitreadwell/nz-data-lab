@@ -13,6 +13,7 @@ export const HIDDEN_MICROSITES: string[] = [
   'backyard-species-census',
   'what-the-world-reads',
   'online-garage-sale',
+  'open-data-catalogue',
 ];
 
 /**
