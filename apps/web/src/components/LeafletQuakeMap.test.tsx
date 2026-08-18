@@ -7,9 +7,11 @@ import { LeafletQuakeMap } from './LeafletQuakeMap';
 vi.mock('react-leaflet', () => ({
   MapContainer: ({
     children,
+    className,
     ref,
   }: {
     children: React.ReactNode;
+    className?: string;
     ref: React.Ref<{ getContainer: () => HTMLElement }>;
   }) => {
     const setDiv = (node: HTMLElement | null): void => {
@@ -24,7 +26,7 @@ vi.mock('react-leaflet', () => ({
       }
     };
     return (
-      <div ref={setDiv} data-testid="map-container">
+      <div ref={setDiv} data-testid="map-container" className={className}>
         {children}
       </div>
     );
@@ -54,8 +56,14 @@ describe('LeafletQuakeMap', () => {
     const container = screen.getByTestId('map-container');
     expect(container.getAttribute('role')).toBe('region');
     expect(container.getAttribute('role')).not.toBe('application');
-    expect(container.getAttribute('aria-label')).toBe(
-      'Recent felt quakes on a map of New Zealand',
-    );
+    expect(container.getAttribute('aria-label')).toBe('Recent felt quakes on a map of New Zealand');
+  });
+
+  it('shows a visible focus-visible outline on the map container', () => {
+    render(<LeafletQuakeMap quakes={[QUAKE]} label="Recent felt quakes on a map of New Zealand" />);
+    const container = screen.getByTestId('map-container');
+    expect(container.className).toContain('focus-visible:outline-2');
+    expect(container.className).toContain('focus-visible:outline-offset-2!');
+    expect(container.className).toContain('focus-visible:outline-[var(--color-border)]');
   });
 });
