@@ -918,4 +918,38 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+
+  {
+    slug: 'tourist-arrivals',
+    label: 'Tourist arrivals',
+    eyebrow: '✈️ the tourist arrivals',
+    title: 'Australia sends more visitors than the next nine countries combined.',
+    description:
+      'In the year ended December 2019, 1.54 million visitors arrived from Australia. China was second with 407,141, and the United States third with 367,958.',
+    paragraphs: [
+      'The gap was already there in 2015, when Australia sent 1.33 million visitors, again more than the next nine countries combined.',
+      'The fastest growers were the United States, up 51 percent from 2015 to 2019, and India, up 45 percent. Japan grew 12 percent and the United Kingdom 14 percent.',
+      '2019 is the last full year before the border closed. The series stops there on purpose, so the pandemic does not distort the rankings.',
+    ],
+    accent: 'sky',
+    dataNote:
+      'Data: Stats NZ International travel: December 2019 (Table 4, visitor arrivals by country of residence, years ended December 2015 and 2019). 2019 is the last full pre-pandemic year, so the series stops before the 2020-21 border closures.',
+    references: [
+      {
+        label: 'International travel: December 2019 (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/international-travel-december-2019/',
+        kind: 'data',
+      },
+      {
+        label: 'International travel: December 2024 (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/international-travel-december-2024/',
+        kind: 'data',
+      },
+      {
+        label: 'Tourism (Stats NZ)',
+        url: 'https://www.stats.govt.nz/topics/tourism/',
+        kind: 'history',
+      },
+    ],
+  },
 ]);

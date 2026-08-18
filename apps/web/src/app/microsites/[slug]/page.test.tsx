@@ -288,3 +288,13 @@ it('renders the median age by region story', async () => {
   expect(html).toContain('National median age (2023)');
   expect(html).toContain('2023 Census population counts release (Stats NZ)');
 });
+
+it('renders the tourist arrivals story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'tourist-arrivals' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('Australia sends more visitors than the next nine countries combined');
+  expect(html).toContain('Visitors from Australia (2019)');
+  expect(html).toContain('International travel: December 2019 (Stats NZ)');
+});

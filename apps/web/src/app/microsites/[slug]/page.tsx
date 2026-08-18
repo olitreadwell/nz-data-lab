@@ -35,6 +35,7 @@ import { StatCard } from '@/components/StatCard';
 import { TradeMeTree } from '@/components/TradeMeTree';
 import { UnemploymentParallelCoordinates } from '@/components/UnemploymentParallelCoordinates';
 import { VehicleFleet } from '@/components/VehicleFleet';
+import { VisitorArrivalDotPlot } from '@/components/VisitorArrivalDotPlot';
 import { WhatTheWorldReads } from '@/components/WhatTheWorldReads';
 import { env } from '@/env';
 import { CENSUS_RANK_HIGHLIGHTS, formatRankOrdinal } from '@/lib/census-rank-data';
@@ -67,6 +68,7 @@ import { formatRabbitsPerKm } from '@/lib/rabbit-format';
 import { fetchSheepSeries } from '@/lib/sheep-data';
 import { formatMillions as formatMillionsSheep } from '@/lib/sheep-format';
 import { NATIONAL_UNEMPLOYMENT_RATE, UNEMPLOYMENT_RANK_ROWS } from '@/lib/unemployment-rank-data';
+import { VISITOR_ARRIVAL_ROWS, visitorArrivalGrowthPercent } from '@/lib/visitor-arrival-data';
 
 interface MicrositePageProps {
   params: Promise<{ slug: string }>;
@@ -764,6 +766,41 @@ function renderStoryContent(
               accent="indigo"
               testId="median-auckland"
               dataValue={35.9}
+            />
+          </dl>
+        ),
+      };
+    }
+    case 'tourist-arrivals': {
+      const australiaRow = VISITOR_ARRIVAL_ROWS.find((row) => row.key === 'australia');
+      const unitedStatesRow = VISITOR_ARRIVAL_ROWS.find((row) => row.key === 'united-states');
+      const indiaRow = VISITOR_ARRIVAL_ROWS.find((row) => row.key === 'india');
+      return {
+        chart: <VisitorArrivalDotPlot />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Visitors from Australia (2019)"
+              value={australiaRow?.arrivals2019.toLocaleString('en-NZ') ?? ''}
+              accent="sky"
+              testId="visitor-australia"
+              dataValue={australiaRow?.arrivals2019}
+            />
+            <StatCard
+              label="US growth, 2015 to 2019"
+              value={`+${unitedStatesRow === undefined ? 0 : visitorArrivalGrowthPercent(unitedStatesRow)}%`}
+              accent="sky"
+              testId="visitor-us-growth"
+              dataValue={
+                unitedStatesRow === undefined ? 0 : visitorArrivalGrowthPercent(unitedStatesRow)
+              }
+            />
+            <StatCard
+              label="India growth, 2015 to 2019"
+              value={`+${indiaRow === undefined ? 0 : visitorArrivalGrowthPercent(indiaRow)}%`}
+              accent="sky"
+              testId="visitor-india-growth"
+              dataValue={indiaRow === undefined ? 0 : visitorArrivalGrowthPercent(indiaRow)}
             />
           </dl>
         ),

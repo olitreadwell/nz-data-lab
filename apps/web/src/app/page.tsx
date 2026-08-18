@@ -196,6 +196,11 @@ export default async function HomePage(): Promise<React.ReactElement> {
       statLabel: 'National median age (2023)',
       statValue: '38.2 years',
     },
+    {
+      config: getMicrosite('tourist-arrivals'),
+      statLabel: 'Visitors from Australia (2019)',
+      statValue: '1,537,988',
+    },
   ].filter(
     (card): card is { config: MicrositeConfig; statLabel: string; statValue: string } =>
       card.config !== undefined,
