@@ -92,8 +92,8 @@ Bypass when you need to:
 git commit --no-verify
 ```
 
-CI lint, unit tests, and e2e are advisory (`continue-on-error: true`). Only
-**type-check + build + CodeQL** can fail a PR check.
+CI lint and the broad e2e suite are advisory (`continue-on-error: true`). Only
+**type-check + build + unit tests + a11y e2e + CodeQL** can fail a PR check.
 
 ## Deploying
 

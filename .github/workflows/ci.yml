@@ -80,12 +80,11 @@ jobs:
       - run: npm ci
       - run: npm audit --audit-level=high
 
-  # Advisory — never blocks. Surface failures in workflow output and
-  # coverage artifact; merge decision stays with the human.
+  # Blocks — a failing unit test must not merge or deploy. Coverage is
+  # uploaded as an artifact for humans to review.
   test:
-    name: Unit & Integration Tests (advisory)
+    name: Unit & Integration Tests
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -118,9 +117,35 @@ jobs:
         env:
           NEXT_PUBLIC_APP_URL: https://example.com
 
-  # Advisory — never blocks. Same reason as the unit test job.
+  # Blocks — a WCAG/axe regression must not merge. Dedicated a11y gate; the
+  # broader e2e job below stays advisory.
+  a11y:
+    name: Accessibility Tests (axe)
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - run: npm ci
+      - name: Install Playwright browsers
+        run: cd apps/web && npx playwright install --with-deps chromium
+      - name: Build app
+        run: npm run build
+        env:
+          NEXT_PUBLIC_APP_URL: https://example.com
+      - name: Run axe accessibility tests
+        run: cd apps/web && npm run test:a11y
+        env:
+          BASE_URL: http://localhost:3000
+
+  # Advisory — never blocks. Broad e2e suite. Accessibility is gated by the
+  # blocking a11y job above, so a WCAG regression cannot merge with a red
+  # check.
   e2e:
-    name: E2E & Accessibility Tests (advisory, shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
+    name: E2E Tests (advisory, shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
     runs-on: ubuntu-latest
     continue-on-error: true
     needs: [build]
