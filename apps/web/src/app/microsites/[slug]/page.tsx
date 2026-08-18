@@ -22,6 +22,7 @@ import { PeakHeights } from '@/components/PeakHeights';
 import { PopulationRankBump } from '@/components/PopulationRankBump';
 import { QuakeMagnitudeHistogram } from '@/components/QuakeMagnitudeHistogram';
 import { QuakeMap } from '@/components/QuakeMap';
+import { QuakeMonthRose } from '@/components/QuakeMonthRose';
 import { RabbitChart } from '@/components/RabbitChart';
 import { ReportIssueButton } from '@/components/ReportIssueButton';
 import { RiverLengths } from '@/components/RiverLengths';
@@ -58,6 +59,11 @@ import { MICROSITES } from '@/lib/microsites';
 import { fetchRecentQuakeCatalog } from '@/lib/quake-catalog';
 import type { QuakeCatalogEvent } from '@/lib/quake-catalog';
 import { fetchRecentQuakes } from '@/lib/quake-data';
+import {
+  buildQuakeMonthBins,
+  fetchQuakeMonthCatalog,
+  summarizeQuakeMonths,
+} from '@/lib/quake-month-data';
 import { fetchRabbitSpotlightSeries } from '@/lib/rabbit-data';
 import type { RabbitSpotlightSeries } from '@/lib/rabbit-data';
 import { formatRabbitsPerKm } from '@/lib/rabbit-format';
@@ -100,6 +106,7 @@ export default async function MicrositePage({
     registerTotal,
     catalogueTotal,
     quakeCatalog,
+    quakeMonthCatalog,
   ] = await Promise.all([
     fetchSheepSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
     fetchLivestockSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
@@ -110,6 +117,7 @@ export default async function MicrositePage({
     fetchRegisterTotal(),
     fetchCatalogueTotal(),
     fetchRecentQuakeCatalog(3),
+    fetchQuakeMonthCatalog(),
   ]);
 
   const livestockStats = summarizeLivestock(livestock);
@@ -136,6 +144,7 @@ export default async function MicrositePage({
     quakes,
     rabbit,
     quakeCatalog,
+    quakeMonthCatalog,
     registerTotal,
     catalogueTotal,
   });
@@ -183,6 +192,7 @@ interface StoryData {
   quakes: Awaited<ReturnType<typeof fetchRecentQuakes>>;
   rabbit: RabbitSpotlightSeries;
   quakeCatalog: QuakeCatalogEvent[];
+  quakeMonthCatalog: QuakeCatalogEvent[];
   registerTotal: number;
   catalogueTotal: number;
 }
@@ -637,6 +647,38 @@ function renderStoryContent(
               accent="rose"
               testId="quake-catalog-strongest"
               dataValue={strongest?.magnitude}
+            />
+          </dl>
+        ),
+      };
+    }
+    case 'quake-months': {
+      const monthBins = buildQuakeMonthBins(data.quakeMonthCatalog, 'all', 3);
+      const monthSummary = summarizeQuakeMonths(monthBins);
+      return {
+        chart: <QuakeMonthRose events={data.quakeMonthCatalog} />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Quakes M3+, 2 years"
+              value={monthSummary.total.toLocaleString('en-NZ')}
+              accent="rose"
+              testId="quake-months-total"
+              dataValue={monthSummary.total}
+            />
+            <StatCard
+              label="Busiest month"
+              value={`${monthSummary.busiest.label} (${monthSummary.busiest.count.toLocaleString('en-NZ')})`}
+              accent="rose"
+              testId="quake-months-busiest"
+              dataValue={monthSummary.busiest.count}
+            />
+            <StatCard
+              label="Quietest month"
+              value={`${monthSummary.quietest.label} (${monthSummary.quietest.count.toLocaleString('en-NZ')})`}
+              accent="rose"
+              testId="quake-months-quietest"
+              dataValue={monthSummary.quietest.count}
             />
           </dl>
         ),

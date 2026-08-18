@@ -21,6 +21,17 @@ vi.mock('@/lib/quake-catalog', () => ({
   ]),
 }));
 
+vi.mock('@/lib/quake-month-data', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/quake-month-data')>();
+  return {
+    ...actual,
+    fetchQuakeMonthCatalog: vi.fn().mockResolvedValue([
+      { timeEpochSec: 1780000000, magnitude: 3.2 },
+      { timeEpochSec: 1780000001, magnitude: 4.1 },
+    ]),
+  };
+});
+
 vi.mock('@/lib/headline-stats', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/lib/headline-stats')>();
   return {
@@ -184,6 +195,15 @@ describe('MicrositePage', () => {
     const html = await new Response(stream).text();
     expect(html).toContain('Small quakes drown out the big ones');
     expect(html).toContain('Quakes located, 3 months');
+  });
+
+  it('renders the quake months story', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'quake-months' })} />,
+    );
+    const html = await new Response(stream).text();
+    expect(html).toContain('Quakes of magnitude 3+ cluster in autumn');
+    expect(html).toContain('Quakes M3+, 2 years');
   });
 
   it('renders the rabbit boom story with the spotlight chart', async () => {
