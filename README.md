@@ -5,16 +5,12 @@
 Small experiments digging through New Zealand public data (Stats NZ, Hansard
 transcripts, and whatever else turns up something weird, funny, or surprising).
 
-Three things this repo is for, at once:
+Two things this repo is for, at once:
 
 1. **Explore NZ public data** for the interesting stuff — not a polished analytics
    platform, a pile of scrappy experiments. Many small attempts beat one big one; dead
    experiments stay listed, not deleted.
-2. **Practice directing Claude (Sonnet) to orchestrate a cheaper model (Haiku)** for the
-   mechanical parts of building each experiment — scaffolding, boilerplate tests,
-   repetitive fills. See `apps/web/src/app/experiments/_example/ORCHESTRATION.md` for
-   the template that records how that split went for each experiment.
-3. **Turn what worked into tutorials** other people can actually follow. See
+2. **Turn what worked into tutorials** other people can actually follow. See
    `TUTORIALS.md` and the `_example/TUTORIAL.md` template.
 
 Never a fabricated data source, a fabricated stat, or a "this worked" claim that isn't
