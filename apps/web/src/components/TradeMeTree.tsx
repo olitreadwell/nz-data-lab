@@ -179,6 +179,14 @@ export function TradeMeTree(): React.ReactElement {
       .slice(0, MAX_SEARCH_RESULTS);
   }, [flat, query]);
 
+  const filteredCount = useMemo(() => {
+    const trimmed = query.trim().toLowerCase();
+    if (trimmed === '') {
+      return null;
+    }
+    return flat.filter((category) => category.name.toLowerCase().includes(trimmed)).length;
+  }, [flat, query]);
+
   const toggleExpanded = useCallback((path: string) => {
     setExpandedPaths((current) => {
       const next = new Set(current);
@@ -216,7 +224,12 @@ export function TradeMeTree(): React.ReactElement {
       <p className="numeral-paragraph-sm mb-2 text-[var(--color-muted)]" aria-live="polite">
         {isLoading
           ? 'Loading the category tree...'
-          : (error ?? `${flat.length} categories in the tree.`)}
+          : (error ??
+              (filteredCount === null
+                ? `${flat.length} categories in the tree.`
+                : `${filteredCount} ${
+                    filteredCount === 1 ? 'category matches' : 'categories match'
+                  } your filter.`))}
       </p>
       {!isLoading && error === null && tree !== null && (
         <div className="grid gap-4 sm:grid-cols-2">
