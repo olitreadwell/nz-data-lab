@@ -21,6 +21,7 @@ const LIVE_API_HOSTS = [
   'en.wikipedia.org',
   'query.wikidata.org',
   'services1.arcgis.com',
+  'services.arcgis.com',
 ];
 
 const TILE_HOST = 'tile.openstreetmap.org';
