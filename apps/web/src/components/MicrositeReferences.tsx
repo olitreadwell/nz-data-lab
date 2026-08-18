@@ -21,9 +21,9 @@ interface MicrositeReferencesProps {
 export function MicrositeReferences({ references }: MicrositeReferencesProps): React.ReactElement {
   return (
     <div className="max-w-3xl pb-[var(--spacing-2xl)]">
-      <h3 className="numeral-text-eyebrow text-[var(--color-muted)]">
+      <h2 className="numeral-text-eyebrow text-[var(--color-muted)]">
         Sources and further reading
-      </h3>
+      </h2>
       <ul className="mt-3 space-y-2">
         {references.map((reference) => (
           <li key={reference.url} className="flex items-baseline gap-2">
