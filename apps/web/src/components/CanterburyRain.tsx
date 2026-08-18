@@ -104,10 +104,6 @@ export function buildRainTicks(maxValue: number): number[] {
   return ticks;
 }
 
-function formatMillimetres(value: number): string {
-  return `${value.toLocaleString('en-NZ', { maximumFractionDigits: 1 })} mm`;
-}
-
 /**
  * Live Environment Canterbury rain gauges drawn as a box plot: one box per
  * day, showing the spread of rainfall across the region's gauges. Type a
