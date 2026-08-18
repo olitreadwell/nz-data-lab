@@ -4,7 +4,13 @@ import { describe, expect, it, vi } from 'vitest';
 
 import type { LiveHamiltonPlayground } from '@/lib/live-sources';
 
-import { buildPlaygroundHeatmap, HamiltonPlaygrounds } from './HamiltonPlaygrounds';
+import {
+  buildPlaygroundHeatmap,
+  cellFillColor,
+  cellTextColor,
+  HamiltonPlaygrounds,
+  HEATMAP_BG,
+} from './HamiltonPlaygrounds';
 
 expect.extend(toHaveNoViolations);
 
@@ -75,5 +81,48 @@ describe('HamiltonPlaygrounds', () => {
     await screen.findByText(/5 playgrounds, fetched live/);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
+  });
+});
+
+const MIN_CONTRAST_AA = 4.5;
+
+/** Relative luminance of an sRGB hex color, per the WCAG 2.2 formula. */
+function relativeLuminance(hex: string): number {
+  const channel = (index: number): number => parseInt(hex.slice(index, index + 2), 16) / 255;
+  const linearize = (value: number): number =>
+    value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+  return (
+    0.2126 * linearize(channel(1)) + 0.7152 * linearize(channel(3)) + 0.0722 * linearize(channel(5))
+  );
+}
+
+function contrastRatio(first: string, second: string): number {
+  const firstLuminance = relativeLuminance(first);
+  const secondLuminance = relativeLuminance(second);
+  const lighter = Math.max(firstLuminance, secondLuminance);
+  const darker = Math.min(firstLuminance, secondLuminance);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+describe('cellFillColor', () => {
+  it('mixes toward the max color as the count rises', () => {
+    expect(cellFillColor(0, 10, '#fafafa')).toBe('#fafafa');
+    expect(cellFillColor(10, 10, '#fafafa')).toBe('#10b981');
+  });
+});
+
+describe('cellTextColor', () => {
+  it('keeps at least 4.5:1 contrast against its own fill for every count in both themes', () => {
+    const maxCounts = [2, 3, 5, 10, 20, 50];
+    for (const theme of ['light', 'dark'] as const) {
+      const bgColor = HEATMAP_BG[theme];
+      for (const maxCount of maxCounts) {
+        for (let count = 1; count <= maxCount; count += 1) {
+          const fill = cellFillColor(count, maxCount, bgColor);
+          const text = cellTextColor(count, maxCount, bgColor);
+          expect(contrastRatio(fill, text)).toBeGreaterThanOrEqual(MIN_CONTRAST_AA);
+        }
+      }
+    }
   });
 });
