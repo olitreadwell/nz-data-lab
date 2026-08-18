@@ -16,6 +16,7 @@ import {
   parseHamiltonPlaygrounds,
   parseInaturalistTotal,
   parseMvrFleetRows,
+  parseDigitalNzSearch,
   parseNzorNamesXml,
   parseNzSchools,
   parseWikidataPeaks,
@@ -521,5 +522,80 @@ describe('fetchLiveNzSchools', () => {
       expect.any(URL),
       expect.objectContaining({ signal: expect.any(AbortSignal) }),
     );
+  });
+});
+
+describe('parseDigitalNzSearch', () => {
+  it('prefers the ISO date array over the display date', () => {
+    const payload = {
+      search: {
+        results: [
+          {
+            id: 1,
+            title: 'A',
+            display_content_partner: 'P',
+            landing_url: 'u',
+            date: ['1908-01-01T00:00:00.000Z'],
+            display_date: 'Reproduced from a 1908 original, scanned 2021',
+          },
+        ],
+      },
+    };
+    expect(parseDigitalNzSearch(payload).records).toEqual([expect.objectContaining({ year: 1908 })]);
+  });
+
+  it('uses the leading display year and ignores a trailing scan year', () => {
+    const payload = {
+      search: {
+        results: [
+          {
+            id: 1,
+            title: 'A',
+            display_content_partner: 'P',
+            landing_url: 'u',
+            display_date: 'Reproduced from a 1908 original, scanned 2021',
+          },
+        ],
+      },
+    };
+    expect(parseDigitalNzSearch(payload).records).toEqual([expect.objectContaining({ year: 1908 })]);
+  });
+
+  it('returns null when no leading year exists in the display date', () => {
+    const payload = {
+      search: {
+        results: [
+          {
+            id: 1,
+            title: 'A',
+            display_content_partner: 'P',
+            landing_url: 'u',
+            display_date: 'This record has no leading date but mentions scanned 2021',
+          },
+        ],
+      },
+    };
+    expect(parseDigitalNzSearch(payload).records).toEqual([expect.objectContaining({ year: null })]);
+  });
+
+  it('keeps decade faceting consistent with the parsed records', () => {
+    const payload = {
+      search: {
+        result_count: 1,
+        facets: { decade: { 1900: 1 } },
+        results: [
+          {
+            id: 1,
+            title: 'A',
+            display_content_partner: 'P',
+            landing_url: 'u',
+            display_date: '1900-1950',
+          },
+        ],
+      },
+    };
+    const result = parseDigitalNzSearch(payload);
+    expect(result.decades).toEqual([{ decade: 1900, count: 1 }]);
+    expect(result.records).toEqual([expect.objectContaining({ year: 1900 })]);
   });
 });
