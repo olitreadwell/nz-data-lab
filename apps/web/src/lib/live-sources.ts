@@ -16,6 +16,9 @@ export interface LiveNzorName {
 
 const NZOR_XML_PARSER = new XMLParser({ ignoreAttributes: false, parseTagValue: false });
 
+/** How many NZOR name matches the species-register chart renders. */
+const MAX_NZOR_NAMES = 20;
+
 /** How long a browser live-search request may take before it is aborted. */
 export const LIVE_SEARCH_TIMEOUT_MS = 10_000;
 
@@ -28,29 +31,32 @@ function createLiveSearchAbortController(): AbortController {
   return controller;
 }
 
-/** Parses an NZOR /names XML payload into name records. */
+/** Parses an NZOR /names/search XML payload into name records. */
 export function parseNzorNamesXml(payload: string): LiveNzorName[] {
   const parsed = NZOR_XML_PARSER.parse(payload) as {
-    Response?: { Names?: { Name?: unknown[] } };
+    NamesSearchResponse?: {
+      Results?: { NameSearchResult?: unknown[] };
+    };
   };
-  const rawNames = parsed.Response?.Names?.Name ?? [];
-  const names = (Array.isArray(rawNames) ? rawNames : [rawNames]).map((raw) => {
-    const name = raw as { NameId?: string; Class?: string; FullName?: string };
+  const rawResults = parsed.NamesSearchResponse?.Results?.NameSearchResult ?? [];
+  const results = (Array.isArray(rawResults) ? rawResults : [rawResults]).map((raw) => {
+    const name = (raw as { Name?: { NameId?: string; Class?: string; FullName?: string } }).Name;
     return {
-      nameId: name.NameId ?? '',
-      className: name.Class ?? '',
-      fullName: name.FullName ?? '',
+      nameId: name?.NameId ?? '',
+      className: name?.Class ?? '',
+      fullName: name?.FullName ?? '',
     };
   });
-  return names;
+  return results.slice(0, MAX_NZOR_NAMES);
 }
 
 /** Searches the NZ Organisms Register from the browser (CORS is open). */
 export async function searchLiveNzorNames(query: string): Promise<LiveNzorName[]> {
   const controller = createLiveSearchAbortController();
-  const response = await fetch(`https://data.nzor.org.nz/names?q=${encodeURIComponent(query)}`, {
-    signal: controller.signal,
-  });
+  const response = await fetch(
+    `https://data.nzor.org.nz/names/search?query=${encodeURIComponent(query)}`,
+    { signal: controller.signal },
+  );
   if (!response.ok) {
     throw new Error(`NZOR HTTP ${response.status}`);
   }
