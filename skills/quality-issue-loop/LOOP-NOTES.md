@@ -132,3 +132,35 @@ feat/microsite-loop-7 (broken WIP: microsites.ts has orphaned reference
 blocks and missing configs for road-crash and vehicle-fleet) and
 feat/microsite-loop-9 (dirty WIP: uncommitted AgePyramid work; its committed
 hide commit is already in main).
+
+## 2026-08-18 (loop-9 shipped)
+
+Rebased feat/microsite-loop-9 onto main (resolved both conflicts by keeping
+both case/config blocks), verified type-check + 192 unit tests + lint (0
+errors), merged, added hub cards for census-rank-shift, age-pyramid, and
+quake-magnitudes, bumped the e2e card count 20 -> 23, built, pushed, and
+watched the Pages deploy go green. All three new pages return 200. Removed
+the loop-9 worktree and branch. Home page now shows 23 microsites.
+
+## 2026-08-18 (loop-7 shipped)
+
+Rebased feat/microsite-loop-7 onto main (resolved conflicts in live-sources,
+microsites configs, page cases, and tests by keeping both sides), restored
+the missing road-crash-trend and vehicle-fleet config objects from the
+stale .full backups, verified type-check + 217 unit tests + lint (0
+errors), merged, added hub cards for ev-charging, road-crash-trend, and
+vehicle-fleet, bumped the e2e card count 23 -> 26, built, pushed, and
+watched the Pages deploy go green. All three new pages return 200. Removed
+the loop-7 worktree and branch. Home page now shows 26 microsites.
+
+## 2026-08-18 (smarter report-an-issue dialog)
+
+Made the report-an-issue dialog gather more context: it now auto-detects
+the current microsite from the URL and preselects it in the Item dropdown,
+adds a Severity field (Blocks me / Annoying / Cosmetic / Not sure) and an
+optional "What did you expect?" field, and appends an Environment section
+(browser, OS, viewport, color scheme, online state, URL) plus the selected
+microsite's dataNote as Data context to the prefilled issue body. Verified
+with 9 unit tests (incl. axe) and a live Playwright smoke test on the
+deployed site: item preselection, prefilled URL, and all body sections
+present. Deployed green.
