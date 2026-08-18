@@ -157,6 +157,13 @@ when no wrapper is already running (check the lock file first).
   version when they disagree. The smoke-ranked doc's assertions are the safer
   guide than the one-line story.
 
+- GeoNet FDSN caps each query at 10,000 events (HTTP 413 "Request Entity
+  Too Large"): magnitude 1 or stronger only fits about 5 months, so a
+  seasonal "by month" story needs a higher floor. Magnitude 3 or stronger
+  fits 24 months (about 6,900 events), which is enough for a monthly rose
+  with a year filter. Commit a snapshot of the exact query the chart uses
+  (same magnitude floor and window) so the fallback matches the copy.
+
 - Stats NZ ADE data is not keyless beyond the AGR_* tables: census and trade
   dataflows return 401 without a subscription key. For those, pull the
   numbers from the release page instead: fetch the release HTML, read the
