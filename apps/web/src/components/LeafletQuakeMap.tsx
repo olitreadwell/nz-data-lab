@@ -39,7 +39,7 @@ export function LeafletQuakeMap({ quakes, label }: LeafletQuakeMapProps): React.
   }, [label]);
 
   return (
-    <div className="h-[320px] w-full overflow-hidden rounded-[var(--radius-sm)] border border-[var(--color-border)] sm:h-[380px] lg:h-[440px]">
+    <div className="isolate h-[320px] w-full overflow-hidden rounded-[var(--radius-sm)] border border-[var(--color-border)] sm:h-[380px] lg:h-[440px]">
       <MapContainer
         ref={mapRef}
         center={NZ_CENTER}
