@@ -258,3 +258,26 @@ Skill improvements for next iterations: the loop must never trust a fan-out
 merge that errored after the agent finished (verify the merge landed before
 pruning the worktree/branch), and every merged branch needs a real
 `next build` on a main checkout before deploy, not just type-check+test.
+
+## 2026-08-19: CSP revert, viewport-height charts, hub filters, backlog closures
+
+- The strict style-src CSP (9e90a90) broke charts: React runtime style writes
+  (Recharts ResponsiveContainer, Leaflet) are blocked by nonce-only style-src,
+  so chart wrappers stayed 0px. Reverted to 'unsafe-inline' for style-src only
+  (ce59f21) and reopened #267 as a hardening follow-up (script-src stays
+  nonce-based; the deploy header check keeps passing).
+- Charts now size as a percentage of the device viewport height instead of
+  fixed pixels: `h-[clamp(...vh,...px)]` on every chart wrapper and a
+  `max-h-[clamp(320px,46vh,560px)]` cap on the proportional `h-auto w-full`
+  SVGs; the VehicleFleet sunburst now sits in a ResponsiveContainer.
+- The hub page gained client-side filters for data source, chart type, and
+  category (any permutation, AND semantics), with taxonomy metadata added to
+  every MicrositeConfig entry and a taxonomy integrity test.
+- Closed 13 shipped data-viz-idea issues (median-age-ranks, visitor-
+  arrival-ranks, city-population-ranks, unemployment-ranks, export-
+  destination-ranks, regional-population-ranks, quake-depth-distribution,
+  retail-sales-by-month, tourism-arrivals-by-month, quake-months, company-
+  size-distribution, age-distribution, quake-magnitudes) plus the open
+  quake-months microsite-review issue (#223), all verified live with HTTP 200
+  and stat assertions. Protected labels data-viz-idea/data-tutorial untouched
+  beyond these closures.
