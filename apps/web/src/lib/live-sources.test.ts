@@ -67,7 +67,7 @@ describe('live-sources fetchers', () => {
 describe('fetchLiveInaturalistTaxa', () => {
   it('keeps other taxa when one sub-request rejects', async () => {
     const fetchMock = vi.fn((input: RequestInfo | URL) => {
-      const url = String(input);
+      const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
       if (url.includes('iconic_taxa=Aves')) {
         return Promise.reject(new Error('rate limited'));
       }
@@ -92,7 +92,7 @@ describe('fetchLiveInaturalistTaxa', () => {
 describe('fetchLiveGbifKingdoms', () => {
   it('keeps the other year when one year fetch rejects', async () => {
     const fetchMock = vi.fn((input: RequestInfo | URL) => {
-      const url = String(input);
+      const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
       if (url.includes('year=2014')) {
         return Promise.reject(new Error('gbif down'));
       }

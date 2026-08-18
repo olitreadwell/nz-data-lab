@@ -53,7 +53,7 @@ describe('OpenDataSearch', () => {
   });
 
   it('discards a stale response from an earlier search', async () => {
-    let resolveFirst: (value: LiveDataGovtNzDataset[]) => void = () => {};
+    let resolveFirst: (value: LiveDataGovtNzDataset[]) => void = () => undefined;
     const first = new Promise<LiveDataGovtNzDataset[]>((resolve) => {
       resolveFirst = resolve;
     });
@@ -65,7 +65,11 @@ describe('OpenDataSearch', () => {
     fireEvent.change(screen.getByLabelText(/Search the open data catalogue/), {
       target: { value: 'sheep' },
     });
-    fireEvent.submit(screen.getByRole('button', { name: 'Search' }).closest('form') as HTMLFormElement);
+    const form = screen.getByRole('button', { name: 'Search' }).closest('form');
+    if (form === null) {
+      throw new Error('Expected a search form');
+    }
+    fireEvent.submit(form);
     expect(await screen.findByText(/1 datasets match "sheep"/)).toBeInTheDocument();
     expect(screen.getByText('Sheep counts')).toBeInTheDocument();
     resolveFirst(DATASETS);
