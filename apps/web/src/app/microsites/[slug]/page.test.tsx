@@ -206,6 +206,16 @@ describe('MicrositePage', () => {
     expect(html).toContain('Quakes located, 3 months');
   });
 
+  it('renders the ethnic mix story', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'ethnic-mix' })} />,
+    );
+    const html = await new Response(stream).text();
+    expect(html).toContain('European is still the biggest group, but the mix is changing fast.');
+    expect(html).toContain('67.8%');
+    expect(html).toContain('Sources and further reading');
+  });
+
   it('renders the rabbit boom story with the spotlight chart', async () => {
     const stream = await renderToReadableStream(
       <MicrositePage params={Promise.resolve({ slug: 'rabbit-boom' })} />,

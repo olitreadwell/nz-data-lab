@@ -11,6 +11,7 @@ import { BackyardSpeciesCensus } from '@/components/BackyardSpeciesCensus';
 import { CanterburyRain } from '@/components/CanterburyRain';
 import { DeerBoomBustChart } from '@/components/DeerBoomBustChart';
 import { DigitisedMemorySearch } from '@/components/DigitisedMemorySearch';
+import { EthnicityWaffle } from '@/components/EthnicityWaffle';
 import { EvCharging } from '@/components/EvCharging';
 import { ForestryChart } from '@/components/ForestryChart';
 import { HamiltonPlaygrounds } from '@/components/HamiltonPlaygrounds';
@@ -39,6 +40,7 @@ import { WhatTheWorldReads } from '@/components/WhatTheWorldReads';
 import { env } from '@/env';
 import { ageBulgeSixtyFivePlus } from '@/lib/age-bulge-data';
 import { CENSUS_RANK_HIGHLIGHTS, formatRankOrdinal } from '@/lib/census-rank-data';
+import { ethnicityAnswersPerHundred } from '@/lib/ethnicity-mix-data';
 import { fetchForestrySeries, summarizeForestry } from '@/lib/forestry-data';
 import { formatHectares, formatMillions } from '@/lib/format';
 import {
@@ -761,6 +763,36 @@ function renderStoryContent(
               accent="cyan"
               testId="age-bulge-median"
               dataValue={38.1}
+            />
+          </dl>
+        ),
+      };
+    }
+    case 'ethnic-mix': {
+      return {
+        chart: <EthnicityWaffle />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Stated a European ethnicity, 2023"
+              value="67.8%"
+              accent="fuchsia"
+              testId="ethnic-mix-european"
+              dataValue={67.8}
+            />
+            <StatCard
+              label="Stated an Asian ethnicity, 2023"
+              value="17.3%"
+              accent="fuchsia"
+              testId="ethnic-mix-asian"
+              dataValue={17.3}
+            />
+            <StatCard
+              label="Ethnic answers per 100, 2023"
+              value={ethnicityAnswersPerHundred(2023).toFixed(1)}
+              accent="fuchsia"
+              testId="ethnic-mix-answers"
+              dataValue={ethnicityAnswersPerHundred(2023)}
             />
           </dl>
         ),

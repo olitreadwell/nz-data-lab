@@ -919,4 +919,37 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+
+  {
+    slug: 'ethnic-mix',
+    label: 'Ethnic mix',
+    eyebrow: '🧬 the ethnic mix',
+    title: 'European is still the biggest group, but the mix is changing fast.',
+    description:
+      'At the 2023 Census, 67.8 percent of people who stated an ethnicity identified as European. The Asian share has nearly doubled in a decade, from 11.8 percent in 2013 to 17.3 percent in 2023.',
+    paragraphs: [
+      'The chart rows add past 100 because people can identify with more than one ethnic group. The filled cells in each row add past 100: 111 cells for every 100 people who stated an ethnicity in 2013 and 115 in 2023, because people can identify with more than one group. That growing overlap is the multi-identity share.',
+      'The diversity is concentrated. Auckland is the only region where fewer than half of people stated a European ethnicity: 49.8 percent in 2023, against 67.8 percent nationally. Gisborne is next lowest at 56.5 percent.',
+    ],
+    accent: 'fuchsia',
+    dataNote:
+      'Data: Stats NZ 2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts, Table 4 (ethnic group grouped total responses by regional council area, 2013, 2018, and 2023 censuses). Each row of the chart is 100 people who stated an ethnicity, and the filled cells show how many identified with that group. Rows add past 100 because people can choose more than one ethnic group. In 2013, 5.4 percent of people did not state an ethnicity, so that year is measured against the 94.6 percent who did.',
+    references: [
+      {
+        label: '2023 Census population counts release (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
+        kind: 'data',
+      },
+      {
+        label: 'Census results reflect Aotearoa New Zealands diversity (Stats NZ)',
+        url: 'https://www.stats.govt.nz/news/census-results-reflect-aotearoa-new-zealands-diversity/',
+        kind: 'news',
+      },
+      {
+        label: 'Ethnicity (Stats NZ)',
+        url: 'https://www.stats.govt.nz/topics/ethnicity',
+        kind: 'history',
+      },
+    ],
+  },
 ]);
