@@ -120,6 +120,23 @@ The Vercel workflows (`.github/workflows/deploy_preview.yml`,
 `deploy_preproduction.yml`, `deploy_production.yml`) remain available for
 server-rendered previews and production deploys.
 
+### Security headers
+
+The static export ships no server, so `headers()` in `next.config.ts` is
+ignored. Security headers are instead configured per host:
+
+- Vercel reads them from `apps/web/vercel.json` (`headers`), which applies to
+  every route and is verifiable with `curl -I`.
+- `apps/web/public/_headers` ships the same headers in the export for
+  `_headers`-aware static hosts. GitHub Pages does not serve custom headers,
+  so the CSP and friends only take effect on hosts that honor them (Vercel,
+  Netlify, and similar).
+
+The Content-Security-Policy allows only the origins the app actually uses:
+`'self'`, the OpenStreetMap tile host, and the live API hosts in
+`apps/web/src/lib/live-sources.ts`. `apps/web/src/lib/security-headers.test.ts`
+keeps the CSP in sync with those hosts.
+
 ## Optional integrations
 
 Inherited from the base template — not currently used by nz-data-lab, but available on
