@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -124,5 +124,117 @@ describe('ReportIssueButton', () => {
     const dialog = screen.getByRole('dialog');
     const results = await axe(dialog);
     expect(results).toHaveNoViolations();
+  });
+});
+
+describe('ReportIssueButton focus trap', () => {
+  it('cycles focus forward and backward within the dialog', () => {
+    render(<ReportIssueButton />);
+    fireEvent.click(screen.getByRole('button', { name: 'Report an issue' }));
+    const dialog = screen.getByRole('dialog');
+    const close = screen.getByRole('button', { name: 'Close' });
+    const copy = screen.getByRole('button', { name: 'Copy link' });
+
+    copy.focus();
+    fireEvent.keyDown(document, { key: 'Tab' });
+    expect(close).toHaveFocus();
+
+    fireEvent.keyDown(document, { key: 'Tab', shiftKey: true });
+    expect(copy).toHaveFocus();
+
+    expect(dialog.contains(document.activeElement)).toBe(true);
+  });
+
+  it('pulls focus back into the dialog when Tab is pressed from outside', () => {
+    render(<ReportIssueButton />);
+    fireEvent.click(screen.getByRole('button', { name: 'Report an issue' }));
+    const close = screen.getByRole('button', { name: 'Close' });
+    const trigger = screen.getByRole('button', { name: 'Report an issue' });
+
+    trigger.focus();
+    fireEvent.keyDown(document, { key: 'Tab' });
+    expect(close).toHaveFocus();
+  });
+});
+
+describe('ReportIssueButton min-length hint', () => {
+  it('wires the visible hint to the textarea via aria-describedby', () => {
+    render(<ReportIssueButton />);
+    fireEvent.click(screen.getByRole('button', { name: 'Report an issue' }));
+    const textarea = screen.getByRole('textbox', { name: /what happened/i });
+    expect(textarea).toHaveAttribute('aria-describedby', 'report-issue-min-length');
+    expect(screen.getByText('At least 10 characters')).toHaveAttribute(
+      'id',
+      'report-issue-min-length',
+    );
+  });
+
+  it('announces why the submit button is disabled when the description is too short', () => {
+    render(<ReportIssueButton />);
+    fireEvent.click(screen.getByRole('button', { name: 'Report an issue' }));
+    expect(
+      screen.getByText('Add at least 10 characters to enable the submit button.'),
+    ).toHaveAttribute('role', 'status');
+
+    fireEvent.change(screen.getByRole('textbox', { name: /what happened/i }), {
+      target: { value: 'A sufficiently long description.' },
+    });
+    expect(
+      screen.queryByText('Add at least 10 characters to enable the submit button.'),
+    ).not.toBeInTheDocument();
+  });
+});
+
+describe('ReportIssueButton blocked popup', () => {
+  it('keeps the dialog open and offers to copy the link when the popup is blocked', async () => {
+    const open = vi.spyOn(window, 'open').mockImplementation(() => null);
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText },
+      configurable: true,
+    });
+    render(<ReportIssueButton />);
+    fireEvent.click(screen.getByRole('button', { name: 'Report an issue' }));
+    fireEvent.change(screen.getByRole('textbox', { name: /what happened/i }), {
+      target: { value: 'The sheep chart shows the wrong year range.' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Open GitHub issue' }));
+
+    expect(open).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(
+      screen.getByText('Your browser blocked the new window. Copy the prefilled link instead.'),
+    ).toHaveAttribute('role', 'alert');
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Copy link' }));
+    });
+    expect(writeText).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('ReportIssueButton reset after submit', () => {
+  it('resets type, item, description, and copied when the report opens successfully', () => {
+    vi.spyOn(window, 'open').mockImplementation(() => ({}) as Window);
+    render(<ReportIssueButton />);
+    fireEvent.click(screen.getByRole('button', { name: 'Report an issue' }));
+    fireEvent.change(screen.getByRole('combobox', { name: /type/i }), {
+      target: { value: 'Accessibility' },
+    });
+    fireEvent.change(screen.getByRole('combobox', { name: /item/i }), {
+      target: { value: 'Other' },
+    });
+    fireEvent.change(screen.getByRole('textbox', { name: /what happened/i }), {
+      target: { value: 'The sheep chart shows the wrong year range.' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Open GitHub issue' }));
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Report an issue' }));
+    expect(screen.getByRole('combobox', { name: /type/i })).toHaveValue('Bug');
+    expect(screen.getByRole('combobox', { name: /item/i })).toHaveValue('Home page');
+    expect(screen.getByRole('textbox', { name: /what happened/i })).toHaveValue('');
+    expect(screen.getByRole('button', { name: 'Copy link' })).toBeInTheDocument();
   });
 });

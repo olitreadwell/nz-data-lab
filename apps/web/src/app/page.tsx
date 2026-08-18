@@ -1,6 +1,7 @@
 import { Container, Stack } from '@nzlab/ui';
 
 import { MicrositeCard } from '@/components/MicrositeCard';
+import { ReportIssueButton } from '@/components/ReportIssueButton';
 import { env } from '@/env';
 import { fetchForestrySeries, summarizeForestry } from '@/lib/forestry-data';
 import { formatHectares, formatMillions } from '@/lib/format';
@@ -221,6 +222,7 @@ export default async function HomePage(): Promise<React.ReactElement> {
           ))}
         </div>
       </Container>
+      <ReportIssueButton />
     </main>
   );
 }

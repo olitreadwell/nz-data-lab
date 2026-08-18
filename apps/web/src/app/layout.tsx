@@ -3,7 +3,6 @@ import '@nzlab/ui/styles';
 import type { Metadata } from 'next';
 import { Geist } from 'next/font/google';
 
-import { ReportIssueButton } from '@/components/ReportIssueButton';
 import { SiteFooter } from '@/components/SiteFooter';
 import { SiteHeader } from '@/components/SiteHeader';
 
@@ -35,7 +34,6 @@ export default function RootLayout({
           {children}
         </div>
         <SiteFooter />
-        <ReportIssueButton />
       </body>
     </html>
   );

@@ -119,6 +119,13 @@ function detectItemFromPath(pathname: string): string {
   return microsite?.label ?? 'Other';
 }
 
+/** Returns the default report item for the current URL.
+ * @returns the matching microsite label, "Home page", or "Other"
+ */
+function getDefaultItem(): string {
+  return typeof window === 'undefined' ? 'Home page' : detectItemFromPath(window.location.pathname);
+}
+
 /**
  * Builds the prefilled GitHub new-issue URL for a report.
  *
@@ -195,17 +202,18 @@ export function ReportIssueButton({ pageLabel }: ReportIssueButtonProps): React.
   const [open, setOpen] = useState(false);
   const [type, setType] = useState<IssueType>('Bug');
   const [severity, setSeverity] = useState<Severity>('Not sure');
-  const [item, setItem] = useState(() =>
-    typeof window === 'undefined' ? 'Home page' : detectItemFromPath(window.location.pathname),
-  );
+  const [item, setItem] = useState(getDefaultItem);
   const [description, setDescription] = useState('');
   const [expected, setExpected] = useState('');
   const [copied, setCopied] = useState(false);
+  const [blocked, setBlocked] = useState(false);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
 
   const pageUrl = typeof window === 'undefined' ? '' : window.location.href;
   const label = pageLabel ?? (typeof document === 'undefined' ? '' : document.title);
+  const descriptionTooShort = description.trim().length < MIN_DESCRIPTION_LENGTH;
 
   useEffect(() => {
     if (!open) {
@@ -215,6 +223,38 @@ export function ReportIssueButton({ pageLabel }: ReportIssueButtonProps): React.
     const onKeyDown = (event: KeyboardEvent): void => {
       if (event.key === 'Escape') {
         setOpen(false);
+        return;
+      }
+      if (event.key !== 'Tab') {
+        return;
+      }
+      const dialog = dialogRef.current;
+      if (dialog === null) {
+        return;
+      }
+      const focusable = Array.from(
+        dialog.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((element) => !element.hasAttribute('disabled'));
+      if (focusable.length === 0) {
+        event.preventDefault();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (first === undefined || last === undefined) {
+        return;
+      }
+      const active = document.activeElement;
+      if (event.shiftKey) {
+        if (active === first || !dialog.contains(active)) {
+          event.preventDefault();
+          last.focus();
+        }
+      } else if (active === last || !dialog.contains(active)) {
+        event.preventDefault();
+        first.focus();
       }
     };
     document.addEventListener('keydown', onKeyDown);
@@ -238,7 +278,16 @@ export function ReportIssueButton({ pageLabel }: ReportIssueButtonProps): React.
       pageUrl,
       environment: getEnvironmentInfo(),
     });
-    window.open(url, '_blank', 'noopener,noreferrer');
+    const opened = window.open(url, '_blank', 'noopener,noreferrer');
+    if (opened === null) {
+      setBlocked(true);
+      return;
+    }
+    setBlocked(false);
+    setType('Bug');
+    setItem(getDefaultItem());
+    setDescription('');
+    setCopied(false);
     setOpen(false);
   };
 
@@ -284,6 +333,7 @@ export function ReportIssueButton({ pageLabel }: ReportIssueButtonProps): React.
       </button>
       {open ? (
         <div
+          ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-labelledby="report-issue-title"
@@ -389,8 +439,20 @@ export function ReportIssueButton({ pageLabel }: ReportIssueButtonProps): React.
                   value={description}
                   onChange={(event) => setDescription(event.target.value)}
                   placeholder="Describe the problem and what you saw."
+                  aria-describedby="report-issue-min-length"
                   className="rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-bg)] px-2 py-1.5"
                 />
+                <span
+                  id="report-issue-min-length"
+                  className="numeral-paragraph-sm text-[var(--color-muted)]"
+                >
+                  At least {MIN_DESCRIPTION_LENGTH} characters
+                </span>
+                {descriptionTooShort ? (
+                  <p role="status" className="numeral-paragraph-sm text-[var(--color-muted)]">
+                    Add at least {MIN_DESCRIPTION_LENGTH} characters to enable the submit button.
+                  </p>
+                ) : null}
               </label>
               <label className="grid gap-1">
                 <span className="numeral-paragraph-sm text-[var(--color-muted)]">
@@ -407,7 +469,7 @@ export function ReportIssueButton({ pageLabel }: ReportIssueButtonProps): React.
               <div className="flex flex-wrap items-center gap-2">
                 <button
                   type="submit"
-                  disabled={description.trim().length < MIN_DESCRIPTION_LENGTH}
+                  disabled={descriptionTooShort}
                   className="numeral-button numeral-button-primary disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   Open GitHub issue
@@ -422,6 +484,11 @@ export function ReportIssueButton({ pageLabel }: ReportIssueButtonProps): React.
                   {copied ? 'Copied' : 'Copy link'}
                 </button>
               </div>
+              {blocked ? (
+                <p role="alert" className="numeral-paragraph-sm text-[var(--color-muted)]">
+                  Your browser blocked the new window. Copy the prefilled link instead.
+                </p>
+              ) : null}
             </form>
           </div>
         </div>

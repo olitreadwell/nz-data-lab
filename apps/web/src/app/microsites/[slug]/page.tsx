@@ -17,6 +17,7 @@ import { HorticultureChart } from '@/components/HorticultureChart';
 import { KiwifruitOvertakeChart } from '@/components/KiwifruitOvertakeChart';
 import { LivestockChart } from '@/components/LivestockChart';
 import { MicrositeStory } from '@/components/MicrositeStory';
+import { ReportIssueButton } from '@/components/ReportIssueButton';
 import { OpenDataSearch } from '@/components/OpenDataSearch';
 import { PeakHeights } from '@/components/PeakHeights';
 import { PopulationRankBump } from '@/components/PopulationRankBump';
@@ -161,6 +162,7 @@ export default async function MicrositePage({
         dataNote={microsite.dataNote}
         references={microsite.references}
       />
+      <ReportIssueButton pageLabel={microsite.label} />
     </main>
   );
 }
