@@ -1,8 +1,13 @@
-import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
-// Vitest runs with the workspace root (apps/web) as cwd.
-const WEB_ROOT = process.cwd();
+// The test lives at apps/web/src/lib, so the workspace root is two levels up.
+const WEB_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
+const GENERATE_CSP_SCRIPT = path.join(WEB_ROOT, 'scripts', 'generate-csp.mjs');
 
 /** Browser API hosts the app fetches from (see src/lib/live-sources.ts). */
 const LIVE_API_HOSTS = [
@@ -44,13 +49,61 @@ function cspDirective(csp: string, name: string): string {
   return value;
 }
 
+function staticHeaderValue(headers: string, key: string): string {
+  const match = new RegExp(`^\\s*${key}:\\s*(.+)$`, 'm').exec(headers);
+  const value = match?.[1];
+  if (value === undefined) {
+    throw new Error(`_headers is missing the ${key} header`);
+  }
+  return value;
+}
+
+interface GeneratedCsp {
+  headers: string;
+  html: string;
+}
+
+/** Runs the real build-time CSP generator into a temp dir and returns its output. */
+function generateCspOutput(): GeneratedCsp {
+  const tmp = mkdtempSync(path.join(tmpdir(), 'csp-'));
+  try {
+    writeFileSync(
+      path.join(tmp, 'index.html'),
+      '<html><body><script>window.__cspTest = true;</script></body></html>',
+    );
+    execFileSync('node', [GENERATE_CSP_SCRIPT, tmp], { cwd: WEB_ROOT });
+    return {
+      headers: readFileSync(path.join(tmp, '_headers'), 'utf8'),
+      html: readFileSync(path.join(tmp, 'index.html'), 'utf8'),
+    };
+  } finally {
+    rmSync(tmp, { recursive: true, force: true });
+  }
+}
+
 describe('security headers', () => {
   const vercelHeaders = readVercelHeaders();
-  const csp = vercelHeaders.find((header) => header.key === 'Content-Security-Policy')?.value ?? '';
+  const generated = generateCspOutput();
+  const csp = staticHeaderValue(generated.headers, 'Content-Security-Policy');
 
   it('does not allow unsafe-inline in script-src', () => {
     const scriptSrc = cspDirective(csp, 'script-src');
     expect(scriptSrc).not.toContain("'unsafe-inline'");
+  });
+
+  it('injects a fresh nonce into the generated _headers and the inline scripts', () => {
+    const scriptSrc = cspDirective(csp, 'script-src');
+    const nonce = /'nonce-([^']+)'/.exec(scriptSrc)?.[1];
+    if (nonce === undefined) {
+      throw new Error('CSP script-src is missing a nonce');
+    }
+    expect(generated.html).toContain(`nonce="${nonce}"`);
+  });
+
+  it('does not commit a nonce in tracked config', () => {
+    const vercelJson = readFileSync(`${WEB_ROOT}/vercel.json`, 'utf8');
+    expect(vercelJson).not.toContain('nonce-');
+    expect(readStaticHeaders()).not.toContain('nonce-');
   });
 
   it('allows every live API host in connect-src', () => {
@@ -68,7 +121,6 @@ describe('security headers', () => {
     const keys = vercelHeaders.map((header) => header.key);
     expect(keys).toEqual(
       expect.arrayContaining([
-        'Content-Security-Policy',
         'X-Content-Type-Options',
         'Referrer-Policy',
         'X-Frame-Options',

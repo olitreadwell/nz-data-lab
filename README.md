@@ -125,17 +125,20 @@ server-rendered previews and production deploys.
 The static export ships no server, so `headers()` in `next.config.ts` is
 ignored. Security headers are instead configured per host:
 
-- Vercel reads them from `apps/web/vercel.json` (`headers`), which applies to
-  every route and is verifiable with `curl -I`.
-- `apps/web/public/_headers` ships the same headers in the export for
-  `_headers`-aware static hosts. GitHub Pages does not serve custom headers,
-  so the CSP and friends only take effect on hosts that honor them (Vercel,
-  Netlify, and similar).
+- `apps/web/public/_headers` is the committed source of the headers. The build
+  copies it into the export and `apps/web/scripts/generate-csp.mjs` rewrites
+  `out/_headers` with a fresh per-build CSP nonce, so the served CSP always
+  matches the nonce injected into the inline scripts. `_headers`-aware static
+  hosts (Vercel, Netlify, and similar) honor it; GitHub Pages does not serve
+  custom headers, so the CSP and friends only take effect on hosts that do.
+- `apps/web/vercel.json` carries the non-CSP headers for Vercel. It holds no
+  CSP and no nonce, so source control never contains a public nonce.
 
 The Content-Security-Policy allows only the origins the app actually uses:
 `'self'`, the OpenStreetMap tile host, and the live API hosts in
 `apps/web/src/lib/live-sources.ts`. `apps/web/src/lib/security-headers.test.ts`
-keeps the CSP in sync with those hosts.
+keeps the CSP in sync with those hosts and asserts no committed file carries a
+nonce.
 
 ## Optional integrations
 
