@@ -189,6 +189,20 @@ when no wrapper is already running (check the lock file first).
   lag the changelog (it still calls slope unused after loop 5 shipped one),
   so trust the codebase over the doc when they disagree.
 
+- The keyless monthly series map: the retail trade survey is quarterly and its ADE
+  tables need a subscription key, so the monthly retail pulse is Stats NZ's
+  "Electronic card transactions" releases (Table 1, series ECTM, ~2 years per
+  release; combine June 2023 + June 2025 for June 2021 to June 2025). Monthly
+  overseas visitor arrivals are in "International travel" release Table 2
+  (December releases span June of the prior year to December; combine December
+  2017/2018/2019 with a 2025 release for 2017-2019 plus 2024, which skips the
+  COVID years cleanly). Births-by-month release slugs were not findable
+  (guessed slugs 404), so viz-082 stayed unbuilt. All three release xlsx files
+  are reachable via the pageViewData DocumentLink pattern. As of loop 11 every
+  open data-viz-idea maps to slope, histogram, or radial, so loops must
+  introduce chart types new to the site (pareto, cycle plot, and streamgraph
+  shipped in loop 11) instead of following the spec's chart line literally.
+
 ## Loop review checklist (step 8)
 
 - What took longest? (research, build, verify, deploy)
