@@ -140,7 +140,7 @@ export default async function MicrositePage({
   });
 
   return (
-    <main>
+    <>
       <Container size="wide">
         <Link
           href="/"
@@ -161,7 +161,7 @@ export default async function MicrositePage({
         dataNote={microsite.dataNote}
         references={microsite.references}
       />
-    </main>
+    </>
   );
 }
 

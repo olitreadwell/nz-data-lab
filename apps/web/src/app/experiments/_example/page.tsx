@@ -19,32 +19,30 @@ const stats: ExampleStat[] = [
 
 export default function ExampleExperimentPage(): React.ReactElement {
   return (
-    <main>
-      <Section>
-        <Container>
-          <Stack className="max-w-3xl gap-6">
-            <p className="numeral-text-eyebrow text-[var(--color-muted)]">experiments / _example</p>
-            <h1 className="numeral-heading-3xl">One-sentence pitch goes here.</h1>
-            <p className="numeral-paragraph-lg text-[var(--color-muted)]">
-              A short paragraph on what question this experiment asks, and why it might turn up
-              something weird, funny, or surprising. Cite the real data source by name — never a
-              source you haven&apos;t actually pulled from.
-            </p>
-          </Stack>
+    <Section>
+      <Container>
+        <Stack className="max-w-3xl gap-6">
+          <p className="numeral-text-eyebrow text-[var(--color-muted)]">experiments / _example</p>
+          <h1 className="numeral-heading-3xl">One-sentence pitch goes here.</h1>
+          <p className="numeral-paragraph-lg text-[var(--color-muted)]">
+            A short paragraph on what question this experiment asks, and why it might turn up
+            something weird, funny, or surprising. Cite the real data source by name — never a
+            source you haven&apos;t actually pulled from.
+          </p>
+        </Stack>
 
-          <dl className="mt-12 grid gap-6 sm:grid-cols-2">
-            {stats.map((stat) => (
-              <div
-                key={stat.label}
-                className="rounded-[var(--radius-lg)] border border-[var(--color-border)] p-6"
-              >
-                <dt className="numeral-text-eyebrow text-[var(--color-muted)]">{stat.label}</dt>
-                <dd className="numeral-heading-2xl mt-2">{stat.value}</dd>
-              </div>
-            ))}
-          </dl>
-        </Container>
-      </Section>
-    </main>
+        <dl className="mt-12 grid gap-6 sm:grid-cols-2">
+          {stats.map((stat) => (
+            <div
+              key={stat.label}
+              className="rounded-[var(--radius-lg)] border border-[var(--color-border)] p-6"
+            >
+              <dt className="numeral-text-eyebrow text-[var(--color-muted)]">{stat.label}</dt>
+              <dd className="numeral-heading-2xl mt-2">{stat.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </Container>
+    </Section>
   );
 }

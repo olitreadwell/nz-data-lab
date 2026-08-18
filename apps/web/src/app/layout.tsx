@@ -31,9 +31,9 @@ export default function RootLayout({
           Skip to content
         </a>
         <SiteHeader />
-        <div id="main" tabIndex={-1} className="flex-1">
+        <main id="main" tabIndex={-1} className="flex-1">
           {children}
-        </div>
+        </main>
         <SiteFooter />
         <ReportIssueButton />
       </body>

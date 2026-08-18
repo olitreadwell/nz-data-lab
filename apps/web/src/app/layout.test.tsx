@@ -18,4 +18,17 @@ describe('RootLayout', () => {
 
     expect(html).toContain('<html lang="en-NZ"');
   });
+
+  it('renders a single main landmark with id="main" for the skip link', async () => {
+    const stream = await renderToReadableStream(
+      <RootLayout>
+        <p>content</p>
+      </RootLayout>,
+    );
+    const html = await new Response(stream).text();
+
+    expect(html.match(/<main/g)).toHaveLength(1);
+    expect(html).toContain('<main id="main"');
+    expect(html).toContain('</main>');
+  });
 });
