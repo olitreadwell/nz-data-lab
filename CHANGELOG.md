@@ -1,3 +1,28 @@
+## 2026-08-18 22:20 (NZST) - loop 7
+
+- Handed off (unmerged, awaiting review): regional-population-ranks (viz-091,
+  branch feat/microsite-loop-7, review issue #202), export-destination-ranks
+  (viz-093, branch feat/microsite-loop-7, review issue #203), and
+  city-population-ranks (viz-096, branch feat/microsite-loop-7, review issue
+  #204). All three are slope charts with a movers/all toggle and hover
+  highlight, built on a shared SlopeChart component.
+- Sources: Stats NZ 2023 Census population counts release (Table 1 regional,
+  Table 2 territorial authority) and Stats NZ goods and services trade by
+  country releases (year ended March 2015/2020 map data, International trade
+  December 2025 quarter monthly series for 2026). All reference URLs return 200. Chart types used so far: line, area, bar, scatter, donut, treemap,
+  map, histogram, radial, bubble, slope, timeline, funnel, waterfall,
+  sunburst, lollipop, heatmap.
+- Loop review: the smoke-ranked doc says slope is the only unused chart
+  type, but loop 5's species-record-ledger already drew a two-point slope
+  with a LineChart, so the changelog registry and the smoke-ranked doc
+  disagree. The loop built three slope microsites anyway because slope is
+  the highest-value next build per the smoke-ranked doc. The viz-091 spec
+  story (Queenstown climbed) is TA-level, but the region-level ranks are
+  frozen across all three censuses, so the copy tells the honest
+  frozen-pecking-order story. Data sourcing took longest: the ADE needs a
+  subscription key for census and trade tables, so the numbers were pulled
+  from Stats NZ release Excel/CSV downloads instead.
+
 # Changelog
 
 ## 2026-08-18 10:35 (NZST) - loop 5
