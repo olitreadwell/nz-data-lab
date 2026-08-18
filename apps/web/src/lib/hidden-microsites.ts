@@ -13,6 +13,7 @@ export const HIDDEN_MICROSITES: string[] = [
   'peak-heights',
   'open-school-map',
   'open-data-catalogue',
+  'species-register',
 ];
 
 /**
