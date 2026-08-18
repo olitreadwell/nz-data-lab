@@ -11,6 +11,8 @@ interface ChartDataTableProps<T> {
   summary: string;
   columns: ChartDataColumn<T>[];
   rows: T[];
+  /** Whether the table should be expanded by default instead of collapsed. */
+  defaultOpen?: boolean;
 }
 
 /**
@@ -22,9 +24,10 @@ export function ChartDataTable<T>({
   summary,
   columns,
   rows,
+  defaultOpen = false,
 }: ChartDataTableProps<T>): React.ReactElement {
   return (
-    <details className="mt-2">
+    <details className="mt-2" open={defaultOpen}>
       <summary className="numeral-paragraph-sm cursor-pointer text-[var(--color-muted)] underline hover:text-[var(--color-fg)]">
         {summary}
       </summary>
@@ -55,11 +58,7 @@ export function ChartDataTable<T>({
                   const cellClassName =
                     'border-b border-[var(--color-border)] py-1 pr-3 text-[var(--color-muted)]';
                   return columnIndex === 0 ? (
-                    <th
-                      key={String(column.key)}
-                      scope="row"
-                      className={cellClassName}
-                    >
+                    <th key={String(column.key)} scope="row" className={cellClassName}>
                       {content}
                     </th>
                   ) : (
