@@ -121,6 +121,8 @@ export default async function HomePage(): Promise<React.ReactElement> {
     (card): card is { config: MicrositeConfig; statLabel: string; statValue: string } =>
       card.config !== undefined,
   );
+  // The cards array is in ship order (oldest first); show the newest first.
+  cards.reverse();
 
   return (
     <main>
