@@ -5,6 +5,7 @@ import type { TooltipContentProps } from 'recharts';
 
 import { formatMillions } from '@/lib/format';
 import type { LivestockSeriesPoint } from '@/lib/livestock-data';
+import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
 import { ChartDataTable } from './ChartDataTable';
 import type { ChartDataColumn } from './ChartDataTable';
@@ -53,6 +54,7 @@ function DeerTooltip({ active, label, payload }: TooltipContentProps): React.Rea
  * long fall since reads as one shape.
  */
 export function DeerBoomBustChart({ points }: DeerBoomBustChartProps): React.ReactElement {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const data = points.map((point) => ({ year: point.year, deer: point.deer }));
   const firstYear = points[0]?.year;
   const lastYear = points[points.length - 1]?.year;
@@ -111,6 +113,7 @@ export function DeerBoomBustChart({ points }: DeerBoomBustChartProps): React.Rea
             <Area
               type="monotone"
               dataKey="deer"
+              isAnimationActive={!prefersReducedMotion}
               stroke={DEER_COLOR}
               strokeWidth={2.5}
               fill={`url(#${DEER_GRADIENT_ID})`}

@@ -12,6 +12,7 @@ import {
 
 import type { ForestrySeriesPoint } from '@/lib/forestry-data';
 import { formatHectares } from '@/lib/format';
+import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
 import { ChartDataTable } from './ChartDataTable';
 import { EmojiActiveDot, SeriesTooltip } from './chart-utils';
@@ -31,6 +32,7 @@ function formatAxisTick(value: number): string {
 }
 
 export function ForestryChart({ points }: ForestryChartProps): React.ReactElement {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const firstYear = points[0]?.year;
   const lastYear = points[points.length - 1]?.year;
   const label =
@@ -115,6 +117,7 @@ export function ForestryChart({ points }: ForestryChartProps): React.ReactElemen
             <Area
               type="monotone"
               dataKey="newPlanting"
+              isAnimationActive={!prefersReducedMotion}
               stroke="#10b981"
               strokeWidth={2.5}
               fill="url(#newPlantingFill)"
@@ -124,6 +127,7 @@ export function ForestryChart({ points }: ForestryChartProps): React.ReactElemen
             <Area
               type="monotone"
               dataKey="harvestedArea"
+              isAnimationActive={!prefersReducedMotion}
               stroke="#d97706"
               strokeWidth={2.5}
               fill="url(#harvestedAreaFill)"

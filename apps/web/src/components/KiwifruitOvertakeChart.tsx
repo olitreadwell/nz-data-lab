@@ -5,6 +5,7 @@ import type { TooltipContentProps } from 'recharts';
 
 import { formatHectares } from '@/lib/format';
 import type { HorticultureSeriesPoint } from '@/lib/horticulture-data';
+import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
 import { ChartDataTable } from './ChartDataTable';
 import type { ChartDataColumn } from './ChartDataTable';
@@ -101,6 +102,7 @@ function BeforeAfterTooltip({ active, payload }: TooltipContentProps): React.Rea
 export function KiwifruitOvertakeChart({
   points,
 }: KiwifruitOvertakeChartProps): React.ReactElement {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const data = buildBeforeAfterData(points);
   const firstYear = points[0]?.year;
   const latestYear = points[points.length - 1]?.year;
@@ -176,8 +178,18 @@ export function KiwifruitOvertakeChart({
               content={(props) => <BeforeAfterTooltip {...props} />}
               cursor={{ fill: 'var(--color-border)', opacity: CURSOR_OPACITY }}
             />
-            <Bar dataKey="first" fill={FIRST_BAR_COLOR} radius={BAR_RADIUS} />
-            <Bar dataKey="latest" fill={LATEST_BAR_COLOR} radius={BAR_RADIUS} />
+            <Bar
+              dataKey="first"
+              fill={FIRST_BAR_COLOR}
+              radius={BAR_RADIUS}
+              isAnimationActive={!prefersReducedMotion}
+            />
+            <Bar
+              dataKey="latest"
+              fill={LATEST_BAR_COLOR}
+              radius={BAR_RADIUS}
+              isAnimationActive={!prefersReducedMotion}
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>

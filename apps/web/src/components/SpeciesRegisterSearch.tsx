@@ -6,6 +6,7 @@ import type { TooltipContentProps } from 'recharts';
 
 import { searchLiveNzorNames } from '@/lib/live-sources';
 import type { LiveNzorName } from '@/lib/live-sources';
+import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
 import { ChartDataTable } from './ChartDataTable';
 
@@ -76,6 +77,7 @@ export function SpeciesRegisterSearch({
 }: SpeciesRegisterSearchProps): React.ReactElement {
   const [query, setQuery] = useState(initialQuery);
   const [submittedQuery, setSubmittedQuery] = useState(initialQuery);
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [names, setNames] = useState<LiveNzorName[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -155,6 +157,7 @@ export function SpeciesRegisterSearch({
                     data={byClass}
                     dataKey="count"
                     nameKey="className"
+                    isAnimationActive={!prefersReducedMotion}
                     innerRadius={45}
                     outerRadius={80}
                     paddingAngle={2}

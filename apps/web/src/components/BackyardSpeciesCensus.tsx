@@ -6,6 +6,7 @@ import type { TooltipContentProps } from 'recharts';
 
 import { fetchLiveInaturalistTaxa } from '@/lib/live-sources';
 import type { LiveInaturalistTaxon } from '@/lib/live-sources';
+import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
 import { ChartDataTable } from './ChartDataTable';
 import type { ChartDataColumn } from './ChartDataTable';
@@ -65,6 +66,7 @@ function TaxonTooltip({ active, payload }: TooltipContentProps): React.ReactElem
  */
 export function BackyardSpeciesCensus(): React.ReactElement {
   const [taxa, setTaxa] = useState<LiveInaturalistTaxon[]>([]);
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [hiddenTaxa, setHiddenTaxa] = useState<ReadonlySet<string>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -183,6 +185,7 @@ export function BackyardSpeciesCensus(): React.ReactElement {
                   <Scatter
                     key={taxon.taxon}
                     data={[taxon]}
+                    isAnimationActive={!prefersReducedMotion}
                     fill={TAXON_COLORS[taxon.taxon] ?? '#64748b'}
                     name={taxon.taxon}
                   />

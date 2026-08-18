@@ -4,6 +4,7 @@ import { Area, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } fro
 
 import { formatHectares } from '@/lib/format';
 import type { HorticultureSeriesPoint } from '@/lib/horticulture-data';
+import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
 import { EmojiActiveDot, SeriesTooltip } from './chart-utils';
 import type { ChartSeriesDef } from './chart-utils';
@@ -22,6 +23,7 @@ const SERIES: ChartSeriesDef[] = [
 ];
 
 export function HorticultureChart({ points }: HorticultureChartProps): React.ReactElement {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const firstYear = points[0]?.year;
   const lastYear = points[points.length - 1]?.year;
   const label =
@@ -104,6 +106,7 @@ export function HorticultureChart({ points }: HorticultureChartProps): React.Rea
             <Area
               type="monotone"
               dataKey="wineGrapes"
+              isAnimationActive={!prefersReducedMotion}
               stroke="#a855f7"
               strokeWidth={2.5}
               fill="url(#wineGrapesFill)"
@@ -115,6 +118,7 @@ export function HorticultureChart({ points }: HorticultureChartProps): React.Rea
                 key={definition.key}
                 type="monotone"
                 dataKey={definition.key}
+                isAnimationActive={!prefersReducedMotion}
                 stroke={definition.color}
                 strokeWidth={2}
                 dot={false}
