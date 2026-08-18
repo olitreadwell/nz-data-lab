@@ -16,6 +16,7 @@ import { HamiltonPlaygrounds } from '@/components/HamiltonPlaygrounds';
 import { HorticultureChart } from '@/components/HorticultureChart';
 import { KiwifruitOvertakeChart } from '@/components/KiwifruitOvertakeChart';
 import { LivestockChart } from '@/components/LivestockChart';
+import { MedianAgeTileGrid } from '@/components/MedianAgeTileGrid';
 import { MicrositeStory } from '@/components/MicrositeStory';
 import { OpenDataSearch } from '@/components/OpenDataSearch';
 import { PeakHeights } from '@/components/PeakHeights';
@@ -55,6 +56,7 @@ import {
 } from '@/lib/headline-stats';
 import { fetchHorticultureSeries, summarizeHorticulture } from '@/lib/horticulture-data';
 import { fetchLivestockSeries, summarizeLivestock } from '@/lib/livestock-data';
+import { NATIONAL_MEDIAN_AGE } from '@/lib/median-age-data';
 import { MICROSITES } from '@/lib/microsites';
 import { fetchRecentQuakeCatalog } from '@/lib/quake-catalog';
 import type { QuakeCatalogEvent } from '@/lib/quake-catalog';
@@ -732,6 +734,36 @@ function renderStoryContent(
               accent="rose"
               testId="otago-rate"
               dataValue={otagoRow?.rates.at(-1)}
+            />
+          </dl>
+        ),
+      };
+    }
+    case 'median-age-by-region': {
+      return {
+        chart: <MedianAgeTileGrid />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="National median age (2023)"
+              value="38.2 years"
+              accent="indigo"
+              testId="median-national"
+              dataValue={NATIONAL_MEDIAN_AGE[2023]}
+            />
+            <StatCard
+              label="West Coast median age (2023)"
+              value="47.9 years"
+              accent="indigo"
+              testId="median-west-coast"
+              dataValue={47.9}
+            />
+            <StatCard
+              label="Auckland median age (2023)"
+              value="35.9 years"
+              accent="indigo"
+              testId="median-auckland"
+              dataValue={35.9}
             />
           </dl>
         ),

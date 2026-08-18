@@ -886,4 +886,36 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+  {
+    slug: 'median-age-by-region',
+    label: 'The ageing map',
+    eyebrow: '🧓 the ageing map',
+    title: 'The West Coast aged five years in one decade.',
+    description:
+      'The median age in the West Coast region rose from 42.8 in 2013 to 47.9 in 2023, the biggest jump of any region. Auckland stayed the youngest at 35.9.',
+    paragraphs: [
+      'The national median age was 37.9 in 2013 and 38.2 in 2023, a movement of less than half a year. The map underneath moved far more. West Coast, Tasman, and Marlborough are the three oldest regions, and all three passed 46 by 2023.',
+      'The other direction is smaller. Bay of Plenty, Otago, and Canterbury were each younger in 2023 than in 2013, and Gisborne barely moved.',
+    ],
+    accent: 'indigo',
+    dataNote:
+      'Data: Stats NZ 2023 Census release "2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts", Table 7 (age in five-year groups for the census usually resident population by regional council area). Median ages are interpolated within the five-year band holding the midpoint of each regional population, so they are estimates, not published medians.',
+    references: [
+      {
+        label: '2023 Census population counts release (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
+        kind: 'data',
+      },
+      {
+        label: 'Population counts workbook (Stats NZ)',
+        url: 'https://www.stats.govt.nz/assets/Uploads/2023-Census-population-counts-by-ethnic-group-age-and-Maori-descent-and-dwelling-counts/Downloads/2023-Census-national-and-subnational-usually-resident-population-counts-and-dwelling-counts.xlsx',
+        kind: 'data',
+      },
+      {
+        label: '2023 Census (Stats NZ)',
+        url: 'https://www.stats.govt.nz/2023-census/',
+        kind: 'history',
+      },
+    ],
+  },
 ]);

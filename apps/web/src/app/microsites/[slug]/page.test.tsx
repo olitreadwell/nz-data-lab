@@ -278,3 +278,13 @@ it('renders the unemployment ranks story', async () => {
   expect(html).toContain('National unemployment rate (Dec 2025)');
   expect(html).toContain('Labour market statistics: December 2025 quarter (Stats NZ)');
 });
+
+it('renders the median age by region story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'median-age-by-region' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('The West Coast aged five years in one decade');
+  expect(html).toContain('National median age (2023)');
+  expect(html).toContain('2023 Census population counts release (Stats NZ)');
+});
