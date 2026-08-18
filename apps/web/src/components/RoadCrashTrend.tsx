@@ -25,8 +25,9 @@ interface HeatmapCell {
   count: number;
 }
 
-interface RegionTotalRow {
+interface HeatmapCellRow {
   region: string;
+  year: number;
   count: number;
 }
 
@@ -105,19 +106,14 @@ export function RoadCrashTrend(): React.ReactElement {
       ? `Crashes by region and year, ${MIN_YEAR} to ${endYear}`
       : `Fatal crashes by region and year, ${MIN_YEAR} to ${endYear}`;
 
-  const tableRows = useMemo<RegionTotalRow[]>(() => {
-    const lookup = new Map(cells.map((cell) => [`${cell.region}|${cell.year}`, cell.count]));
-    return regionTotals.map((region) => {
-      let total = 0;
-      for (const year of years) {
-        total += lookup.get(`${region}|${year}`) ?? 0;
-      }
-      return { region, count: total };
-    });
-  }, [cells, regionTotals, years]);
+  const tableRows = useMemo<HeatmapCellRow[]>(
+    () => grid.flatMap((row) => row.map((cell) => ({ ...cell }))),
+    [grid],
+  );
 
-  const tableColumns: ChartDataColumn<RegionTotalRow>[] = [
+  const tableColumns: ChartDataColumn<HeatmapCellRow>[] = [
     { key: 'region', header: 'Region' },
+    { key: 'year', header: 'Year' },
     { key: 'count', header: 'Crashes', format: (value) => value.toLocaleString('en-NZ') },
   ];
 
@@ -225,11 +221,11 @@ export function RoadCrashTrend(): React.ReactElement {
             })}
           </svg>
           <p className="numeral-paragraph-sm mt-1 text-[var(--color-muted)]">
-            Darker cells mean more {mode === 'fatal' ? 'fatal crashes' : 'crashes'}. Hover a cell to
-            read the exact count.
+            Darker cells mean more {mode === 'fatal' ? 'fatal crashes' : 'crashes'}. Open the table
+            below to read the exact count for each region and year.
           </p>
           <ChartDataTable
-            summary="View the crashes by region as a table"
+            summary={`View the ${mode === 'fatal' ? 'fatal crashes' : 'crashes'} by region and year as a table`}
             columns={tableColumns}
             rows={tableRows}
           />

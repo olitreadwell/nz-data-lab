@@ -60,6 +60,28 @@ describe('RoadCrashTrend', () => {
     expect(await screen.findByText(/20,118 crashes in view/)).toBeInTheDocument();
   });
 
+  it('exposes every region and year count in the data table', async () => {
+    render(<RoadCrashTrend />);
+    await screen.findByText(/40,618 crashes in view/);
+    fireEvent.click(screen.getByText((_content, element) => element?.tagName === 'SUMMARY'));
+    expect(screen.getByRole('cell', { name: '13,763' })).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: '14,000' })).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: '4,210' })).toBeInTheDocument();
+  });
+
+  it('updates the data table with the fatal toggle and year slider', async () => {
+    render(<RoadCrashTrend />);
+    await screen.findByText(/40,618 crashes in view/);
+    fireEvent.click(screen.getByText((_content, element) => element?.tagName === 'SUMMARY'));
+    fireEvent.click(screen.getByRole('button', { name: 'Fatal crashes' }));
+    expect(screen.getByRole('cell', { name: '350' })).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: '375' })).toBeInTheDocument();
+    const slider = screen.getByRole('slider', { name: /Up to year/ });
+    fireEvent.change(slider, { target: { value: '2006' } });
+    expect(screen.getByRole('cell', { name: '350' })).toBeInTheDocument();
+    expect(screen.queryByRole('cell', { name: '375' })).not.toBeInTheDocument();
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = render(<RoadCrashTrend />);
     await screen.findByText(/40,618 crashes in view/);
