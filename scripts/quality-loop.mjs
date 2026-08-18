@@ -78,18 +78,28 @@ function writeHiddenSlugs(slugs) {
 }
 
 /** Hide-first rule: a microsite with an open bug is taken off the site now. */
-function hideMicrosite(slug) {
-  const slugs = readHiddenSlugs();
-  if (slugs.includes(slug)) {
-    console.log(`already hidden: ${slug}`);
+function hideMicrosite(slugsCsv) {
+  const micrositesSource = readFileSync(path.join(ROOT, 'apps/web/src/lib/microsites.ts'), 'utf8');
+  const validSlugs = [...micrositesSource.matchAll(/slug: '([a-z0-9-]+)'/g)].map((m) => m[1]);
+  const requested = slugsCsv
+    .split(',')
+    .map((slug) => slug.trim())
+    .filter((slug) => validSlugs.includes(slug));
+  if (requested.length === 0) {
+    console.log(`hide skipped: no valid microsite slug in "${slugsCsv}"`);
     return;
   }
-  slugs.push(slug);
-  writeHiddenSlugs(slugs);
+  const slugs = readHiddenSlugs();
+  const added = requested.filter((slug) => !slugs.includes(slug));
+  if (added.length === 0) {
+    console.log(`already hidden: ${requested.join(', ')}`);
+    return;
+  }
+  writeHiddenSlugs([...slugs, ...added]);
   run('git', ['add', 'apps/web/src/lib/hidden-microsites.ts']);
-  run('git', ['commit', '-m', `fix: hide ${slug} microsite while its bug is open`]);
+  run('git', ['commit', '-m', `fix: hide ${added.join(',')} microsite while its bug is open`]);
   run('git', ['push', 'origin', 'main']);
-  console.log(`HIDDEN microsite: ${slug}`);
+  console.log(`HIDDEN microsite: ${added.join(', ')}`);
 }
 
 /** Called by the fan-out fix: the shipped fix makes the microsite safe again. */
@@ -306,9 +316,11 @@ async function triageIssues() {
     '',
     `Issues: ${JSON.stringify(compact)}`,
     '',
-    'For any issue whose bug is about a specific microsite, add',
-    '  "microsite": "<slug>" and "hide": true (hide-first rule: the site comes',
-    '  off the site now and stays hidden until the fix ships).',
+    'For any issue whose bug makes a specific microsite broken or unsafe',
+    '  (rendering bugs, wrong or missing data, security), add',
+    '  "microsite": "<slug-or-comma-separated-slugs>" and "hide": true',
+    '  (hide-first rule). NEVER hide for enhancements, a11y improvements,',
+    '  perf, or polish issues: those get fixed in place.',
     'Output ONLY a JSON array, no prose, no fences:',
     '[{"number": 13, "action": "update|close", "title": "...", "body": "...", "priority": "high|medium|low", "microsite": "shake-index", "hide": true, "reason": "..."}]',
   ].join('\n');

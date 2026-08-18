@@ -1,6 +1,9 @@
 import { renderToReadableStream } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 
+import { HIDDEN_MICROSITES } from '@/lib/hidden-microsites';
+import { MICROSITES } from '@/lib/microsites';
+
 import HomePage from './page';
 
 vi.mock('@/lib/headline-stats', async (importOriginal) => {
@@ -89,33 +92,45 @@ vi.mock('@/lib/forestry-data', async (importOriginal) => {
 });
 
 describe('HomePage', () => {
-  it('renders the mission line and all four microsite cards', async () => {
+  it('renders the mission line and the visible microsite cards', async () => {
     const stream = await renderToReadableStream(<HomePage />);
     const html = await new Response(stream).text();
     expect(html).toContain('Small experiments digging through New Zealand public data');
     expect(html).toContain('national animal is in freefall');
     expect(html).toContain('paddocks flipped from wool to milk');
-    expect(html).toContain('Wine grapes took over the orchard');
     expect(html).toContain('stopped planting trees');
+    for (const slug of HIDDEN_MICROSITES) {
+      expect(html).not.toContain(`href="/microsites/${slug}"`);
+    }
   });
 
-  it('links every card to its story page', async () => {
+  it('links every visible card to its story page and omits hidden ones', async () => {
     const stream = await renderToReadableStream(<HomePage />);
     const html = await new Response(stream).text();
-    expect(html).toContain('href="/microsites/sheep-index"');
-    expect(html).toContain('href="/microsites/dairy-takeover"');
-    expect(html).toContain('href="/microsites/vineyard-boom"');
-    expect(html).toContain('href="/microsites/planting-bust"');
+    const visibleWithCards = [
+      'sheep-index',
+      'dairy-takeover',
+      'planting-bust',
+      'kiwifruit-overtake',
+      'deer-boom-bust',
+      'online-garage-sale',
+    ];
+    for (const slug of visibleWithCards) {
+      expect(html).toContain(`href="/microsites/${slug}"`);
+    }
+    for (const slug of HIDDEN_MICROSITES) {
+      expect(html).not.toContain(`href="/microsites/${slug}"`);
+    }
   });
 
-  it('shows a headline stat on each card', async () => {
+  it('shows a headline stat on each visible card', async () => {
     const stream = await renderToReadableStream(<HomePage />);
     const html = await new Response(stream).text();
     expect(html).toContain('23.3 million');
     expect(html).toContain('5.8 million');
-    expect(html).toContain('37,627 ha');
     expect(html).toContain('8,293 ha');
-    expect(html).toContain('170,151');
-    expect(html).toContain('31,915');
+    expect(html).toContain('14,514 ha');
+    expect(html).toContain('0.7 million');
+    expect(html).toContain('5,589');
   });
 });

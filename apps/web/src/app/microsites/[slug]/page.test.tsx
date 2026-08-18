@@ -3,6 +3,15 @@ import { describe, expect, it, vi } from 'vitest';
 
 import MicrositePage from './page';
 
+const notFoundMock = vi.fn();
+vi.mock('next/navigation', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('next/navigation')>();
+  return {
+    ...actual,
+    notFound: () => notFoundMock(),
+  };
+});
+
 vi.mock('@/lib/headline-stats', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/lib/headline-stats')>();
   return {
@@ -110,14 +119,14 @@ describe('MicrositePage', () => {
   });
 });
 
-it('renders the digitised memory story', async () => {
-  const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'digitised-memory' })} />,
-  );
-  const html = await new Response(stream).text();
-  expect(html).toContain('the 1890s light up');
-  expect(html).toContain('DigitalNZ');
-  expect(html).toContain('Papers Past');
+it('calls notFound for a hidden microsite (digitised-memory)', async () => {
+  notFoundMock.mockClear();
+  await expect(
+    renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'digitised-memory' })} />,
+    ),
+  ).rejects.toThrow();
+  expect(notFoundMock).toHaveBeenCalled();
 });
 
 it('renders the online garage sale story', async () => {
@@ -130,20 +139,22 @@ it('renders the online garage sale story', async () => {
   expect(html).toContain('Home &amp; living');
 });
 
-it('renders the species register with the live register total', async () => {
-  const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'species-register' })} />,
-  );
-  const html = await new Response(stream).text();
-  expect(html).toContain('170,151');
-  expect(html).toContain('Names in the register');
+it('calls notFound for a hidden microsite (species-register)', async () => {
+  notFoundMock.mockClear();
+  await expect(
+    renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'species-register' })} />,
+    ),
+  ).rejects.toThrow();
+  expect(notFoundMock).toHaveBeenCalled();
 });
 
-it('renders the open data catalogue with the live catalogue total', async () => {
-  const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'open-data-catalogue' })} />,
-  );
-  const html = await new Response(stream).text();
-  expect(html).toContain('31,915');
-  expect(html).toContain('Datasets in the catalogue');
+it('calls notFound for a hidden microsite (open-data-catalogue)', async () => {
+  notFoundMock.mockClear();
+  await expect(
+    renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'open-data-catalogue' })} />,
+    ),
+  ).rejects.toThrow();
+  expect(notFoundMock).toHaveBeenCalled();
 });
