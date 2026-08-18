@@ -173,6 +173,23 @@ export function SpeciesRegisterSearch({
                 </PieChart>
               </ResponsiveContainer>
             </div>
+            <ul className="mt-2 mb-3 flex flex-wrap gap-x-4 gap-y-2" aria-label="Chart legend">
+              {byClass.map((datum, index) => (
+                <li
+                  key={datum.className}
+                  className="flex items-center gap-2 text-sm text-[var(--color-fg)]"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="h-3 w-3 rounded-[var(--radius-sm)]"
+                    style={{
+                      backgroundColor: CLASS_COLORS[index % CLASS_COLORS.length] ?? '#94a3b8',
+                    }}
+                  />
+                  {datum.className}
+                </li>
+              ))}
+            </ul>
             <ChartDataTable
               summary="View species by class as a table"
               columns={[
