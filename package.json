@@ -36,7 +36,43 @@
   },
   "overrides": {
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "tar": "^7.5.22",
+    "js-yaml": "^4.3.1",
+    "smol-toml": "^1.6.1",
+    "@tootallnate/once": "2.0.1",
+    "on-headers": "1.1.0",
+    "@vercel/node": {
+      "undici": "^6.28.0",
+      "path-to-regexp": "^6.3.0"
+    },
+    "vercel": {
+      "undici": "^6.28.0"
+    },
+    "@vercel/express": {
+      "path-to-regexp": "^8.4.0"
+    },
+    "@vercel/hono": {
+      "path-to-regexp": "^8.4.0"
+    },
+    "@vercel/remix-builder": {
+      "path-to-regexp": "^6.3.0"
+    },
+    "@vercel/static-config": {
+      "ajv": "^8.18.0"
+    },
+    "serve-handler": {
+      "minimatch": "^3.1.4"
+    },
+    "@vercel/python-analysis": {
+      "minimatch": "^10.2.3"
+    },
+    "@vercel/fun": {
+      "path-to-regexp": "^8.4.0"
+    },
+    "@vercel/backends": {
+      "path-to-regexp": "^8.4.0"
+    }
   },
   "devDependencies": {
     "@clack/prompts": "^0.7",

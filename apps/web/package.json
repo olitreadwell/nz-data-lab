@@ -47,7 +47,7 @@
     "@nzlab/config-eslint": "*",
     "@nzlab/config-tailwind": "*",
     "@nzlab/config-typescript": "*",
-    "@playwright/test": "^1.55.0",
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
@@ -64,7 +64,7 @@
     "jest-axe": "^9.0.0",
     "postcss": "^8.5.2",
     "sass": "^1.86.0",
-    "serve": "^14.2.4",
+    "serve": "^14.2.6",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
     "vitest": "^3.0.0"

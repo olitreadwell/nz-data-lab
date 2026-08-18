@@ -64,6 +64,22 @@ jobs:
       - run: npm ci
       - run: npm run type-check
 
+  # Blocks on critical/high npm audit findings. Moderate/low findings are
+  # accepted deviations: @vercel/static-config pins ajv 8.6.3 (no newer
+  # release), @storybook/addon-actions pins uuid 9 (only uses v4), and
+  # vercel's build tooling pins esbuild 0.27 (Windows-only dev-server issue).
+  audit:
+    name: npm audit (critical/high gate)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm audit --audit-level=high
+
   # Advisory — never blocks. Surface failures in workflow output and
   # coverage artifact; merge decision stays with the human.
   test:
