@@ -5,6 +5,7 @@ import {
   parseAucklandParkBoards,
   parseGbifKingdomFacet,
   parseInaturalistTotal,
+  parseNzorNamesXml,
   parseWikidataPeaks,
   parseWikidataRivers,
   parseWikipediaPageviews,
@@ -58,6 +59,48 @@ describe('live-sources fetchers', () => {
       expect.stringContaining('catalogue.data.govt.nz'),
       expect.objectContaining({ signal: expect.any(AbortSignal) }),
     );
+  });
+});
+
+describe('parseNzorNamesXml', () => {
+  it('parses the /names/search response shape', () => {
+    const payload = `<?xml version="1.0"?>
+<NamesSearchResponse>
+  <Total>2</Total>
+  <Results>
+    <NameSearchResult>
+      <Name>
+        <NameId>8c0e6c60-2e1d-4280-b129-0e687d2dbb79</NameId>
+        <Class>Scientific Name</Class>
+        <FullName>Anzacladius kiwi Cranston, 2009</FullName>
+      </Name>
+    </NameSearchResult>
+    <NameSearchResult>
+      <Name>
+        <NameId>071b096a-724f-4b46-9a96-3c11a9950618</NameId>
+        <Class>Scientific Name</Class>
+        <FullName>Kiwi Khalaim and Ward, 2019</FullName>
+      </Name>
+    </NameSearchResult>
+  </Results>
+</NamesSearchResponse>`;
+    const names = parseNzorNamesXml(payload);
+    expect(names).toHaveLength(2);
+    expect(names[0]).toEqual({
+      nameId: '8c0e6c60-2e1d-4280-b129-0e687d2dbb79',
+      className: 'Scientific Name',
+      fullName: 'Anzacladius kiwi Cranston, 2009',
+    });
+    expect(names[1]?.fullName).toBe('Kiwi Khalaim and Ward, 2019');
+  });
+
+  it('returns an empty list when there are no results', () => {
+    const payload = `<?xml version="1.0"?>
+<NamesSearchResponse>
+  <Total>0</Total>
+  <Results />
+</NamesSearchResponse>`;
+    expect(parseNzorNamesXml(payload)).toEqual([]);
   });
 });
 

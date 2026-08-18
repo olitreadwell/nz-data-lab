@@ -15,7 +15,6 @@ export const HIDDEN_MICROSITES: string[] = [
   'what-the-world-reads',
   'open-data-catalogue',
   'vineyard-boom',
-  'species-register',
 ];
 
 /**
