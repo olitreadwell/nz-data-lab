@@ -1,3 +1,32 @@
+## 2026-08-19 03:45 (NZST) - loop 11
+
+- Handed off (unmerged, awaiting review): company-size-distribution (viz-079,
+  branch feat/microsite-loop-11, review issue #237), tourism-arrivals-by-month
+  (viz-083, branch feat/microsite-loop-11, review issue #238), and
+  retail-sales-by-month (viz-086, branch feat/microsite-loop-11, review issue
+  #239). A Pareto chart of enterprises by employment size group with an
+  industry filter and measure toggle, a cycle plot of monthly overseas visitor
+  arrivals with year toggles, and a streamgraph of monthly card spending by
+  industry with layer toggles. Chart types pareto, cycle plot, and streamgraph
+  are new to the site.
+- Sources: Stats NZ "New Zealand business demography statistics: At February
+  2025" (Table 1), "International travel" releases December 2018, December
+  2019, and June 2025 (Table 2, monthly overseas visitor arrivals), and
+  "Electronic card transactions" releases June 2023 and June 2025 (Table 1,
+  actual monthly values). Every number was verified against the release
+  workbooks before committing. All reference URLs return 200. Chart types used
+  so far: line, area, bar, scatter, donut, treemap, map, histogram, radial,
+  bubble, slope, timeline, funnel, waterfall, sunburst, lollipop, heatmap,
+  pareto, cycle plot, streamgraph.
+- Loop review: every Tier 1-2 chart type in the smoke-ranked doc was already
+  used, and each remaining open issue maps to slope, histogram, or radial, so
+  this loop introduced three chart types new to the site to honor the
+  no-repeat rule. Research took longest: the retail trade survey is quarterly
+  and its ADE tables need a subscription key, so viz-086 uses Stats NZ's
+  monthly electronic card transactions series with copy that names the series
+  exactly and says why. The births release slugs 404'd, so viz-082 was skipped
+  for tourism and card data, which were verifiable from release workbooks.
+
 ## 2026-08-19 02:45 (NZST) - loop 10
 
 - Handed off (unmerged, awaiting review): age-distribution (viz-074, branch
