@@ -28,6 +28,7 @@ export function MicrositeCard({
   return (
     <Link
       href={`/microsites/${slug}`}
+      aria-label={`${title} - read the story`}
       className={`flex flex-col gap-3 rounded-[var(--radius-lg)] border border-[var(--color-border)] p-6 ${styles.cardBg} transition-colors hover:border-[var(--color-fg)]`}
     >
       <MicrositeEyebrow className={`numeral-text-eyebrow ${styles.eyebrow}`} eyebrow={eyebrow} />
@@ -37,7 +38,6 @@ export function MicrositeCard({
         <dt className="numeral-text-eyebrow text-[var(--color-muted)]">{statLabel}</dt>
         <dd className={`numeral-heading-2xl ${styles.cardValue}`}>{statValue}</dd>
       </dl>
-      <span className="numeral-paragraph-sm underline">Read the story</span>
     </Link>
   );
 }
