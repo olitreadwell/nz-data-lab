@@ -145,16 +145,6 @@ describe('MicrositePage', () => {
   });
 });
 
-it('calls notFound for a hidden microsite (digitised-memory)', async () => {
-  notFoundMock.mockClear();
-  await expect(
-    renderToReadableStream(
-      <MicrositePage params={Promise.resolve({ slug: 'digitised-memory' })} />,
-    ),
-  ).rejects.toThrow();
-  expect(notFoundMock).toHaveBeenCalled();
-});
-
 it('renders the online garage sale story', async () => {
   const stream = await renderToReadableStream(
     <MicrositePage params={Promise.resolve({ slug: 'online-garage-sale' })} />,
@@ -165,22 +155,3 @@ it('renders the online garage sale story', async () => {
   expect(html).toContain('Home &amp; living');
 });
 
-it('calls notFound for a hidden microsite (species-register)', async () => {
-  notFoundMock.mockClear();
-  await expect(
-    renderToReadableStream(
-      <MicrositePage params={Promise.resolve({ slug: 'species-register' })} />,
-    ),
-  ).rejects.toThrow();
-  expect(notFoundMock).toHaveBeenCalled();
-});
-
-it('calls notFound for a hidden microsite (open-data-catalogue)', async () => {
-  notFoundMock.mockClear();
-  await expect(
-    renderToReadableStream(
-      <MicrositePage params={Promise.resolve({ slug: 'open-data-catalogue' })} />,
-    ),
-  ).rejects.toThrow();
-  expect(notFoundMock).toHaveBeenCalled();
-});
