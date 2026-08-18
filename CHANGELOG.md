@@ -1,3 +1,21 @@
+## 2026-08-19 00:55 (NZST) - loop 9
+
+- Handed off (unmerged, awaiting review): quake-months (viz-081, branch
+  feat/microsite-loop-9, review issue #223). A radial rose of earthquakes
+  of magnitude 3 or stronger by calendar month, with year and magnitude
+  filters, built on the GeoNet FDSN catalog (24 months, M3+).
+- Sources: GeoNet FDSN event service (service.geonet.org.nz), earthquakes of
+  magnitude 3 or stronger in the two years to 19 August 2026, fetched at
+  build time and falling back to a committed snapshot of that catalog. All
+  reference URLs return 200.
+- Loop review: this iteration ran as a heal session because the loop had
+  been blocked by uncommitted work and then a nested heal-session recursion
+  (a heal session ran the wrapper while the launchd wrapper that spawned it
+  was still alive, so the lock skip spawned another heal). The wrapper now
+  exits quietly on a lock skip and refuses to spawn a second heal session,
+  and the skill says a heal session should verify the guards and exit
+  rather than run the wrapper while its parent wrapper is alive.
+
 ## 2026-08-18 23:15 (NZST) - loop 8
 
 - Handed off (unmerged, awaiting review): quake-depth-scatter (viz-032,
