@@ -84,3 +84,38 @@ the fix ships. Implemented:
   un-hide as part of the fix.
 - Applied: #154 (shake-index map z-index over the report dialog) -> shake-index
   hidden, verified 404 on the deployed site; fix pending in the loop.
+
+## 2026-08-18
+
+Generated 5 issues, merged 4 fixes (#159, #156, #155, #149).
+
+## 2026-08-18
+
+Generated 5 issues, merged 4 fixes (#180, #179, #176, #175).
+
+## 2026-08-18 (un-hide sprint)
+
+Fixed every open bug blocking a hidden microsite and brought all 9 back
+live: shake-index (#154 map stacking context), what-the-world-reads (#150
+logPosition guard), digitised-memory (#169 undated-record filter),
+backyard-species-census + species-record-ledger (#151 live-fetch isolation
+and concurrency cap), open-data-catalogue (#145 stale-response guard),
+species-register (#171 NZOR /names/search endpoint), auckland-parks (#168
+board filter label), vineyard-boom (#4 closed as not-a-bug: data is
+genuinely hectares and labeled). Also merged the in-flight fan-out fixes
+(#160, #161, #164, #165, #166, #167, #148) and added hub cards for
+river-lengths, peak-heights, and auckland-parks (#184). All 17 microsites
+live, CI green, issues closed.
+
+Loop fixes this iteration:
+
+- Fan-out agents un-hid microsites their fix did not cover (e.g. #166
+  un-hid shake-index/digitised-memory/what-the-world-reads whose real
+  blockers were still open). The fan-out prompt says "if this issue names a
+  microsite, remove it from hidden-microsites.ts", which agents over-apply
+  when an issue merely mentions a component. Fix: only un-hide when the
+  issue body carries an explicit "Hide-first" section naming the slug.
+- Sequential merges of branches that each edit hidden-microsites.ts
+  conflict because every branch is based on the same old main. Resolving
+  each conflict by hand is mechanical; the script could merge the hidden
+  list itself (union of removals) before merging branches.
