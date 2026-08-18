@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -58,6 +58,20 @@ describe('OpenDataSearch', () => {
     const legend = screen.getByRole('list', { name: 'Chart legend' });
     expect(legend).toHaveTextContent('Ministry for the Environment');
     expect(legend).toHaveTextContent('NIWA');
+  });
+
+  it('exposes each treemap cell with its publisher and dataset count', async () => {
+    const { container } = render(<OpenDataSearch initialQuery="water" />);
+    await screen.findByText(/3 datasets match "water"/);
+    // jsdom cannot compute the accessibility tree for SVG group elements, so
+    // assert the rendered per-cell role and label directly. waitFor covers the
+    // re-render once the mocked ResizeObserver reports chart dimensions.
+    await waitFor(() => {
+      const labels = [...container.querySelectorAll('g[role="img"]')].map((cell) =>
+        cell.getAttribute('aria-label'),
+      );
+      expect(labels).toEqual(['Ministry for the Environment, 2 datasets', 'NIWA, 1 dataset']);
+    });
   });
 
   it('discards a stale response from an earlier search', async () => {
