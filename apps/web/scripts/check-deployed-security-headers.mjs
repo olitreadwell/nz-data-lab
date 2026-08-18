@@ -1,7 +1,9 @@
 /* global fetch, process, setTimeout */
 // Verifies a deployed URL serves every security header the site is meant to
-// carry. Exits non-zero when any header is missing so a host that cannot serve
-// them (e.g. GitHub Pages) fails loudly instead of silently passing.
+// carry, and that the served CSP actually permits the inline scripts in the
+// served HTML to run (the per-build nonce round-trips from markup to header).
+// Exits non-zero when any header is missing or an inline script is blocked so
+// a host that cannot serve them fails loudly instead of silently passing.
 const REQUIRED_HEADERS = [
   'Content-Security-Policy',
   'Strict-Transport-Security',
@@ -39,4 +41,22 @@ if (missing.length > 0) {
   process.stderr.write(`Deployed URL ${url} is missing security headers: ${missing.join(', ')}\n`);
   process.exit(1);
 }
-process.stdout.write(`Deployed URL ${url} serves all security headers.\n`);
+
+const csp = response.headers.get('Content-Security-Policy') ?? '';
+const html = await response.text();
+const scriptSrc = /script-src\s+([^;]+)/.exec(csp)?.[1] ?? '';
+const inlineNonces = [...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*\snonce="([^"]+)"/g)].map(
+  (match) => match[1],
+);
+
+const blocked = inlineNonces.filter((nonce) => !scriptSrc.includes(`'nonce-${nonce}'`));
+if (blocked.length > 0) {
+  process.stderr.write(
+    `Deployed URL ${url} serves a CSP that blocks inline scripts with nonce(s): ${blocked.join(', ')}\n`,
+  );
+  process.exit(1);
+}
+
+process.stdout.write(
+  `Deployed URL ${url} serves all security headers and permits its inline scripts.\n`,
+);

@@ -25,6 +25,10 @@ export default defineConfig({
         'postcss.config.mjs',
         'eslint.config.mjs',
         'playwright.config.ts',
+        'vercel.ts',
+        'scripts/csp-nonce.mjs',
+        'scripts/generate-csp.mjs',
+        'scripts/check-deployed-security-headers.mjs',
       ],
       thresholds: {
         lines: 60,

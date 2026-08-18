@@ -31,6 +31,8 @@ export default [
       'playwright.config.ts',
       'scripts/generate-csp.mjs',
       'scripts/check-deployed-security-headers.mjs',
+      'scripts/csp-nonce.mjs',
+      'vercel.ts',
     ],
     rules: {
       '@typescript-eslint/no-unsafe-assignment': 'off',
