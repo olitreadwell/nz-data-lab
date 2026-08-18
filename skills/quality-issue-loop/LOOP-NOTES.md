@@ -168,3 +168,33 @@ present. Deployed green.
 ## 2026-08-18
 
 Generated 5 issues, merged 1 fixes (#143).
+
+## 2026-08-18 (un-hide batch: NZOR total, open-data count, Overpass timeout, responsive charts)
+
+Merged 4 fan-out fixes that un-hid all 5 remaining hidden microsites:
+
+- #181 real NZOR register total (empty query returns full Total; parseNzorNames
+  now throws on non-finite Total / malformed Names) -> species-register live.
+- #191 real CKAN match count in open-data search -> open-data-catalogue live.
+- #201 Overpass timeout raised to 60s with cleared abort timer -> open-school-map live.
+- #183 ResponsiveContainer for auckland-parks + peak-heights charts -> both live.
+  Closed 6 triage duplicates (#20->#163, #25->#182, #39->#177, #195->#181,
+  #35/#38->#142) and raised the un-hide batch to priority-high. HIDDEN_MICROSITES
+  is now empty; all 26 microsites live, CI fully green (incl. all E2E shards),
+  deployed, every page 200.
+
+Loop fixes this iteration:
+
+- The fanout script's sequential merge broke on hidden-microsites.ts (every
+  branch removes a different slug from the same list, based on old main). The
+  script caught the conflict, logged, and CONTINUED, leaving main with a
+  half-merged conflicted index, then pushed the partial state. Resolved by
+  hand (union of removals). Fix: teach fanout to auto-resolve hidden-microsites.ts
+  conflicts as the union of both sides' removals before/while merging.
+- The #199 axe-scan fan-out agent hung 40 min on a Playwright run against a
+  dead local dev server (0% CPU, no child processes). Had to kill it and
+  finish the fix manually (also found the muted-text token failed AA on tinted
+  cards: 373 hub violations; darkened --color-muted to neutral-600).
+- The #197 CSP generate-csp.mjs rewrites tracked files (public/_headers,
+  vercel.json) with a fresh nonce on every build, leaving the working tree
+  dirty after any local build. Worth making those files build-time-only.

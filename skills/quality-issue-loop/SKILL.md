@@ -59,8 +59,10 @@ every iteration makes the next one faster.
    drives the mechanics.
 5. **Verify (1 min)**: type-check, lint, unit tests, and build per worktree
    before merge. Never merge a failing worktree.
-6. **Merge (1 min)**: sequential `--no-ff` merges to `main`, push, watch the
-   Pages deploy, curl the touched pages for 200.
+6. **Merge (1 min)**: sequential `--no-ff` merges to `main`. The script
+   auto-resolves hidden-microsites.ts conflicts as the 3-way union of changes
+   (kept-by-both stays, removed-by-either goes); hand-resolve any other
+   conflict, then push, watch the Pages deploy, curl the touched pages for 200.
 7. **Close (1 min)**: close each issue with the merge commit SHA.
 8. **Review (1 min)**: read the last loop's notes, list what slowed it down,
    and update this skill with one concrete improvement. Keep the skill

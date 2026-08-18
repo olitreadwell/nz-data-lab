@@ -102,14 +102,6 @@ function hideMicrosite(slugsCsv) {
   console.log(`HIDDEN microsite: ${added.join(', ')}`);
 }
 
-/** Called by the fan-out fix: the shipped fix makes the microsite safe again. */
-function unhideMicrosite(slug) {
-  const slugs = readHiddenSlugs().filter((entry) => entry !== slug);
-  writeHiddenSlugs(slugs);
-  run('git', ['add', 'apps/web/src/lib/hidden-microsites.ts']);
-  run('git', ['commit', '-m', `fix: un-hide ${slug} microsite, bug is fixed`]);
-}
-
 /** Removes worktrees whose branch is already merged into main and whose tree is clean. */
 function pruneMergedWorktrees() {
   const lines = runCapture('git', ['worktree', 'list', '--porcelain']).split('\n');
@@ -461,6 +453,61 @@ async function fanout(issueNumbers) {
     throw new Error(`implementation failed for issues: ${failed.join(', ')}`);
   }
 
+  /** Parses the hidden microsite slugs out of hidden-microsites.ts source. */
+  function parseHiddenSlugs(source) {
+    return [...source.matchAll(/'([^']+)'/g)].map((entry) => entry[1]);
+  }
+
+  /**
+   * Resolves a merge conflict in hidden-microsites.ts as the 3-way union of
+   * changes: slugs kept by both sides stay, slugs removed by either side go,
+   * slugs added by a side come back. Every fan-out fix that un-hides a
+   * microsite edits this same list, so sequential merges of same-base branches
+   * always collide here. Returns true when the conflict was resolved and the
+   * merge completed; false (after aborting cleanly) otherwise.
+   */
+  function resolveHiddenMicrositesConflict() {
+    const status = runCapture('git', ['status', '--porcelain']);
+    if (!status.includes('UU apps/web/src/lib/hidden-microsites.ts')) {
+      return false;
+    }
+    const baseSource = runCapture('git', ['show', ':1:apps/web/src/lib/hidden-microsites.ts']);
+    const ours = new Set(
+      parseHiddenSlugs(runCapture('git', ['show', ':2:apps/web/src/lib/hidden-microsites.ts'])),
+    );
+    const theirs = new Set(
+      parseHiddenSlugs(runCapture('git', ['show', ':3:apps/web/src/lib/hidden-microsites.ts'])),
+    );
+    const base = new Set(parseHiddenSlugs(baseSource));
+    const resolved = [...new Set([...ours, ...theirs])].filter((slug) => {
+      if (base.has(slug)) {
+        return ours.has(slug) && theirs.has(slug);
+      }
+      return ours.has(slug) || theirs.has(slug);
+    });
+    const body =
+      resolved.length > 0 ? `\n${resolved.map((slug) => `  '${slug}',`).join('\n')}\n` : ' ';
+    const next = baseSource.replace(
+      /HIDDEN_MICROSITES: string\[\] = \[[^\]]*\]/,
+      `HIDDEN_MICROSITES: string[] = [${body}]`,
+    );
+    writeFileSync(HIDDEN_FILE, next);
+    run('git', ['add', HIDDEN_FILE]);
+    const remaining = runCapture('git', ['status', '--porcelain'])
+      .split('\n')
+      .filter((line) => line.startsWith('UU '));
+    if (remaining.length > 0) {
+      run('git', ['merge', '--abort']);
+      console.error(
+        `merge conflict beyond hidden-microsites.ts in: ${remaining.join(', ')}; aborted`,
+      );
+      return false;
+    }
+    run('git', ['commit', '--no-edit']);
+    console.log('auto-resolved hidden-microsites.ts merge conflict');
+    return true;
+  }
+
   // Belt-and-braces verify, then merge sequentially.
   const merged = [];
   for (const job of jobs) {
@@ -479,7 +526,14 @@ async function fanout(issueNumbers) {
       run('git', ['branch', '-d', job.branch]);
       merged.push({ number: job.number, sha });
     } catch (error) {
-      console.error(`merge failed for #${job.number}: ${error.message}`);
+      if (resolveHiddenMicrositesConflict()) {
+        const sha = runCapture('git', ['rev-parse', 'HEAD']);
+        run('git', ['worktree', 'remove', job.worktree]);
+        run('git', ['branch', '-d', job.branch]);
+        merged.push({ number: job.number, sha });
+      } else {
+        console.error(`merge failed for #${job.number}: ${error.message}`);
+      }
     }
   }
   if (merged.length === 0) {
