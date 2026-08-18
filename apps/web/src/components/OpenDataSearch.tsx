@@ -82,6 +82,7 @@ export function OpenDataSearch({ initialQuery }: OpenDataSearchProps): React.Rea
   const [query, setQuery] = useState(initialQuery);
   const [submittedQuery, setSubmittedQuery] = useState(initialQuery);
   const [datasets, setDatasets] = useState<LiveDataGovtNzDataset[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const requestIdRef = useRef(0);
@@ -96,13 +97,15 @@ export function OpenDataSearch({ initialQuery }: OpenDataSearchProps): React.Rea
       if (requestIdRef.current !== requestId) {
         return;
       }
-      setDatasets(next);
+      setDatasets(next.datasets);
+      setTotalCount(next.totalCount);
     } catch {
       if (requestIdRef.current !== requestId) {
         return;
       }
       setError('The catalogue did not answer. Try again in a moment.');
       setDatasets([]);
+      setTotalCount(0);
     } finally {
       if (requestIdRef.current === requestId) {
         setIsLoading(false);
@@ -116,6 +119,10 @@ export function OpenDataSearch({ initialQuery }: OpenDataSearchProps): React.Rea
 
   const byOrg = groupByOrganization(datasets);
   const label = `Open data datasets matching "${submittedQuery}": ${datasets.length} shown by publisher`;
+  const matchLabel =
+    totalCount > MAX_DATASETS_SHOWN
+      ? `${totalCount.toLocaleString('en-NZ')} datasets match "${submittedQuery}"; showing the first ${MAX_DATASETS_SHOWN}.`
+      : `${totalCount} datasets match "${submittedQuery}".`;
 
   return (
     <div>
@@ -146,9 +153,7 @@ export function OpenDataSearch({ initialQuery }: OpenDataSearchProps): React.Rea
         </button>
       </form>
       <p className="numeral-paragraph-sm mb-2 text-[var(--color-muted)]" aria-live="polite">
-        {isLoading
-          ? 'Searching the catalogue...'
-          : (error ?? `${datasets.length} datasets match "${submittedQuery}".`)}
+        {isLoading ? 'Searching the catalogue...' : (error ?? matchLabel)}
       </p>
       {!isLoading && error === null && datasets.length > 0 && (
         <div className="grid gap-4 sm:grid-cols-2">

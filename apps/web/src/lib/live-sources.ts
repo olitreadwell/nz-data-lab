@@ -69,22 +69,39 @@ export interface LiveDataGovtNzDataset {
   organization: string | undefined;
 }
 
-/** Parses a data.govt.nz CKAN package_search payload into datasets. */
-export function parseDataGovtNzSearch(payload: unknown): LiveDataGovtNzDataset[] {
-  const result = (payload as { result?: { results?: unknown[] } }).result;
+export interface LiveDataGovtNzSearchResult {
+  datasets: LiveDataGovtNzDataset[];
+  /** Real total match count from CKAN result.count, not the capped row count. */
+  totalCount: number;
+}
+
+/** Parses a data.govt.nz CKAN package_search payload into a search result. */
+export function parseDataGovtNzSearch(payload: unknown): LiveDataGovtNzSearchResult {
+  const result = (
+    payload as {
+      result?: {
+        count?: unknown;
+        results?: unknown[];
+      };
+    }
+  ).result;
   const rows = result?.results ?? [];
-  return rows.map((row) => {
-    const dataset = row as { name?: string; title?: string; organization?: { title?: string } };
-    return {
-      name: dataset.name ?? '',
-      title: dataset.title ?? '',
-      organization: dataset.organization?.title,
-    };
-  });
+  const totalCount = typeof result?.count === 'number' ? result.count : 0;
+  return {
+    datasets: rows.map((row) => {
+      const dataset = row as { name?: string; title?: string; organization?: { title?: string } };
+      return {
+        name: dataset.name ?? '',
+        title: dataset.title ?? '',
+        organization: dataset.organization?.title,
+      };
+    }),
+    totalCount,
+  };
 }
 
 /** Searches the data.govt.nz catalogue from the browser (CORS is open). */
-export async function searchLiveDataGovtNz(query: string): Promise<LiveDataGovtNzDataset[]> {
+export async function searchLiveDataGovtNz(query: string): Promise<LiveDataGovtNzSearchResult> {
   const controller = createLiveSearchAbortController();
   const response = await fetch(
     `https://catalogue.data.govt.nz/api/3/action/package_search?q=${encodeURIComponent(query)}&rows=20`,
