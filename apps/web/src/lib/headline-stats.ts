@@ -52,7 +52,8 @@ export const FELT_QUAKES_PER_YEAR = '~250';
  */
 export async function fetchRegisterTotal(): Promise<number> {
   try {
-    return (await searchNzorNames('kiwi')).total;
+    // An empty query returns the whole register, so Total is the register size.
+    return (await searchNzorNames('')).total;
   } catch {
     return REGISTER_TOTAL_FALLBACK;
   }

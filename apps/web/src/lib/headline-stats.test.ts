@@ -24,6 +24,7 @@ describe('headline-stats fetchers', () => {
   it('returns the live NZOR total when the API answers', async () => {
     searchNzorNamesMock.mockResolvedValue({ total: LIVE_REGISTER_TOTAL, names: [] });
     await expect(fetchRegisterTotal()).resolves.toBe(LIVE_REGISTER_TOTAL);
+    expect(searchNzorNamesMock).toHaveBeenCalledWith('');
   });
 
   it('falls back to the pinned register total when the API fails', async () => {
