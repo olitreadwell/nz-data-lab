@@ -1,3 +1,34 @@
+## 2026-08-19 02:45 (NZST) - loop 10
+
+- Handed off (unmerged, awaiting review): age-distribution (viz-074, branch
+  feat/microsite-loop-10, review issue #229), median-age-ranks (viz-100,
+  branch feat/microsite-loop-10, review issue #230), and
+  visitor-arrival-ranks (viz-097, branch feat/microsite-loop-10, review
+  issue #231). A histogram of the national age distribution with a census
+  year slider, a slope chart of regional council median age ranks with a
+  movers toggle, and a slope chart of visitor arrival ranks by country of
+  residence with a movers toggle, built on a shared SlopeChart component.
+- Sources: Stats NZ "2023 Census population counts (by ethnic group, age,
+  and Maori descent) and dwelling counts" (Tables 6 and 7) and Stats NZ
+  International travel: December 2019 (Table 4, visitor arrivals by country
+  of residence, years ended December 2015 and 2019). Every age band,
+  regional median age, and visitor arrival number was verified against the
+  release Excel workbooks before committing. All reference URLs return 200.
+  Chart types used so far: line, area, bar, scatter, donut, treemap, map,
+  histogram, radial, bubble, slope, timeline, funnel, waterfall, sunburst,
+  lollipop, heatmap.
+- Loop review: the iteration resumed the stalled loop-10 work (a previous
+  run hit the time cap at 01:59 and left WIP components on the branch), and
+  the shared SlopeChart component had a rank-matrix transpose bug that
+  mislabelled movers and hover summaries; both were fixed before pushing.
+  The slower friction: main was found mid-merge with a stale unresolved
+  conflict (merge: fix #142, left by an interrupted lane at 02:29, no agent
+  working it). No live agent was touching main, so the merge was completed
+  here after verification (tsc, vitest, lint, prettier) to unblock the
+  changelog and prune steps. The skill now says a conflicted main (UU
+  files) is the same category as dirty main: check for a live agent, then
+  either resolve and commit the merge or abort it, never leave it half.
+
 ## 2026-08-19 00:55 (NZST) - loop 9
 
 - Handed off (unmerged, awaiting review): quake-months (viz-081, branch
