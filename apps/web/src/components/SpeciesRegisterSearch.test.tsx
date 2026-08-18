@@ -40,6 +40,14 @@ describe('SpeciesRegisterSearch', () => {
     expect(table).toHaveTextContent('Insecta');
   });
 
+  it('shows a legend pairing each class with its color', async () => {
+    render(<SpeciesRegisterSearch initialQuery="kiwi" />);
+    await screen.findByText(/3 names match "kiwi"/);
+    const legend = screen.getByRole('list', { name: 'Chart legend' });
+    expect(legend).toHaveTextContent('Aves');
+    expect(legend).toHaveTextContent('Insecta');
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = render(<SpeciesRegisterSearch initialQuery="kiwi" />);
     await screen.findByText(/3 names match/);

@@ -25,6 +25,14 @@ describe('PopulationRankBump', () => {
     ).toHaveAccessibleName(/All 67 territories/i);
   });
 
+  it('shows a legend mapping line colors to mover categories', () => {
+    render(<PopulationRankBump />);
+    const legend = screen.getByRole('list', { name: 'Chart legend' });
+    expect(legend).toHaveTextContent('Climbed');
+    expect(legend).toHaveTextContent('Fell');
+    expect(legend).toHaveTextContent('Little change');
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = render(<PopulationRankBump />);
     const results = await axe(container);

@@ -18,7 +18,7 @@ const ROW_COUNT = CENSUS_TA_POPULATION_ROWS.length;
 const MOVER_THRESHOLD = 3;
 const CLIMBER_COLOR = '#d97706';
 const FALLER_COLOR = '#e11d48';
-const QUIET_COLOR = '#cbd5e1';
+const QUIET_COLOR = 'var(--color-muted)';
 
 type BumpMode = 'movers' | 'all';
 
@@ -129,6 +129,32 @@ export function PopulationRankBump(): React.ReactElement {
             : formatRowSummary(highlightedRow)}
         </p>
       </div>
+      <ul className="mb-3 flex flex-wrap gap-x-4 gap-y-2" aria-label="Chart legend">
+        <li className="flex items-center gap-2 text-sm text-[var(--color-fg)]">
+          <span
+            aria-hidden="true"
+            className="h-3 w-3 rounded-[var(--radius-sm)]"
+            style={{ backgroundColor: CLIMBER_COLOR }}
+          />
+          Climbed
+        </li>
+        <li className="flex items-center gap-2 text-sm text-[var(--color-fg)]">
+          <span
+            aria-hidden="true"
+            className="h-3 w-3 rounded-[var(--radius-sm)]"
+            style={{ backgroundColor: FALLER_COLOR }}
+          />
+          Fell
+        </li>
+        <li className="flex items-center gap-2 text-sm text-[var(--color-fg)]">
+          <span
+            aria-hidden="true"
+            className="h-3 w-3 rounded-[var(--radius-sm)]"
+            style={{ backgroundColor: QUIET_COLOR }}
+          />
+          Little change
+        </li>
+      </ul>
       <div role="img" aria-label={chartLabel} className="h-[460px]">
         <svg
           viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
