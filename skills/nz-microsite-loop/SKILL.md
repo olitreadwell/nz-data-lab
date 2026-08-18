@@ -108,6 +108,18 @@ fix the guard or the skill rather than working around it by hand.
   intact. If the loop skips for a dirty main again, the wrapper logs the
   dirty file list, so read that line before changing the guard.
 
+- Stats NZ ADE data is not keyless beyond the AGR_* tables: census and trade
+  dataflows return 401 without a subscription key. For those, pull the
+  numbers from the release page instead: fetch the release HTML, read the
+  `pageViewData` JSON for the `DocumentLink` of the xlsx/csv download, then
+  parse the sheet. The 2023 Census release's Table 1 (regional) and Table 2
+  (territorial authority) are the fastest path to census rank data, and the
+  "Goods and services trade by country" release's map CSV has exports by
+  country for the years ended March 2015-2020. Verify every number against
+  the source before committing; the smoke-ranked doc's chart-type claims can
+  lag the changelog (it still calls slope unused after loop 5 shipped one),
+  so trust the codebase over the doc when they disagree.
+
 ## Loop review checklist (step 8)
 
 - What took longest? (research, build, verify, deploy)
