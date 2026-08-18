@@ -21,12 +21,8 @@ import { fetchRecentQuakes } from '@/lib/quake-data';
 import { fetchSheepSeries } from '@/lib/sheep-data';
 import { formatMillions as formatMillionsSheep } from '@/lib/sheep-format';
 
-function getMicrosite(slug: string): MicrositeConfig {
-  const microsite = MICROSITES.find((candidate) => candidate.slug === slug);
-  if (microsite === undefined) {
-    throw new Error(`Unknown microsite: ${slug}`);
-  }
-  return microsite;
+function getMicrosite(slug: string): MicrositeConfig | undefined {
+  return MICROSITES.find((candidate) => candidate.slug === slug);
 }
 
 export default async function HomePage(): Promise<React.ReactElement> {
@@ -50,20 +46,81 @@ export default async function HomePage(): Promise<React.ReactElement> {
   const kiwifruit = horticultureStats.find((stat) => stat.key === 'kiwifruit');
   const newPlanting = forestryStats.find((stat) => stat.key === 'newPlanting');
 
-  const sheepConfig = getMicrosite('sheep-index');
-  const dairyConfig = getMicrosite('dairy-takeover');
-  const vineyardConfig = getMicrosite('vineyard-boom');
-  const plantingConfig = getMicrosite('planting-bust');
-  const kiwifruitConfig = getMicrosite('kiwifruit-overtake');
-  const deerConfig = getMicrosite('deer-boom-bust');
-  const shakeConfig = getMicrosite('shake-index');
-  const speciesConfig = getMicrosite('species-register');
-  const openDataConfig = getMicrosite('open-data-catalogue');
-  const digitisedConfig = getMicrosite('digitised-memory');
-  const garageSaleConfig = getMicrosite('online-garage-sale');
-  const backyardConfig = getMicrosite('backyard-species-census');
-  const ledgerConfig = getMicrosite('species-record-ledger');
-  const worldReadsConfig = getMicrosite('what-the-world-reads');
+  const cards = [
+    {
+      config: getMicrosite('sheep-index'),
+      statLabel: `Sheep right now (${sheep.latest.year})`,
+      statValue: formatMillionsSheep(sheep.latest.sheep),
+    },
+    {
+      config: getMicrosite('dairy-takeover'),
+      statLabel: `Dairy cattle now (${livestock.latest.year})`,
+      statValue: formatMillions(dairy?.latest ?? 0),
+    },
+    {
+      config: getMicrosite('vineyard-boom'),
+      statLabel: `Wine grapes now (${horticulture.latest.year})`,
+      statValue: formatHectares(wineGrapes?.latest ?? 0),
+    },
+    {
+      config: getMicrosite('planting-bust'),
+      statLabel: `New planting in ${forestry.latest.year}`,
+      statValue: formatHectares(newPlanting?.latest ?? 0),
+    },
+    {
+      config: getMicrosite('kiwifruit-overtake'),
+      statLabel: `Kiwifruit now (${horticulture.latest.year})`,
+      statValue: formatHectares(kiwifruit?.latest ?? 0),
+    },
+    {
+      config: getMicrosite('deer-boom-bust'),
+      statLabel: `Farmed deer now (${livestock.latest.year})`,
+      statValue: formatMillions(deer?.latest ?? 0),
+    },
+    {
+      config: getMicrosite('shake-index'),
+      statLabel: 'Recent felt quakes',
+      statValue: String(quakes.length),
+    },
+    {
+      config: getMicrosite('species-register'),
+      statLabel: 'Names in the register',
+      statValue: registerTotal.toLocaleString('en-NZ'),
+    },
+    {
+      config: getMicrosite('open-data-catalogue'),
+      statLabel: 'Datasets in the catalogue',
+      statValue: catalogueTotal.toLocaleString('en-NZ'),
+    },
+    {
+      config: getMicrosite('digitised-memory'),
+      statLabel: "Records matching 'gold'",
+      statValue: DIGITALNZ_GOLD_RECORDS,
+    },
+    {
+      config: getMicrosite('online-garage-sale'),
+      statLabel: 'Leaf categories',
+      statValue: TRADEME_LEAF_CATEGORIES,
+    },
+    {
+      config: getMicrosite('backyard-species-census'),
+      statLabel: 'Observations in New Zealand',
+      statValue: INATURALIST_NZ_OBSERVATIONS,
+    },
+    {
+      config: getMicrosite('species-record-ledger'),
+      statLabel: 'Records in 2024',
+      statValue: GBIF_NZ_RECORDS_2024,
+    },
+    {
+      config: getMicrosite('what-the-world-reads'),
+      statLabel: 'New Zealand page peak',
+      statValue: WIKIPEDIA_NZ_PAGE_PEAK,
+    },
+  ].filter(
+    (card): card is { config: MicrositeConfig; statLabel: string; statValue: string } =>
+      card.config !== undefined,
+  );
 
   return (
     <main>
@@ -74,137 +131,24 @@ export default async function HomePage(): Promise<React.ReactElement> {
             the surprising.
           </h1>
           <p className="numeral-paragraph-lg text-[var(--color-muted)]">
-            Fourteen live microsites. Stats NZ at deploy time, plus GeoNet, NZOR, data.govt.nz,
-            DigitalNZ, Trade Me, iNaturalist, GBIF, and Wikipedia live from the browser.
+            {cards.length} live microsites. Stats NZ at deploy time, plus GeoNet, NZOR,
+            data.govt.nz, DigitalNZ, Trade Me, iNaturalist, GBIF, and Wikipedia live from the
+            browser.
           </p>
         </Stack>
         <div className="grid gap-6 pb-[var(--spacing-3xl)] sm:grid-cols-2 lg:grid-cols-3">
-          <MicrositeCard
-            slug={sheepConfig.slug}
-            eyebrow={sheepConfig.eyebrow}
-            title={sheepConfig.title}
-            description={sheepConfig.description}
-            statLabel={`Sheep right now (${sheep.latest.year})`}
-            statValue={formatMillionsSheep(sheep.latest.sheep)}
-            accent={sheepConfig.accent}
-          />
-          <MicrositeCard
-            slug={dairyConfig.slug}
-            eyebrow={dairyConfig.eyebrow}
-            title={dairyConfig.title}
-            description={dairyConfig.description}
-            statLabel={`Dairy cattle now (${livestock.latest.year})`}
-            statValue={formatMillions(dairy?.latest ?? 0)}
-            accent={dairyConfig.accent}
-          />
-          <MicrositeCard
-            slug={vineyardConfig.slug}
-            eyebrow={vineyardConfig.eyebrow}
-            title={vineyardConfig.title}
-            description={vineyardConfig.description}
-            statLabel={`Wine grapes now (${horticulture.latest.year})`}
-            statValue={formatHectares(wineGrapes?.latest ?? 0)}
-            accent={vineyardConfig.accent}
-          />
-          <MicrositeCard
-            slug={plantingConfig.slug}
-            eyebrow={plantingConfig.eyebrow}
-            title={plantingConfig.title}
-            description={plantingConfig.description}
-            statLabel={`New planting in ${forestry.latest.year}`}
-            statValue={formatHectares(newPlanting?.latest ?? 0)}
-            accent={plantingConfig.accent}
-          />
-          <MicrositeCard
-            slug={kiwifruitConfig.slug}
-            eyebrow={kiwifruitConfig.eyebrow}
-            title={kiwifruitConfig.title}
-            description={kiwifruitConfig.description}
-            statLabel={`Kiwifruit now (${horticulture.latest.year})`}
-            statValue={formatHectares(kiwifruit?.latest ?? 0)}
-            accent={kiwifruitConfig.accent}
-          />
-          <MicrositeCard
-            slug={deerConfig.slug}
-            eyebrow={deerConfig.eyebrow}
-            title={deerConfig.title}
-            description={deerConfig.description}
-            statLabel={`Farmed deer now (${livestock.latest.year})`}
-            statValue={formatMillions(deer?.latest ?? 0)}
-            accent={deerConfig.accent}
-          />
-          <MicrositeCard
-            slug={shakeConfig.slug}
-            eyebrow={shakeConfig.eyebrow}
-            title={shakeConfig.title}
-            description={shakeConfig.description}
-            statLabel="Recent felt quakes"
-            statValue={String(quakes.length)}
-            accent={shakeConfig.accent}
-          />
-          <MicrositeCard
-            slug={speciesConfig.slug}
-            eyebrow={speciesConfig.eyebrow}
-            title={speciesConfig.title}
-            description={speciesConfig.description}
-            statLabel="Names in the register"
-            statValue={registerTotal.toLocaleString('en-NZ')}
-            accent={speciesConfig.accent}
-          />
-          <MicrositeCard
-            slug={openDataConfig.slug}
-            eyebrow={openDataConfig.eyebrow}
-            title={openDataConfig.title}
-            description={openDataConfig.description}
-            statLabel="Datasets in the catalogue"
-            statValue={catalogueTotal.toLocaleString('en-NZ')}
-            accent={openDataConfig.accent}
-          />
-          <MicrositeCard
-            slug={digitisedConfig.slug}
-            eyebrow={digitisedConfig.eyebrow}
-            title={digitisedConfig.title}
-            description={digitisedConfig.description}
-            statLabel="Records matching 'gold'"
-            statValue={DIGITALNZ_GOLD_RECORDS}
-            accent={digitisedConfig.accent}
-          />
-          <MicrositeCard
-            slug={garageSaleConfig.slug}
-            eyebrow={garageSaleConfig.eyebrow}
-            title={garageSaleConfig.title}
-            description={garageSaleConfig.description}
-            statLabel="Leaf categories"
-            statValue={TRADEME_LEAF_CATEGORIES}
-            accent={garageSaleConfig.accent}
-          />
-          <MicrositeCard
-            slug={backyardConfig.slug}
-            eyebrow={backyardConfig.eyebrow}
-            title={backyardConfig.title}
-            description={backyardConfig.description}
-            statLabel="Observations in New Zealand"
-            statValue={INATURALIST_NZ_OBSERVATIONS}
-            accent={backyardConfig.accent}
-          />
-          <MicrositeCard
-            slug={ledgerConfig.slug}
-            eyebrow={ledgerConfig.eyebrow}
-            title={ledgerConfig.title}
-            description={ledgerConfig.description}
-            statLabel="Records in 2024"
-            statValue={GBIF_NZ_RECORDS_2024}
-            accent={ledgerConfig.accent}
-          />
-          <MicrositeCard
-            slug={worldReadsConfig.slug}
-            eyebrow={worldReadsConfig.eyebrow}
-            title={worldReadsConfig.title}
-            description={worldReadsConfig.description}
-            statLabel="New Zealand page peak"
-            statValue={WIKIPEDIA_NZ_PAGE_PEAK}
-            accent={worldReadsConfig.accent}
-          />
+          {cards.map((card) => (
+            <MicrositeCard
+              key={card.config.slug}
+              slug={card.config.slug}
+              eyebrow={card.config.eyebrow}
+              title={card.config.title}
+              description={card.config.description}
+              statLabel={card.statLabel}
+              statValue={card.statValue}
+              accent={card.config.accent}
+            />
+          ))}
         </div>
       </Container>
     </main>

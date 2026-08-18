@@ -1,6 +1,8 @@
 import type { MicrositeAccent } from '@/components/microsite-styles';
 import type { MicrositeReference } from '@/components/MicrositeReferences';
 
+import { withHiddenMicrositesRemoved } from './hidden-microsites';
+
 export interface MicrositeConfig {
   slug: string;
   label: string;
@@ -13,7 +15,7 @@ export interface MicrositeConfig {
   references: MicrositeReference[];
 }
 
-export const MICROSITES: MicrositeConfig[] = [
+export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
   {
     slug: 'sheep-index',
     label: 'Sheep index',
@@ -559,4 +561,4 @@ export const MICROSITES: MicrositeConfig[] = [
       },
     ],
   },
-];
+]);

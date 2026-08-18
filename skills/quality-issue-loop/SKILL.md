@@ -81,6 +81,10 @@ every iteration makes the next one faster.
 - Check `git status` on `main` before fan-out. If the working tree is dirty,
   only touch files that are clean; defer fixes that would clobber concurrent
   work.
+- Hide-first: the moment a bug is filed against a microsite, add its slug to
+  `apps/web/src/lib/hidden-microsites.ts` and deploy (hide it). The microsite
+  stays hidden until the fix ships; the fix removes the slug. Hiding is the
+  highest-priority action, done during triage, before any fan-out.
 - If a loop fails three times on the same blocker, stop, document the
   blocker in `LOOP-NOTES.md`, and ask the user one precise question.
 

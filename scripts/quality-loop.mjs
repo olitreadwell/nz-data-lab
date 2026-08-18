@@ -49,6 +49,54 @@ function runCapture(command, args, cwd = ROOT) {
   }).trim();
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+const HIDDEN_FILE = path.join(ROOT, 'apps/web/src/lib/hidden-microsites.ts');
+
+function readHiddenSlugs() {
+  const source = readFileSync(HIDDEN_FILE, 'utf8');
+  const match = source.match(/HIDDEN_MICROSITES: string\[\] = \[([^\]]*)\]/);
+  if (match === null) {
+    throw new Error('cannot parse hidden-microsites.ts');
+  }
+  return [...match[1].matchAll(/'([^']+)'/g)].map((entry) => entry[1]);
+}
+
+function writeHiddenSlugs(slugs) {
+  const source = readFileSync(HIDDEN_FILE, 'utf8');
+  const body = slugs.length > 0 ? `\n${slugs.map((slug) => `  '${slug}',`).join('\n')}\n` : ' ';
+  const next = source.replace(
+    /HIDDEN_MICROSITES: string\[\] = \[[^\]]*\]/,
+    `HIDDEN_MICROSITES: string[] = [${body}]`,
+  );
+  writeFileSync(HIDDEN_FILE, next);
+}
+
+/** Hide-first rule: a microsite with an open bug is taken off the site now. */
+function hideMicrosite(slug) {
+  const slugs = readHiddenSlugs();
+  if (slugs.includes(slug)) {
+    console.log(`already hidden: ${slug}`);
+    return;
+  }
+  slugs.push(slug);
+  writeHiddenSlugs(slugs);
+  run('git', ['add', 'apps/web/src/lib/hidden-microsites.ts']);
+  run('git', ['commit', '-m', `fix: hide ${slug} microsite while its bug is open`]);
+  run('git', ['push', 'origin', 'main']);
+  console.log(`HIDDEN microsite: ${slug}`);
+}
+
+/** Called by the fan-out fix: the shipped fix makes the microsite safe again. */
+function unhideMicrosite(slug) {
+  const slugs = readHiddenSlugs().filter((entry) => entry !== slug);
+  writeHiddenSlugs(slugs);
+  run('git', ['add', 'apps/web/src/lib/hidden-microsites.ts']);
+  run('git', ['commit', '-m', `fix: un-hide ${slug} microsite, bug is fixed`]);
+}
+
 function codexExec(cwd, prompt) {
   const child = spawn(
     'codex',
@@ -180,9 +228,17 @@ async function triageIssues() {
     console.log('no open quality-loop issues to triage');
     return;
   }
+  const compact = open.map((issue) => ({
+    number: issue.number,
+    title: issue.title,
+    labels: (issue.labels ?? []).map((label) => label.name),
+    body: (issue.body ?? '').split('\n').slice(0, 6).join(' | ').slice(0, 400),
+  }));
   const prompt = [
     `You are the triage agent for the quality-issue-loop in the nz-data-lab repo at ${ROOT}.`,
-    'Below is every open issue in the repo (user reports and loop-generated).',
+    'Below is a COMPACT summary of every open issue (body truncated). Run',
+    '`gh issue view <number> --repo olitreadwell/nz-data-lab --json body` to read',
+    'the full body of any issue you need to judge deeply.',
     'For EACH issue:',
     '- skip bot/dependency-dashboard issues (e.g. renovate, Dependency Dashboard)',
     '- read the code it references and decide whether the finding is STILL VALID',
@@ -191,17 +247,21 @@ async function triageIssues() {
     '  what the code does today, and updated acceptance criteria. Do not invent findings.',
     '- reassign priority: security and accessibility = "high",',
     '  correctness/robustness/perf = "medium", polish/docs/tests = "low"',
+    '- propose a fresh TITLE: short, specific, lowercase-first, no issue number,',
+    '  e.g. "add robots.txt and sitemap.xml" or "fix deer chart y-axis labels"',
     '',
-    'Then find DUPLICATES: issues with the same root cause or overlapping files',
-    '(for example two issues about chart data only existing in hover tooltips).',
+    'Then find DUPLICATES: issues with the same root cause or overlapping files.',
     'For each duplicate group pick one primary issue (broadest, clearest scope),',
     'merge every group member acceptance criterion into its body (action "update"),',
     'and close the rest (action "close", reason "Duplicate of #<primary number>").',
     '',
-    `Issues: ${JSON.stringify(open)}`,
+    `Issues: ${JSON.stringify(compact)}`,
     '',
+    'For any issue whose bug is about a specific microsite, add',
+    '  "microsite": "<slug>" and "hide": true (hide-first rule: the site comes',
+    '  off the site now and stays hidden until the fix ships).',
     'Output ONLY a JSON array, no prose, no fences:',
-    '[{"number": 13, "action": "update|close", "body": "...", "priority": "high|medium|low", "reason": "..."}]',
+    '[{"number": 13, "action": "update|close", "title": "...", "body": "...", "priority": "high|medium|low", "microsite": "shake-index", "hide": true, "reason": "..."}]',
   ].join('\n');
   const out = runCapture('codex', [
     'exec',
@@ -234,7 +294,7 @@ async function triageIssues() {
       console.log(`triage closed #${number}: ${verdict.reason ?? 'stale'}`);
       continue;
     }
-    run('gh', [
+    const editArgs = [
       'issue',
       'edit',
       number,
@@ -244,7 +304,11 @@ async function triageIssues() {
       verdict.body,
       '--add-label',
       'quality-loop',
-    ]);
+    ];
+    if (verdict.title !== undefined) {
+      editArgs.push('--title', verdict.title);
+    }
+    run('gh', editArgs);
     if (verdict.priority !== undefined) {
       const target = `priority-${verdict.priority}`;
       for (let attempt = 0; attempt < 3; attempt += 1) {
@@ -273,6 +337,9 @@ async function triageIssues() {
       }
     }
     console.log(`triage updated #${number} (priority-${verdict.priority ?? 'unchanged'})`);
+    if (verdict.hide === true && verdict.microsite !== undefined) {
+      hideMicrosite(verdict.microsite);
+    }
   }
 }
 
@@ -304,6 +371,9 @@ async function fanout(issueNumbers) {
       'resolve `next` from a worktree), so skip `npm run build` here; CI runs the',
       'build on the merged main. Fix any failures. Add or update a unit test when',
       'the fix changes behavior.',
+      'If this issue names a microsite and that slug is listed in',
+      'apps/web/src/lib/hidden-microsites.ts, remove it from that array as',
+      'part of the fix (the fix makes the microsite safe to show again).',
       '',
       `Commit with a Conventional Commit message referencing the issue, e.g. "fix: add skip link (#${number})".`,
       'Do NOT push, do NOT merge, do NOT create a PR.',
@@ -390,6 +460,8 @@ if (mode === 'generate') {
   const countIndex = rest.indexOf('--count');
   const count = countIndex !== -1 ? Number(rest[countIndex + 1]) : 5;
   generateIssues(count);
+} else if (mode === 'triage') {
+  await triageIssues();
 } else if (mode === 'fanout') {
   if (rest.length === 0) {
     console.error('usage: node scripts/quality-loop.mjs fanout <issue-number>...');
@@ -431,6 +503,6 @@ if (mode === 'generate') {
       .join(', ')}).`,
   );
 } else {
-  console.error('usage: node scripts/quality-loop.mjs generate|fanout|full');
+  console.error('usage: node scripts/quality-loop.mjs generate|triage|fanout|full');
   process.exit(1);
 }
