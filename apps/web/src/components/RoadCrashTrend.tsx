@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { fetchLiveCasCrashes } from '@/lib/live-sources';
+import { handleRadioGroupKeyDown } from '@/lib/radio-group';
 import type { LiveCasCrashCell } from '@/lib/live-sources';
 
 import { ChartDataTable } from './ChartDataTable';
@@ -18,6 +19,8 @@ const MIN_YEAR = 2006;
 const MAX_YEAR = 2026;
 
 type CrashMode = 'all' | 'fatal';
+
+const CRASH_OPTIONS = ['all', 'fatal'] as const;
 
 interface HeatmapCell {
   region: string;
@@ -128,21 +131,27 @@ export function RoadCrashTrend(): React.ReactElement {
       {!isLoading && error === null && allCells.length > 0 && (
         <div>
           <div className="mb-2 flex flex-wrap items-center gap-2">
-            {(['all', 'fatal'] as const).map((option) => (
-              <button
-                key={option}
-                type="button"
-                onClick={() => setMode(option)}
-                aria-pressed={mode === option}
-                className={`rounded-[var(--radius-sm)] border px-3 py-1 text-sm ${
-                  mode === option
-                    ? 'border-[var(--color-fg)] bg-[var(--color-fg)] text-[var(--color-bg)]'
-                    : 'border-[var(--color-border)] text-[var(--color-muted)] hover:text-[var(--color-fg)]'
-                }`}
-              >
-                {option === 'all' ? 'All crashes' : 'Fatal crashes'}
-              </button>
-            ))}
+            <div role="radiogroup" aria-label="Crash type" className="flex items-center gap-2">
+              {CRASH_OPTIONS.map((option, index) => (
+                <button
+                  key={option}
+                  type="button"
+                  role="radio"
+                  aria-checked={mode === option}
+                  onClick={() => setMode(option)}
+                  onKeyDown={(event) =>
+                    handleRadioGroupKeyDown(event, index, CRASH_OPTIONS, setMode)
+                  }
+                  className={`rounded-[var(--radius-sm)] border px-3 py-1 text-sm ${
+                    mode === option
+                      ? 'border-[var(--color-fg)] bg-[var(--color-fg)] text-[var(--color-bg)]'
+                      : 'border-[var(--color-border)] text-[var(--color-muted)] hover:text-[var(--color-fg)]'
+                  }`}
+                >
+                  {option === 'all' ? 'All crashes' : 'Fatal crashes'}
+                </button>
+              ))}
+            </div>
             <label className="ml-auto flex items-center gap-2 text-sm text-[var(--color-muted)]">
               Up to year
               <input

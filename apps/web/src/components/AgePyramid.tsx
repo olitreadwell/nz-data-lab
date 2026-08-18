@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 
 import { AGE_PYRAMID_POPULATION } from '@/lib/age-pyramid-data';
+import { handleRadioGroupKeyDown } from '@/lib/radio-group';
 import type { AgeBandPopulation } from '@/lib/age-pyramid-data';
 
 import { ChartDataTable } from './ChartDataTable';
@@ -12,6 +13,12 @@ const MALE_COLOR = '#0284c7';
 const FEMALE_COLOR = '#e11d48';
 
 type SexView = 'both' | 'male' | 'female';
+
+const SEX_OPTIONS = [
+  ['both', 'Male and female'],
+  ['male', 'Male only'],
+  ['female', 'Female only'],
+] as const;
 
 /** The widest band sets the bar scale for the whole pyramid. */
 const MAX_BAND_TOTAL = Math.max(...AGE_PYRAMID_POPULATION.map((band) => band.total));
@@ -52,20 +59,22 @@ export function AgePyramid(): React.ReactElement {
 
   return (
     <div>
-      <div className="mb-3 flex gap-1 rounded-[var(--radius-sm)] border border-[var(--color-border)] p-1">
-        {(
-          [
-            ['both', 'Male and female'],
-            ['male', 'Male only'],
-            ['female', 'Female only'],
-          ] as const
-        ).map(([value, label]) => (
+      <div
+        role="radiogroup"
+        aria-label="Sex to display"
+        className="mb-3 flex gap-1 rounded-[var(--radius-sm)] border border-[var(--color-border)] p-1"
+      >
+        {SEX_OPTIONS.map(([value, label], index) => (
           <button
             key={value}
             type="button"
+            role="radio"
+            aria-checked={view === value}
             onClick={() => setView(value)}
-            aria-pressed={view === value}
-            className="rounded-[var(--radius-sm)] px-2 py-1 text-sm text-[var(--color-muted)] hover:text-[var(--color-fg)] aria-pressed:bg-[var(--color-border)]"
+            onKeyDown={(event) =>
+              handleRadioGroupKeyDown(event, index, SEX_OPTIONS, ([value]) => setView(value))
+            }
+            className="rounded-[var(--radius-sm)] px-2 py-1 text-sm text-[var(--color-muted)] hover:text-[var(--color-fg)] aria-checked:bg-[var(--color-border)]"
           >
             {label}
           </button>
