@@ -36,7 +36,9 @@ commit per microsite, then one merge and one deploy.
    page for 200 and for a content marker. Before merging, run `git fetch
 origin` and rebase the branch onto `origin/main` if it moved while you
    built: the launchd quality loop commits to `main` concurrently, and a
-   stale base makes the merge fight the new code. In a fresh worktree, run
+   stale base makes the merge fight the new code. Push fast-forward when
+   `origin/main` is an ancestor of your branch; only rebase when the tree is
+   clean, and never rebase with unstaged changes. In a fresh worktree, run
    `npm install` before the checks: symlinking the main repo's `node_modules`
    into the worktree breaks vitest's esbuild with "too many levels of
    symbolic links".
