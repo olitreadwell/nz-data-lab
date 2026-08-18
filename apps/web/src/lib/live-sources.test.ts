@@ -4,19 +4,20 @@ import {
   fetchLiveGbifKingdoms,
   fetchLiveInaturalistTaxa,
   fetchLiveNzSchools,
+  INATURALIST_CENSUS_DEADLINE_MS,
   LIVE_SEARCH_TIMEOUT_MS,
   OVERPASS_SCHOOLS_TIMEOUT_MS,
   parseAucklandParkBoards,
   parseCanterburyRainGauges,
   parseCasCrashCells,
   parseDataGovtNzSearch,
+  parseDigitalNzSearch,
   parseEvChargingCurrentTypes,
   parseEvChargingOperators,
   parseGbifKingdomFacet,
   parseHamiltonPlaygrounds,
   parseInaturalistTotal,
   parseMvrFleetRows,
-  parseDigitalNzSearch,
   parseNzorNamesXml,
   parseNzSchools,
   parseWikidataPeaks,
@@ -29,6 +30,10 @@ import {
 function stubHangingFetch(): ReturnType<typeof vi.fn> {
   const fetchMock = vi.fn((_input: RequestInfo | URL, init?: RequestInit) => {
     return new Promise<Response>((_resolve, reject) => {
+      if (init?.signal?.aborted) {
+        reject(new DOMException('Aborted', 'AbortError'));
+        return;
+      }
       init?.signal?.addEventListener('abort', () => {
         reject(new DOMException('Aborted', 'AbortError'));
       });
@@ -76,6 +81,20 @@ describe('live-sources fetchers', () => {
 });
 
 describe('fetchLiveInaturalistTaxa', () => {
+  it('aborts the whole census at the overall deadline', async () => {
+    vi.useFakeTimers();
+    const fetchMock = stubHangingFetch();
+
+    const census = fetchLiveInaturalistTaxa();
+    const expectation = expect(census).rejects.toThrow(
+      'iNaturalist census hit its overall deadline',
+    );
+    await vi.advanceTimersByTimeAsync(INATURALIST_CENSUS_DEADLINE_MS);
+
+    await expectation;
+    expect(fetchMock).toHaveBeenCalled();
+  });
+
   it('keeps other taxa when one sub-request rejects', async () => {
     const fetchMock = vi.fn((input: RequestInfo | URL) => {
       const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
@@ -541,7 +560,9 @@ describe('parseDigitalNzSearch', () => {
         ],
       },
     };
-    expect(parseDigitalNzSearch(payload).records).toEqual([expect.objectContaining({ year: 1908 })]);
+    expect(parseDigitalNzSearch(payload).records).toEqual([
+      expect.objectContaining({ year: 1908 }),
+    ]);
   });
 
   it('uses the leading display year and ignores a trailing scan year', () => {
@@ -558,7 +579,9 @@ describe('parseDigitalNzSearch', () => {
         ],
       },
     };
-    expect(parseDigitalNzSearch(payload).records).toEqual([expect.objectContaining({ year: 1908 })]);
+    expect(parseDigitalNzSearch(payload).records).toEqual([
+      expect.objectContaining({ year: 1908 }),
+    ]);
   });
 
   it('returns null when no leading year exists in the display date', () => {
@@ -575,7 +598,9 @@ describe('parseDigitalNzSearch', () => {
         ],
       },
     };
-    expect(parseDigitalNzSearch(payload).records).toEqual([expect.objectContaining({ year: null })]);
+    expect(parseDigitalNzSearch(payload).records).toEqual([
+      expect.objectContaining({ year: null }),
+    ]);
   });
 
   it('keeps decade faceting consistent with the parsed records', () => {

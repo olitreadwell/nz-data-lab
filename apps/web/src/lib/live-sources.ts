@@ -25,11 +25,22 @@ export const LIVE_SEARCH_TIMEOUT_MS = 10_000;
 /** How long the Overpass schools query may take before it is aborted (matches its [timeout:60]). */
 export const OVERPASS_SCHOOLS_TIMEOUT_MS = 60_000;
 
-/** Creates an AbortController that aborts after the live-search timeout.
+/** How long the whole iNaturalist census may take before it aborts. */
+export const INATURALIST_CENSUS_DEADLINE_MS = 15_000;
+
+/**
+ * Creates an AbortController that aborts after the live-search timeout, or
+ * sooner when an outer deadline signal aborts first.
+ * @param deadlineSignal - optional outer signal that aborts the controller early
  * @returns the controller whose signal is passed to fetch.
  */
-function createLiveSearchAbortController(): AbortController {
+function createLiveSearchAbortController(deadlineSignal?: AbortSignal): AbortController {
   const controller = new AbortController();
+  if (deadlineSignal?.aborted) {
+    controller.abort();
+  } else {
+    deadlineSignal?.addEventListener('abort', () => controller.abort(), { once: true });
+  }
   setTimeout(() => controller.abort(), LIVE_SEARCH_TIMEOUT_MS);
   return controller;
 }
@@ -343,27 +354,54 @@ async function mapWithConcurrency<T, R>(
  * Fetches per-taxon species, observation, and observer counts for New
  * Zealand from iNaturalist (CORS is open). Three small list calls per taxon,
  * capped at a few taxa in flight; a failed sub-request yields a zero count
- * for that taxon instead of failing the whole chart.
+ * for that taxon instead of failing the whole chart. The whole census aborts
+ * at INATURALIST_CENSUS_DEADLINE_MS so a slow network cannot hold the chart
+ * in a loading state indefinitely.
  */
 export async function fetchLiveInaturalistTaxa(): Promise<LiveInaturalistTaxon[]> {
-  return mapWithConcurrency(INATURALIST_TAXA, INATURALIST_CONCURRENCY, async (taxon) => {
-    const base = 'https://api.inaturalist.org/v1/observations';
-    const placeQuery = `place_id=${INATURALIST_NZ_PLACE_ID}`;
-    const [species, observations, observers] = await Promise.allSettled([
-      fetchJson(
-        `${base}/species_counts?${placeQuery}&hrank=species&iconic_taxa=${taxon}&per_page=1`,
-      ),
-      fetchJson(`${base}?${placeQuery}&iconic_taxa=${taxon}&per_page=1`),
-      fetchJson(`${base}/observers?${placeQuery}&iconic_taxa=${taxon}&per_page=1`),
-    ]);
-    return {
-      taxon,
-      speciesCount: species.status === 'fulfilled' ? parseInaturalistTotal(species.value) : 0,
-      observationCount:
-        observations.status === 'fulfilled' ? parseInaturalistTotal(observations.value) : 0,
-      observerCount: observers.status === 'fulfilled' ? parseInaturalistTotal(observers.value) : 0,
-    };
-  });
+  const deadlineController = new AbortController();
+  const deadlineTimer = setTimeout(
+    () => deadlineController.abort(),
+    INATURALIST_CENSUS_DEADLINE_MS,
+  );
+  try {
+    const taxa = await mapWithConcurrency(
+      INATURALIST_TAXA,
+      INATURALIST_CONCURRENCY,
+      async (taxon) => {
+        const base = 'https://api.inaturalist.org/v1/observations';
+        const placeQuery = `place_id=${INATURALIST_NZ_PLACE_ID}`;
+        const [species, observations, observers] = await Promise.allSettled([
+          fetchJson(
+            `${base}/species_counts?${placeQuery}&hrank=species&iconic_taxa=${taxon}&per_page=1`,
+            deadlineController.signal,
+          ),
+          fetchJson(
+            `${base}?${placeQuery}&iconic_taxa=${taxon}&per_page=1`,
+            deadlineController.signal,
+          ),
+          fetchJson(
+            `${base}/observers?${placeQuery}&iconic_taxa=${taxon}&per_page=1`,
+            deadlineController.signal,
+          ),
+        ]);
+        return {
+          taxon,
+          speciesCount: species.status === 'fulfilled' ? parseInaturalistTotal(species.value) : 0,
+          observationCount:
+            observations.status === 'fulfilled' ? parseInaturalistTotal(observations.value) : 0,
+          observerCount:
+            observers.status === 'fulfilled' ? parseInaturalistTotal(observers.value) : 0,
+        };
+      },
+    );
+    if (deadlineController.signal.aborted) {
+      throw new Error('iNaturalist census hit its overall deadline');
+    }
+    return taxa;
+  } finally {
+    clearTimeout(deadlineTimer);
+  }
 }
 
 export interface LiveGbifKingdom {
@@ -495,9 +533,9 @@ export async function fetchLiveWikipediaPageviews(): Promise<LiveWikipediaPage[]
   return parseWikipediaPageviews(await response.json());
 }
 
-/** Fetches a JSON payload with the shared live-search timeout. */
-async function fetchJson(url: string): Promise<unknown> {
-  const controller = createLiveSearchAbortController();
+/** Fetches a JSON payload with the shared live-search timeout and an optional outer deadline. */
+async function fetchJson(url: string, deadlineSignal?: AbortSignal): Promise<unknown> {
+  const controller = createLiveSearchAbortController(deadlineSignal);
   const response = await fetch(url, { signal: controller.signal });
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}`);
