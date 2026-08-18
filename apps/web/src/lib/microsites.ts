@@ -565,7 +565,7 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
     slug: 'open-school-map',
     label: 'Open school map',
     eyebrow: '🏫 the open school map',
-    title: "New Zealand has 2,604 schools mapped on OpenStreetMap.",
+    title: 'New Zealand has 2,604 schools mapped on OpenStreetMap.',
     description:
       'OpenStreetMap maps 2,604 schools in New Zealand, from kura to universities. Most carry Ministry of Education tags, so the map reads like a school directory.',
     paragraphs: [
@@ -735,6 +735,38 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       {
         label: 'GeoNet FDSN usage',
         url: 'https://www.geonet.org.nz/data/tools/FDSN',
+        kind: 'data',
+      },
+    ],
+  },
+  {
+    slug: 'quake-depth-scatter',
+    label: 'Quake depth scatter',
+    eyebrow: '📉 the quake depth scatter',
+    title: 'Shallow quakes are the ones people feel.',
+    description:
+      'In the three months to 18 August 2026, GeoNet located 5,148 earthquakes of magnitude 1 or stronger. 3,408 of them, 66%, ruptured shallower than 40 km. The deepest reached 600 km.',
+    paragraphs: [
+      'Shallow quakes release their energy close to the surface, which is why they are the ones people feel. Of the 101 quakes of magnitude 4 or stronger in the same three months, 55 were shallower than 40 km.',
+      'Each dot is one quake. Depth runs down the chart, so the shallow quakes sit at the top. Use the day buttons to narrow the window, and hover a dot to read its magnitude and depth.',
+    ],
+    accent: 'rose',
+    dataNote:
+      'Data: GeoNet FDSN event service (service.geonet.org.nz), earthquakes of magnitude 1 or stronger in the three months to 18 August 2026, fetched at build time and falling back to a committed snapshot of that catalog. The site redeploys daily.',
+    references: [
+      {
+        label: 'GeoNet FDSN event service',
+        url: 'https://service.geonet.org.nz/fdsnws/event/1/',
+        kind: 'data',
+      },
+      {
+        label: 'GeoNet FDSN usage',
+        url: 'https://www.geonet.org.nz/data/tools/FDSN',
+        kind: 'data',
+      },
+      {
+        label: 'Earthquake FAQ (GeoNet)',
+        url: 'https://www.geonet.org.nz/earthquake/faq',
         kind: 'data',
       },
     ],

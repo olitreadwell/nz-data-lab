@@ -15,9 +15,9 @@ vi.mock('next/navigation', () => ({
 
 vi.mock('@/lib/quake-catalog', () => ({
   fetchRecentQuakeCatalog: vi.fn().mockResolvedValue([
-    { timeEpochSec: 1780000000, magnitude: 1.4 },
-    { timeEpochSec: 1780000001, magnitude: 2.2 },
-    { timeEpochSec: 1780000002, magnitude: 6.3 },
+    { timeEpochSec: 1780000000, magnitude: 1.4, depthKm: 12 },
+    { timeEpochSec: 1780000001, magnitude: 2.2, depthKm: 30 },
+    { timeEpochSec: 1780000002, magnitude: 6.3, depthKm: 45 },
   ]),
 }));
 
@@ -171,6 +171,15 @@ describe('MicrositePage', () => {
     const html = await new Response(stream).text();
     expect(html).toContain('Small quakes drown out the big ones');
     expect(html).toContain('Quakes located, 3 months');
+  });
+
+  it('renders the quake depth scatter story', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'quake-depth-scatter' })} />,
+    );
+    const html = await new Response(stream).text();
+    expect(html).toContain('Shallow quakes are the ones people feel');
+    expect(html).toContain('Share shallower than 40 km');
   });
 
   it('renders the dairy story with the livestock chart', async () => {

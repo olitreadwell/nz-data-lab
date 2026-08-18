@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 
 import type { QuakeCatalogEvent } from '@/lib/quake-catalog';
 
-import { QuakeMagnitudeHistogram } from './QuakeMagnitudeHistogram';
+import { QuakeDepthScatter } from './QuakeDepthScatter';
 
 expect.extend(toHaveNoViolations);
 
@@ -19,23 +19,31 @@ const EVENTS: QuakeCatalogEvent[] = [
   { timeEpochSec: NOW - 70 * DAY, magnitude: 4.6, depthKm: 200 },
 ];
 
-describe('QuakeMagnitudeHistogram', () => {
-  it('renders the histogram and counts the quakes in the default window', () => {
-    render(<QuakeMagnitudeHistogram events={EVENTS} />);
+describe('QuakeDepthScatter', () => {
+  it('renders the scatter and counts the quakes in the default window', () => {
+    render(<QuakeDepthScatter events={EVENTS} />);
     expect(screen.getByText(/5 quakes in the last 90 days/)).toBeInTheDocument();
     expect(
-      screen.getByRole('img', { name: /Earthquakes of magnitude 1 or stronger/ }),
+      screen.getByRole('img', {
+        name: /Earthquakes of magnitude 1 or stronger by magnitude and depth/,
+      }),
     ).toBeInTheDocument();
   });
 
   it('narrows the window to 30 days', () => {
-    render(<QuakeMagnitudeHistogram events={EVENTS} />);
+    render(<QuakeDepthScatter events={EVENTS} />);
     fireEvent.click(screen.getByRole('button', { name: '30 days' }));
     expect(screen.getByText(/3 quakes in the last 30 days/)).toBeInTheDocument();
   });
 
+  it('summarizes the depth bands for the window', () => {
+    render(<QuakeDepthScatter events={EVENTS} />);
+    expect(screen.getByText('0-40 km')).toBeInTheDocument();
+    expect(screen.getByText('300-700 km')).toBeInTheDocument();
+  });
+
   it('has no accessibility violations', async () => {
-    const { container } = render(<QuakeMagnitudeHistogram events={EVENTS} />);
+    const { container } = render(<QuakeDepthScatter events={EVENTS} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });

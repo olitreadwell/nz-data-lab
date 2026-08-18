@@ -20,11 +20,12 @@ import { MicrositeStory } from '@/components/MicrositeStory';
 import { OpenDataSearch } from '@/components/OpenDataSearch';
 import { PeakHeights } from '@/components/PeakHeights';
 import { PopulationRankBump } from '@/components/PopulationRankBump';
+import { QuakeDepthScatter } from '@/components/QuakeDepthScatter';
 import { QuakeMagnitudeHistogram } from '@/components/QuakeMagnitudeHistogram';
 import { QuakeMap } from '@/components/QuakeMap';
 import { RiverLengths } from '@/components/RiverLengths';
-import { SchoolRoll } from '@/components/SchoolRoll';
 import { RoadCrashTrend } from '@/components/RoadCrashTrend';
+import { SchoolRoll } from '@/components/SchoolRoll';
 import { SheepChart } from '@/components/SheepChart';
 import { SpeciesRecordLedger } from '@/components/SpeciesRecordLedger';
 import { SpeciesRegisterSearch } from '@/components/SpeciesRegisterSearch';
@@ -67,9 +68,7 @@ export function generateStaticParams(): { slug: string }[] {
   return MICROSITES.map((microsite) => ({ slug: microsite.slug }));
 }
 
-export async function generateMetadata({
-  params,
-}: MicrositePageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: MicrositePageProps): Promise<Metadata> {
   const { slug } = await params;
   const microsite = MICROSITES.find((candidate) => candidate.slug === slug);
   if (microsite === undefined) {
@@ -563,6 +562,45 @@ function renderStoryContent(
               accent="cyan"
               testId="pyramid-men-90"
               dataValue={12010}
+            />
+          </dl>
+        ),
+      };
+    }
+    case 'quake-depth-scatter': {
+      const shallow = data.quakeCatalog.filter((event) => event.depthKm < 40).length;
+      const shallowPercent =
+        data.quakeCatalog.length === 0 ? 0 : Math.round((shallow / data.quakeCatalog.length) * 100);
+      const deepest = data.quakeCatalog.reduce<QuakeCatalogEvent | undefined>(
+        (best, event) => (best === undefined || event.depthKm > best.depthKm ? event : best),
+        undefined,
+      );
+      return {
+        chart: <QuakeDepthScatter events={data.quakeCatalog} />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Quakes located, 3 months"
+              value={data.quakeCatalog.length.toLocaleString('en-NZ')}
+              accent="rose"
+              testId="quake-depth-total"
+              dataValue={data.quakeCatalog.length}
+            />
+            <StatCard
+              label="Share shallower than 40 km"
+              value={`${shallowPercent}%`}
+              accent="rose"
+              testId="quake-depth-shallow-percent"
+              dataValue={shallowPercent}
+            />
+            <StatCard
+              label="Deepest located"
+              value={
+                deepest === undefined ? 'n/a' : `${deepest.depthKm.toLocaleString('en-NZ')} km`
+              }
+              accent="rose"
+              testId="quake-depth-deepest"
+              dataValue={deepest?.depthKm}
             />
           </dl>
         ),

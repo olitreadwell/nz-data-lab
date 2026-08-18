@@ -10,12 +10,14 @@ const FDSN_TEXT = `#EventID | Time | Latitude | Longitude | Depth/km | Author | 
 `;
 
 describe('parseGeoNetFdsnEvents', () => {
-  it('keeps only earthquake rows and extracts time and magnitude', () => {
+  it('keeps only earthquake rows and extracts time, magnitude, and depth', () => {
     const events = parseGeoNetFdsnEvents(FDSN_TEXT);
     expect(events).toHaveLength(2);
     expect(events[0]?.magnitude).toBe(2.5);
     expect(events[1]?.magnitude).toBe(1.5);
     expect(events[0]?.timeEpochSec).toBe(Date.parse('2026-07-11T19:35:55') / 1000);
+    expect(events[0]?.depthKm).toBe(185.3);
+    expect(events[1]?.depthKm).toBe(21.3);
   });
 
   it('rejects a payload without the expected header', () => {
