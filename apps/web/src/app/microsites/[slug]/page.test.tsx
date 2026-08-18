@@ -408,3 +408,33 @@ it('renders the visitor arrival ranks story', async () => {
   expect(html).toContain('data-value="3888473"');
   expect(html).toContain('Sources and further reading');
 });
+
+it('renders the population waffle story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'population-waffle' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('Auckland is a third of the country');
+  expect(html).toContain('4,993,290');
+  expect(html).toContain('2023 Census population counts release (Stats NZ)');
+});
+
+it('renders the export market bump story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'export-market-bump' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('China overtook Australia as the top export market');
+  expect(html).toContain('$19.9b');
+  expect(html).toContain('Goods and services trade by country release (Stats NZ)');
+});
+
+it('renders the business register story', async () => {
+  const stream = await renderToReadableStream(
+    <MicrositePage params={Promise.resolve({ slug: 'enterprise-bar-in-bar' })} />,
+  );
+  const html = await new Response(stream).text();
+  expect(html).toContain('Rental and real estate is the biggest block of the business register');
+  expect(html).toContain('617,334');
+  expect(html).toContain('Business demography: At February 2025 (Stats NZ)');
+});

@@ -1341,4 +1341,98 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+
+  {
+    slug: 'population-waffle',
+    label: 'Population by region',
+    eyebrow: '🧱 the population grid',
+    title: "Auckland is a third of the country's population.",
+    description:
+      'At the 2023 Census, 1,656,486 of the 4,993,290 people counted in regional council areas lived in Auckland, 33.2 percent of the country. The waffle chart draws one cell per 1 percent of the census population, so Auckland fills a third of the grid.',
+    paragraphs: [
+      'The North Island holds most of the rest. Its 3,808,005 people are 76.3 percent of the total, and the South Island has 1,185,282, 23.7 percent.',
+      'Canterbury is the second-biggest region with 651,027 people, 13.0 percent of the country, and Wellington third with 520,971, 10.4 percent. Auckland has held near a third through every census since 2013: 33.4 percent in 2013, 33.2 percent in 2023.',
+    ],
+    accent: 'teal',
+    dataNote:
+      'Data: Stats NZ 2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts, Table 1 (census usually resident population count by regional council area, 2013, 2018, and 2023 censuses). Each cell is one percent of the census usually resident population count, allocated so the grid always sums to 100 cells. Counts have fixed random rounding to base 3 applied. Hover a cell, search for a region, or toggle the census year.',
+    references: [
+      {
+        label: '2023 Census population counts release (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
+        kind: 'data',
+      },
+      {
+        label: '2023 Census (Stats NZ)',
+        url: 'https://www.stats.govt.nz/2023-census/',
+        kind: 'data',
+      },
+      {
+        label: 'Population (Stats NZ)',
+        url: 'https://www.stats.govt.nz/topics/population',
+        kind: 'history',
+      },
+    ],
+  },
+
+  {
+    slug: 'export-market-bump',
+    label: 'Top export markets',
+    eyebrow: '🚢 the export handover',
+    title: 'China overtook Australia as the top export market.',
+    description:
+      "In the year ended March 2015, Australia was New Zealand's biggest export market at $12.9 billion, ahead of China at $10.8 billion. By the year ended March 2018, China had taken the top spot, and by March 2020 it bought $19.9 billion of New Zealand goods and services.",
+    paragraphs: [
+      'The United States held third place in every year of the series. Japan and the United Kingdom held fourth and fifth, and below them the ranks churned: Singapore and Germany traded places at the edge of the top ten.',
+      'The numbers are total exports of goods and services in New Zealand dollars, so the ranks move with exchange rates as well as volumes.',
+    ],
+    accent: 'sky',
+    dataNote:
+      'Data: Stats NZ "Goods and services trade by country: Year ended March 2020" (map data table), total exports of goods and services by destination country in NZ$ millions for the years ended March 2015 to 2020. Ranks are computed from the full country list in that table. Hover a line to highlight it, or toggle between the top 8 and top 5 markets.',
+    references: [
+      {
+        label: 'Goods and services trade by country release (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/goods-and-services-trade-by-country-year-ended-march-2020/',
+        kind: 'data',
+      },
+      {
+        label: 'International trade: December 2025 quarter (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/international-trade-december-2025-quarter',
+        kind: 'data',
+      },
+    ],
+  },
+
+  {
+    slug: 'enterprise-bar-in-bar',
+    label: 'Business register',
+    eyebrow: '🏢 the business register',
+    title: 'Rental and real estate is the biggest block of the business register.',
+    description:
+      'At February 2025, New Zealand had 617,334 economically significant enterprises. Rental, hiring, and real estate services led with 129,120, construction was second with 81,249, and professional, scientific, and technical services third with 70,938.',
+    paragraphs: [
+      'The register grew 10.7 percent from February 2020, when it held 557,685 enterprises. Financial and insurance services grew fastest at 25.8 percent, health care and social assistance grew 22.1 percent, and construction grew 20.8 percent.',
+      'Two industries shrank: agriculture, forestry, and fishing fell 3.9 percent and wholesale trade fell 3.2 percent. The register counts every economically significant business, so the biggest block mixes active traders with companies that still file but do little.',
+    ],
+    accent: 'indigo',
+    dataNote:
+      'Data: Stats NZ "New Zealand business demography statistics" releases, Table 1, enterprises by industry (ANZSIC06) at February 2020 (published 29 October 2020) and February 2025 (published 30 October 2025). The 2025 counts are provisional and have noise added or subtracted to protect individual businesses. Hover a row, search for an industry, or toggle the sort order.',
+    references: [
+      {
+        label: 'Business demography: At February 2025 (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/new-zealand-business-demography-statistics-at-february-2025/',
+        kind: 'data',
+      },
+      {
+        label: 'Business demography: At February 2020 (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/new-zealand-business-demography-statistics-at-february-2020/',
+        kind: 'data',
+      },
+      {
+        label: 'Business (Stats NZ)',
+        url: 'https://www.stats.govt.nz/topics/business',
+        kind: 'history',
+      },
+    ],
+  },
 ]);

@@ -186,6 +186,23 @@ export default async function HomePage(): Promise<React.ReactElement> {
       statLabel: `Rabbits per km (${rabbit.latest.year})`,
       statValue: formatRabbitsPerKm(rabbit.latest.rabbitsPerKm),
     },
+    {
+      config: getMicrosite('population-waffle'),
+      statLabel: 'Auckland share, 2023',
+      statValue: '33.2%',
+    },
+
+    {
+      config: getMicrosite('export-market-bump'),
+      statLabel: 'Top market, YE Mar 2020',
+      statValue: 'China, $19.9b',
+    },
+
+    {
+      config: getMicrosite('enterprise-bar-in-bar'),
+      statLabel: 'Enterprises, Feb 2025',
+      statValue: '617,334',
+    },
   ].filter(
     (card): card is { config: MicrositeConfig; statLabel: string; statValue: string } =>
       card.config !== undefined,

@@ -17,9 +17,11 @@ import { DigitisedMemorySearch } from '@/components/DigitisedMemorySearch';
 import { EthnicityWaffle } from '@/components/EthnicityWaffle';
 import { EvCharging } from '@/components/EvCharging';
 import { ExportDestinationSlope } from '@/components/ExportDestinationSlope';
+import { ExportRankBump } from '@/components/ExportRankBump';
 import { ForestryChart } from '@/components/ForestryChart';
 import { HamiltonPlaygrounds } from '@/components/HamiltonPlaygrounds';
 import { HorticultureChart } from '@/components/HorticultureChart';
+import { IndustryBarInBar } from '@/components/IndustryBarInBar';
 import { KiwifruitOvertakeChart } from '@/components/KiwifruitOvertakeChart';
 import { LivestockChart } from '@/components/LivestockChart';
 import { MedianAgeRankSlope } from '@/components/MedianAgeRankSlope';
@@ -36,6 +38,7 @@ import { QuakeMonthRose } from '@/components/QuakeMonthRose';
 import { RabbitChart } from '@/components/RabbitChart';
 import { RegionalGrowthDumbbell } from '@/components/RegionalGrowthDumbbell';
 import { RegionalRankSlope } from '@/components/RegionalRankSlope';
+import { RegionWaffle } from '@/components/RegionWaffle';
 import { ReportIssueButton } from '@/components/ReportIssueButton';
 import { RetailSalesStreamgraph } from '@/components/RetailSalesStreamgraph';
 import { RiverLengths } from '@/components/RiverLengths';
@@ -1237,6 +1240,91 @@ function renderStoryContent(
         ),
       };
     }
+    case 'population-waffle':
+      return {
+        chart: <RegionWaffle />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Auckland share, 2023"
+              value="33.2%"
+              accent="teal"
+              testId="region-waffle-auckland-share"
+              dataValue={33.2}
+            />
+            <StatCard
+              label="North Island share, 2023"
+              value="76.3%"
+              accent="teal"
+              dataValue={76.3}
+            />
+            <StatCard
+              label="Census population, 2023"
+              value="4,993,290"
+              accent="teal"
+              testId="region-waffle-total"
+              dataValue={4993290}
+            />
+          </dl>
+        ),
+      };
+    case 'export-market-bump':
+      return {
+        chart: <ExportRankBump />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="China exports, YE Mar 2020"
+              value="$19.9b"
+              accent="sky"
+              testId="export-bump-china-2020"
+              dataValue={19888.1}
+            />
+            <StatCard
+              label="Australia exports, YE Mar 2020"
+              value="$14.2b"
+              accent="sky"
+              dataValue={14166.6}
+            />
+            <StatCard
+              label="China exports, YE Mar 2015"
+              value="$10.8b"
+              accent="sky"
+              testId="export-bump-china-2015"
+              dataValue={10762.0}
+            />
+          </dl>
+        ),
+      };
+    case 'enterprise-bar-in-bar':
+      return {
+        chart: <IndustryBarInBar />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Enterprises, Feb 2025"
+              value="617,334"
+              accent="indigo"
+              testId="enterprise-total"
+              dataValue={617334}
+            />
+            <StatCard
+              label="Biggest industry, Feb 2025"
+              value="Rental & real estate, 129,120"
+              accent="indigo"
+              testId="enterprise-biggest"
+              dataValue={129120}
+            />
+            <StatCard
+              label="Change, Feb 2020 to 2025"
+              value="+10.7%"
+              accent="indigo"
+              testId="enterprise-change"
+              dataValue={10.7}
+            />
+          </dl>
+        ),
+      };
     default:
       return { chart: null, stats: null };
   }
