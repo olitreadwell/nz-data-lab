@@ -117,6 +117,21 @@ export default async function HomePage(): Promise<React.ReactElement> {
       statLabel: 'New Zealand page peak',
       statValue: WIKIPEDIA_NZ_PAGE_PEAK,
     },
+    {
+      config: getMicrosite('river-lengths'),
+      statLabel: 'Longest river',
+      statValue: '425 km',
+    },
+    {
+      config: getMicrosite('peak-heights'),
+      statLabel: 'Highest peak',
+      statValue: '3,724 m',
+    },
+    {
+      config: getMicrosite('auckland-parks'),
+      statLabel: 'Parks in Auckland',
+      statValue: '3,953',
+    },
   ].filter(
     (card): card is { config: MicrositeConfig; statLabel: string; statValue: string } =>
       card.config !== undefined,

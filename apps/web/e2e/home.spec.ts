@@ -7,12 +7,12 @@ test.describe('home', () => {
     // (the GitHub Pages deploy serves the site under /<repo>/).
     await page.goto('./');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    await expect(page.getByRole('link', { name: /read the story/i })).toHaveCount(7);
+    await expect(page.getByRole('link', { name: /read the story/i })).toHaveCount(17);
   });
 
   test('@critical opens a microsite story from its card', async ({ page }) => {
     await page.goto('./');
-    await page.getByRole('link', { name: /dairy takeover/i }).click();
+    await page.getByRole('link', { name: /paddocks flipped from wool to milk/i }).click();
     await expect(page.getByRole('img', { name: /livestock numbers/i })).toBeVisible();
     await expect(page.getByText('Sources and further reading')).toBeVisible();
   });
