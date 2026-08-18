@@ -1,0 +1,23 @@
+# viz-099 Crime rate rank by region
+
+Self-contained spec for the `[viz-099] Crime rate rank by region` data-viz-idea issue. Implement the microsite from this doc alone; the master list is `docs/backlog/data-viz-ideas.md` and the ranking is `docs/backlog/data-viz-ideas-smoke-ranked.md`.
+
+## Spec
+
+- **Chart**: slope
+- **Source**: Police statistics (https://www.police.govt.nz/)
+- **Story**: Some regions climbed the crime ranks sharply after 2014 recording changes.
+- **Interaction**: hover; region highlight.
+- **Critique**: strength is the rank churn; risk is that recording-standard changes make the slope misleading, so note them.
+
+## Priority and smoke-test readiness
+
+- **Priority**: priority-low (Tier 6 of 6)
+- **Smoke-test score**: see `docs/backlog/data-viz-ideas-smoke-ranked.md`
+
+## Definition of done
+
+- Microsite under `apps/web/src/app/microsites/` with the chart type, interaction, and a `StatCard` exposing the headline value via `data-value` for the e2e smoke test.
+- Oli-style copy: no em dashes, no puffery, real verified numbers, named sources; every reference URL returns 200.
+- Unit test per new component; `npx tsc --noEmit` and `npx vitest run` pass in `apps/web`.
+- Close the issue with a comment linking the shipped microsite.
