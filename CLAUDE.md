@@ -135,10 +135,11 @@ for these only on experiments that actually need animation or 3D.
 
 - **Pre-commit**: lint-staged autofix (Prettier + ESLint `--fix`). Warnings never
   block; only unfixable errors do. Bypass with `git commit --no-verify`.
-- **CI lint, unit tests, e2e**: advisory (`continue-on-error: true`). Reviewdog posts
+- **CI lint and broad e2e**: advisory (`continue-on-error: true`). Reviewdog posts
   inline PR comments on new lint findings. Test failures show up in the workflow
   output and the coverage artifact.
-- **CI gates that DO block**: type-check, build, CodeQL.
+- **CI gates that DO block**: type-check, build, unit tests, the a11y (axe) e2e
+  gate, CodeQL.
 - Dependency updates: Renovate (`.github/renovate.json`) auto-merges passing
   minor/patch PRs; major bumps and anything touching peer-dependency-sensitive
   packages (React, Next, the r3f stack) open as PRs for review — see that config for

@@ -26,8 +26,8 @@ doc that disagrees)
   has an explicit return type
 - pre-commit: `lint-staged` (Prettier + ESLint `--fix`); warnings never block, only
   unfixable errors do — bypass with `git commit --no-verify` when you must
-- CI lint/unit/e2e are advisory (`continue-on-error: true`); **type-check, build, and
-  CodeQL are the only checks that block a PR**
+- CI lint and the broad e2e suite are advisory (`continue-on-error: true`); **type-check,
+  build, unit tests, the a11y (axe) e2e gate, and CodeQL block a PR**
 - Coverage threshold is 60% (lines/functions/branches/statements) — see
   `CLAUDE.md` for why it's not 80%
 
