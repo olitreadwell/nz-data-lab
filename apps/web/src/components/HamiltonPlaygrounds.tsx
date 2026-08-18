@@ -17,6 +17,70 @@ const CHART_BOTTOM = 48;
 const CELL_GAP = 3;
 const MAX_CELL_COLOR = '#10b981';
 
+/**
+ * Resolved `--color-bg` in each theme (the `--neutral-50` token from
+ * `packages/ui/src/tokens/tokens.css`). Used to compute the concrete cell
+ * fill for the label's contrast decision; the rendered fill itself stays a
+ * `color-mix(...)` against `var(--color-bg)`.
+ */
+export const HEATMAP_BG = {
+  light: '#fafafa',
+  dark: '#060606',
+};
+
+/** Relative luminance of an sRGB hex color, per the WCAG 2.2 formula. */
+function relativeLuminance(hex: string): number {
+  const channel = (index: number): number => parseInt(hex.slice(index, index + 2), 16) / 255;
+  const linearize = (value: number): number =>
+    value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+  return (
+    0.2126 * linearize(channel(1)) + 0.7152 * linearize(channel(3)) + 0.0722 * linearize(channel(5))
+  );
+}
+
+function contrastRatio(first: string, second: string): number {
+  const firstLuminance = relativeLuminance(first);
+  const secondLuminance = relativeLuminance(second);
+  const lighter = Math.max(firstLuminance, secondLuminance);
+  const darker = Math.min(firstLuminance, secondLuminance);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+function mixSrgbColor(from: string, to: string, amount: number): string {
+  const channel = (fromValue: number, toValue: number): number =>
+    Math.round(fromValue + (toValue - fromValue) * amount);
+  const fromRgb = [1, 3, 5].map((index) => parseInt(from.slice(index, index + 2), 16));
+  const toRgb = [1, 3, 5].map((index) => parseInt(to.slice(index, index + 2), 16));
+  const channels = fromRgb.map((fromValue, index) =>
+    channel(fromValue, toRgb[index] ?? 0)
+      .toString(16)
+      .padStart(2, '0'),
+  );
+  return `#${channels.join('')}`;
+}
+
+/**
+ * Concrete mixed fill for a heatmap cell, mirroring the rendered
+ * `color-mix(in srgb, #10b981 <intensity>%, var(--color-bg))`.
+ */
+export function cellFillColor(count: number, maxCount: number, bgColor: string): string {
+  if (count === 0 || maxCount === 0) {
+    return bgColor;
+  }
+  return mixSrgbColor(bgColor, MAX_CELL_COLOR, count / maxCount);
+}
+
+/**
+ * Cell-number color that keeps at least 4.5:1 (WCAG 1.4.3 AA) contrast
+ * against its own fill for every possible count in both light and dark
+ * themes. Picks the lighter of white or black against the concrete fill,
+ * mirroring `getOrgLabelColor` in OpenDataSearch.
+ */
+export function cellTextColor(count: number, maxCount: number, bgColor: string): string {
+  const fill = cellFillColor(count, maxCount, bgColor);
+  return contrastRatio(fill, '#ffffff') >= contrastRatio(fill, '#000000') ? '#ffffff' : '#000000';
+}
+
 export interface PlaygroundHeatCell {
   type: string;
   decade: number;
@@ -68,6 +132,7 @@ export function HamiltonPlaygrounds(): React.ReactElement {
   const [hiddenTypes, setHiddenTypes] = useState<ReadonlySet<string>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isDark, setIsDark] = useState(false);
 
   const loadPlaygrounds = useCallback(async () => {
     setIsLoading(true);
@@ -85,6 +150,11 @@ export function HamiltonPlaygrounds(): React.ReactElement {
   useEffect(() => {
     void loadPlaygrounds();
   }, [loadPlaygrounds]);
+
+  useEffect(() => {
+    // Effects only run in the browser, so `document` is always available here.
+    setIsDark(document.documentElement.classList.contains('dark'));
+  }, []);
 
   const allTypes = useMemo(
     () => [...new Set(playgrounds.map((playground) => playground.type))].sort(),
@@ -213,7 +283,15 @@ export function HamiltonPlaygrounds(): React.ReactElement {
                     y={y + (cellHeight - CELL_GAP) / 2 + 3}
                     textAnchor="middle"
                     fontSize={11}
-                    fill={cell.count === 0 ? 'var(--color-muted)' : 'var(--color-bg)'}
+                    fill={
+                      cell.count === 0
+                        ? 'var(--color-muted)'
+                        : cellTextColor(
+                            cell.count,
+                            heatmap.maxCount,
+                            HEATMAP_BG[isDark ? 'dark' : 'light'],
+                          )
+                    }
                   >
                     {cell.count}
                   </text>
