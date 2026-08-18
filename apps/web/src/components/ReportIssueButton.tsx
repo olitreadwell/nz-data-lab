@@ -152,9 +152,8 @@ export function ReportIssueButton({ pageLabel }: ReportIssueButtonProps): React.
           aria-describedby="report-issue-description"
           className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center"
         >
-          <button
-            type="button"
-            aria-label="Close report dialog"
+          <div
+            aria-hidden="true"
             onClick={() => setOpen(false)}
             className="absolute inset-0 bg-black/40"
           />
