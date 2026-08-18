@@ -19,6 +19,7 @@ export const HIDDEN_MICROSITES: string[] = [
   'species-register',
   'species-record-ledger',
   'planting-bust',
+  'vineyard-boom,kiwifruit-overtake,deer-boom-bust,digitised-memory,online-garage-sale',
 ];
 
 /**
