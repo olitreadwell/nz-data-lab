@@ -1242,4 +1242,103 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+
+  {
+    slug: 'regional-population-growth',
+    label: 'Regional population growth',
+    eyebrow: '🗺️ the growth gap',
+    title: 'The top of the country is growing faster than the bottom.',
+    description:
+      'Every region grew between the 2013 and 2023 censuses, but the growth piled up in the north. Northland grew the fastest at 27.9 percent, Auckland added the most people at 240,936, and the West Coast grew the slowest at 3.9 percent.',
+    paragraphs: [
+      'The four fastest-growing regions are all in the top of the North Island. Northland, Waikato, and Bay of Plenty all grew by more than 23 percent, and together with Auckland they added 444,783 people, about 59 percent of the national gain of 751,875.',
+      'The bottom of the country grew much more slowly. The West Coast added 1,242 people in the decade, and Southland grew 7.3 percent. Canterbury was the exception to the south: it added 111,594 people, the second-largest gain of any region.',
+    ],
+    accent: 'emerald',
+    dataNote:
+      'Data: Stats NZ 2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts, Table 1 (census usually resident population count by regional council area, 2013 and 2023 censuses). The chart plots population on a log scale, so the gap between the dots shows the growth rate. Hover a row to read both counts.',
+    references: [
+      {
+        label: '2023 Census population counts release (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
+        kind: 'data',
+      },
+      {
+        label: '2023 Census (Stats NZ)',
+        url: 'https://www.stats.govt.nz/2023-census/',
+        kind: 'data',
+      },
+      {
+        label: 'Population (Stats NZ)',
+        url: 'https://www.stats.govt.nz/topics/population',
+        kind: 'history',
+      },
+    ],
+  },
+
+  {
+    slug: 'age-bulge',
+    label: 'Age bulge',
+    eyebrow: '👶 the age bulge',
+    title: 'The biggest five-year band in the country is 30 to 34.',
+    description:
+      'At the 2023 Census, 374,079 people were aged 30 to 34, the largest five-year band in the country. It is the echo of the baby boom, and it has been marching up the age stack with every census.',
+    paragraphs: [
+      'In 2013 the largest five-year band was 40 to 44, at 305,754 people. By 2023 the largest was 30 to 34, at 374,079, bigger than any band the original baby boom ever put in a single five-year group.',
+      'The original baby boom is now in its 60s and 70s. People aged 65 and over grew from 607,035 in 2013 to 828,585 in 2023, and their share of everyone rose from 14.3 to 16.6 percent. The median age moved from 38.0 to 38.1 years.',
+    ],
+    accent: 'cyan',
+    dataNote:
+      'Data: Stats NZ 2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts, Table 6 (usually resident population by five-year age group, 2013, 2018, and 2023 censuses). Each ridge is one census year; hover or tap a band to read the count in all three years. Census counts have fixed random rounding applied, so the bands can differ from the published total by a few people.',
+    references: [
+      {
+        label: '2023 Census population counts release (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
+        kind: 'data',
+      },
+      {
+        label: '2023 Census (Stats NZ)',
+        url: 'https://www.stats.govt.nz/2023-census/',
+        kind: 'data',
+      },
+      {
+        label: 'Population (Stats NZ)',
+        url: 'https://www.stats.govt.nz/topics/population',
+        kind: 'history',
+      },
+    ],
+  },
+
+  {
+    slug: 'ethnic-mix',
+    label: 'Ethnic mix',
+    eyebrow: '🧬 the ethnic mix',
+    title: 'European is still the biggest group, but the mix is changing fast.',
+    description:
+      'At the 2023 Census, 67.8 percent of people who stated an ethnicity identified as European. The Asian share has nearly doubled in a decade, from 11.8 percent in 2013 to 17.3 percent in 2023.',
+    paragraphs: [
+      'The chart rows add past 100 because people can identify with more than one ethnic group. The filled cells in each row add past 100: 111 cells for every 100 people who stated an ethnicity in 2013 and 115 in 2023, because people can identify with more than one group. That growing overlap is the multi-identity share.',
+      'The diversity is concentrated. Auckland is the only region where fewer than half of people stated a European ethnicity: 49.8 percent in 2023, against 67.8 percent nationally. Gisborne is next lowest at 56.5 percent.',
+    ],
+    accent: 'fuchsia',
+    dataNote:
+      'Data: Stats NZ 2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts, Table 4 (ethnic group grouped total responses by regional council area, 2013, 2018, and 2023 censuses). Each row of the chart is 100 people who stated an ethnicity, and the filled cells show how many identified with that group. Rows add past 100 because people can choose more than one ethnic group. In 2013, 5.4 percent of people did not state an ethnicity, so that year is measured against the 94.6 percent who did.',
+    references: [
+      {
+        label: '2023 Census population counts release (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
+        kind: 'data',
+      },
+      {
+        label: 'Census results reflect Aotearoa New Zealands diversity (Stats NZ)',
+        url: 'https://www.stats.govt.nz/news/census-results-reflect-aotearoa-new-zealands-diversity/',
+        kind: 'news',
+      },
+      {
+        label: 'Ethnicity (Stats NZ)',
+        url: 'https://www.stats.govt.nz/topics/ethnicity',
+        kind: 'history',
+      },
+    ],
+  },
 ]);

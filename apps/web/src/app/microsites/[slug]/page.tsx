@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { AgeBulgeRidgeline } from '@/components/AgeBulgeRidgeline';
 import { AgeDistributionHistogram } from '@/components/AgeDistributionHistogram';
 import { AgePyramid } from '@/components/AgePyramid';
 import { AucklandParks } from '@/components/AucklandParks';
@@ -13,6 +14,7 @@ import { CityRankSlope } from '@/components/CityRankSlope';
 import { CompanySizePareto } from '@/components/CompanySizePareto';
 import { DeerBoomBustChart } from '@/components/DeerBoomBustChart';
 import { DigitisedMemorySearch } from '@/components/DigitisedMemorySearch';
+import { EthnicityWaffle } from '@/components/EthnicityWaffle';
 import { EvCharging } from '@/components/EvCharging';
 import { ExportDestinationSlope } from '@/components/ExportDestinationSlope';
 import { ForestryChart } from '@/components/ForestryChart';
@@ -32,6 +34,7 @@ import { QuakeMagnitudeHistogram } from '@/components/QuakeMagnitudeHistogram';
 import { QuakeMap } from '@/components/QuakeMap';
 import { QuakeMonthRose } from '@/components/QuakeMonthRose';
 import { RabbitChart } from '@/components/RabbitChart';
+import { RegionalGrowthDumbbell } from '@/components/RegionalGrowthDumbbell';
 import { RegionalRankSlope } from '@/components/RegionalRankSlope';
 import { ReportIssueButton } from '@/components/ReportIssueButton';
 import { RetailSalesStreamgraph } from '@/components/RetailSalesStreamgraph';
@@ -48,8 +51,10 @@ import { VehicleFleet } from '@/components/VehicleFleet';
 import { VisitorRankSlope } from '@/components/VisitorRankSlope';
 import { WhatTheWorldReads } from '@/components/WhatTheWorldReads';
 import { env } from '@/env';
+import { ageBulgeSixtyFivePlus } from '@/lib/age-bulge-data';
 import { CENSUS_RANK_HIGHLIGHTS, formatRankOrdinal } from '@/lib/census-rank-data';
 import { CITY_RANK_ROWS } from '@/lib/city-rank-data';
+import { ethnicityAnswersPerHundred } from '@/lib/ethnicity-mix-data';
 import { EXPORT_DESTINATION_ROWS } from '@/lib/export-destination-data';
 import { fetchForestrySeries, summarizeForestry } from '@/lib/forestry-data';
 import { formatHectares, formatMillions } from '@/lib/format';
@@ -1142,6 +1147,96 @@ function renderStoryContent(
           </dl>
         ),
       };
+    case 'regional-population-growth':
+      return {
+        chart: <RegionalGrowthDumbbell />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Auckland gain, 2013-2023"
+              value="240,936"
+              accent="emerald"
+              testId="regional-growth-auckland-gain"
+              dataValue={240936}
+            />
+            <StatCard
+              label="Fastest growth"
+              value="Northland, +27.9%"
+              accent="emerald"
+              testId="regional-growth-northland"
+              dataValue={27.9}
+            />
+            <StatCard
+              label="Slowest growth"
+              value="West Coast, +3.9%"
+              accent="emerald"
+              testId="regional-growth-west-coast"
+              dataValue={3.9}
+            />
+          </dl>
+        ),
+      };
+    case 'age-bulge': {
+      const sixtyFivePlus2023 = ageBulgeSixtyFivePlus(2023);
+      return {
+        chart: <AgeBulgeRidgeline />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Biggest band, 2023"
+              value="30-34, 374,079"
+              accent="cyan"
+              testId="age-bulge-largest"
+              dataValue={374079}
+            />
+            <StatCard
+              label="Aged 65 and over, 2023"
+              value={sixtyFivePlus2023.toLocaleString('en-NZ')}
+              accent="cyan"
+              testId="age-bulge-sixty-five-plus"
+              dataValue={sixtyFivePlus2023}
+            />
+            <StatCard
+              label="Median age, 2023"
+              value="38.1"
+              accent="cyan"
+              testId="age-bulge-median"
+              dataValue={38.1}
+            />
+          </dl>
+        ),
+      };
+    }
+    case 'ethnic-mix': {
+      return {
+        chart: <EthnicityWaffle />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Stated a European ethnicity, 2023"
+              value="67.8%"
+              accent="fuchsia"
+              testId="ethnic-mix-european"
+              dataValue={67.8}
+            />
+            <StatCard
+              label="Stated an Asian ethnicity, 2023"
+              value="17.3%"
+              accent="fuchsia"
+              testId="ethnic-mix-asian"
+              dataValue={17.3}
+            />
+            <StatCard
+              label="Ethnic answers per 100, 2023"
+              value={ethnicityAnswersPerHundred(2023).toFixed(1)}
+              accent="fuchsia"
+              testId="ethnic-mix-answers"
+              dataValue={ethnicityAnswersPerHundred(2023)}
+            />
+          </dl>
+        ),
+      };
+    }
     default:
       return { chart: null, stats: null };
   }

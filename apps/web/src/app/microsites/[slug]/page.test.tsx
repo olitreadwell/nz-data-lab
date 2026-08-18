@@ -188,6 +188,26 @@ describe('MicrositePage', () => {
     expect(html).toContain('5,122,600');
   });
 
+  it('renders the regional population growth story', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'regional-population-growth' })} />,
+    );
+    const html = await new Response(stream).text();
+    expect(html).toContain('The top of the country is growing faster than the bottom.');
+    expect(html).toContain('240,936');
+    expect(html).toContain('Sources and further reading');
+  });
+
+  it('renders the age bulge story', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'age-bulge' })} />,
+    );
+    const html = await new Response(stream).text();
+    expect(html).toContain('The biggest five-year band in the country is 30 to 34.');
+    expect(html).toContain('374,079');
+    expect(html).toContain('Sources and further reading');
+  });
+
   it('renders the quake magnitudes story', async () => {
     const stream = await renderToReadableStream(
       <MicrositePage params={Promise.resolve({ slug: 'quake-magnitudes' })} />,
@@ -204,6 +224,16 @@ describe('MicrositePage', () => {
     const html = await new Response(stream).text();
     expect(html).toContain('Quakes of magnitude 3+ cluster in autumn');
     expect(html).toContain('Quakes M3+, 2 years');
+  });
+
+  it('renders the ethnic mix story', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'ethnic-mix' })} />,
+    );
+    const html = await new Response(stream).text();
+    expect(html).toContain('European is still the biggest group, but the mix is changing fast.');
+    expect(html).toContain('67.8%');
+    expect(html).toContain('Sources and further reading');
   });
 
   it('renders the rabbit boom story with the spotlight chart', async () => {
