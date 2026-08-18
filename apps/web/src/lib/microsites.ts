@@ -565,7 +565,7 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
     slug: 'open-school-map',
     label: 'Open school map',
     eyebrow: '🏫 the open school map',
-    title: "New Zealand has 2,604 schools mapped on OpenStreetMap.",
+    title: 'New Zealand has 2,604 schools mapped on OpenStreetMap.',
     description:
       'OpenStreetMap maps 2,604 schools in New Zealand, from kura to universities. Most carry Ministry of Education tags, so the map reads like a school directory.',
     paragraphs: [
@@ -817,6 +817,39 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
         label: 'New Zealand Motor Vehicle Register statistics (NZTA)',
         url: 'https://www.nzta.govt.nz/resources/new-zealand-motor-vehicle-register-statistics/',
         kind: 'data',
+      },
+    ],
+  },
+
+  {
+    slug: 'rabbit-boom',
+    label: 'Rabbit boom',
+    eyebrow: '🐇 the rabbit boom',
+    title: "The bunnies are winning in Hawke's Bay.",
+    description:
+      "Night spotlight counts of rabbits in Hawke's Bay rose from 2.35 to 13.26 rabbits per kilometre between 2012 and 2021, a fivefold boom in a decade. The counts are an index of abundance, not a total population.",
+    paragraphs: [
+      "Landcare Research has driven the same night transects across Hawke's Bay farm sites since 2012, counting rabbits seen per kilometre. The pooled rate across all monitored sites rose almost every year.",
+      'Counts wobble with control operations and rabbit disease, but the decade trend is unambiguous: from 2.35 rabbits per kilometre in 2012 to a peak of 13.26 in 2021. The dataset backs a 2024 Wildlife Research study on whether rabbit abundance rises after predator control.',
+    ],
+    accent: 'emerald',
+    dataNote:
+      'Data: Manaaki Whenua Landcare Research HawkesBayRabbits dataset (data.govt.nz, CC-BY-4.0), spotlight counts by farm site and year, pooled into rabbits per kilometre, fetched at deploy time with a committed snapshot fallback. Hover or drag across the chart to read any year.',
+    references: [
+      {
+        label: 'HawkesBayRabbits spotlight counts (data.govt.nz)',
+        url: 'https://catalogue.data.govt.nz/dataset/hawkesbayrabbits',
+        kind: 'data',
+      },
+      {
+        label: 'Rabbit abundance after predator control (Wildlife Research)',
+        url: 'https://doi.org/10.1071/wr24043',
+        kind: 'data',
+      },
+      {
+        label: 'Rabbits (Te Ara)',
+        url: 'https://teara.govt.nz/en/rabbits',
+        kind: 'history',
       },
     ],
   },

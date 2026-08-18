@@ -30,6 +30,19 @@ vi.mock('@/lib/headline-stats', async (importOriginal) => {
   };
 });
 
+vi.mock('@/lib/rabbit-data', () => ({
+  fetchRabbitSpotlightSeries: vi.fn().mockResolvedValue({
+    points: [
+      { year: 2012, sites: 5, rabbits: 263, km: 112, rabbitsPerKm: 2.35 },
+      { year: 2021, sites: 10, rabbits: 3102, km: 234, rabbitsPerKm: 13.26 },
+    ],
+    first: { year: 2012, sites: 5, rabbits: 263, km: 112, rabbitsPerKm: 2.35 },
+    latest: { year: 2021, sites: 10, rabbits: 3102, km: 234, rabbitsPerKm: 13.26 },
+    peak: { year: 2021, sites: 10, rabbits: 3102, km: 234, rabbitsPerKm: 13.26 },
+    changeFromFirstPercent: 464,
+  }),
+}));
+
 vi.mock('@/lib/sheep-data', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/lib/sheep-data')>();
   return {
@@ -173,6 +186,15 @@ describe('MicrositePage', () => {
     expect(html).toContain('Quakes located, 3 months');
   });
 
+  it('renders the rabbit boom story with the spotlight chart', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'rabbit-boom' })} />,
+    );
+    const html = await new Response(stream).text();
+    expect(html).toContain('bunnies are winning');
+    expect(html).toContain('13.3 per km');
+    expect(html).toContain('HawkesBayRabbits spotlight counts (data.govt.nz)');
+  });
   it('renders the dairy story with the livestock chart', async () => {
     const stream = await renderToReadableStream(
       <MicrositePage params={Promise.resolve({ slug: 'dairy-takeover' })} />,

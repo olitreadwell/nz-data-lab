@@ -18,6 +18,8 @@ import { fetchLivestockSeries, summarizeLivestock } from '@/lib/livestock-data';
 import { MICROSITES } from '@/lib/microsites';
 import type { MicrositeConfig } from '@/lib/microsites';
 import { fetchRecentQuakes } from '@/lib/quake-data';
+import { fetchRabbitSpotlightSeries } from '@/lib/rabbit-data';
+import { formatRabbitsPerKm } from '@/lib/rabbit-format';
 import { fetchSheepSeries } from '@/lib/sheep-data';
 import { formatMillions as formatMillionsSheep } from '@/lib/sheep-format';
 
@@ -26,13 +28,14 @@ function getMicrosite(slug: string): MicrositeConfig | undefined {
 }
 
 export default async function HomePage(): Promise<React.ReactElement> {
-  const [sheep, livestock, horticulture, forestry, quakes, registerTotal, catalogueTotal] =
+  const [sheep, livestock, horticulture, forestry, quakes, rabbit, registerTotal, catalogueTotal] =
     await Promise.all([
       fetchSheepSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
       fetchLivestockSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
       fetchHorticultureSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
       fetchForestrySeries(env.STATS_NZ_SUBSCRIPTION_KEY),
       fetchRecentQuakes(),
+      fetchRabbitSpotlightSeries(),
       fetchRegisterTotal(),
       fetchCatalogueTotal(),
     ]);
@@ -176,6 +179,11 @@ export default async function HomePage(): Promise<React.ReactElement> {
       config: getMicrosite('vehicle-fleet'),
       statLabel: 'Electric vehicles',
       statValue: '107,525',
+    },
+    {
+      config: getMicrosite('rabbit-boom'),
+      statLabel: `Rabbits per km (${rabbit.latest.year})`,
+      statValue: formatRabbitsPerKm(rabbit.latest.rabbitsPerKm),
     },
   ].filter(
     (card): card is { config: MicrositeConfig; statLabel: string; statValue: string } =>

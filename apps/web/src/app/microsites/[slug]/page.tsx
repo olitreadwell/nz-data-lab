@@ -22,9 +22,10 @@ import { PeakHeights } from '@/components/PeakHeights';
 import { PopulationRankBump } from '@/components/PopulationRankBump';
 import { QuakeMagnitudeHistogram } from '@/components/QuakeMagnitudeHistogram';
 import { QuakeMap } from '@/components/QuakeMap';
+import { RabbitChart } from '@/components/RabbitChart';
 import { RiverLengths } from '@/components/RiverLengths';
-import { SchoolRoll } from '@/components/SchoolRoll';
 import { RoadCrashTrend } from '@/components/RoadCrashTrend';
+import { SchoolRoll } from '@/components/SchoolRoll';
 import { SheepChart } from '@/components/SheepChart';
 import { SpeciesRecordLedger } from '@/components/SpeciesRecordLedger';
 import { SpeciesRegisterSearch } from '@/components/SpeciesRegisterSearch';
@@ -56,6 +57,9 @@ import { MICROSITES } from '@/lib/microsites';
 import { fetchRecentQuakeCatalog } from '@/lib/quake-catalog';
 import type { QuakeCatalogEvent } from '@/lib/quake-catalog';
 import { fetchRecentQuakes } from '@/lib/quake-data';
+import { fetchRabbitSpotlightSeries } from '@/lib/rabbit-data';
+import type { RabbitSpotlightSeries } from '@/lib/rabbit-data';
+import { formatRabbitsPerKm } from '@/lib/rabbit-format';
 import { fetchSheepSeries } from '@/lib/sheep-data';
 import { formatMillions as formatMillionsSheep } from '@/lib/sheep-format';
 
@@ -67,9 +71,7 @@ export function generateStaticParams(): { slug: string }[] {
   return MICROSITES.map((microsite) => ({ slug: microsite.slug }));
 }
 
-export async function generateMetadata({
-  params,
-}: MicrositePageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: MicrositePageProps): Promise<Metadata> {
   const { slug } = await params;
   const microsite = MICROSITES.find((candidate) => candidate.slug === slug);
   if (microsite === undefined) {
@@ -93,6 +95,7 @@ export default async function MicrositePage({
     horticulture,
     forestry,
     quakes,
+    rabbit,
     registerTotal,
     catalogueTotal,
     quakeCatalog,
@@ -102,6 +105,7 @@ export default async function MicrositePage({
     fetchHorticultureSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
     fetchForestrySeries(env.STATS_NZ_SUBSCRIPTION_KEY),
     fetchRecentQuakes(),
+    fetchRabbitSpotlightSeries(),
     fetchRegisterTotal(),
     fetchCatalogueTotal(),
     fetchRecentQuakeCatalog(3),
@@ -129,6 +133,7 @@ export default async function MicrositePage({
     apples,
     newPlanting,
     quakes,
+    rabbit,
     quakeCatalog,
     registerTotal,
     catalogueTotal,
@@ -174,6 +179,7 @@ interface StoryData {
   apples: { latest?: number } | undefined;
   newPlanting: { latest?: number; first?: number; changeFromFirstPercent?: number } | undefined;
   quakes: Awaited<ReturnType<typeof fetchRecentQuakes>>;
+  rabbit: RabbitSpotlightSeries;
   quakeCatalog: QuakeCatalogEvent[];
   registerTotal: number;
   catalogueTotal: number;
@@ -184,6 +190,33 @@ function renderStoryContent(
   data: StoryData,
 ): { chart: React.ReactNode; stats: React.ReactNode } {
   switch (slug) {
+    case 'rabbit-boom':
+      return {
+        chart: <RabbitChart points={data.rabbit.points} />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label={`Rabbits per km (${data.rabbit.latest.year})`}
+              value={formatRabbitsPerKm(data.rabbit.latest.rabbitsPerKm)}
+              accent="emerald"
+              testId="rabbit-latest"
+              dataValue={data.rabbit.latest.rabbitsPerKm}
+            />
+            <StatCard
+              label={`Rabbits per km (${data.rabbit.first.year})`}
+              value={formatRabbitsPerKm(data.rabbit.first.rabbitsPerKm)}
+              accent="emerald"
+            />
+            <StatCard
+              label={`Change since ${data.rabbit.first.year}`}
+              value={`+${Math.round(data.rabbit.changeFromFirstPercent)}%`}
+              accent="emerald"
+              testId="rabbit-change"
+              dataValue={Math.round(data.rabbit.changeFromFirstPercent)}
+            />
+          </dl>
+        ),
+      };
     case 'sheep-index':
       return {
         chart: <SheepChart points={data.sheep.points} />,
