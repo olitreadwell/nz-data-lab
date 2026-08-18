@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { AgeBulgeRidgeline } from '@/components/AgeBulgeRidgeline';
 import { AgePyramid } from '@/components/AgePyramid';
 import { AucklandParks } from '@/components/AucklandParks';
 import { BackyardSpeciesCensus } from '@/components/BackyardSpeciesCensus';
@@ -36,6 +37,7 @@ import { TradeMeTree } from '@/components/TradeMeTree';
 import { VehicleFleet } from '@/components/VehicleFleet';
 import { WhatTheWorldReads } from '@/components/WhatTheWorldReads';
 import { env } from '@/env';
+import { ageBulgeSixtyFivePlus } from '@/lib/age-bulge-data';
 import { CENSUS_RANK_HIGHLIGHTS, formatRankOrdinal } from '@/lib/census-rank-data';
 import { fetchForestrySeries, summarizeForestry } from '@/lib/forestry-data';
 import { formatHectares, formatMillions } from '@/lib/format';
@@ -733,6 +735,37 @@ function renderStoryContent(
           </dl>
         ),
       };
+    case 'age-bulge': {
+      const sixtyFivePlus2023 = ageBulgeSixtyFivePlus(2023);
+      return {
+        chart: <AgeBulgeRidgeline />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Biggest band, 2023"
+              value="30-34, 374,079"
+              accent="cyan"
+              testId="age-bulge-largest"
+              dataValue={374079}
+            />
+            <StatCard
+              label="Aged 65 and over, 2023"
+              value={sixtyFivePlus2023.toLocaleString('en-NZ')}
+              accent="cyan"
+              testId="age-bulge-sixty-five-plus"
+              dataValue={sixtyFivePlus2023}
+            />
+            <StatCard
+              label="Median age, 2023"
+              value="38.1"
+              accent="cyan"
+              testId="age-bulge-median"
+              dataValue={38.1}
+            />
+          </dl>
+        ),
+      };
+    }
     default:
       return { chart: null, stats: null };
   }

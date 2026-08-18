@@ -187,6 +187,16 @@ describe('MicrositePage', () => {
     expect(html).toContain('Sources and further reading');
   });
 
+  it('renders the age bulge story', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'age-bulge' })} />,
+    );
+    const html = await new Response(stream).text();
+    expect(html).toContain('The biggest five-year band in the country is 30 to 34.');
+    expect(html).toContain('374,079');
+    expect(html).toContain('Sources and further reading');
+  });
+
   it('renders the quake magnitudes story', async () => {
     const stream = await renderToReadableStream(
       <MicrositePage params={Promise.resolve({ slug: 'quake-magnitudes' })} />,

@@ -886,4 +886,37 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       },
     ],
   },
+
+  {
+    slug: 'age-bulge',
+    label: 'Age bulge',
+    eyebrow: '👶 the age bulge',
+    title: 'The biggest five-year band in the country is 30 to 34.',
+    description:
+      'At the 2023 Census, 374,079 people were aged 30 to 34, the largest five-year band in the country. It is the echo of the baby boom, and it has been marching up the age stack with every census.',
+    paragraphs: [
+      'In 2013 the largest five-year band was 40 to 44, at 305,754 people. By 2023 the largest was 30 to 34, at 374,079, bigger than any band the original baby boom ever put in a single five-year group.',
+      'The original baby boom is now in its 60s and 70s. People aged 65 and over grew from 607,035 in 2013 to 828,585 in 2023, and their share of everyone rose from 14.3 to 16.6 percent. The median age moved from 38.0 to 38.1 years.',
+    ],
+    accent: 'cyan',
+    dataNote:
+      'Data: Stats NZ 2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts, Table 6 (usually resident population by five-year age group, 2013, 2018, and 2023 censuses). Each ridge is one census year; hover or tap a band to read the count in all three years. Census counts have fixed random rounding applied, so the bands can differ from the published total by a few people.',
+    references: [
+      {
+        label: '2023 Census population counts release (Stats NZ)',
+        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
+        kind: 'data',
+      },
+      {
+        label: '2023 Census (Stats NZ)',
+        url: 'https://www.stats.govt.nz/2023-census/',
+        kind: 'data',
+      },
+      {
+        label: 'Population (Stats NZ)',
+        url: 'https://www.stats.govt.nz/topics/population',
+        kind: 'history',
+      },
+    ],
+  },
 ]);
