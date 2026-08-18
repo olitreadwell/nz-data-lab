@@ -32,7 +32,10 @@ commit per microsite, then one merge and one deploy.
    on the site (line, area, bar, scatter, bubble, slope, timeline, map) and
    an interaction: a slider, a toggle, a search, a brush, or a filter.
    Reuse `MicrositeStory`, `StatCard`, `MicrositeReferences`, and the
-   accent system. Add a unit test per new component.
+   accent system. Add a unit test per new component. Add each microsite to
+   the home-page cards array in `apps/web/src/app/page.tsx` in the same
+   commit: loops 11 and 12 skipped this and their microsites were
+   unreachable except by direct URL.
 4. **Verify (3 min)**: `npx tsc --noEmit` and `npx vitest run` in
    `apps/web`, lint the changed files. Fix errors before merging.
 5. **Hand off (2 min)**: worktree + branch, one Conventional Commit per
