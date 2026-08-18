@@ -20,6 +20,7 @@ import { MicrositeStory } from '@/components/MicrositeStory';
 import { OpenDataSearch } from '@/components/OpenDataSearch';
 import { PeakHeights } from '@/components/PeakHeights';
 import { PopulationRankBump } from '@/components/PopulationRankBump';
+import { QuakeDepthDistribution } from '@/components/QuakeDepthDistribution';
 import { QuakeDepthScatter } from '@/components/QuakeDepthScatter';
 import { QuakeFrequencyMagnitude } from '@/components/QuakeFrequencyMagnitude';
 import { QuakeMagnitudeHistogram } from '@/components/QuakeMagnitudeHistogram';
@@ -634,6 +635,45 @@ function renderStoryContent(
               accent="indigo"
               testId="quake-frequency-at-least-six"
               dataValue={atLeastSix}
+            />
+          </dl>
+        ),
+      };
+    }
+    case 'quake-depth-distribution': {
+      const shallow = data.quakeCatalog.filter((event) => event.depthKm < 40).length;
+      const shallowPercent =
+        data.quakeCatalog.length === 0 ? 0 : Math.round((shallow / data.quakeCatalog.length) * 100);
+      const deepest = data.quakeCatalog.reduce<QuakeCatalogEvent | undefined>(
+        (best, event) => (best === undefined || event.depthKm > best.depthKm ? event : best),
+        undefined,
+      );
+      return {
+        chart: <QuakeDepthDistribution events={data.quakeCatalog} />,
+        stats: (
+          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+            <StatCard
+              label="Quakes located, 3 months"
+              value={data.quakeCatalog.length.toLocaleString('en-NZ')}
+              accent="teal"
+              testId="quake-depth-distribution-total"
+              dataValue={data.quakeCatalog.length}
+            />
+            <StatCard
+              label="Share shallower than 40 km"
+              value={`${shallowPercent}%`}
+              accent="teal"
+              testId="quake-depth-distribution-shallow-percent"
+              dataValue={shallowPercent}
+            />
+            <StatCard
+              label="Deepest located"
+              value={
+                deepest === undefined ? 'n/a' : `${deepest.depthKm.toLocaleString('en-NZ')} km`
+              }
+              accent="teal"
+              testId="quake-depth-distribution-deepest"
+              dataValue={deepest?.depthKm}
             />
           </dl>
         ),

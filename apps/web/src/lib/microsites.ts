@@ -804,6 +804,38 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
     ],
   },
   {
+    slug: 'quake-depth-distribution',
+    label: 'Quake depth distribution',
+    eyebrow: '🌋 the quake depth distribution',
+    title: 'Deep quakes cluster under the North Island.',
+    description:
+      'In the three months to 18 August 2026, GeoNet located 5,148 earthquakes of magnitude 1 or stronger. 3,408 of them, 66%, ruptured shallower than 40 km. The deep quakes sit almost entirely under the North Island.',
+    paragraphs: [
+      "The Pacific plate dives beneath the North Island's east coast, so quakes there can rupture hundreds of kilometres down. 1,031 of the 1,037 quakes deeper than 100 km were under the North Island.",
+      "The South Island's quakes are almost all shallow: 697 of 870, 80%, ruptured shallower than 40 km. The radial chart shows the depth bands. Use the magnitude buttons to filter.",
+    ],
+    accent: 'teal',
+    dataNote:
+      'Data: GeoNet FDSN event service (service.geonet.org.nz), earthquakes of magnitude 1 or stronger in the three months to 18 August 2026, fetched at build time and falling back to a committed snapshot of that catalog. The site redeploys daily.',
+    references: [
+      {
+        label: 'GeoNet FDSN event service',
+        url: 'https://service.geonet.org.nz/fdsnws/event/1/',
+        kind: 'data',
+      },
+      {
+        label: 'GeoNet FDSN usage',
+        url: 'https://www.geonet.org.nz/data/tools/FDSN',
+        kind: 'data',
+      },
+      {
+        label: 'Hikurangi Trough (Wikipedia)',
+        url: 'https://en.wikipedia.org/wiki/Hikurangi_Trough',
+        kind: 'history',
+      },
+    ],
+  },
+  {
     slug: 'ev-charging',
     label: 'EV charging',
     eyebrow: '🔌 the ev charging map',

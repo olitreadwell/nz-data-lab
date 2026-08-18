@@ -191,6 +191,15 @@ describe('MicrositePage', () => {
     expect(html).toContain('Magnitude 4 or stronger');
   });
 
+  it('renders the quake depth distribution story', async () => {
+    const stream = await renderToReadableStream(
+      <MicrositePage params={Promise.resolve({ slug: 'quake-depth-distribution' })} />,
+    );
+    const html = await new Response(stream).text();
+    expect(html).toContain('Deep quakes cluster under the North Island');
+    expect(html).toContain('Share shallower than 40 km');
+  });
+
   it('renders the dairy story with the livestock chart', async () => {
     const stream = await renderToReadableStream(
       <MicrositePage params={Promise.resolve({ slug: 'dairy-takeover' })} />,
