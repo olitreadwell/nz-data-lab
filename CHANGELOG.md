@@ -1,3 +1,33 @@
+## 2026-08-19 04:30 (NZST) - loop 12
+
+- Handed off (unmerged, awaiting review): regional-population-growth (viz-022,
+  branch feat/microsite-loop-12, review issue #240), age-bulge (viz-013, branch
+  feat/microsite-loop-12, review issue #241), and ethnic-mix (viz-043, branch
+  feat/microsite-loop-12, review issue #242). A dumbbell chart of census
+  population by regional council in 2013 and 2023 on a log scale with a sort
+  toggle, a ridgeline chart of the five-year age distribution across the 2013,
+  2018, and 2023 censuses with a year toggle and hover readout, and a unit
+  chart of ethnic group shares at three censuses with a year toggle. Chart
+  types dumbbell, ridgeline, and unit chart are new to the site.
+- Sources: Stats NZ "2023 Census population counts (by ethnic group, age, and
+  Maori descent) and dwelling counts" release workbook (Tables 1, 4, and 6,
+  published 29 May 2024). Every population count, ethnic share, and median
+  age was verified against the release workbook before committing. All
+  reference URLs return 200. Chart types used so far: line, area, bar,
+  scatter, donut, treemap, map, histogram, radial, bubble, slope, timeline,
+  funnel, waterfall, sunburst, lollipop, heatmap, pareto, cycle plot,
+  streamgraph, dumbbell, ridgeline, unit chart.
+- Loop review: research took longest again, but for a new reason: the 2023
+  Census topic releases published after May 2024 (religion, birthplace,
+  commuting) carry no workbook downloads and point to the Aotearoa Data
+  Explorer, which needs a subscription key. The ethnicity/culture release
+  page has no DocumentLink in pageViewData, so viz-029, viz-049, and viz-050
+  were skipped in favour of viz-013, viz-022, and viz-043, which all live in
+  the one 2023 Census population counts workbook that still ships tables.
+  The skill now says to check a release page for a BlockDocuments workbook
+  before committing to a spec, since the census topic releases moved to ADE
+  and guessed slugs 404.
+
 ## 2026-08-19 03:45 (NZST) - loop 11
 
 - Handed off (unmerged, awaiting review): company-size-distribution (viz-079,
