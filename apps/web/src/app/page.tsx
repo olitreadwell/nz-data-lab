@@ -162,6 +162,21 @@ export default async function HomePage(): Promise<React.ReactElement> {
       statLabel: 'Quakes located, 3 months',
       statValue: '5,148',
     },
+    {
+      config: getMicrosite('ev-charging'),
+      statLabel: 'Public EV charging stations',
+      statValue: '639',
+    },
+    {
+      config: getMicrosite('road-crash-trend'),
+      statLabel: 'Crashes in 2025',
+      statValue: '29,017',
+    },
+    {
+      config: getMicrosite('vehicle-fleet'),
+      statLabel: 'Electric vehicles',
+      statValue: '107,525',
+    },
   ].filter(
     (card): card is { config: MicrositeConfig; statLabel: string; statValue: string } =>
       card.config !== undefined,
