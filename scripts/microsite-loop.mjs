@@ -23,7 +23,7 @@ if (branch === undefined || message === undefined) {
 
 const root = process.cwd();
 const worktree = path.join(root, '.worktrees', branch);
-const base = 'https://olitreadwell.github.io/nz-data-lab';
+const base = 'https://nz-data-lab.vercel.app';
 
 function run(command, args, cwd = root) {
   console.log(`$ ${command} ${args.join(' ')}`);
@@ -57,7 +57,7 @@ const runId = execFileSync(
   [
     'run',
     'list',
-    '--workflow=deploy_github_pages.yml',
+    '--workflow=deploy_primary.yml',
     '--limit',
     '1',
     '--json',

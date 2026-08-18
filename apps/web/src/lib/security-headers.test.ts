@@ -29,6 +29,7 @@ const TILE_HOST = 'tile.openstreetmap.org';
 /** The security headers every served response must carry. */
 const REQUIRED_HEADERS = [
   'Content-Security-Policy',
+  'Strict-Transport-Security',
   'X-Content-Type-Options',
   'Referrer-Policy',
   'X-Frame-Options',

@@ -83,7 +83,7 @@ export function buildSheepSeries(rows: StatsNzObservation[]): SheepSeries {
 export async function fetchSheepSeries(subscriptionKey?: string): Promise<SheepSeries> {
   const client = createStatsNzClient({
     ...(subscriptionKey === undefined ? {} : { subscriptionKey }),
-    // The page is a static export (GitHub Pages), so the fetch must be
+    // The page is a static export (no server), so the fetch must be
     // cacheable at build time instead of the client's default no-store.
     fetchImpl: (input, init) => globalThis.fetch(input, { ...init, cache: 'force-cache' }),
   });

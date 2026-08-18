@@ -2,8 +2,8 @@ import { defineConfig } from '@playwright/test';
 
 const CI = !!process.env.CI;
 // Normalized to end with "/" so relative page.goto() URLs resolve against the
-// baseURL path — required for the GitHub Pages deploy, which serves the site
-// under /<repo>/ rather than at the origin root.
+// baseURL path (the site may be served under a base path rather than at the
+// origin root).
 const BASE_URL = (process.env.BASE_URL ?? 'http://localhost:3000').replace(/\/?$/, '/');
 
 export default defineConfig({

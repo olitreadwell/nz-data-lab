@@ -17,7 +17,7 @@ import path from 'node:path';
 const ROOT = process.cwd();
 const WORKTREES = path.join(ROOT, '.worktrees');
 const REPO = 'olitreadwell/nz-data-lab';
-const DEPLOY_WORKFLOW = 'deploy_github_pages.yml';
+const DEPLOY_WORKFLOW = 'deploy_primary.yml';
 const SKILL_DIR = path.join(ROOT, 'skills', 'quality-issue-loop');
 const NOTES_FILE = path.join(SKILL_DIR, 'LOOP-NOTES.md');
 const CHECKLIST_URLS = [
