@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>): React.ReactElement {
   return (
-    <html lang="en" suppressHydrationWarning className={cn('font-sans', geist.variable)}>
+    <html lang="en-NZ" suppressHydrationWarning className={cn('font-sans', geist.variable)}>
       <body className="flex min-h-screen flex-col">
         <a
           href="#main"
