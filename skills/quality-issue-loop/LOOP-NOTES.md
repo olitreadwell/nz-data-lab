@@ -198,3 +198,23 @@ Loop fixes this iteration:
 - The #197 CSP generate-csp.mjs rewrites tracked files (public/_headers,
   vercel.json) with a fresh nonce on every build, leaving the working tree
   dirty after any local build. Worth making those files build-time-only.
+
+## 2026-08-18
+
+Generated 5 issues, merged 4 fixes (#208, #207, #206, #205).
+
+## 2026-08-19
+
+Generated 5 issues, merged 4 fixes (#222, #217, #215, #213).
+
+## 2026-08-19
+
+Generated 5 issues, merged 3 fixes (#225, #224, #218).
+
+## 2026-08-19
+
+Generated 5 issues, merged 4 fixes (#235, #234, #233, #232).
+
+## 2026-08-19
+
+Generated 5 issues, merged 4 fixes (#246, #245, #244, #243).
