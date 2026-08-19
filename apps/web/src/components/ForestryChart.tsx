@@ -11,7 +11,7 @@ import {
 } from 'recharts';
 
 import type { ForestrySeriesPoint } from '@/lib/forestry-data';
-import { formatHectares } from '@/lib/format';
+import { formatAreaKm2 } from '@/lib/format';
 import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
 import { EmojiActiveDot, SeriesTooltip } from './chart-utils';
@@ -107,7 +107,7 @@ export function ForestryChart({ points }: ForestryChartProps): React.ReactElemen
                 <SeriesTooltip
                   {...props}
                   series={SERIES}
-                  formatValue={formatHectares}
+                  formatValue={formatAreaKm2}
                   testId="forestry-tooltip"
                 />
               )}
@@ -146,8 +146,8 @@ export function ForestryChart({ points }: ForestryChartProps): React.ReactElemen
         summary="View forestry planting and harvest as a table"
         columns={[
           { key: 'year', header: 'Year' },
-          { key: 'newPlanting', header: 'New planting', format: formatHectares },
-          { key: 'harvestedArea', header: 'Harvested area', format: formatHectares },
+          { key: 'newPlanting', header: 'New planting', format: formatAreaKm2 },
+          { key: 'harvestedArea', header: 'Harvested area', format: formatAreaKm2 },
         ]}
         rows={points}
       />

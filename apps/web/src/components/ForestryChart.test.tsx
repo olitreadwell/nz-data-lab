@@ -39,8 +39,8 @@ describe('ForestryChart', () => {
     expect(table).toHaveTextContent('New planting');
     expect(table).toHaveTextContent('Harvested area');
     expect(table).toHaveTextContent('2002');
-    expect(table).toHaveTextContent('33,674 ha');
-    expect(table).toHaveTextContent('46,658 ha');
+    expect(table).toHaveTextContent('336.7 km²');
+    expect(table).toHaveTextContent('466.6 km²');
   });
 
   it('shows planting and harvest for the hovered year', async () => {

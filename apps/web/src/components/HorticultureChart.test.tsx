@@ -49,7 +49,7 @@ describe('HorticultureChart', () => {
     expect(table).toHaveTextContent('Apples');
     expect(table).toHaveTextContent('Avocados');
     expect(table).toHaveTextContent('1994');
-    expect(table).toHaveTextContent('7,160 ha');
+    expect(table).toHaveTextContent('71.6 km²');
   });
 
   it('renders a fallback label for empty data', () => {

@@ -2,7 +2,7 @@
 
 import { Area, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
-import { formatHectares } from '@/lib/format';
+import { formatAreaKm2 } from '@/lib/format';
 import type { HorticultureSeriesPoint } from '@/lib/horticulture-data';
 import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
@@ -35,7 +35,7 @@ export function HorticultureChart({ points }: HorticultureChartProps): React.Rea
     ...SERIES.map((definition) => ({
       key: definition.key as keyof HorticultureSeriesPoint,
       header: definition.label,
-      format: formatHectares,
+      format: formatAreaKm2,
     })),
   ];
 
@@ -95,14 +95,14 @@ export function HorticultureChart({ points }: HorticultureChartProps): React.Rea
               domain={['dataMin', 'dataMax']}
               padding={{ top: 16, bottom: 8 }}
               tick={{ fill: 'var(--color-muted)', fontSize: 11 }}
-              tickFormatter={formatHectares}
+              tickFormatter={formatAreaKm2}
             />
             <Tooltip
               content={(props) => (
                 <SeriesTooltip
                   {...props}
                   series={SERIES}
-                  formatValue={formatHectares}
+                  formatValue={formatAreaKm2}
                   testId="horticulture-tooltip"
                 />
               )}

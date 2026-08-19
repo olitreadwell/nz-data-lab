@@ -38,8 +38,8 @@ describe('KiwifruitOvertakeChart', () => {
     expect(table).toHaveTextContent('Kiwifruit');
     expect(table).toHaveTextContent('Apples');
     expect(table).toHaveTextContent('Avocados');
-    expect(table).toHaveTextContent('12,174 ha');
-    expect(table).toHaveTextContent('14,514 ha');
+    expect(table).toHaveTextContent('121.7 km²');
+    expect(table).toHaveTextContent('145.1 km²');
   });
 
   it('renders a fallback label for empty data', () => {

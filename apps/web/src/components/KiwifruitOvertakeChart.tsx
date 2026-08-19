@@ -3,7 +3,7 @@
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { TooltipContentProps } from 'recharts';
 
-import { formatHectares } from '@/lib/format';
+import { formatAreaKm2 } from '@/lib/format';
 import type { HorticultureSeriesPoint } from '@/lib/horticulture-data';
 import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
@@ -86,10 +86,10 @@ function BeforeAfterTooltip({ active, payload }: TooltipContentProps): React.Rea
         {datum.emoji} {datum.crop}
       </p>
       <p className="numeral-paragraph-sm text-[var(--color-fg)]">
-        {datum.firstYear}: {formatHectares(datum.first)}
+        {datum.firstYear}: {formatAreaKm2(datum.first)}
       </p>
       <p className="numeral-paragraph-sm text-[var(--color-fg)]">
-        {datum.latestYear}: {formatHectares(datum.latest)}
+        {datum.latestYear}: {formatAreaKm2(datum.latest)}
       </p>
     </div>
   );
@@ -115,12 +115,12 @@ export function KiwifruitOvertakeChart({
     {
       key: 'first',
       header: firstYear === undefined ? '' : String(firstYear),
-      format: (value) => formatHectares(Number(value)),
+      format: (value) => formatAreaKm2(Number(value)),
     },
     {
       key: 'latest',
       header: latestYear === undefined ? '' : String(latestYear),
-      format: (value) => formatHectares(Number(value)),
+      format: (value) => formatAreaKm2(Number(value)),
     },
   ];
 

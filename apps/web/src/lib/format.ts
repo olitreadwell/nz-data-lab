@@ -1,6 +1,7 @@
-/** Formats a hectare count with thousands separators, e.g. "37,627 ha". */
-export function formatHectares(value: number): string {
-  return `${Math.round(value).toLocaleString('en-NZ')} ha`;
+/** Converts a hectare count to square kilometres, e.g. "37,627 ha" -> "376.3 km²". */
+export function formatAreaKm2(hectares: number): string {
+  const squareKilometres = hectares / 100;
+  return `${squareKilometres.toLocaleString('en-NZ', { maximumFractionDigits: 1 })} km²`;
 }
 
 /** Formats a raw count as a rounded millions figure, e.g. "5.8 million". */

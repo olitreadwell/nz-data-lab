@@ -31,8 +31,9 @@ interface PieDatum {
   areaM2: number;
 }
 
-function formatHectares(areaM2: string | number): string {
-  return `${Math.round(Number(areaM2) / 10000).toLocaleString('en-NZ')} ha`;
+function formatAreaKm2(areaM2: string | number): string {
+  const squareKilometres = Number(areaM2) / 1000000;
+  return `${squareKilometres.toLocaleString('en-NZ', { maximumFractionDigits: 1 })} km²`;
 }
 
 /** Tooltip shown while hovering a pie segment. */
@@ -52,7 +53,7 @@ function ParkTooltip({ active, payload }: TooltipContentProps): React.ReactEleme
       className="rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-bg)] px-2 py-1"
     >
       <p className="numeral-text-eyebrow text-[10px] text-[var(--color-muted)]">{name}</p>
-      <p className="numeral-paragraph-sm text-[var(--color-fg)]">{formatHectares(value)}</p>
+      <p className="numeral-paragraph-sm text-[var(--color-fg)]">{formatAreaKm2(value)}</p>
     </div>
   );
 }
@@ -112,11 +113,11 @@ export function AucklandParks(): React.ReactElement {
   const chartLabel =
     data.length === 0
       ? 'Auckland Council park land by local board'
-      : `Auckland Council park land by local board, ${formatHectares(totalAreaM2)} total`;
+      : `Auckland Council park land by local board, ${formatAreaKm2(totalAreaM2)} total`;
 
   const tableColumns: ChartDataColumn<PieDatum>[] = [
     { key: 'name', header: 'Local board' },
-    { key: 'areaM2', header: 'Park land', format: formatHectares },
+    { key: 'areaM2', header: 'Park land', format: formatAreaKm2 },
   ];
 
   return (
