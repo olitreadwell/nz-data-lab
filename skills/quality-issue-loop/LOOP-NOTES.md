@@ -291,3 +291,35 @@ next to the default. Also: the hub chart sweep must assert real rendered
 heights per chart type, not just class presence; choropleth/rose/bump/
 parallel-coordinates all cap at <= 46vh now. Preview deploys (deploy_preview.
 yml) are manual-only going forward to stop burning Vercel builds per PR.
+
+## 2026-08-19 (iteration, manual)
+
+- Routing overhaul: microsites moved from `/microsites/:slug` to
+  `/category-slug/:slug` with category landing pages at `/category-slug/`
+  (11 categories via `CATEGORY_SLUGS` in `apps/web/src/lib/microsites.ts`).
+  The "All microsites" link is gone, replaced by a breadcrumb
+  (`nav[aria-label="Breadcrumb"]`) on story pages that links back to the
+  category page. Old routes 404; verified live.
+- Contrast overhaul: every accent now has `--accent-<name>-fg/bg/border`
+  tokens in `packages/ui/src/tokens/tokens.css` for both `:root` and `.dark`
+  (light fg `oklch(0.45 0.13 <hue>)`, dark fg `oklch(0.82 0.12 <hue>)`).
+  `microsite-styles.ts` maps accents to these tokens, the section gradient
+  (`sectionBg`) is gone (plain bordered sections), and a token-level contrast
+  test asserts 4.5:1 for every accent on light and dark page/card backgrounds.
+- Chart sweep: ~23 chart components plus shared libs
+  (`quake-utils.ts`, `export-rank-data.ts`, `ethnicity-mix-data.ts`,
+  `region-waffle-data.ts`) moved to the Okabe-Ito colorblind-safe palette
+  (blue `#0072B2`, orange `#E69F00`, green `#009E73`, red `#D55E00`, pink
+  `#CC79A7`). `region-density-data.ts` keeps its indigo choropleth ramp
+  (sequential, not categorical).
+- Verification: 467 unit tests pass, type-check clean, static build clean
+  (11 categories + 51 stories prerendered), local route probe PASS, and axe
+  WCAG A/AA reports 0 contrast and 0 other violations across 6 pages in both
+  light and dark mode. Pushed to main in two commits; the single primary
+  Vercel deploy succeeded and the live probe against
+  https://nz-data-lab.vercel.app passes the same route + axe checks.
+- CI advisory jobs (e2e shards, axe e2e, lint) still fail on GitHub runners
+  with pre-existing issues (keyboard-focus tab-through assertion, stats-nz
+  jsdoc/no-magic-number warnings); type-check, build, CodeQL, npm audit, and
+  unit tests all pass, and those are the blocking gates. No preview deploys
+  were created (deploy_preview stays manual-only).
