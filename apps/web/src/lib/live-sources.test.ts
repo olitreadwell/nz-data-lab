@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   fetchLiveGbifKingdoms,
   fetchLiveInaturalistTaxa,
-  fetchLiveNzSchools,
+  fetchLiveSchools,
   INATURALIST_CENSUS_DEADLINE_MS,
   LIVE_SEARCH_TIMEOUT_MS,
   OVERPASS_SCHOOLS_TIMEOUT_MS,
@@ -521,7 +521,7 @@ describe('parseMvrFleetRows', () => {
   });
 });
 
-describe('fetchLiveNzSchools', () => {
+describe('fetchLiveSchools', () => {
   const OVERpass_QUERY_TIMEOUT_MS = 60_000;
 
   it('uses a timeout at least as long as the Overpass [timeout:60] query', () => {
@@ -532,7 +532,7 @@ describe('fetchLiveNzSchools', () => {
     vi.useFakeTimers();
     const fetchMock = stubHangingFetch();
 
-    const promise = fetchLiveNzSchools();
+    const promise = fetchLiveSchools();
     const expectation = expect(promise).rejects.toThrow('Aborted');
     await vi.advanceTimersByTimeAsync(OVERPASS_SCHOOLS_TIMEOUT_MS);
 

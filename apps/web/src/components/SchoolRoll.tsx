@@ -1,10 +1,9 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { TooltipContentProps } from 'recharts';
 
-import { fetchLiveNzSchools } from '@/lib/live-sources';
 import type { LiveNzSchool } from '@/lib/live-sources';
 
 import { ChartDataTable } from './ChartDataTable';
@@ -173,31 +172,11 @@ function SchoolTooltip({ active, payload }: TooltipContentProps): React.ReactEle
  * the x axis, authority stacked inside each bar. Type a name to filter the
  * map, or toggle an authority to hide it.
  */
-export function SchoolRoll(): React.ReactElement {
-  const [schools, setSchools] = useState<LiveNzSchool[]>([]);
+export function SchoolRoll({ schools }: { schools: LiveNzSchool[] }): React.ReactElement {
   const [query, setQuery] = useState('');
   const [hiddenAuthorities, setHiddenAuthorities] = useState<ReadonlySet<SchoolAuthority>>(
     new Set(),
   );
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const loadSchools = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      setSchools(await fetchLiveNzSchools());
-    } catch {
-      setError('OpenStreetMap did not answer. Try again in a moment.');
-      setSchools([]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    void loadSchools();
-  }, [loadSchools]);
 
   const filteredSchools = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -247,11 +226,9 @@ export function SchoolRoll(): React.ReactElement {
   return (
     <div>
       <p className="numeral-paragraph-sm mb-2 text-[var(--color-muted)]" aria-live="polite">
-        {isLoading
-          ? 'Counting the schools...'
-          : (error ?? `${schools.length} schools, fetched live from OpenStreetMap.`)}
+        {schools.length.toLocaleString('en-NZ')} schools, fetched from OpenStreetMap at build time.
       </p>
-      {!isLoading && error === null && schools.length > 0 && (
+      {schools.length > 0 && (
         <div>
           <div className="mb-2 flex flex-wrap items-center gap-2">
             <label

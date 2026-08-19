@@ -10,7 +10,7 @@ const nonce = freshCspNonce();
 const securityHeaders = [
   {
     key: 'Content-Security-Policy',
-    value: `default-src 'self'; script-src 'self' 'nonce-${nonce}'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://tile.openstreetmap.org; connect-src 'self' https://data.nzor.org.nz https://catalogue.data.govt.nz https://api.digitalnz.org https://api.trademe.co.nz https://api.inaturalist.org https://api.gbif.org https://en.wikipedia.org https://query.wikidata.org https://services1.arcgis.com https://services.arcgis.com https://overpass-api.de; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests`,
+    value: `default-src 'self'; script-src 'self' 'nonce-${nonce}'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://tile.openstreetmap.org; connect-src 'self' https://data.nzor.org.nz https://catalogue.data.govt.nz https://api.digitalnz.org https://cors.eu.org https://api.trademe.co.nz https://api.inaturalist.org https://api.gbif.org https://en.wikipedia.org https://query.wikidata.org https://services1.arcgis.com https://services.arcgis.com https://overpass-api.de; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests`,
   },
   { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains; preload' },
   { key: 'X-Content-Type-Options', value: 'nosniff' },

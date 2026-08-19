@@ -18,6 +18,7 @@ const LIVE_API_HOSTS = [
   'data.nzor.org.nz',
   'catalogue.data.govt.nz',
   'api.digitalnz.org',
+  'cors.eu.org',
   'api.trademe.co.nz',
   'api.inaturalist.org',
   'api.gbif.org',

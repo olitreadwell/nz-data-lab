@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import type { LiveNzSchool } from '@/lib/live-sources';
 
@@ -13,8 +13,6 @@ import {
 
 expect.extend(toHaveNoViolations);
 
-const { FETCH_MOCK } = vi.hoisted(() => ({ FETCH_MOCK: vi.fn() }));
-
 const SCHOOLS: LiveNzSchool[] = [
   { name: 'Burnside High School', years: '9-13', authority: 'state' },
   { name: 'Riverhead Montessori School', years: '1-6', authority: 'private' },
@@ -22,12 +20,6 @@ const SCHOOLS: LiveNzSchool[] = [
   { name: 'St Marys College', years: '7-13', authority: 'integrated' },
   { name: 'Aoraki Polytechnic', years: undefined, authority: undefined },
 ];
-
-FETCH_MOCK.mockResolvedValue(SCHOOLS);
-
-vi.mock('@/lib/live-sources', () => ({
-  fetchLiveNzSchools: FETCH_MOCK,
-}));
 
 describe('classifySchoolYears', () => {
   it('classifies year ranges into school types', () => {
@@ -75,26 +67,26 @@ describe('buildSchoolTypeData', () => {
 
 describe('SchoolRoll', () => {
   it('shows the stacked school bar', async () => {
-    render(<SchoolRoll />);
-    expect(await screen.findByText(/5 schools, fetched live/)).toBeInTheDocument();
+    render(<SchoolRoll schools={SCHOOLS} />);
+    expect(
+      await screen.findByText(/5 schools, fetched from OpenStreetMap at build time/),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole('img', { name: /5 schools by type and authority/ }),
     ).toBeInTheDocument();
   });
 
   it('filters schools by name', async () => {
-    render(<SchoolRoll />);
-    await screen.findByText(/5 schools, fetched live/);
+    render(<SchoolRoll schools={SCHOOLS} />);
+    await screen.findByText(/5 schools, fetched from OpenStreetMap at build time/);
     const search = screen.getByLabelText('Filter by name');
     fireEvent.change(search, { target: { value: 'burnside' } });
-    expect(
-      screen.getByRole('img', { name: /1 school by type and authority/ }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: /1 school by type and authority/ })).toBeInTheDocument();
   });
 
   it('toggles an authority off and on', async () => {
-    render(<SchoolRoll />);
-    await screen.findByText(/5 schools, fetched live/);
+    render(<SchoolRoll schools={SCHOOLS} />);
+    await screen.findByText(/5 schools, fetched from OpenStreetMap at build time/);
     const privateButton = screen.getByRole('button', { name: 'Private' });
     fireEvent.click(privateButton);
     expect(privateButton).toHaveAttribute('aria-pressed', 'false');
@@ -106,8 +98,8 @@ describe('SchoolRoll', () => {
   });
 
   it('has no accessibility violations', async () => {
-    const { container } = render(<SchoolRoll />);
-    await screen.findByText(/5 schools, fetched live/);
+    const { container } = render(<SchoolRoll schools={SCHOOLS} />);
+    await screen.findByText(/5 schools, fetched from OpenStreetMap at build time/);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });

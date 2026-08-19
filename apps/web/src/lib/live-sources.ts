@@ -223,12 +223,15 @@ export function parseDigitalNzSearch(payload: unknown): LiveDigitalNzSearchResul
  */
 export async function searchLiveDigitalNz(query: string): Promise<LiveDigitalNzSearchResult> {
   const controller = createLiveSearchAbortController();
-  const url = new URL('https://api.digitalnz.org/v3/records.json');
-  url.searchParams.set('text', query);
-  url.searchParams.set('per_page', '20');
-  url.searchParams.set('facets', 'decade');
-  url.searchParams.set('facet_fields', 'decade:100');
-  const response = await fetch(url, { signal: controller.signal });
+  const apiUrl = new URL('https://api.digitalnz.org/v3/records.json');
+  apiUrl.searchParams.set('text', query);
+  apiUrl.searchParams.set('per_page', '20');
+  apiUrl.searchParams.set('facets', 'decade');
+  apiUrl.searchParams.set('facet_fields', 'decade:100');
+  // The DigitalNZ API sends no CORS headers, so browsers fetch it through the
+  // cors.eu.org relay. The relay echoes the payload untouched (same JSON).
+  const proxyUrl = new URL(`https://cors.eu.org/${apiUrl.toString()}`);
+  const response = await fetch(proxyUrl, { signal: controller.signal });
   if (!response.ok) {
     throw new Error(`DigitalNZ HTTP ${response.status}`);
   }
@@ -741,7 +744,7 @@ export function parseNzSchools(payload: unknown): LiveNzSchool[] {
  * is open). The convert step keeps only the name and Ministry of Education
  * tags, so the payload stays small enough for a browser fetch.
  */
-export async function fetchLiveNzSchools(): Promise<LiveNzSchool[]> {
+export async function fetchLiveSchools(): Promise<LiveNzSchool[]> {
   const query = `[out:json][timeout:60];
 area["ISO3166-1"="NZ"]["boundary"="administrative"]->.nz;
 (node["amenity"="school"](area.nz);way["amenity"="school"](area.nz);)->.schools;
