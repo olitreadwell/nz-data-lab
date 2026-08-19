@@ -251,6 +251,27 @@ interface StoryData {
   catalogueTotal: number;
 }
 
+/** Two labelled chart blocks stacked on one story page (merged microsites). */
+function storyChartPair(
+  firstTitle: string,
+  firstChart: React.ReactNode,
+  secondTitle: string,
+  secondChart: React.ReactNode,
+): React.ReactNode {
+  return (
+    <div className="grid gap-10">
+      <div>
+        <h2 className="numeral-heading-lg mb-3">{firstTitle}</h2>
+        {firstChart}
+      </div>
+      <div>
+        <h2 className="numeral-heading-lg mb-3">{secondTitle}</h2>
+        {secondChart}
+      </div>
+    </div>
+  );
+}
+
 function renderStoryContent(
   slug: string,
   data: StoryData,
@@ -676,7 +697,12 @@ function renderStoryContent(
         undefined,
       );
       return {
-        chart: <QuakeDepthScatter events={data.quakeCatalog} />,
+        chart: storyChartPair(
+          'Depth scatter',
+          <QuakeDepthScatter events={data.quakeCatalog} />,
+          'Depth distribution',
+          <QuakeDepthDistribution events={data.quakeCatalog} />,
+        ),
         stats: (
           <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
             <StatCard
@@ -706,77 +732,6 @@ function renderStoryContent(
         ),
       };
     }
-    case 'quake-frequency-magnitude': {
-      const atLeastFour = data.quakeCatalog.filter((event) => event.magnitude >= 4).length;
-      const atLeastSix = data.quakeCatalog.filter((event) => event.magnitude >= 6).length;
-      return {
-        chart: <QuakeFrequencyMagnitude events={data.quakeCatalog} />,
-        stats: (
-          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
-            <StatCard
-              label="Quakes located, 3 months"
-              value={data.quakeCatalog.length.toLocaleString('en-NZ')}
-              accent="indigo"
-              testId="quake-frequency-total"
-              dataValue={data.quakeCatalog.length}
-            />
-            <StatCard
-              label="Magnitude 4 or stronger"
-              value={atLeastFour.toLocaleString('en-NZ')}
-              accent="indigo"
-              testId="quake-frequency-at-least-four"
-              dataValue={atLeastFour}
-            />
-            <StatCard
-              label="Magnitude 6 or stronger"
-              value={atLeastSix.toLocaleString('en-NZ')}
-              accent="indigo"
-              testId="quake-frequency-at-least-six"
-              dataValue={atLeastSix}
-            />
-          </dl>
-        ),
-      };
-    }
-    case 'quake-depth-distribution': {
-      const shallow = data.quakeCatalog.filter((event) => event.depthKm < 40).length;
-      const shallowPercent =
-        data.quakeCatalog.length === 0 ? 0 : Math.round((shallow / data.quakeCatalog.length) * 100);
-      const deepest = data.quakeCatalog.reduce<QuakeCatalogEvent | undefined>(
-        (best, event) => (best === undefined || event.depthKm > best.depthKm ? event : best),
-        undefined,
-      );
-      return {
-        chart: <QuakeDepthDistribution events={data.quakeCatalog} />,
-        stats: (
-          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
-            <StatCard
-              label="Quakes located, 3 months"
-              value={data.quakeCatalog.length.toLocaleString('en-NZ')}
-              accent="teal"
-              testId="quake-depth-distribution-total"
-              dataValue={data.quakeCatalog.length}
-            />
-            <StatCard
-              label="Share shallower than 40 km"
-              value={`${shallowPercent}%`}
-              accent="teal"
-              testId="quake-depth-distribution-shallow-percent"
-              dataValue={shallowPercent}
-            />
-            <StatCard
-              label="Deepest located"
-              value={
-                deepest === undefined ? 'n/a' : `${deepest.depthKm.toLocaleString('en-NZ')} km`
-              }
-              accent="teal"
-              testId="quake-depth-distribution-deepest"
-              dataValue={deepest?.depthKm}
-            />
-          </dl>
-        ),
-      };
-    }
     case 'quake-magnitudes': {
       const underTwo = data.quakeCatalog.filter((event) => event.magnitude < 2).length;
       const strongest = data.quakeCatalog.reduce<QuakeCatalogEvent | undefined>(
@@ -787,32 +742,57 @@ function renderStoryContent(
         data.quakeCatalog.length === 0
           ? 0
           : Math.round((underTwo / data.quakeCatalog.length) * 100);
+      const atLeastFour = data.quakeCatalog.filter((event) => event.magnitude >= 4).length;
+      const atLeastSix = data.quakeCatalog.filter((event) => event.magnitude >= 6).length;
       return {
-        chart: <QuakeMagnitudeHistogram events={data.quakeCatalog} />,
+        chart: storyChartPair(
+          'Magnitude histogram',
+          <QuakeMagnitudeHistogram events={data.quakeCatalog} />,
+          'Frequency by magnitude',
+          <QuakeFrequencyMagnitude events={data.quakeCatalog} />,
+        ),
         stats: (
-          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
-            <StatCard
-              label="Quakes located, 3 months"
-              value={data.quakeCatalog.length.toLocaleString('en-NZ')}
-              accent="rose"
-              testId="quake-catalog-total"
-              dataValue={data.quakeCatalog.length}
-            />
-            <StatCard
-              label="Share under magnitude 2"
-              value={`${underTwoPercent}%`}
-              accent="rose"
-              testId="quake-under-two-percent"
-              dataValue={underTwoPercent}
-            />
-            <StatCard
-              label="Biggest located"
-              value={strongest === undefined ? 'n/a' : `M ${strongest.magnitude.toFixed(1)}`}
-              accent="rose"
-              testId="quake-catalog-strongest"
-              dataValue={strongest?.magnitude}
-            />
-          </dl>
+          <>
+            <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+              <StatCard
+                label="Quakes located, 3 months"
+                value={data.quakeCatalog.length.toLocaleString('en-NZ')}
+                accent="rose"
+                testId="quake-catalog-total"
+                dataValue={data.quakeCatalog.length}
+              />
+              <StatCard
+                label="Share under magnitude 2"
+                value={`${underTwoPercent}%`}
+                accent="rose"
+                testId="quake-under-two-percent"
+                dataValue={underTwoPercent}
+              />
+              <StatCard
+                label="Biggest located"
+                value={strongest === undefined ? 'n/a' : `M ${strongest.magnitude.toFixed(1)}`}
+                accent="rose"
+                testId="quake-catalog-strongest"
+                dataValue={strongest?.magnitude}
+              />
+            </dl>
+            <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+              <StatCard
+                label="Magnitude 4 or stronger"
+                value={atLeastFour.toLocaleString('en-NZ')}
+                accent="rose"
+                testId="quake-frequency-at-least-four"
+                dataValue={atLeastFour}
+              />
+              <StatCard
+                label="Magnitude 6 or stronger"
+                value={atLeastSix.toLocaleString('en-NZ')}
+                accent="rose"
+                testId="quake-frequency-at-least-six"
+                dataValue={atLeastSix}
+              />
+            </dl>
+          </>
         ),
       };
     }
@@ -922,31 +902,60 @@ function renderStoryContent(
       const auckland = regionDensityRowByKey('auckland');
       const westCoast = regionDensityRowByKey('west-coast');
       return {
-        chart: <RegionDensityChoropleth />,
+        chart: storyChartPair(
+          'Population density map',
+          <RegionDensityChoropleth />,
+          'Population waffle',
+          <RegionWaffle />,
+        ),
         stats: (
-          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
-            <StatCard
-              label="People per km², NZ (2023)"
-              value={nationalDensity(2023).toFixed(1)}
-              accent="indigo"
-              testId="region-density-national"
-              dataValue={Math.round(nationalDensity(2023))}
-            />
-            <StatCard
-              label="Auckland (2023)"
-              value={`${densityFor(auckland, 2023).toFixed(1)} per km²`}
-              accent="indigo"
-              testId="region-density-auckland"
-              dataValue={Math.round(densityFor(auckland, 2023))}
-            />
-            <StatCard
-              label="West Coast (2023)"
-              value={`${densityFor(westCoast, 2023).toFixed(1)} per km²`}
-              accent="indigo"
-              testId="region-density-west-coast"
-              dataValue={Math.round(densityFor(westCoast, 2023))}
-            />
-          </dl>
+          <>
+            <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+              <StatCard
+                label="People per km², NZ (2023)"
+                value={nationalDensity(2023).toFixed(1)}
+                accent="indigo"
+                testId="region-density-national"
+                dataValue={Math.round(nationalDensity(2023))}
+              />
+              <StatCard
+                label="Auckland (2023)"
+                value={`${densityFor(auckland, 2023).toFixed(1)} per km²`}
+                accent="indigo"
+                testId="region-density-auckland"
+                dataValue={Math.round(densityFor(auckland, 2023))}
+              />
+              <StatCard
+                label="West Coast (2023)"
+                value={`${densityFor(westCoast, 2023).toFixed(1)} per km²`}
+                accent="indigo"
+                testId="region-density-west-coast"
+                dataValue={Math.round(densityFor(westCoast, 2023))}
+              />
+            </dl>
+            <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+              <StatCard
+                label="Auckland share, 2023"
+                value="33.2%"
+                accent="teal"
+                testId="region-waffle-auckland-share"
+                dataValue={33.2}
+              />
+              <StatCard
+                label="North Island share, 2023"
+                value="76.3%"
+                accent="teal"
+                dataValue={76.3}
+              />
+              <StatCard
+                label="Census population, 2023"
+                value="4,993,290"
+                accent="teal"
+                testId="region-waffle-total"
+                dataValue={4993290}
+              />
+            </dl>
+          </>
         ),
       };
     }
@@ -1012,31 +1021,61 @@ function renderStoryContent(
       const auckland = REGIONAL_CENSUS_ROWS.find((row) => row.name === 'Auckland');
       const westCoast = REGIONAL_CENSUS_ROWS.find((row) => row.name === 'West Coast');
       return {
-        chart: <RegionalRankSlope />,
+        chart: storyChartPair(
+          'Regional rank slope',
+          <RegionalRankSlope />,
+          'Growth, 2013 to 2023',
+          <RegionalGrowthDumbbell />,
+        ),
         stats: (
-          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
-            <StatCard
-              label="Auckland region, 2023 census"
-              value={auckland?.population2023.toLocaleString('en-NZ') ?? ''}
-              accent="teal"
-              testId="auckland-region-population"
-              dataValue={auckland?.population2023}
-            />
-            <StatCard
-              label="Auckland rank, 2013 and 2023"
-              value="#1 both censuses"
-              accent="teal"
-              testId="auckland-region-rank"
-              dataValue={auckland?.rank2023}
-            />
-            <StatCard
-              label="West Coast rank, 2023"
-              value="#16"
-              accent="teal"
-              testId="west-coast-rank"
-              dataValue={westCoast?.rank2023}
-            />
-          </dl>
+          <>
+            <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+              <StatCard
+                label="Auckland region, 2023 census"
+                value={auckland?.population2023.toLocaleString('en-NZ') ?? ''}
+                accent="teal"
+                testId="auckland-region-population"
+                dataValue={auckland?.population2023}
+              />
+              <StatCard
+                label="Auckland rank, 2013 and 2023"
+                value="#1 both censuses"
+                accent="teal"
+                testId="auckland-region-rank"
+                dataValue={auckland?.rank2023}
+              />
+              <StatCard
+                label="West Coast rank, 2023"
+                value="#16"
+                accent="teal"
+                testId="west-coast-rank"
+                dataValue={westCoast?.rank2023}
+              />
+            </dl>
+            <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+              <StatCard
+                label="Auckland gain, 2013-2023"
+                value="240,936"
+                accent="emerald"
+                testId="regional-growth-auckland-gain"
+                dataValue={240936}
+              />
+              <StatCard
+                label="Fastest growth"
+                value="Northland, +27.9%"
+                accent="emerald"
+                testId="regional-growth-northland"
+                dataValue={27.9}
+              />
+              <StatCard
+                label="Slowest growth"
+                value="West Coast, +3.9%"
+                accent="emerald"
+                testId="regional-growth-west-coast"
+                dataValue={3.9}
+              />
+            </dl>
+          </>
         ),
       };
     }
@@ -1044,31 +1083,60 @@ function renderStoryContent(
       const china = EXPORT_DESTINATION_ROWS.find((row) => row.name === 'China');
       const australia = EXPORT_DESTINATION_ROWS.find((row) => row.name === 'Australia');
       return {
-        chart: <ExportDestinationSlope />,
+        chart: storyChartPair(
+          'Export destination ranks',
+          <ExportDestinationSlope />,
+          'Export market bump',
+          <ExportRankBump />,
+        ),
         stats: (
-          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
-            <StatCard
-              label="China rank, 2026"
-              value="#1"
-              accent="indigo"
-              testId="china-rank"
-              dataValue={china?.rank2026}
-            />
-            <StatCard
-              label="Australia rank, 2026"
-              value="#2"
-              accent="indigo"
-              testId="australia-rank"
-              dataValue={australia?.rank2026}
-            />
-            <StatCard
-              label="China exports, year ended March 2026"
-              value={`$${(china?.exports2026 ?? 0).toFixed(1)}b`}
-              accent="indigo"
-              testId="china-exports"
-              dataValue={china?.exports2026}
-            />
-          </dl>
+          <>
+            <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+              <StatCard
+                label="China rank, 2026"
+                value="#1"
+                accent="indigo"
+                testId="china-rank"
+                dataValue={china?.rank2026}
+              />
+              <StatCard
+                label="Australia rank, 2026"
+                value="#2"
+                accent="indigo"
+                testId="australia-rank"
+                dataValue={australia?.rank2026}
+              />
+              <StatCard
+                label="China exports, year ended March 2026"
+                value={`$${(china?.exports2026 ?? 0).toFixed(1)}b`}
+                accent="indigo"
+                testId="china-exports"
+                dataValue={china?.exports2026}
+              />
+            </dl>
+            <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+              <StatCard
+                label="China exports, YE Mar 2020"
+                value="$19.9b"
+                accent="sky"
+                testId="export-bump-china-2020"
+                dataValue={19888.1}
+              />
+              <StatCard
+                label="Australia exports, YE Mar 2020"
+                value="$14.2b"
+                accent="sky"
+                dataValue={14166.6}
+              />
+              <StatCard
+                label="China exports, YE Mar 2015"
+                value="$10.8b"
+                accent="sky"
+                testId="export-bump-china-2015"
+                dataValue={10762.0}
+              />
+            </dl>
+          </>
         ),
       };
     }
@@ -1136,31 +1204,61 @@ function renderStoryContent(
       };
     case 'median-age-ranks':
       return {
-        chart: <MedianAgeRankSlope />,
+        chart: storyChartPair(
+          'Median age rank slope',
+          <MedianAgeRankSlope />,
+          'Median age by region',
+          <MedianAgeTileGrid />,
+        ),
         stats: (
-          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
-            <StatCard
-              label="Oldest region, 2023"
-              value="West Coast, 48.1 years"
-              accent="amber"
-              testId="oldest-region-median-age"
-              dataValue={48.1}
-            />
-            <StatCard
-              label="Youngest region, 2023"
-              value="Auckland, 35.9 years"
-              accent="amber"
-              testId="youngest-region-median-age"
-              dataValue={35.9}
-            />
-            <StatCard
-              label="Biggest rank climb"
-              value="Southland, 10th to 6th"
-              accent="amber"
-              testId="median-age-biggest-climb"
-              dataValue={4}
-            />
-          </dl>
+          <>
+            <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+              <StatCard
+                label="Oldest region, 2023"
+                value="West Coast, 48.1 years"
+                accent="amber"
+                testId="oldest-region-median-age"
+                dataValue={48.1}
+              />
+              <StatCard
+                label="Youngest region, 2023"
+                value="Auckland, 35.9 years"
+                accent="amber"
+                testId="youngest-region-median-age"
+                dataValue={35.9}
+              />
+              <StatCard
+                label="Biggest rank climb"
+                value="Southland, 10th to 6th"
+                accent="amber"
+                testId="median-age-biggest-climb"
+                dataValue={4}
+              />
+            </dl>
+            <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+              <StatCard
+                label="National median age (2023)"
+                value="38.2 years"
+                accent="indigo"
+                testId="median-national"
+                dataValue={NATIONAL_MEDIAN_AGE[2023]}
+              />
+              <StatCard
+                label="West Coast median age (2023)"
+                value="47.9 years"
+                accent="indigo"
+                testId="median-west-coast"
+                dataValue={47.9}
+              />
+              <StatCard
+                label="Auckland median age (2023)"
+                value="35.9 years"
+                accent="indigo"
+                testId="median-auckland"
+                dataValue={35.9}
+              />
+            </dl>
+          </>
         ),
       };
     case 'visitor-arrival-ranks':
@@ -1280,35 +1378,6 @@ function renderStoryContent(
           </dl>
         ),
       };
-    case 'regional-population-growth':
-      return {
-        chart: <RegionalGrowthDumbbell />,
-        stats: (
-          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
-            <StatCard
-              label="Auckland gain, 2013-2023"
-              value="240,936"
-              accent="emerald"
-              testId="regional-growth-auckland-gain"
-              dataValue={240936}
-            />
-            <StatCard
-              label="Fastest growth"
-              value="Northland, +27.9%"
-              accent="emerald"
-              testId="regional-growth-northland"
-              dataValue={27.9}
-            />
-            <StatCard
-              label="Slowest growth"
-              value="West Coast, +3.9%"
-              accent="emerald"
-              testId="regional-growth-west-coast"
-              dataValue={3.9}
-            />
-          </dl>
-        ),
-      };
     case 'age-bulge': {
       const sixtyFivePlus2023 = ageBulgeSixtyFivePlus(2023);
       return {
@@ -1370,62 +1439,6 @@ function renderStoryContent(
         ),
       };
     }
-    case 'population-waffle':
-      return {
-        chart: <RegionWaffle />,
-        stats: (
-          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
-            <StatCard
-              label="Auckland share, 2023"
-              value="33.2%"
-              accent="teal"
-              testId="region-waffle-auckland-share"
-              dataValue={33.2}
-            />
-            <StatCard
-              label="North Island share, 2023"
-              value="76.3%"
-              accent="teal"
-              dataValue={76.3}
-            />
-            <StatCard
-              label="Census population, 2023"
-              value="4,993,290"
-              accent="teal"
-              testId="region-waffle-total"
-              dataValue={4993290}
-            />
-          </dl>
-        ),
-      };
-    case 'export-market-bump':
-      return {
-        chart: <ExportRankBump />,
-        stats: (
-          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
-            <StatCard
-              label="China exports, YE Mar 2020"
-              value="$19.9b"
-              accent="sky"
-              testId="export-bump-china-2020"
-              dataValue={19888.1}
-            />
-            <StatCard
-              label="Australia exports, YE Mar 2020"
-              value="$14.2b"
-              accent="sky"
-              dataValue={14166.6}
-            />
-            <StatCard
-              label="China exports, YE Mar 2015"
-              value="$10.8b"
-              accent="sky"
-              testId="export-bump-china-2015"
-              dataValue={10762.0}
-            />
-          </dl>
-        ),
-      };
     case 'enterprise-bar-in-bar':
       return {
         chart: <IndustryBarInBar />,
@@ -1482,36 +1495,6 @@ function renderStoryContent(
               accent="rose"
               testId="otago-rate"
               dataValue={otagoRow?.rates.at(-1)}
-            />
-          </dl>
-        ),
-      };
-    }
-    case 'median-age-by-region': {
-      return {
-        chart: <MedianAgeTileGrid />,
-        stats: (
-          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
-            <StatCard
-              label="National median age (2023)"
-              value="38.2 years"
-              accent="indigo"
-              testId="median-national"
-              dataValue={NATIONAL_MEDIAN_AGE[2023]}
-            />
-            <StatCard
-              label="West Coast median age (2023)"
-              value="47.9 years"
-              accent="indigo"
-              testId="median-west-coast"
-              dataValue={47.9}
-            />
-            <StatCard
-              label="Auckland median age (2023)"
-              value="35.9 years"
-              accent="indigo"
-              testId="median-auckland"
-              dataValue={35.9}
             />
           </dl>
         ),

@@ -188,13 +188,13 @@ export default async function HomePage(): Promise<React.ReactElement> {
       statValue: formatRabbitsPerKm(rabbit.latest.rabbitsPerKm),
     },
     {
-      config: getMicrosite('population-waffle'),
+      config: getMicrosite('region-density'),
       statLabel: 'Auckland share, 2023',
       statValue: '33.2%',
     },
 
     {
-      config: getMicrosite('export-market-bump'),
+      config: getMicrosite('export-destination-ranks'),
       statLabel: 'Top market, YE Mar 2020',
       statValue: 'China, $19.9b',
     },
@@ -210,7 +210,7 @@ export default async function HomePage(): Promise<React.ReactElement> {
       statValue: '5.3%',
     },
     {
-      config: getMicrosite('median-age-by-region'),
+      config: getMicrosite('median-age-ranks'),
       statLabel: 'National median age (2023)',
       statValue: '38.2 years',
     },

@@ -873,7 +873,7 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
     eyebrow: '📉 the quake magnitudes',
     title: 'Small quakes drown out the big ones.',
     description:
-      'In the three months to 18 August 2026, GeoNet located 5,148 earthquakes of magnitude 1 or stronger. 2,436 came in under magnitude 2, and just 10 reached 5 or more.',
+      'Each step up the magnitude scale holds far fewer quakes: of the 5,148 GeoNet located in the three months to 18 August 2026, 2,436 were under magnitude 2 and just 10 reached 5 or more. A histogram and a cumulative frequency chart show the same fall-off.',
     paragraphs: [
       'From magnitude 2 up, each step holds roughly a quarter of the quakes of the step below: 2,159 quakes measured 2 to 3, 452 measured 3 to 4, and 91 measured 4 to 5.',
       'The biggest was a 6.3 on 16 July 2026, 45 km north of Te Anau. GeoNet also located a 6.2 north of Te Araroa and a 5.9 near Taumarunui in the same three months.',
@@ -933,7 +933,7 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
     eyebrow: '📉 the quake depth scatter',
     title: 'Shallow quakes are the ones people feel.',
     description:
-      'In the three months to 18 August 2026, GeoNet located 5,148 earthquakes of magnitude 1 or stronger. 3,408 of them, 66%, ruptured shallower than 40 km. The deepest reached 600 km.',
+      'Most quakes rupture shallow: 3,408 of the 5,148 GeoNet located in the three months to 18 August 2026, 66%, broke shallower than 40 km, and the deepest reached 600 km. A scatter and a depth-band chart show where the shaking happens.',
     paragraphs: [
       'Shallow quakes release their energy close to the surface, which is why they are the ones people feel. Of the 101 quakes of magnitude 4 or stronger in the same three months, 55 were shallower than 40 km.',
       'Each dot is one quake. Depth runs down the chart, so the shallow quakes sit at the top. Use the day buttons to narrow the window, and hover a dot to read its magnitude and depth.',
@@ -959,76 +959,6 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
         label: 'Earthquake FAQ (GeoNet)',
         url: 'https://www.geonet.org.nz/earthquake/faq',
         kind: 'data',
-      },
-    ],
-  },
-  {
-    slug: 'quake-frequency-magnitude',
-    label: 'Quake frequency by magnitude',
-    eyebrow: '📉 the quake frequency',
-    title: 'Small quakes vastly outnumber big ones.',
-    description:
-      'In the three months to 18 August 2026, GeoNet located 5,148 earthquakes of magnitude 1 or stronger. 2,712 were magnitude 2 or stronger, 101 were magnitude 4 or stronger, and just 2 reached magnitude 6.',
-    paragraphs: [
-      'The pattern is the Gutenberg-Richter law, named for the seismologists who first described it. The count falls steeply with each step up in magnitude: 2,712 quakes of magnitude 2 or stronger, 552 of 3 or stronger, 101 of 4 or stronger, 10 of 5 or stronger, and 2 of 6 or stronger.',
-      'The log view draws the law as a straight line. Toggle between linear and log to see how the small quakes dominate the count.',
-    ],
-    accent: 'indigo',
-    dataSource: 'GeoNet',
-    chartType: 'Bar chart',
-    category: 'Earthquakes & geology',
-    dataNote:
-      'Data: GeoNet FDSN event service (service.geonet.org.nz), earthquakes of magnitude 1 or stronger in the three months to 18 August 2026, fetched at build time and falling back to a committed snapshot of that catalog. The site redeploys daily.',
-    references: [
-      {
-        label: 'GeoNet FDSN event service',
-        url: 'https://service.geonet.org.nz/fdsnws/event/1/',
-        kind: 'data',
-      },
-      {
-        label: 'GeoNet FDSN usage',
-        url: 'https://www.geonet.org.nz/data/tools/FDSN',
-        kind: 'data',
-      },
-      {
-        label: 'Gutenberg-Richter law (Wikipedia)',
-        url: 'https://en.wikipedia.org/wiki/Gutenberg%E2%80%93Richter_law',
-        kind: 'history',
-      },
-    ],
-  },
-  {
-    slug: 'quake-depth-distribution',
-    label: 'Quake depth distribution',
-    eyebrow: '🌋 the quake depth distribution',
-    title: 'Deep quakes cluster under the North Island.',
-    description:
-      'In the three months to 18 August 2026, GeoNet located 5,148 earthquakes of magnitude 1 or stronger. 3,408 of them, 66%, ruptured shallower than 40 km. The deep quakes sit almost entirely under the North Island.',
-    paragraphs: [
-      "The Pacific plate dives beneath the North Island's east coast, so quakes there can rupture hundreds of kilometres down. 1,031 of the 1,037 quakes deeper than 100 km were under the North Island.",
-      "The South Island's quakes are almost all shallow: 697 of 870, 80%, ruptured shallower than 40 km. The radial chart shows the depth bands. Use the magnitude buttons to filter.",
-    ],
-    accent: 'teal',
-    dataSource: 'GeoNet',
-    chartType: 'Histogram',
-    category: 'Earthquakes & geology',
-    dataNote:
-      'Data: GeoNet FDSN event service (service.geonet.org.nz), earthquakes of magnitude 1 or stronger in the three months to 18 August 2026, fetched at build time and falling back to a committed snapshot of that catalog. The site redeploys daily.',
-    references: [
-      {
-        label: 'GeoNet FDSN event service',
-        url: 'https://service.geonet.org.nz/fdsnws/event/1/',
-        kind: 'data',
-      },
-      {
-        label: 'GeoNet FDSN usage',
-        url: 'https://www.geonet.org.nz/data/tools/FDSN',
-        kind: 'data',
-      },
-      {
-        label: 'Hikurangi Trough (Wikipedia)',
-        url: 'https://en.wikipedia.org/wiki/Hikurangi_Trough',
-        kind: 'history',
       },
     ],
   },
@@ -1164,7 +1094,7 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
     eyebrow: '🗺️ the regional population ranks',
     title: 'The regional pecking order is frozen.',
     description:
-      'Between the 2013 and 2023 censuses, not one of the 16 regions changed rank. Auckland stayed first with 1,656,486 people, and the West Coast stayed last with 33,390.',
+      'Between the 2013 and 2023 censuses, not one of the 16 regions changed rank. Auckland stayed first with 1,656,486 people, and the West Coast stayed last with 33,390. A rank slope and a growth dumbbell draw on the same census counts.',
     paragraphs: [
       'The ranks are stable because the regions grow at similar rates. The West Coast was the only region whose population shrank between 2013 and 2018, from 32,148 to 31,575, before growing again to 33,390 by 2023.',
       'Ranks hide absolute change, so the table keeps the counts. Every region grew between 2018 and 2023, and Tasman grew fastest at 10.3 percent.',
@@ -1194,7 +1124,7 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
     eyebrow: '🚢 the export destination ranks',
     title: 'China overtook Australia as the top export market.',
     description:
-      "In the year ended March 2015, Australia was still New Zealand's biggest goods export market at $8.6 billion, just ahead of China's $8.6 billion. By 2026 China's lead was $9.3 billion.",
+      "In the year ended March 2015, Australia was still New Zealand's biggest goods export market at $8.6 billion, just ahead of China's $8.6 billion. By 2026 China's lead was $9.3 billion. A slope chart and a bump chart trace the handover.",
     paragraphs: [
       'China took the top spot in 2016 and has held it since. In the year ended March 2026, goods exports to China reached $19.7 billion, more than Australia ($10.5 billion) and the United States ($9.3 billion) combined.',
       "The slope chart ranks the top ten destinations in 2015, 2020, and 2026. The order has barely moved since 2015; the story is the size of China's lead, not the ranking.",
@@ -1287,7 +1217,7 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
     eyebrow: '📊 the median age ranks',
     title: 'The upper South Island is where New Zealand ages fastest.',
     description:
-      'West Coast was the oldest region in the 2023 census, at a median age of 48.1 years. Tasman (46.8), Marlborough (46.1) and Nelson (44.0) followed. Auckland stayed the youngest in all three censuses, at 35.9.',
+      'West Coast was the oldest region in the 2023 census, at a median age of 48.1 years. Tasman (46.8), Marlborough (46.1) and Nelson (44.0) followed. Auckland stayed the youngest in all three censuses, at 35.9. A rank slope and a tile grid both map median age across the 2013, 2018, and 2023 censuses.',
     paragraphs: [
       'West Coast climbed from 3rd-oldest in 2013 to oldest in 2023. Southland climbed 4 places to 6th-oldest, and Taranaki and Manawatu-Whanganui each climbed 2.',
       'Marlborough went the other way, from oldest in 2013 (45.0) to 3rd in 2023 (46.1). Canterbury and Bay of Plenty each fell 3 places. The whole range is small: 35.9 to 48.1 years.',
@@ -1453,42 +1383,6 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
   },
 
   {
-    slug: 'regional-population-growth',
-    label: 'Regional population growth',
-    eyebrow: '🗺️ the growth gap',
-    title: 'The top of the country is growing faster than the bottom.',
-    description:
-      'Every region grew between the 2013 and 2023 censuses, but the growth piled up in the north. Northland grew the fastest at 27.9 percent, Auckland added the most people at 240,936, and the West Coast grew the slowest at 3.9 percent.',
-    paragraphs: [
-      'The four fastest-growing regions are all in the top of the North Island. Northland, Waikato, and Bay of Plenty all grew by more than 23 percent, and together with Auckland they added 444,783 people, about 59 percent of the national gain of 751,875.',
-      'The bottom of the country grew much more slowly. The West Coast added 1,242 people in the decade, and Southland grew 7.3 percent. Canterbury was the exception to the south: it added 111,594 people, the second-largest gain of any region.',
-    ],
-    accent: 'emerald',
-    dataSource: 'Stats NZ',
-    chartType: 'Dumbbell',
-    category: 'Census & population',
-    dataNote:
-      'Data: Stats NZ 2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts, Table 1 (census usually resident population count by regional council area, 2013 and 2023 censuses). The chart plots population on a log scale, so the gap between the dots shows the growth rate. Hover a row to read both counts.',
-    references: [
-      {
-        label: '2023 Census population counts release (Stats NZ)',
-        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
-        kind: 'data',
-      },
-      {
-        label: '2023 Census (Stats NZ)',
-        url: 'https://www.stats.govt.nz/2023-census/',
-        kind: 'data',
-      },
-      {
-        label: 'Population (Stats NZ)',
-        url: 'https://www.stats.govt.nz/topics/population',
-        kind: 'history',
-      },
-    ],
-  },
-
-  {
     slug: 'age-bulge',
     label: 'Age bulge',
     eyebrow: '👶 the age bulge',
@@ -1561,73 +1455,6 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
   },
 
   {
-    slug: 'population-waffle',
-    label: 'Population by region',
-    eyebrow: '🧱 the population grid',
-    title: "Auckland is a third of the country's population.",
-    description:
-      'At the 2023 Census, 1,656,486 of the 4,993,290 people counted in regional council areas lived in Auckland, 33.2 percent of the country. The waffle chart draws one cell per 1 percent of the census population, so Auckland fills a third of the grid.',
-    paragraphs: [
-      'The North Island holds most of the rest. Its 3,808,005 people are 76.3 percent of the total, and the South Island has 1,185,282, 23.7 percent.',
-      'Canterbury is the second-biggest region with 651,027 people, 13.0 percent of the country, and Wellington third with 520,971, 10.4 percent. Auckland has held near a third through every census since 2013: 33.4 percent in 2013, 33.2 percent in 2023.',
-    ],
-    accent: 'teal',
-    dataSource: 'Stats NZ',
-    chartType: 'Waffle',
-    category: 'Census & population',
-    dataNote:
-      'Data: Stats NZ 2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts, Table 1 (census usually resident population count by regional council area, 2013, 2018, and 2023 censuses). Each cell is one percent of the census usually resident population count, allocated so the grid always sums to 100 cells. Counts have fixed random rounding to base 3 applied. Hover a cell, search for a region, or toggle the census year.',
-    references: [
-      {
-        label: '2023 Census population counts release (Stats NZ)',
-        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
-        kind: 'data',
-      },
-      {
-        label: '2023 Census (Stats NZ)',
-        url: 'https://www.stats.govt.nz/2023-census/',
-        kind: 'data',
-      },
-      {
-        label: 'Population (Stats NZ)',
-        url: 'https://www.stats.govt.nz/topics/population',
-        kind: 'history',
-      },
-    ],
-  },
-
-  {
-    slug: 'export-market-bump',
-    label: 'Top export markets',
-    eyebrow: '🚢 the export handover',
-    title: 'China overtook Australia as the top export market.',
-    description:
-      "In the year ended March 2015, Australia was New Zealand's biggest export market at $12.9 billion, ahead of China at $10.8 billion. By the year ended March 2018, China had taken the top spot, and by March 2020 it bought $19.9 billion of New Zealand goods and services.",
-    paragraphs: [
-      'The United States held third place in every year of the series. Japan and the United Kingdom held fourth and fifth, and below them the ranks churned: Singapore and Germany traded places at the edge of the top ten.',
-      'The numbers are total exports of goods and services in New Zealand dollars, so the ranks move with exchange rates as well as volumes.',
-    ],
-    accent: 'sky',
-    dataSource: 'Stats NZ',
-    chartType: 'Rank / slope',
-    category: 'Economy & business',
-    dataNote:
-      'Data: Stats NZ "Goods and services trade by country: Year ended March 2020" (map data table), total exports of goods and services by destination country in NZ$ millions for the years ended March 2015 to 2020. Ranks are computed from the full country list in that table. Hover a line to highlight it, or toggle between the top 8 and top 5 markets.',
-    references: [
-      {
-        label: 'Goods and services trade by country release (Stats NZ)',
-        url: 'https://www.stats.govt.nz/information-releases/goods-and-services-trade-by-country-year-ended-march-2020/',
-        kind: 'data',
-      },
-      {
-        label: 'International trade: December 2025 quarter (Stats NZ)',
-        url: 'https://www.stats.govt.nz/information-releases/international-trade-december-2025-quarter',
-        kind: 'data',
-      },
-    ],
-  },
-
-  {
     slug: 'enterprise-bar-in-bar',
     label: 'Business register',
     eyebrow: '🏢 the business register',
@@ -1694,41 +1521,6 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
       {
         label: 'Unemployment (Stats NZ)',
         url: 'https://www.stats.govt.nz/topics/labour-market/',
-        kind: 'history',
-      },
-    ],
-  },
-  {
-    slug: 'median-age-by-region',
-    label: 'The ageing map',
-    eyebrow: '🧓 the ageing map',
-    title: 'The West Coast aged five years in one decade.',
-    description:
-      'The median age in the West Coast region rose from 42.8 in 2013 to 47.9 in 2023, the biggest jump of any region. Auckland stayed the youngest at 35.9.',
-    paragraphs: [
-      'The national median age was 37.9 in 2013 and 38.2 in 2023, a movement of less than half a year. The map underneath moved far more. West Coast, Tasman, and Marlborough are the three oldest regions, and all three passed 46 by 2023.',
-      'The other direction is smaller. Bay of Plenty, Otago, and Canterbury were each younger in 2023 than in 2013, and Gisborne barely moved.',
-    ],
-    accent: 'indigo',
-    dataSource: 'Stats NZ',
-    chartType: 'Tile grid',
-    category: 'Census & population',
-    dataNote:
-      'Data: Stats NZ 2023 Census release "2023 Census population counts (by ethnic group, age, and Maori descent) and dwelling counts", Table 7 (age in five-year groups for the census usually resident population by regional council area). Median ages are interpolated within the five-year band holding the midpoint of each regional population, so they are estimates, not published medians.',
-    references: [
-      {
-        label: '2023 Census population counts release (Stats NZ)',
-        url: 'https://www.stats.govt.nz/information-releases/2023-census-population-counts-by-ethnic-group-age-and-maori-descent-and-dwelling-counts/',
-        kind: 'data',
-      },
-      {
-        label: 'Population counts workbook (Stats NZ)',
-        url: 'https://www.stats.govt.nz/assets/Uploads/2023-Census-population-counts-by-ethnic-group-age-and-Maori-descent-and-dwelling-counts/Downloads/2023-Census-national-and-subnational-usually-resident-population-counts-and-dwelling-counts.xlsx',
-        kind: 'data',
-      },
-      {
-        label: '2023 Census (Stats NZ)',
-        url: 'https://www.stats.govt.nz/2023-census/',
         kind: 'history',
       },
     ],
@@ -1813,7 +1605,7 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved([
     eyebrow: '🗺️ the region density',
     title: 'Auckland holds a third of the people on 2% of the land.',
     description:
-      "New Zealand's 16 regional councils cover 264,091 square kilometres of land. At the 2023 census, Auckland held 1,656,486 people, a third of the country, on 4,941 square kilometres, under 2% of it.",
+      "New Zealand's 16 regional councils cover 264,091 square kilometres of land. At the 2023 census, Auckland held 1,656,486 people, a third of the country, on 4,941 square kilometres, under 2% of it. A choropleth map and a waffle grid show the same population with census-year controls.",
     paragraphs: [
       'The 2023 census counted 4,993,923 people by regional council, about 18.9 per square kilometre. Auckland runs at 335.3 per square kilometre, more than 17 times the national density.',
       'Nelson is the next busiest council at 124.6 per square kilometre, a pocket of 52,584 people on just 422 square kilometres. The West Coast is the emptiest at 1.4 people per square kilometre. Toggle the census year to watch the 2013 to 2023 shift.',

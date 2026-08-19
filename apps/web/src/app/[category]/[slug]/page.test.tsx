@@ -221,12 +221,12 @@ describe('MicrositePage', () => {
     expect(html).toContain('5,122,600');
   });
 
-  it('renders the regional population growth story', async () => {
+  it('renders the regional population ranks story with the growth dumbbell', async () => {
     const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve(paramsFor('regional-population-growth'))} />,
+      <MicrositePage params={Promise.resolve(paramsFor('regional-population-ranks'))} />,
     );
     const html = await new Response(stream).text();
-    expect(html).toContain('The top of the country is growing faster than the bottom.');
+    expect(html).toContain('The regional pecking order is frozen.');
     expect(html).toContain('240,936');
     expect(html).toContain('Sources and further reading');
   });
@@ -308,31 +308,24 @@ describe('MicrositePage', () => {
     expect(html).toContain('13.3 per km');
     expect(html).toContain('HawkesBayRabbits spotlight counts (data.govt.nz)');
   });
-  it('renders the quake depth scatter story', async () => {
+  it('renders the quake depth scatter story with the depth distribution chart', async () => {
     const stream = await renderToReadableStream(
       <MicrositePage params={Promise.resolve(paramsFor('quake-depth-scatter'))} />,
     );
     const html = await new Response(stream).text();
     expect(html).toContain('Shallow quakes are the ones people feel');
     expect(html).toContain('Share shallower than 40 km');
+    expect(html).toContain('Depth distribution');
   });
 
-  it('renders the quake frequency by magnitude story', async () => {
+  it('renders the quake magnitudes story with the frequency chart', async () => {
     const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve(paramsFor('quake-frequency-magnitude'))} />,
+      <MicrositePage params={Promise.resolve(paramsFor('quake-magnitudes'))} />,
     );
     const html = await new Response(stream).text();
-    expect(html).toContain('Small quakes vastly outnumber big ones');
+    expect(html).toContain('Small quakes drown out the big ones');
     expect(html).toContain('Magnitude 4 or stronger');
-  });
-
-  it('renders the quake depth distribution story', async () => {
-    const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve(paramsFor('quake-depth-distribution'))} />,
-    );
-    const html = await new Response(stream).text();
-    expect(html).toContain('Deep quakes cluster under the North Island');
-    expect(html).toContain('Share shallower than 40 km');
+    expect(html).toContain('Frequency by magnitude');
   });
 
   it('renders the dairy story with the livestock chart', async () => {
@@ -472,24 +465,24 @@ it('renders the visitor arrival ranks story', async () => {
   expect(html).toContain('Sources and further reading');
 });
 
-it('renders the population waffle story', async () => {
+it('renders the region density story with the population waffle', async () => {
   const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve(paramsFor('population-waffle'))} />,
+    <MicrositePage params={Promise.resolve(paramsFor('region-density'))} />,
   );
   const html = await new Response(stream).text();
-  expect(html).toContain('Auckland is a third of the country');
+  expect(html).toContain('Auckland holds a third of the people on 2% of the land.');
   expect(html).toContain('4,993,290');
-  expect(html).toContain('2023 Census population counts release (Stats NZ)');
+  expect(html).toContain('2023 Census population counts');
 });
 
-it('renders the export market bump story', async () => {
+it('renders the export destination ranks story with the market bump', async () => {
   const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve(paramsFor('export-market-bump'))} />,
+    <MicrositePage params={Promise.resolve(paramsFor('export-destination-ranks'))} />,
   );
   const html = await new Response(stream).text();
   expect(html).toContain('China overtook Australia as the top export market');
   expect(html).toContain('$19.9b');
-  expect(html).toContain('Goods and services trade by country release (Stats NZ)');
+  expect(html).toContain('Goods and services trade by country: Year ended March 2020');
 });
 
 it('renders the business register story', async () => {
@@ -512,14 +505,14 @@ it('renders the unemployment ranks story', async () => {
   expect(html).toContain('Labour market statistics: December 2025 quarter (Stats NZ)');
 });
 
-it('renders the median age by region story', async () => {
+it('renders the median age ranks story with the tile grid', async () => {
   const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve(paramsFor('median-age-by-region'))} />,
+    <MicrositePage params={Promise.resolve(paramsFor('median-age-ranks'))} />,
   );
   const html = await new Response(stream).text();
-  expect(html).toContain('The West Coast aged five years in one decade');
+  expect(html).toContain('The upper South Island is where New Zealand ages fastest.');
   expect(html).toContain('National median age (2023)');
-  expect(html).toContain('2023 Census population counts release (Stats NZ)');
+  expect(html).toContain('2023 Census population counts');
 });
 
 it('renders the tourist arrivals story', async () => {
