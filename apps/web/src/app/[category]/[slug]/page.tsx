@@ -67,7 +67,7 @@ import { EMPLOYMENT_INDUSTRY_ROWS, EMPLOYMENT_TOTAL_2025 } from '@/lib/employmen
 import { ethnicityAnswersPerHundred } from '@/lib/ethnicity-mix-data';
 import { EXPORT_DESTINATION_ROWS } from '@/lib/export-destination-data';
 import { fetchForestrySeries, summarizeForestry } from '@/lib/forestry-data';
-import { formatHectares, formatMillions } from '@/lib/format';
+import { formatAreaKm2, formatMillions } from '@/lib/format';
 import {
   CATALOGUE_CLIMATE_MATCHES,
   CATALOGUE_WATER_MATCHES,
@@ -83,6 +83,7 @@ import {
   TRADEME_MOTORS_LEAVES,
 } from '@/lib/headline-stats';
 import { fetchHorticultureSeries, summarizeHorticulture } from '@/lib/horticulture-data';
+import type { LiveNzSchool } from '@/lib/live-sources';
 import { fetchLivestockSeries, summarizeLivestock } from '@/lib/livestock-data';
 import { NATIONAL_MEDIAN_AGE } from '@/lib/median-age-data';
 import { categorySlugFor, MICROSITES } from '@/lib/microsites';
@@ -100,6 +101,7 @@ import type { RabbitSpotlightSeries } from '@/lib/rabbit-data';
 import { formatRabbitsPerKm } from '@/lib/rabbit-format';
 import { densityFor, nationalDensity, regionDensityRowByKey } from '@/lib/region-density-data';
 import { REGIONAL_CENSUS_ROWS } from '@/lib/regional-census-data';
+import { fetchSchoolsForBuild } from '@/lib/schools-data';
 import { fetchSheepSeries } from '@/lib/sheep-data';
 import { formatMillions as formatMillionsSheep } from '@/lib/sheep-format';
 import { NATIONAL_UNEMPLOYMENT_RATE, UNEMPLOYMENT_RANK_ROWS } from '@/lib/unemployment-rank-data';
@@ -145,6 +147,7 @@ export default async function MicrositePage({
     catalogueTotal,
     quakeCatalog,
     quakeMonthCatalog,
+    schools,
   ] = await Promise.all([
     fetchSheepSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
     fetchLivestockSeries(env.STATS_NZ_SUBSCRIPTION_KEY),
@@ -156,6 +159,7 @@ export default async function MicrositePage({
     fetchCatalogueTotal(),
     fetchRecentQuakeCatalog(3),
     fetchQuakeMonthCatalog(),
+    fetchSchoolsForBuild(),
   ]);
 
   const livestockStats = summarizeLivestock(livestock);
@@ -185,6 +189,7 @@ export default async function MicrositePage({
     quakeMonthCatalog,
     registerTotal,
     catalogueTotal,
+    schools,
   });
 
   return (
@@ -247,6 +252,7 @@ interface StoryData {
   rabbit: RabbitSpotlightSeries;
   quakeCatalog: QuakeCatalogEvent[];
   quakeMonthCatalog: QuakeCatalogEvent[];
+  schools: LiveNzSchool[];
   registerTotal: number;
   catalogueTotal: number;
 }
@@ -365,14 +371,14 @@ function renderStoryContent(
           <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
             <StatCard
               label={`Wine grapes now (${data.horticulture.latest.year})`}
-              value={formatHectares(data.wineGrapes?.latest ?? 0)}
+              value={formatAreaKm2(data.wineGrapes?.latest ?? 0)}
               accent="purple"
               testId="wine-latest"
               dataValue={data.wineGrapes?.latest}
             />
             <StatCard
               label={`Wine grapes in ${data.horticulture.first.year}`}
-              value={formatHectares(data.wineGrapes?.first ?? 0)}
+              value={formatAreaKm2(data.wineGrapes?.first ?? 0)}
               accent="purple"
             />
             <StatCard
@@ -392,14 +398,14 @@ function renderStoryContent(
           <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
             <StatCard
               label={`New planting in ${data.forestry.first.year}`}
-              value={formatHectares(data.newPlanting?.first ?? 0)}
+              value={formatAreaKm2(data.newPlanting?.first ?? 0)}
               accent="emerald"
               testId="planting-first"
               dataValue={data.newPlanting?.first}
             />
             <StatCard
               label={`New planting in ${data.forestry.latest.year}`}
-              value={formatHectares(data.newPlanting?.latest ?? 0)}
+              value={formatAreaKm2(data.newPlanting?.latest ?? 0)}
               accent="emerald"
               testId="planting-latest"
               dataValue={data.newPlanting?.latest}
@@ -421,21 +427,21 @@ function renderStoryContent(
           <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
             <StatCard
               label={`Kiwifruit now (${data.horticulture.latest.year})`}
-              value={formatHectares(data.kiwifruit?.latest ?? 0)}
+              value={formatAreaKm2(data.kiwifruit?.latest ?? 0)}
               accent="lime"
               testId="kiwifruit-latest"
               dataValue={data.kiwifruit?.latest}
             />
             <StatCard
               label={`Apples now (${data.horticulture.latest.year})`}
-              value={formatHectares(data.apples?.latest ?? 0)}
+              value={formatAreaKm2(data.apples?.latest ?? 0)}
               accent="lime"
               testId="apples-latest"
               dataValue={data.apples?.latest}
             />
             <StatCard
               label={`Kiwifruit in ${data.horticulture.first.year}`}
-              value={formatHectares(data.kiwifruit?.first ?? 0)}
+              value={formatAreaKm2(data.kiwifruit?.first ?? 0)}
               accent="lime"
             />
           </dl>
@@ -601,14 +607,14 @@ function renderStoryContent(
         stats: (
           <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
             <StatCard label="Parks in Auckland" value="3,953" accent="emerald" />
-            <StatCard label="Park land" value="53,677 ha" accent="emerald" />
+            <StatCard label="Park land" value="536.8 km²" accent="emerald" />
             <StatCard label="Franklin + Waitākere share" value="72%" accent="emerald" />
           </dl>
         ),
       };
     case 'open-school-map':
       return {
-        chart: <SchoolRoll />,
+        chart: <SchoolRoll schools={data.schools} />,
         stats: (
           <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
             <StatCard label="Schools mapped" value="2,604" accent="amber" />
@@ -1173,35 +1179,67 @@ function renderStoryContent(
         ),
       };
     }
-    case 'age-distribution':
+    case 'age-distribution': {
+      const sixtyFivePlus2023 = ageBulgeSixtyFivePlus(2023);
       return {
-        chart: <AgeDistributionHistogram />,
+        chart: storyChartPair(
+          'Age distribution histogram',
+          <AgeDistributionHistogram />,
+          'Age bands across censuses',
+          <AgeBulgeRidgeline />,
+        ),
         stats: (
-          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
-            <StatCard
-              label="People counted, 2023 census"
-              value="4,993,923"
-              accent="teal"
-              testId="age-total-2023"
-              dataValue={4993923}
-            />
-            <StatCard
-              label="Biggest band, 2023"
-              value="30-39: 719,616"
-              accent="teal"
-              testId="age-biggest-band-2023"
-              dataValue={719616}
-            />
-            <StatCard
-              label="50-59 band, 2013"
-              value="560,178"
-              accent="teal"
-              testId="age-bulge-2013"
-              dataValue={560178}
-            />
-          </dl>
+          <>
+            <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+              <StatCard
+                label="People counted, 2023 census"
+                value="4,993,923"
+                accent="teal"
+                testId="age-total-2023"
+                dataValue={4993923}
+              />
+              <StatCard
+                label="Biggest band, 2023"
+                value="30-39: 719,616"
+                accent="teal"
+                testId="age-biggest-band-2023"
+                dataValue={719616}
+              />
+              <StatCard
+                label="50-59 band, 2013"
+                value="560,178"
+                accent="teal"
+                testId="age-bulge-2013"
+                dataValue={560178}
+              />
+            </dl>
+            <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+              <StatCard
+                label="Biggest five-year band, 2023"
+                value="30-34, 374,079"
+                accent="cyan"
+                testId="age-bulge-largest"
+                dataValue={374079}
+              />
+              <StatCard
+                label="Aged 65 and over, 2023"
+                value={sixtyFivePlus2023.toLocaleString('en-NZ')}
+                accent="cyan"
+                testId="age-bulge-sixty-five-plus"
+                dataValue={sixtyFivePlus2023}
+              />
+              <StatCard
+                label="Median age, 2023"
+                value="38.1"
+                accent="cyan"
+                testId="age-bulge-median"
+                dataValue={38.1}
+              />
+            </dl>
+          </>
         ),
       };
+    }
     case 'median-age-ranks':
       return {
         chart: storyChartPair(
@@ -1261,36 +1299,71 @@ function renderStoryContent(
           </>
         ),
       };
-    case 'visitor-arrival-ranks':
+    case 'visitor-arrival-ranks': {
+      const australiaRow = VISITOR_ARRIVAL_ROWS.find((row) => row.key === 'australia');
+      const unitedStatesRow = VISITOR_ARRIVAL_ROWS.find((row) => row.key === 'united-states');
+      const indiaRow = VISITOR_ARRIVAL_ROWS.find((row) => row.key === 'india');
       return {
-        chart: <VisitorRankSlope />,
+        chart: storyChartPair(
+          'Visitor arrival ranks',
+          <VisitorRankSlope />,
+          'Visitor arrivals by country',
+          <VisitorArrivalDotPlot />,
+        ),
         stats: (
-          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
-            <StatCard
-              label="Visitor arrivals, Dec 2019 year"
-              value="3,888,473"
-              accent="sky"
-              testId="visitor-arrivals-2019"
-              dataValue={3888473}
-            />
-            <StatCard
-              label="Top source, 2019"
-              value="Australia, 1,537,988"
-              accent="sky"
-              testId="visitor-top-source"
-              dataValue={1537988}
-            />
-            <StatCard
-              label="Biggest rank climbers"
-              value="Indonesia and Philippines, 5 places"
-              accent="sky"
-              testId="visitor-biggest-climbers"
-              dataValue={5}
-            />
-          </dl>
+          <>
+            <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+              <StatCard
+                label="Visitor arrivals, Dec 2019 year"
+                value="3,888,473"
+                accent="sky"
+                testId="visitor-arrivals-2019"
+                dataValue={3888473}
+              />
+              <StatCard
+                label="Top source, 2019"
+                value="Australia, 1,537,988"
+                accent="sky"
+                testId="visitor-top-source"
+                dataValue={1537988}
+              />
+              <StatCard
+                label="Biggest rank climbers"
+                value="Indonesia and Philippines, 5 places"
+                accent="sky"
+                testId="visitor-biggest-climbers"
+                dataValue={5}
+              />
+            </dl>
+            <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
+              <StatCard
+                label="Visitors from Australia (2019)"
+                value={australiaRow?.arrivals2019.toLocaleString('en-NZ') ?? ''}
+                accent="sky"
+                testId="visitor-australia"
+                dataValue={australiaRow?.arrivals2019}
+              />
+              <StatCard
+                label="US growth, 2015 to 2019"
+                value={`+${unitedStatesRow === undefined ? 0 : visitorArrivalGrowthPercent(unitedStatesRow)}%`}
+                accent="sky"
+                testId="visitor-us-growth"
+                dataValue={
+                  unitedStatesRow === undefined ? 0 : visitorArrivalGrowthPercent(unitedStatesRow)
+                }
+              />
+              <StatCard
+                label="India growth, 2015 to 2019"
+                value={`+${indiaRow === undefined ? 0 : visitorArrivalGrowthPercent(indiaRow)}%`}
+                accent="sky"
+                testId="visitor-india-growth"
+                dataValue={indiaRow === undefined ? 0 : visitorArrivalGrowthPercent(indiaRow)}
+              />
+            </dl>
+          </>
         ),
       };
-
+    }
     case 'company-size-distribution':
       return {
         chart: <CompanySizePareto />,
@@ -1378,37 +1451,6 @@ function renderStoryContent(
           </dl>
         ),
       };
-    case 'age-bulge': {
-      const sixtyFivePlus2023 = ageBulgeSixtyFivePlus(2023);
-      return {
-        chart: <AgeBulgeRidgeline />,
-        stats: (
-          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
-            <StatCard
-              label="Biggest band, 2023"
-              value="30-34, 374,079"
-              accent="cyan"
-              testId="age-bulge-largest"
-              dataValue={374079}
-            />
-            <StatCard
-              label="Aged 65 and over, 2023"
-              value={sixtyFivePlus2023.toLocaleString('en-NZ')}
-              accent="cyan"
-              testId="age-bulge-sixty-five-plus"
-              dataValue={sixtyFivePlus2023}
-            />
-            <StatCard
-              label="Median age, 2023"
-              value="38.1"
-              accent="cyan"
-              testId="age-bulge-median"
-              dataValue={38.1}
-            />
-          </dl>
-        ),
-      };
-    }
     case 'ethnic-mix': {
       return {
         chart: <EthnicityWaffle />,
@@ -1495,41 +1537,6 @@ function renderStoryContent(
               accent="rose"
               testId="otago-rate"
               dataValue={otagoRow?.rates.at(-1)}
-            />
-          </dl>
-        ),
-      };
-    }
-    case 'tourist-arrivals': {
-      const australiaRow = VISITOR_ARRIVAL_ROWS.find((row) => row.key === 'australia');
-      const unitedStatesRow = VISITOR_ARRIVAL_ROWS.find((row) => row.key === 'united-states');
-      const indiaRow = VISITOR_ARRIVAL_ROWS.find((row) => row.key === 'india');
-      return {
-        chart: <VisitorArrivalDotPlot />,
-        stats: (
-          <dl className="grid gap-6 py-[var(--spacing-2xl)] sm:grid-cols-3">
-            <StatCard
-              label="Visitors from Australia (2019)"
-              value={australiaRow?.arrivals2019.toLocaleString('en-NZ') ?? ''}
-              accent="sky"
-              testId="visitor-australia"
-              dataValue={australiaRow?.arrivals2019}
-            />
-            <StatCard
-              label="US growth, 2015 to 2019"
-              value={`+${unitedStatesRow === undefined ? 0 : visitorArrivalGrowthPercent(unitedStatesRow)}%`}
-              accent="sky"
-              testId="visitor-us-growth"
-              dataValue={
-                unitedStatesRow === undefined ? 0 : visitorArrivalGrowthPercent(unitedStatesRow)
-              }
-            />
-            <StatCard
-              label="India growth, 2015 to 2019"
-              value={`+${indiaRow === undefined ? 0 : visitorArrivalGrowthPercent(indiaRow)}%`}
-              accent="sky"
-              testId="visitor-india-growth"
-              dataValue={indiaRow === undefined ? 0 : visitorArrivalGrowthPercent(indiaRow)}
             />
           </dl>
         ),

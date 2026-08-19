@@ -5,7 +5,7 @@ import type { MicrositeGalleryCard } from '@/components/MicrositeGallery';
 import { ReportIssueButton } from '@/components/ReportIssueButton';
 import { env } from '@/env';
 import { fetchForestrySeries, summarizeForestry } from '@/lib/forestry-data';
-import { formatHectares, formatMillions } from '@/lib/format';
+import { formatAreaKm2, formatMillions } from '@/lib/format';
 import {
   DIGITALNZ_GOLD_RECORDS,
   fetchCatalogueTotal,
@@ -65,17 +65,17 @@ export default async function HomePage(): Promise<React.ReactElement> {
     {
       config: getMicrosite('vineyard-boom'),
       statLabel: `Wine grapes now (${horticulture.latest.year})`,
-      statValue: formatHectares(wineGrapes?.latest ?? 0),
+      statValue: formatAreaKm2(wineGrapes?.latest ?? 0),
     },
     {
       config: getMicrosite('planting-bust'),
       statLabel: `New planting in ${forestry.latest.year}`,
-      statValue: formatHectares(newPlanting?.latest ?? 0),
+      statValue: formatAreaKm2(newPlanting?.latest ?? 0),
     },
     {
       config: getMicrosite('kiwifruit-overtake'),
       statLabel: `Kiwifruit now (${horticulture.latest.year})`,
-      statValue: formatHectares(kiwifruit?.latest ?? 0),
+      statValue: formatAreaKm2(kiwifruit?.latest ?? 0),
     },
     {
       config: getMicrosite('deer-boom-bust'),
@@ -215,7 +215,7 @@ export default async function HomePage(): Promise<React.ReactElement> {
       statValue: '38.2 years',
     },
     {
-      config: getMicrosite('tourist-arrivals'),
+      config: getMicrosite('visitor-arrival-ranks'),
       statLabel: 'Visitors from Australia (2019)',
       statValue: '1,537,988',
     },
@@ -268,8 +268,8 @@ export default async function HomePage(): Promise<React.ReactElement> {
       <Container size="wide">
         <Stack className="max-w-3xl gap-4 py-[var(--spacing-2xl)]">
           <h1 className="numeral-heading-3xl">
-            Small experiments digging through New Zealand public data for the weird, the funny, and
-            the surprising.
+            Small experiments digging through New Zealand public data for the funny and the
+            surprising.
           </h1>
           <p className="numeral-paragraph-lg text-[var(--color-muted)]">
             {galleryCards.length} live microsites. Stats NZ at deploy time, plus GeoNet, NZOR,

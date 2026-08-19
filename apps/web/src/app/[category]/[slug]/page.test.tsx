@@ -231,16 +231,6 @@ describe('MicrositePage', () => {
     expect(html).toContain('Sources and further reading');
   });
 
-  it('renders the age bulge story', async () => {
-    const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve(paramsFor('age-bulge'))} />,
-    );
-    const html = await new Response(stream).text();
-    expect(html).toContain('The biggest five-year band in the country is 30 to 34.');
-    expect(html).toContain('374,079');
-    expect(html).toContain('Sources and further reading');
-  });
-
   it('renders the industry employment story', async () => {
     const stream = await renderToReadableStream(
       <MicrositePage params={Promise.resolve(paramsFor('industry-employment'))} />,
@@ -432,7 +422,7 @@ it('renders the vehicle fleet story', async () => {
   expect(html).toContain('Motor Vehicle Register (NZTA)');
 });
 
-it('renders the age distribution story', async () => {
+it('renders the age distribution story with the ridgeline', async () => {
   const stream = await renderToReadableStream(
     <MicrositePage params={Promise.resolve(paramsFor('age-distribution'))} />,
   );
@@ -440,6 +430,7 @@ it('renders the age distribution story', async () => {
   expect(html).toContain('The baby boom bulge moved up the age ladder.');
   expect(html).toContain('4,993,923');
   expect(html).toContain('data-value="4993923"');
+  expect(html).toContain('Aged 65 and over, 2023');
   expect(html).toContain('Sources and further reading');
 });
 
@@ -515,12 +506,12 @@ it('renders the median age ranks story with the tile grid', async () => {
   expect(html).toContain('2023 Census population counts');
 });
 
-it('renders the tourist arrivals story', async () => {
+it('renders the visitor arrival ranks story with the dot plot', async () => {
   const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve(paramsFor('tourist-arrivals'))} />,
+    <MicrositePage params={Promise.resolve(paramsFor('visitor-arrival-ranks'))} />,
   );
   const html = await new Response(stream).text();
-  expect(html).toContain('Australia sends more visitors than the next nine countries combined');
+  expect(html).toContain('Indonesia and the Philippines climbed the visitor ranks.');
   expect(html).toContain('Visitors from Australia (2019)');
   expect(html).toContain('International travel: December 2019 (Stats NZ)');
 });

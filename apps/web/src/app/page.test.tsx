@@ -138,8 +138,8 @@ describe('HomePage', () => {
     const html = await new Response(stream).text();
     expect(html).toContain('23.3 million');
     expect(html).toContain('5.8 million');
-    expect(html).toContain('8,293 ha');
-    expect(html).toContain('14,514 ha');
+    expect(html).toContain('82.9 km²');
+    expect(html).toContain('145.1 km²');
     expect(html).toContain('0.7 million');
     expect(html).toContain('5,589');
   });
