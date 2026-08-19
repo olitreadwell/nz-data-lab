@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
   // remain root-relative.
   output: 'export',
   // Story routes become <slug>/index.html so the static host serves
-  // /microsites/<slug>/ without an .html extension.
+  // /<category>/<slug>/ without an .html extension.
   trailingSlash: true,
   basePath: process.env.NEXT_PUBLIC_BASE_PATH ?? '',
   assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH ?? '',

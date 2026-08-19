@@ -2,8 +2,18 @@ import { renderToReadableStream } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 
 import { HIDDEN_MICROSITES } from '@/lib/hidden-microsites';
+import { CATEGORY_SLUGS, MICROSITES } from '@/lib/microsites';
 
 import MicrositePage, { generateMetadata } from './page';
+
+/** Builds the category/slug params for a microsite, or a miss for unknown slugs. */
+function paramsFor(slug: string): { category: string; slug: string } {
+  const microsite = MICROSITES.find((candidate) => candidate.slug === slug);
+  return {
+    category: microsite === undefined ? 'nope' : CATEGORY_SLUGS[microsite.category],
+    slug,
+  };
+}
 
 const notFoundMock = vi.fn();
 vi.mock('next/navigation', () => ({
@@ -151,20 +161,22 @@ vi.mock('@/lib/forestry-data', async (importOriginal) => {
 describe('MicrositePage', () => {
   it('renders the sheep story with narrative, chart, and sources', async () => {
     const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve({ slug: 'sheep-index' })} />,
+      <MicrositePage params={Promise.resolve(paramsFor('sheep-index'))} />,
     );
     const html = await new Response(stream).text();
     expect(html).toContain('national animal is in freefall');
     expect(html).toContain('70 million sheep');
     expect(html).toContain('Sources and further reading');
     expect(html).toContain('Sheep number falls to six for each person');
-    expect(html).toContain('All microsites');
+    expect(html).toContain('aria-label="Breadcrumb"');
+    expect(html).toContain('href="/agriculture"');
+    expect(html).toContain('Sheep index');
     expect(html.match(/<h1[^>]*>/g) ?? []).toHaveLength(1);
   });
 
   it('renders exactly one h1 with the microsite title before any h2', async () => {
     const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve({ slug: 'sheep-index' })} />,
+      <MicrositePage params={Promise.resolve(paramsFor('sheep-index'))} />,
     );
     const html = await new Response(stream).text();
     const h1s = html.match(/<h1[^>]*>(.*?)<\/h1>/g) ?? [];
@@ -178,19 +190,21 @@ describe('MicrositePage', () => {
 
   it('returns a unique document title for the sheep microsite', async () => {
     await expect(
-      generateMetadata({ params: Promise.resolve({ slug: 'sheep-index' }) }),
+      generateMetadata({ params: Promise.resolve(paramsFor('sheep-index')) }),
     ).resolves.toEqual({ title: 'Sheep index - nz-data-lab' });
   });
 
   it('returns a generic title for an unknown microsite', async () => {
-    await expect(generateMetadata({ params: Promise.resolve({ slug: 'nope' }) })).resolves.toEqual({
-      title: 'nz-data-lab',
-    });
+    await expect(generateMetadata({ params: Promise.resolve(paramsFor('nope')) })).resolves.toEqual(
+      {
+        title: 'nz-data-lab',
+      },
+    );
   });
 
   it('renders the census rank shift story', async () => {
     const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve({ slug: 'census-rank-shift' })} />,
+      <MicrositePage params={Promise.resolve(paramsFor('census-rank-shift'))} />,
     );
     const html = await new Response(stream).text();
     expect(html).toContain('Selwyn and Queenstown raced up the census ranks');
@@ -200,7 +214,7 @@ describe('MicrositePage', () => {
 
   it('renders the age pyramid story', async () => {
     const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve({ slug: 'age-pyramid' })} />,
+      <MicrositePage params={Promise.resolve(paramsFor('age-pyramid'))} />,
     );
     const html = await new Response(stream).text();
     expect(html).toContain('Women outnumber men from age 30 up');
@@ -209,7 +223,7 @@ describe('MicrositePage', () => {
 
   it('renders the regional population growth story', async () => {
     const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve({ slug: 'regional-population-growth' })} />,
+      <MicrositePage params={Promise.resolve(paramsFor('regional-population-growth'))} />,
     );
     const html = await new Response(stream).text();
     expect(html).toContain('The top of the country is growing faster than the bottom.');
@@ -219,7 +233,7 @@ describe('MicrositePage', () => {
 
   it('renders the age bulge story', async () => {
     const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve({ slug: 'age-bulge' })} />,
+      <MicrositePage params={Promise.resolve(paramsFor('age-bulge'))} />,
     );
     const html = await new Response(stream).text();
     expect(html).toContain('The biggest five-year band in the country is 30 to 34.');
@@ -229,7 +243,7 @@ describe('MicrositePage', () => {
 
   it('renders the industry employment story', async () => {
     const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve({ slug: 'industry-employment' })} />,
+      <MicrositePage params={Promise.resolve(paramsFor('industry-employment'))} />,
     );
     const html = await new Response(stream).text();
     expect(html).toContain('biggest employer');
@@ -239,7 +253,7 @@ describe('MicrositePage', () => {
 
   it('renders the region density story', async () => {
     const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve({ slug: 'region-density' })} />,
+      <MicrositePage params={Promise.resolve(paramsFor('region-density'))} />,
     );
     const html = await new Response(stream).text();
     expect(html).toContain('Auckland holds a third of the people');
@@ -249,7 +263,7 @@ describe('MicrositePage', () => {
 
   it('renders the quake years story', async () => {
     const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve({ slug: 'quake-years' })} />,
+      <MicrositePage params={Promise.resolve(paramsFor('quake-years'))} />,
     );
     const html = await new Response(stream).text();
     expect(html).toContain('busiest quake year since 2001');
@@ -259,7 +273,7 @@ describe('MicrositePage', () => {
 
   it('renders the quake magnitudes story', async () => {
     const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve({ slug: 'quake-magnitudes' })} />,
+      <MicrositePage params={Promise.resolve(paramsFor('quake-magnitudes'))} />,
     );
     const html = await new Response(stream).text();
     expect(html).toContain('Small quakes drown out the big ones');
@@ -268,7 +282,7 @@ describe('MicrositePage', () => {
 
   it('renders the quake months story', async () => {
     const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve({ slug: 'quake-months' })} />,
+      <MicrositePage params={Promise.resolve(paramsFor('quake-months'))} />,
     );
     const html = await new Response(stream).text();
     expect(html).toContain('Quakes of magnitude 3+ cluster in autumn');
@@ -277,7 +291,7 @@ describe('MicrositePage', () => {
 
   it('renders the ethnic mix story', async () => {
     const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve({ slug: 'ethnic-mix' })} />,
+      <MicrositePage params={Promise.resolve(paramsFor('ethnic-mix'))} />,
     );
     const html = await new Response(stream).text();
     expect(html).toContain('European is still the biggest group, but the mix is changing fast.');
@@ -287,7 +301,7 @@ describe('MicrositePage', () => {
 
   it('renders the rabbit boom story with the spotlight chart', async () => {
     const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve({ slug: 'rabbit-boom' })} />,
+      <MicrositePage params={Promise.resolve(paramsFor('rabbit-boom'))} />,
     );
     const html = await new Response(stream).text();
     expect(html).toContain('bunnies are winning');
@@ -296,7 +310,7 @@ describe('MicrositePage', () => {
   });
   it('renders the quake depth scatter story', async () => {
     const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve({ slug: 'quake-depth-scatter' })} />,
+      <MicrositePage params={Promise.resolve(paramsFor('quake-depth-scatter'))} />,
     );
     const html = await new Response(stream).text();
     expect(html).toContain('Shallow quakes are the ones people feel');
@@ -305,7 +319,7 @@ describe('MicrositePage', () => {
 
   it('renders the quake frequency by magnitude story', async () => {
     const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve({ slug: 'quake-frequency-magnitude' })} />,
+      <MicrositePage params={Promise.resolve(paramsFor('quake-frequency-magnitude'))} />,
     );
     const html = await new Response(stream).text();
     expect(html).toContain('Small quakes vastly outnumber big ones');
@@ -314,7 +328,7 @@ describe('MicrositePage', () => {
 
   it('renders the quake depth distribution story', async () => {
     const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve({ slug: 'quake-depth-distribution' })} />,
+      <MicrositePage params={Promise.resolve(paramsFor('quake-depth-distribution'))} />,
     );
     const html = await new Response(stream).text();
     expect(html).toContain('Deep quakes cluster under the North Island');
@@ -323,7 +337,7 @@ describe('MicrositePage', () => {
 
   it('renders the dairy story with the livestock chart', async () => {
     const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve({ slug: 'dairy-takeover' })} />,
+      <MicrositePage params={Promise.resolve(paramsFor('dairy-takeover'))} />,
     );
     const html = await new Response(stream).text();
     expect(html).toContain('paddocks flipped from wool to milk');
@@ -333,7 +347,7 @@ describe('MicrositePage', () => {
 
 it('renders the online garage sale story', async () => {
   const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'online-garage-sale' })} />,
+    <MicrositePage params={Promise.resolve(paramsFor('online-garage-sale'))} />,
   );
   const html = await new Response(stream).text();
   expect(html).toContain('5,589 leaf categories');
@@ -345,7 +359,7 @@ it.skipIf(HIDDEN_MICROSITES.includes('species-register'))(
   'renders the species register with the live register total',
   async () => {
     const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve({ slug: 'species-register' })} />,
+      <MicrositePage params={Promise.resolve(paramsFor('species-register'))} />,
     );
     const html = await new Response(stream).text();
     expect(html).toContain('170,151');
@@ -357,7 +371,7 @@ it.skipIf(HIDDEN_MICROSITES.includes('open-data-catalogue'))(
   'renders the open data catalogue with the live catalogue total',
   async () => {
     const stream = await renderToReadableStream(
-      <MicrositePage params={Promise.resolve({ slug: 'open-data-catalogue' })} />,
+      <MicrositePage params={Promise.resolve(paramsFor('open-data-catalogue'))} />,
     );
     const html = await new Response(stream).text();
     expect(html).toContain('31,915');
@@ -367,7 +381,7 @@ it.skipIf(HIDDEN_MICROSITES.includes('open-data-catalogue'))(
 
 it('renders the company size distribution story', async () => {
   const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'company-size-distribution' })} />,
+    <MicrositePage params={Promise.resolve(paramsFor('company-size-distribution'))} />,
   );
   const html = await new Response(stream).text();
   expect(html).toContain('Most businesses have no staff at all.');
@@ -377,7 +391,7 @@ it('renders the company size distribution story', async () => {
 
 it('renders the tourism arrivals by month story', async () => {
   const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'tourism-arrivals-by-month' })} />,
+    <MicrositePage params={Promise.resolve(paramsFor('tourism-arrivals-by-month'))} />,
   );
   const html = await new Response(stream).text();
   expect(html).toContain('Visitors flood in every summer.');
@@ -387,7 +401,7 @@ it('renders the tourism arrivals by month story', async () => {
 
 it('renders the retail sales by month story', async () => {
   const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'retail-sales-by-month' })} />,
+    <MicrositePage params={Promise.resolve(paramsFor('retail-sales-by-month'))} />,
   );
   const html = await new Response(stream).text();
   expect(html).toContain('Card spending peaks every December.');
@@ -397,7 +411,7 @@ it('renders the retail sales by month story', async () => {
 
 it('renders the EV charging story', async () => {
   const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'ev-charging' })} />,
+    <MicrositePage params={Promise.resolve(paramsFor('ev-charging'))} />,
   );
   const html = await new Response(stream).text();
   expect(html).toContain('639 public EV charging stations');
@@ -407,7 +421,7 @@ it('renders the EV charging story', async () => {
 
 it('renders the road crash trend story', async () => {
   const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'road-crash-trend' })} />,
+    <MicrositePage params={Promise.resolve(paramsFor('road-crash-trend'))} />,
   );
   const html = await new Response(stream).text();
   expect(html).toContain('Road crashes fell 27%');
@@ -417,7 +431,7 @@ it('renders the road crash trend story', async () => {
 
 it('renders the vehicle fleet story', async () => {
   const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'vehicle-fleet' })} />,
+    <MicrositePage params={Promise.resolve(paramsFor('vehicle-fleet'))} />,
   );
   const html = await new Response(stream).text();
   expect(html).toContain('107,525 electric vehicles');
@@ -427,7 +441,7 @@ it('renders the vehicle fleet story', async () => {
 
 it('renders the age distribution story', async () => {
   const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'age-distribution' })} />,
+    <MicrositePage params={Promise.resolve(paramsFor('age-distribution'))} />,
   );
   const html = await new Response(stream).text();
   expect(html).toContain('The baby boom bulge moved up the age ladder.');
@@ -438,7 +452,7 @@ it('renders the age distribution story', async () => {
 
 it('renders the median age ranks story', async () => {
   const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'median-age-ranks' })} />,
+    <MicrositePage params={Promise.resolve(paramsFor('median-age-ranks'))} />,
   );
   const html = await new Response(stream).text();
   expect(html).toContain('The upper South Island is where New Zealand ages fastest.');
@@ -449,7 +463,7 @@ it('renders the median age ranks story', async () => {
 
 it('renders the visitor arrival ranks story', async () => {
   const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'visitor-arrival-ranks' })} />,
+    <MicrositePage params={Promise.resolve(paramsFor('visitor-arrival-ranks'))} />,
   );
   const html = await new Response(stream).text();
   expect(html).toContain('Indonesia and the Philippines climbed the visitor ranks.');
@@ -460,7 +474,7 @@ it('renders the visitor arrival ranks story', async () => {
 
 it('renders the population waffle story', async () => {
   const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'population-waffle' })} />,
+    <MicrositePage params={Promise.resolve(paramsFor('population-waffle'))} />,
   );
   const html = await new Response(stream).text();
   expect(html).toContain('Auckland is a third of the country');
@@ -470,7 +484,7 @@ it('renders the population waffle story', async () => {
 
 it('renders the export market bump story', async () => {
   const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'export-market-bump' })} />,
+    <MicrositePage params={Promise.resolve(paramsFor('export-market-bump'))} />,
   );
   const html = await new Response(stream).text();
   expect(html).toContain('China overtook Australia as the top export market');
@@ -480,7 +494,7 @@ it('renders the export market bump story', async () => {
 
 it('renders the business register story', async () => {
   const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'enterprise-bar-in-bar' })} />,
+    <MicrositePage params={Promise.resolve(paramsFor('enterprise-bar-in-bar'))} />,
   );
   const html = await new Response(stream).text();
   expect(html).toContain('Rental and real estate is the biggest block of the business register');
@@ -490,7 +504,7 @@ it('renders the business register story', async () => {
 
 it('renders the unemployment ranks story', async () => {
   const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'unemployment-ranks' })} />,
+    <MicrositePage params={Promise.resolve(paramsFor('unemployment-ranks'))} />,
   );
   const html = await new Response(stream).text();
   expect(html).toContain('The unemployment pecking order reshuffles every year');
@@ -500,7 +514,7 @@ it('renders the unemployment ranks story', async () => {
 
 it('renders the median age by region story', async () => {
   const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'median-age-by-region' })} />,
+    <MicrositePage params={Promise.resolve(paramsFor('median-age-by-region'))} />,
   );
   const html = await new Response(stream).text();
   expect(html).toContain('The West Coast aged five years in one decade');
@@ -510,7 +524,7 @@ it('renders the median age by region story', async () => {
 
 it('renders the tourist arrivals story', async () => {
   const stream = await renderToReadableStream(
-    <MicrositePage params={Promise.resolve({ slug: 'tourist-arrivals' })} />,
+    <MicrositePage params={Promise.resolve(paramsFor('tourist-arrivals'))} />,
   );
   const html = await new Response(stream).text();
   expect(html).toContain('Australia sends more visitors than the next nine countries combined');

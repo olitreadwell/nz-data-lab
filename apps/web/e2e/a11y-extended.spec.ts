@@ -31,24 +31,24 @@ test.describe('extended a11y coverage', () => {
     // The root error boundary only renders when a page throws at runtime. In
     // the static export served by CI there is no server to throw, so force a
     // 500 on the document request to surface the error page.
-    await page.route('**/microsites/sheep-index/', (route) =>
+    await page.route('**/agriculture/sheep-index/', (route) =>
       route.fulfill({ status: 500, body: '' }),
     );
-    await page.goto('./microsites/sheep-index');
+    await page.goto('./agriculture/sheep-index');
     await expect(page.getByRole('heading', { name: 'An unexpected error occurred' })).toBeVisible();
     const results = await new AxeBuilder({ page }).analyze();
     expect(results.violations).toEqual([]);
   });
 
   test('@a11y waits for live-search content before running axe', async ({ page }) => {
-    await page.goto('./microsites/species-register');
+    await page.goto('./biodiversity/species-register');
     await expect(page.getByText(/names match "kiwi"/i)).toBeVisible();
     const results = await new AxeBuilder({ page }).analyze();
     expect(results.violations).toEqual([]);
   });
 
   test('@a11y keyboard-only tab-through shows visible focus and no trap', async ({ page }) => {
-    await page.goto('./microsites/shake-index');
+    await page.goto('./earthquakes/shake-index');
     await expect(page.getByRole('main')).toBeVisible();
 
     const focusedTags: string[] = [];
@@ -82,7 +82,7 @@ test.describe('extended a11y coverage', () => {
     // Delay the RSC payload for a microsite so the streaming loading boundary
     // stays visible long enough to assert on it. Set up before navigating so
     // any prefetch is also delayed.
-    await page.route('**/microsites/census-rank-shift/**', async (route) => {
+    await page.route('**/census/census-rank-shift/**', async (route) => {
       await new Promise((resolve) => setTimeout(resolve, 3000));
       await route.continue();
     });
@@ -90,7 +90,7 @@ test.describe('extended a11y coverage', () => {
     // Wait for the client-side router to be ready before clicking, otherwise
     // the click can race hydration and skip the loading boundary.
     await page.waitForLoadState('networkidle');
-    await page.locator('a[href="/microsites/census-rank-shift/"]').click();
+    await page.locator('a[href="/census/census-rank-shift/"]').click();
 
     const loading = page.getByRole('status');
     await expect(loading).toBeVisible();

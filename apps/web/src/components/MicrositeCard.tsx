@@ -6,6 +6,7 @@ import { MicrositeEyebrow } from './MicrositeEyebrow';
 
 interface MicrositeCardProps {
   slug: string;
+  categorySlug: string;
   eyebrow: string;
   title: string;
   description: string;
@@ -17,6 +18,7 @@ interface MicrositeCardProps {
 /** One microsite teaser card on the hub page, linking to its full story. */
 export function MicrositeCard({
   slug,
+  categorySlug,
   eyebrow,
   title,
   description,
@@ -27,7 +29,7 @@ export function MicrositeCard({
   const styles = getMicrositeAccentStyles(accent);
   return (
     <Link
-      href={`/microsites/${slug}`}
+      href={`/${categorySlug}/${slug}`}
       className={`flex flex-col gap-3 rounded-[var(--radius-lg)] border border-[var(--color-border)] p-6 ${styles.cardBg} transition-colors hover:border-[var(--color-fg)]`}
     >
       <MicrositeEyebrow className={`numeral-text-eyebrow ${styles.eyebrow}`} eyebrow={eyebrow} />

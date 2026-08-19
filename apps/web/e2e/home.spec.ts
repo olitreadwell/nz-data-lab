@@ -28,7 +28,7 @@ test.describe('home', () => {
   });
 
   test('@smoke shows a plausible live sheep count', async ({ page }) => {
-    await page.goto('./microsites/sheep-index');
+    await page.goto('./agriculture/sheep-index');
     const latest = await page.getAttribute('[data-testid="sheep-latest"]', 'data-value');
     expect(latest).not.toBeNull();
     const sheep = Number(latest);
@@ -38,11 +38,11 @@ test.describe('home', () => {
   });
 
   test('@smoke shows plausible dairy and wine numbers', async ({ page }) => {
-    await page.goto('./microsites/dairy-takeover');
+    await page.goto('./agriculture/dairy-takeover');
     const dairy = await page.getAttribute('[data-testid="dairy-latest"]', 'data-value');
     expect(Number(dairy)).toBeGreaterThan(5000000);
     expect(Number(dairy)).toBeLessThan(7000000);
-    await page.goto('./microsites/vineyard-boom');
+    await page.goto('./agriculture/vineyard-boom');
     const wine = await page.getAttribute('[data-testid="wine-latest"]', 'data-value');
     expect(Number(wine)).toBeGreaterThan(30000);
     expect(Number(wine)).toBeLessThan(45000);

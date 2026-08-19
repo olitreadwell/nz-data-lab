@@ -17,7 +17,7 @@ import {
 } from '@/lib/headline-stats';
 import { fetchHorticultureSeries, summarizeHorticulture } from '@/lib/horticulture-data';
 import { fetchLivestockSeries, summarizeLivestock } from '@/lib/livestock-data';
-import { MICROSITES } from '@/lib/microsites';
+import { categorySlugFor, MICROSITES } from '@/lib/microsites';
 import type { MicrositeConfig } from '@/lib/microsites';
 import { fetchRecentQuakes } from '@/lib/quake-data';
 import { fetchRabbitSpotlightSeries } from '@/lib/rabbit-data';
@@ -251,6 +251,7 @@ export default async function HomePage(): Promise<React.ReactElement> {
     const stat = statBySlug.get(config.slug);
     return {
       slug: config.slug,
+      categorySlug: categorySlugFor(config),
       eyebrow: config.eyebrow,
       title: config.title,
       description: config.description,

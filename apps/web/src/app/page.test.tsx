@@ -2,8 +2,15 @@ import { renderToReadableStream } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 
 import { HIDDEN_MICROSITES } from '@/lib/hidden-microsites';
+import { CATEGORY_SLUGS, MICROSITES } from '@/lib/microsites';
 
 import HomePage from './page';
+
+/** Category slug for a microsite slug, for link assertions. */
+function categorySlugForTest(slug: string): string {
+  const microsite = MICROSITES.find((candidate) => candidate.slug === slug);
+  return microsite === undefined ? 'nope' : CATEGORY_SLUGS[microsite.category];
+}
 
 vi.mock('@/lib/headline-stats', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/lib/headline-stats')>();
@@ -99,7 +106,7 @@ describe('HomePage', () => {
     expect(html).toContain('paddocks flipped from wool to milk');
     expect(html).toContain('stopped planting trees');
     for (const slug of HIDDEN_MICROSITES) {
-      expect(html).not.toContain(`href="/microsites/${slug}"`);
+      expect(html).not.toContain(`href="/${categorySlugForTest(slug)}/${slug}"`);
     }
   });
 
@@ -115,10 +122,10 @@ describe('HomePage', () => {
       'online-garage-sale',
     ];
     for (const slug of visibleWithCards) {
-      expect(html).toContain(`href="/microsites/${slug}"`);
+      expect(html).toContain(`href="/${categorySlugForTest(slug)}/${slug}"`);
     }
     for (const slug of HIDDEN_MICROSITES) {
-      expect(html).not.toContain(`href="/microsites/${slug}"`);
+      expect(html).not.toContain(`href="/${categorySlugForTest(slug)}/${slug}"`);
     }
   });
 

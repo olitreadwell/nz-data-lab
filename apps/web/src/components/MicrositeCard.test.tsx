@@ -5,6 +5,7 @@ import { MicrositeCard } from './MicrositeCard';
 
 const baseProps = {
   slug: 'sheep-index',
+  categorySlug: 'agriculture',
   eyebrow: '🐑 the sheep index',
   title: 'The Sheep Index',
   description: 'How New Zealand\u2019s national animal is in freefall.',

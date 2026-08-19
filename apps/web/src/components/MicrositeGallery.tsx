@@ -8,6 +8,7 @@ import { MicrositeCard } from './MicrositeCard';
 /** One filterable microsite teaser on the hub page. */
 export interface MicrositeGalleryCard {
   slug: string;
+  categorySlug: string;
   eyebrow: string;
   title: string;
   description: string;
@@ -21,6 +22,8 @@ export interface MicrositeGalleryCard {
 
 interface MicrositeGalleryProps {
   cards: MicrositeGalleryCard[];
+  /** Optional gallery heading; pass null to hide it (e.g. category pages). */
+  title?: string | null;
 }
 
 type FilterKey = 'dataSource' | 'chartType' | 'category';
@@ -39,7 +42,7 @@ function filterOptions(cards: MicrositeGalleryCard[], key: FilterKey): string[] 
 }
 
 /** The interactive hub grid: filter microsites by any combination of dimensions. */
-export function MicrositeGallery({ cards }: MicrositeGalleryProps): React.ReactElement {
+export function MicrositeGallery({ cards, title }: MicrositeGalleryProps): React.ReactElement {
   const [dataSource, setDataSource] = useState(ALL);
   const [chartType, setChartType] = useState(ALL);
   const [category, setCategory] = useState(ALL);
@@ -78,9 +81,11 @@ export function MicrositeGallery({ cards }: MicrositeGalleryProps): React.ReactE
 
   return (
     <section aria-labelledby="microsite-filters-heading">
-      <h2 id="microsite-filters-heading" className="numeral-heading-lg">
-        Explore the microsites
-      </h2>
+      {title !== null ? (
+        <h2 id="microsite-filters-heading" className="numeral-heading-lg">
+          {title ?? 'Explore the microsites'}
+        </h2>
+      ) : null}
       <div className="grid gap-3 sm:grid-cols-[1fr_1fr_1fr_auto]">
         {(Object.keys(FILTER_LABELS) as FilterKey[]).map((key) => (
           <label key={key} className="flex flex-col gap-1">
@@ -123,6 +128,7 @@ export function MicrositeGallery({ cards }: MicrositeGalleryProps): React.ReactE
             <MicrositeCard
               key={card.slug}
               slug={card.slug}
+              categorySlug={card.categorySlug}
               eyebrow={card.eyebrow}
               title={card.title}
               description={card.description}

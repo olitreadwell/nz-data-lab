@@ -110,12 +110,11 @@ function getEnvironmentInfo(): EnvironmentInfo {
  * @returns the matching microsite label, "Home page", or "Other"
  */
 function detectItemFromPath(pathname: string): string {
-  const marker = '/microsites/';
-  const markerIndex = pathname.indexOf(marker);
-  if (markerIndex === -1) {
+  const segments = pathname.split('/').filter((segment) => segment.length > 0);
+  const slug = segments[segments.length - 1] ?? '';
+  if (slug === '') {
     return 'Home page';
   }
-  const slug = pathname.slice(markerIndex + marker.length).split('/')[0] ?? '';
   const microsite = MICROSITES.find((candidate) => candidate.slug === slug);
   return microsite?.label ?? 'Other';
 }

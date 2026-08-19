@@ -64,6 +64,31 @@ export type MicrositeCategory =
   | 'Open data & digital'
   | 'Society & community';
 
+/** URL slug for each microsite category, used for /category-slug/ routes. */
+export const CATEGORY_SLUGS: Record<MicrositeCategory, string> = {
+  'Agriculture & farming': 'agriculture',
+  'Earthquakes & geology': 'earthquakes',
+  'Biodiversity & nature': 'biodiversity',
+  'Environment & geography': 'environment',
+  'Census & population': 'census',
+  'Economy & business': 'economy',
+  'Tourism & travel': 'tourism',
+  Transport: 'transport',
+  Education: 'education',
+  'Open data & digital': 'open-data',
+  'Society & community': 'society',
+};
+
+/** Category slug for a microsite config. */
+export function categorySlugFor(microsite: Pick<MicrositeConfig, 'category'>): string {
+  return CATEGORY_SLUGS[microsite.category];
+}
+
+/** Canonical story path for a microsite: /category-slug/slug/. */
+export function micrositePathFor(microsite: Pick<MicrositeConfig, 'slug' | 'category'>): string {
+  return `/${CATEGORY_SLUGS[microsite.category]}/${microsite.slug}/`;
+}
+
 export interface MicrositeConfig {
   slug: string;
   label: string;

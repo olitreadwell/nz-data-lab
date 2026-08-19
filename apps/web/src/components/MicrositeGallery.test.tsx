@@ -8,6 +8,7 @@ import type { MicrositeGalleryCard } from './MicrositeGallery';
 const cards: MicrositeGalleryCard[] = [
   {
     slug: 'sheep-index',
+    categorySlug: 'agriculture',
     eyebrow: '🐑 the sheep index',
     title: 'The Sheep Index',
     description: 'The national flock is in freefall.',
@@ -20,6 +21,7 @@ const cards: MicrositeGalleryCard[] = [
   },
   {
     slug: 'shake-index',
+    categorySlug: 'earthquakes',
     eyebrow: '🌏 the shake index',
     title: 'The Shake Index',
     description: 'Felt quakes across New Zealand.',
@@ -32,6 +34,7 @@ const cards: MicrositeGalleryCard[] = [
   },
   {
     slug: 'retail-sales-by-month',
+    categorySlug: 'economy',
     eyebrow: '🛍️ retail sales',
     title: 'Retail Sales',
     description: 'Card transactions by industry.',
@@ -105,6 +108,7 @@ describe('MicrositeGallery cards without headline stats', () => {
   it('still renders a card and links to the story', () => {
     const statless: MicrositeGalleryCard = {
       slug: 'retail-sales-by-month',
+      categorySlug: 'economy',
       eyebrow: '🛍️ retail sales',
       title: 'Retail Sales by Month',
       description: 'A streamgraph of card transactions.',

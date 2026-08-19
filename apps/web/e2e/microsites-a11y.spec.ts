@@ -1,7 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
-import { MICROSITES } from '../src/lib/microsites';
+import { micrositePathFor, MICROSITES } from '../src/lib/microsites';
 
 interface RouteCase {
   label: string;
@@ -14,7 +14,7 @@ const routeCases: RouteCase[] = [
   { label: 'hub', path: './' },
   ...MICROSITES.map((microsite) => ({
     label: microsite.slug,
-    path: `./microsites/${microsite.slug}`,
+    path: `.${micrositePathFor(microsite)}`,
   })),
 ];
 

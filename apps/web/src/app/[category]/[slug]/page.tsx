@@ -85,7 +85,7 @@ import {
 import { fetchHorticultureSeries, summarizeHorticulture } from '@/lib/horticulture-data';
 import { fetchLivestockSeries, summarizeLivestock } from '@/lib/livestock-data';
 import { NATIONAL_MEDIAN_AGE } from '@/lib/median-age-data';
-import { MICROSITES } from '@/lib/microsites';
+import { categorySlugFor, MICROSITES } from '@/lib/microsites';
 import { fetchRecentQuakeCatalog } from '@/lib/quake-catalog';
 import type { QuakeCatalogEvent } from '@/lib/quake-catalog';
 import { fetchRecentQuakes } from '@/lib/quake-data';
@@ -106,17 +106,20 @@ import { NATIONAL_UNEMPLOYMENT_RATE, UNEMPLOYMENT_RANK_ROWS } from '@/lib/unempl
 import { VISITOR_ARRIVAL_ROWS, visitorArrivalGrowthPercent } from '@/lib/visitor-arrival-data';
 
 interface MicrositePageProps {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ category: string; slug: string }>;
 }
 
-export function generateStaticParams(): { slug: string }[] {
-  return MICROSITES.map((microsite) => ({ slug: microsite.slug }));
+export function generateStaticParams(): { category: string; slug: string }[] {
+  return MICROSITES.map((microsite) => ({
+    category: categorySlugFor(microsite),
+    slug: microsite.slug,
+  }));
 }
 
 export async function generateMetadata({ params }: MicrositePageProps): Promise<Metadata> {
-  const { slug } = await params;
+  const { category, slug } = await params;
   const microsite = MICROSITES.find((candidate) => candidate.slug === slug);
-  if (microsite === undefined) {
+  if (microsite === undefined || categorySlugFor(microsite) !== category) {
     return { title: 'nz-data-lab' };
   }
   return { title: `${microsite.label} - nz-data-lab` };
@@ -125,9 +128,9 @@ export async function generateMetadata({ params }: MicrositePageProps): Promise<
 export default async function MicrositePage({
   params,
 }: MicrositePageProps): Promise<React.ReactElement> {
-  const { slug } = await params;
+  const { category, slug } = await params;
   const microsite = MICROSITES.find((candidate) => candidate.slug === slug);
-  if (microsite === undefined) {
+  if (microsite === undefined || categorySlugFor(microsite) !== category) {
     notFound();
   }
 
@@ -187,12 +190,28 @@ export default async function MicrositePage({
   return (
     <>
       <Container size="wide">
-        <Link
-          href="/"
-          className="numeral-paragraph-sm inline-block py-[var(--spacing-2xl)] text-[var(--color-muted)] underline hover:text-[var(--color-fg)]"
-        >
-          All microsites
-        </Link>
+        <nav aria-label="Breadcrumb" className="py-[var(--spacing-2xl)]">
+          <ol className="numeral-paragraph-sm flex flex-wrap items-center gap-2 text-[var(--color-muted)]">
+            <li>
+              <Link href="/" className="underline hover:text-[var(--color-fg)]">
+                Home
+              </Link>
+            </li>
+            <li aria-hidden="true">/</li>
+            <li>
+              <Link
+                href={`/${categorySlugFor(microsite)}/`}
+                className="underline hover:text-[var(--color-fg)]"
+              >
+                {microsite.category}
+              </Link>
+            </li>
+            <li aria-hidden="true">/</li>
+            <li aria-current="page" className="text-[var(--color-fg)]">
+              {microsite.label}
+            </li>
+          </ol>
+        </nav>
       </Container>
       <MicrositeStory
         id={microsite.slug}
