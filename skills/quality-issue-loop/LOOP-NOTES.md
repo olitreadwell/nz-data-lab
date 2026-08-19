@@ -323,3 +323,30 @@ yml) are manual-only going forward to stop burning Vercel builds per PR.
   jsdoc/no-magic-number warnings); type-check, build, CodeQL, npm audit, and
   unit tests all pass, and those are the blocking gates. No preview deploys
   were created (deploy_preview stays manual-only).
+
+## 2026-08-19 (iteration 2, manual): duplicate-page merges + category filters
+
+- Dedup audit: mapped all 52 microsites to their chart components and data
+  libs, then merged pages that plot the same underlying data. Six pairs
+  became single pages that now show BOTH visualisations (kept slug shown):
+  - `region-density` (choropleth) + `population-waffle` (waffle)
+  - `regional-population-ranks` (slope) + `regional-population-growth`
+    (dumbbell) - same regional census counts
+  - `median-age-ranks` (slope) + `median-age-by-region` (tile grid)
+  - `quake-magnitudes` (histogram) + `quake-frequency-magnitude` (cumulative
+    log view)
+  - `quake-depth-scatter` (scatter) + `quake-depth-distribution` (radial
+    depth bands)
+  - `export-destination-ranks` (slope) + `export-market-bump` (bump)
+- Removed slugs 404; story pages render a labelled pair of charts
+  (`storyChartPair` in the story page) and keep both pages' stat cards.
+  Descriptions were rewritten so the four earthquake cards no longer share
+  the "In the three months to 18 August 2026..." opener.
+- Category pages now pre-set the Category filter (no "All categories"
+  option) and Reset navigates to the hub (`/`) with every filter cleared.
+- Verification: 468 unit tests pass, type-check and static build clean
+  (45 visible story routes), local route/content probes pass, removed routes
+  404, axe WCAG A/AA 0 violations on all 6 merged pages in light and dark.
+  Deployed to Vercel; live probes pass. Remaining advisory CI failures are
+  the pre-existing e2e/axe/lint ones; blocking gates (type-check, build,
+  CodeQL, audit, unit) are green.
