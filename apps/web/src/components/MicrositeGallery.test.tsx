@@ -1,9 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { MicrositeGallery } from './MicrositeGallery';
 import type { MicrositeGalleryCard } from './MicrositeGallery';
+
+const pushMock = vi.fn();
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: pushMock }),
+}));
 
 const cards: MicrositeGalleryCard[] = [
   {
@@ -101,6 +106,22 @@ describe('MicrositeGallery', () => {
     expect(screen.getByText(/No microsites match those filters/)).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Reset' }));
     expect(screen.getByText('Showing 3 of 3 microsites.')).toBeInTheDocument();
+  });
+
+  it('preselects the category filter on a category page', () => {
+    render(<MicrositeGallery cards={cards} title={null} initialCategory="Census & population" />);
+    const category = screen.getByLabelText('Category') as HTMLSelectElement;
+    expect(category.value).toBe('Census & population');
+    expect(screen.getByRole('option', { name: 'Census & population' })).toBeInTheDocument();
+    expect(screen.queryByRole('option', { name: /All categories/ })).not.toBeInTheDocument();
+  });
+
+  it('reset on a category page navigates back to the hub with every filter cleared', async () => {
+    render(<MicrositeGallery cards={cards} title={null} initialCategory="Census & population" />);
+    await userEvent.click(screen.getByRole('button', { name: 'Reset' }));
+    expect(pushMock).toHaveBeenCalledWith('/');
+    expect(screen.getByLabelText('Data source')).toHaveValue('all');
+    expect(screen.getByLabelText('Chart type')).toHaveValue('all');
   });
 });
 

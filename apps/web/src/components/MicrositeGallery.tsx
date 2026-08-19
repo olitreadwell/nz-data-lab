@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
 import type { MicrositeAccent } from './microsite-styles';
@@ -24,6 +25,8 @@ interface MicrositeGalleryProps {
   cards: MicrositeGalleryCard[];
   /** Optional gallery heading; pass null to hide it (e.g. category pages). */
   title?: string | null;
+  /** When set (category pages), the category filter starts here and reset returns to the hub. */
+  initialCategory?: string;
 }
 
 type FilterKey = 'dataSource' | 'chartType' | 'category';
@@ -42,10 +45,15 @@ function filterOptions(cards: MicrositeGalleryCard[], key: FilterKey): string[] 
 }
 
 /** The interactive hub grid: filter microsites by any combination of dimensions. */
-export function MicrositeGallery({ cards, title }: MicrositeGalleryProps): React.ReactElement {
+export function MicrositeGallery({
+  cards,
+  title,
+  initialCategory,
+}: MicrositeGalleryProps): React.ReactElement {
+  const router = useRouter();
   const [dataSource, setDataSource] = useState(ALL);
   const [chartType, setChartType] = useState(ALL);
-  const [category, setCategory] = useState(ALL);
+  const [category, setCategory] = useState(initialCategory ?? ALL);
 
   const setFilter = (key: FilterKey, value: string): void => {
     if (key === 'dataSource') {
@@ -61,6 +69,9 @@ export function MicrositeGallery({ cards, title }: MicrositeGalleryProps): React
     setDataSource(ALL);
     setChartType(ALL);
     setCategory(ALL);
+    if (initialCategory !== undefined) {
+      router.push('/');
+    }
   };
 
   const filteredCards = useMemo(
@@ -97,12 +108,18 @@ export function MicrositeGallery({ cards, title }: MicrositeGalleryProps): React
               onChange={(event) => setFilter(key, event.target.value)}
               className={selectClass}
             >
-              <option value={ALL}>All {FILTER_LABELS[key].toLowerCase()}s</option>
-              {filterOptions(cards, key).map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
+              {key === 'category' && initialCategory !== undefined ? (
+                <option value={initialCategory}>{initialCategory}</option>
+              ) : (
+                <>
+                  <option value={ALL}>All {FILTER_LABELS[key].toLowerCase()}s</option>
+                  {filterOptions(cards, key).map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </>
+              )}
             </select>
           </label>
         ))}

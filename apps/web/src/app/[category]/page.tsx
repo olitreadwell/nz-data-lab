@@ -54,7 +54,12 @@ export default async function CategoryPage({
         </p>
       </Stack>
       <div className="pb-[var(--spacing-3xl)]">
-        <MicrositeGallery cards={cards} title={null} />
+        <MicrositeGallery
+          cards={cards}
+          title={null}
+          initialCategory={categoryLabel}
+          key={category}
+        />
       </div>
     </Container>
   );

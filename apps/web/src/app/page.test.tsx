@@ -6,6 +6,10 @@ import { CATEGORY_SLUGS, MICROSITES } from '@/lib/microsites';
 
 import HomePage from './page';
 
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), prefetch: vi.fn() }),
+}));
+
 /** Category slug for a microsite slug, for link assertions. */
 function categorySlugForTest(slug: string): string {
   const microsite = MICROSITES.find((candidate) => candidate.slug === slug);
