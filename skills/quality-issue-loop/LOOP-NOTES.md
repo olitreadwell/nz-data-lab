@@ -350,3 +350,30 @@ yml) are manual-only going forward to stop burning Vercel builds per PR.
   Deployed to Vercel; live probes pass. Remaining advisory CI failures are
   the pre-existing e2e/axe/lint ones; blocking gates (type-check, build,
   CodeQL, audit, unit) are green.
+
+## 2026-08-19 (iteration 3, manual): second dedup batch + de-ai-text + km2 + live-source fixes
+
+- Dedup batch 2: merged two more same-data pairs into single pages showing
+  BOTH charts (46 -> 44 visible story routes):
+  - `tourist-arrivals` folded into `visitor-arrival-ranks` (rank slope + dot plot)
+  - `age-bulge` folded into `age-distribution` (histogram + ridgeline)
+  - Removed slugs 404; both pages' stat cards kept; home page stat cards repointed.
+- de-ai-text pass over all microsite copy: stripped emoji from all 44
+  eyebrows, removed "This page shows..." framing and "Hover or drag across
+  the chart..." boilerplate from descriptions/dataNotes, de-rule-of-three'd
+  the home H1.
+- Units: replaced hectares with km2 everywhere (`formatHectares` ->
+  `formatAreaKm2`; Auckland parks m2 -> km2; narrative + dataNotes + tests).
+- open-school-map: Overpass school fetch moved from browser to build time
+  (`fetchSchoolsForBuild`), committed 2,604-school fixture as fallback; the
+  map now renders with zero runtime dependencies and a status line saying
+  the data came from OSM at build time.
+- digitised-memory: DigitalNZ v3 sends no CORS headers, so the live search
+  now routes through `cors.eu.org` relay (same JSON payload, verified);
+  relay host added to CSP `connect-src` in `vercel.ts`, `public/_headers`,
+  and the security-headers test.
+- Verification: 467 unit tests pass, type-check clean, static build clean,
+  local probe passes (404s, merged content, km2 text, OSM text, live
+  DigitalNZ search, axe WCAG A/AA 0 violations on all 4 changed pages in
+  light and dark). One final deploy only (no preview deploys). Advisory CI
+  (e2e/axe/lint) still has pre-existing failures; blocking gates green.
