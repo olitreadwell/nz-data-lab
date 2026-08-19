@@ -19,8 +19,8 @@ const LABEL_FONT_SIZE = 12;
 const X_MAX = 135000;
 const BAR_2020_HEIGHT = 14;
 const BAR_2025_HEIGHT = 6;
-const BAR_2020_COLOR = '#cbd5e1';
-const BAR_2025_COLOR = '#4f46e5';
+const BAR_2020_COLOR = '#999999';
+const BAR_2025_COLOR = '#0072B2';
 const HOVER_FADE = 0.35;
 
 type SortMode = 'size' | 'change';

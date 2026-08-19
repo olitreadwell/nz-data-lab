@@ -15,14 +15,14 @@ const PLOT_TOP = 24;
 const PLOT_BOTTOM = 36;
 
 const LAYER_COLORS: Record<(typeof RETAIL_SALES_LAYERS)[number], string> = {
-  consumables: '#0284c7',
-  durables: '#d97706',
-  hospitality: '#e11d48',
-  apparel: '#8b5cf6',
-  fuel: '#f59e0b',
-  vehicles: '#059669',
-  services: '#14b8a6',
-  nonRetail: '#64748b',
+  consumables: '#0072B2',
+  durables: '#E69F00',
+  hospitality: '#D55E00',
+  apparel: '#CC79A7',
+  fuel: '#E69F00',
+  vehicles: '#009E73',
+  services: '#56B4E9',
+  nonRetail: '#999999',
 };
 
 const LAYER_LABELS: Record<(typeof RETAIL_SALES_LAYERS)[number], string> = {

@@ -2,15 +2,15 @@
  * the map module only loads in the browser. */
 
 export const MMI_BANDS: { band: string; label: string; color: string }[] = [
-  { band: 'weak', label: 'Weak (MMI 3-4)', color: '#38bdf8' },
-  { band: 'moderate', label: 'Moderate (MMI 5-6)', color: '#f59e0b' },
-  { band: 'strong', label: 'Strong (MMI 7+)', color: '#ef4444' },
+  { band: 'weak', label: 'Weak (MMI 3-4)', color: '#56B4E9' },
+  { band: 'moderate', label: 'Moderate (MMI 5-6)', color: '#E69F00' },
+  { band: 'strong', label: 'Strong (MMI 7+)', color: '#D55E00' },
 ];
 
 export const BAND_COLORS: Record<string, string> = {
-  weak: '#38bdf8',
-  moderate: '#f59e0b',
-  strong: '#ef4444',
+  weak: '#56B4E9',
+  moderate: '#E69F00',
+  strong: '#D55E00',
 };
 
 const MIN_BUBBLE_RADIUS = 4;

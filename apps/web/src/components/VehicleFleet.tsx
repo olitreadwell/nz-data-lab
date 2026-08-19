@@ -26,19 +26,19 @@ interface SectorDatum extends FleetDatum {
 
 /** Colour per sector, reused by both the sunburst fill and the legend swatch. */
 const SECTOR_COLORS = [
-  '#1f77b4',
-  '#ff7f0e',
-  '#2ca02c',
-  '#d62728',
-  '#9467bd',
-  '#8c564b',
-  '#e377c2',
-  '#7f7f7f',
-  '#bcbd22',
-  '#17becf',
+  '#0072B2',
+  '#E69F00',
+  '#009E73',
+  '#D55E00',
+  '#CC79A7',
+  '#661100',
+  '#F0E442',
+  '#999999',
+  '#F0E442',
+  '#56B4E9',
 ];
 
-const FALLBACK_SECTOR_COLOR = '#1f77b4';
+const FALLBACK_SECTOR_COLOR = '#0072B2';
 
 function formatVehicles(value: string | number): string {
   return Number(value).toLocaleString('en-NZ');

@@ -148,7 +148,7 @@ export function QuakeDepthScatter({ events }: { events: QuakeCatalogEvent[] }): 
               tick={{ fill: 'var(--color-muted)', fontSize: 11 }}
             />
             <Tooltip content={(props) => <DepthTooltip {...props} />} />
-            <Scatter data={points} fill="#be123c" />
+            <Scatter data={points} fill="#D55E00" />
           </ScatterChart>
         </ResponsiveContainer>
       </div>

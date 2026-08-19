@@ -20,14 +20,14 @@ import { ChartDataTable } from './ChartDataTable';
 import type { ChartDataColumn } from './ChartDataTable';
 
 const KINGDOM_COLORS: Record<string, string> = {
-  Animalia: '#f59e0b',
-  Plantae: '#10b981',
-  Fungi: '#8b5cf6',
-  Protozoa: '#0ea5e9',
-  Chromista: '#14b8a6',
-  Archaea: '#f97316',
-  Bacteria: '#ef4444',
-  Viruses: '#d946ef',
+  Animalia: '#E69F00',
+  Plantae: '#009E73',
+  Fungi: '#CC79A7',
+  Protozoa: '#0072B2',
+  Chromista: '#56B4E9',
+  Archaea: '#D55E00',
+  Bacteria: '#D55E00',
+  Viruses: '#F0E442',
 };
 
 const COMPACT_FORMATTER = new Intl.NumberFormat('en-NZ', {
@@ -187,7 +187,7 @@ export function SpeciesRecordLedger(): React.ReactElement {
                     type="linear"
                     dataKey={kingdom.kingdom}
                     isAnimationActive={!prefersReducedMotion}
-                    stroke={KINGDOM_COLORS[kingdom.kingdom] ?? '#64748b'}
+                    stroke={KINGDOM_COLORS[kingdom.kingdom] ?? '#999999'}
                     strokeWidth={2}
                     dot={{ r: 4 }}
                   />

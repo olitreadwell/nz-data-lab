@@ -29,9 +29,9 @@ const MODE_OPTIONS = [
 ] as const;
 
 const YEAR_COLORS: Record<2013 | 2018 | 2023, string> = {
-  2013: '#cbd5e1',
-  2018: '#f59e0b',
-  2023: '#0ea5e9',
+  2013: '#999999',
+  2018: '#E69F00',
+  2023: '#0072B2',
 };
 
 const COUNTS_BY_YEAR: Record<2013 | 2018 | 2023, number[]> = {

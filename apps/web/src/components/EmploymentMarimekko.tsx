@@ -24,16 +24,16 @@ const COLUMN_GAP = 30;
 const PLOT_HEIGHT = 320;
 
 const INDUSTRY_COLORS = [
-  '#4338ca',
-  '#7c3aed',
-  '#db2777',
-  '#e11d48',
-  '#ea580c',
-  '#d97706',
-  '#65a30d',
-  '#059669',
-  '#0d9488',
-  '#0891b2',
+  '#0072B2',
+  '#56B4E9',
+  '#CC79A7',
+  '#D55E00',
+  '#D55E00',
+  '#E69F00',
+  '#E69F00',
+  '#009E73',
+  '#661100',
+  '#000000',
 ] as const;
 
 const WIDTH_OPTIONS = [

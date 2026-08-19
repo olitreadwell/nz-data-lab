@@ -34,10 +34,7 @@ export function MicrositeStory({
 }: MicrositeStoryProps): React.ReactElement {
   const styles = getMicrositeAccentStyles(accent);
   return (
-    <section
-      id={id}
-      className={`scroll-mt-16 border-b border-[var(--color-border)] ${styles.sectionBg}`}
-    >
+    <section id={id} className="scroll-mt-16 border-b border-[var(--color-border)]">
       <Container size="wide">
         <Stack className="max-w-3xl gap-6 py-[var(--spacing-2xl)]">
           <MicrositeEyebrow

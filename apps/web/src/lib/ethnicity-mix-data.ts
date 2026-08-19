@@ -24,37 +24,37 @@ export const ETHNICITY_GROUPS: EthnicityGroupMix[] = [
   {
     key: 'european',
     label: 'European',
-    color: '#0ea5e9',
+    color: '#0072B2',
     countsByYear: { 2013: 2969391, 2018: 3297864, 2023: 3383742 },
   },
   {
     key: 'maori',
     label: 'Māori',
-    color: '#059669',
+    color: '#009E73',
     countsByYear: { 2013: 598602, 2018: 775836, 2023: 887493 },
   },
   {
     key: 'pacific',
     label: 'Pacific peoples',
-    color: '#d97706',
+    color: '#E69F00',
     countsByYear: { 2013: 295941, 2018: 381642, 2023: 442632 },
   },
   {
     key: 'asian',
     label: 'Asian',
-    color: '#e11d48',
+    color: '#D55E00',
     countsByYear: { 2013: 471708, 2018: 707598, 2023: 861576 },
   },
   {
     key: 'melaa',
     label: 'Middle Eastern/Latin American/African',
-    color: '#7c3aed',
+    color: '#CC79A7',
     countsByYear: { 2013: 46953, 2018: 70332, 2023: 92760 },
   },
   {
     key: 'other',
     label: 'Other ethnicity',
-    color: '#94a3b8',
+    color: '#999999',
     countsByYear: { 2013: 67752, 2018: 58053, 2023: 56133 },
   },
 ];

@@ -84,6 +84,51 @@
   --color-warning: oklch(0.78 0.16 75);
   --color-danger: oklch(0.62 0.22 25);
 
+  /* Microsite accent: amber (light) */
+  --accent-amber-fg: oklch(0.45 0.13 70);
+  --accent-amber-bg: oklch(0.97 0.02 70);
+  --accent-amber-border: oklch(0.9 0.05 70);
+  /* Microsite accent: sky (light) */
+  --accent-sky-fg: oklch(0.45 0.13 240);
+  --accent-sky-bg: oklch(0.97 0.02 240);
+  --accent-sky-border: oklch(0.9 0.05 240);
+  /* Microsite accent: purple (light) */
+  --accent-purple-fg: oklch(0.45 0.13 290);
+  --accent-purple-bg: oklch(0.97 0.02 290);
+  --accent-purple-border: oklch(0.9 0.05 290);
+  /* Microsite accent: emerald (light) */
+  --accent-emerald-fg: oklch(0.45 0.13 150);
+  --accent-emerald-bg: oklch(0.97 0.02 150);
+  --accent-emerald-border: oklch(0.9 0.05 150);
+  /* Microsite accent: lime (light) */
+  --accent-lime-fg: oklch(0.45 0.13 120);
+  --accent-lime-bg: oklch(0.97 0.02 120);
+  --accent-lime-border: oklch(0.9 0.05 120);
+  /* Microsite accent: violet (light) */
+  --accent-violet-fg: oklch(0.45 0.13 330);
+  --accent-violet-bg: oklch(0.97 0.02 330);
+  --accent-violet-border: oklch(0.9 0.05 330);
+  /* Microsite accent: rose (light) */
+  --accent-rose-fg: oklch(0.45 0.13 25);
+  --accent-rose-bg: oklch(0.97 0.02 25);
+  --accent-rose-border: oklch(0.9 0.05 25);
+  /* Microsite accent: teal (light) */
+  --accent-teal-fg: oklch(0.45 0.13 190);
+  --accent-teal-bg: oklch(0.97 0.02 190);
+  --accent-teal-border: oklch(0.9 0.05 190);
+  /* Microsite accent: indigo (light) */
+  --accent-indigo-fg: oklch(0.45 0.13 265);
+  --accent-indigo-bg: oklch(0.97 0.02 265);
+  --accent-indigo-border: oklch(0.9 0.05 265);
+  /* Microsite accent: cyan (light) */
+  --accent-cyan-fg: oklch(0.45 0.13 225);
+  --accent-cyan-bg: oklch(0.97 0.02 225);
+  --accent-cyan-border: oklch(0.9 0.05 225);
+  /* Microsite accent: fuchsia (light) */
+  --accent-fuchsia-fg: oklch(0.45 0.13 310);
+  --accent-fuchsia-bg: oklch(0.97 0.02 310);
+  --accent-fuchsia-border: oklch(0.9 0.05 310);
+
   /*
    * Spacing and radius scales are NOT redefined here — they live in
    * `packages/config-tailwind/tokens.css` (`--spacing-0..24`, generates the
@@ -162,4 +207,49 @@
   --color-success: oklch(0.7 0.16 145);
   --color-warning: oklch(0.82 0.14 75);
   --color-danger: oklch(0.7 0.2 25);
+
+  /* Microsite accent: amber (dark) */
+  --accent-amber-fg: oklch(0.82 0.12 70);
+  --accent-amber-bg: oklch(0.21 0.03 70);
+  --accent-amber-border: oklch(0.32 0.04 70);
+  /* Microsite accent: sky (dark) */
+  --accent-sky-fg: oklch(0.82 0.12 240);
+  --accent-sky-bg: oklch(0.21 0.03 240);
+  --accent-sky-border: oklch(0.32 0.04 240);
+  /* Microsite accent: purple (dark) */
+  --accent-purple-fg: oklch(0.82 0.12 290);
+  --accent-purple-bg: oklch(0.21 0.03 290);
+  --accent-purple-border: oklch(0.32 0.04 290);
+  /* Microsite accent: emerald (dark) */
+  --accent-emerald-fg: oklch(0.82 0.12 150);
+  --accent-emerald-bg: oklch(0.21 0.03 150);
+  --accent-emerald-border: oklch(0.32 0.04 150);
+  /* Microsite accent: lime (dark) */
+  --accent-lime-fg: oklch(0.82 0.12 120);
+  --accent-lime-bg: oklch(0.21 0.03 120);
+  --accent-lime-border: oklch(0.32 0.04 120);
+  /* Microsite accent: violet (dark) */
+  --accent-violet-fg: oklch(0.82 0.12 330);
+  --accent-violet-bg: oklch(0.21 0.03 330);
+  --accent-violet-border: oklch(0.32 0.04 330);
+  /* Microsite accent: rose (dark) */
+  --accent-rose-fg: oklch(0.82 0.12 25);
+  --accent-rose-bg: oklch(0.21 0.03 25);
+  --accent-rose-border: oklch(0.32 0.04 25);
+  /* Microsite accent: teal (dark) */
+  --accent-teal-fg: oklch(0.82 0.12 190);
+  --accent-teal-bg: oklch(0.21 0.03 190);
+  --accent-teal-border: oklch(0.32 0.04 190);
+  /* Microsite accent: indigo (dark) */
+  --accent-indigo-fg: oklch(0.82 0.12 265);
+  --accent-indigo-bg: oklch(0.21 0.03 265);
+  --accent-indigo-border: oklch(0.32 0.04 265);
+  /* Microsite accent: cyan (dark) */
+  --accent-cyan-fg: oklch(0.82 0.12 225);
+  --accent-cyan-bg: oklch(0.21 0.03 225);
+  --accent-cyan-border: oklch(0.32 0.04 225);
+  /* Microsite accent: fuchsia (dark) */
+  --accent-fuchsia-fg: oklch(0.82 0.12 310);
+  --accent-fuchsia-bg: oklch(0.21 0.03 310);
+  --accent-fuchsia-border: oklch(0.32 0.04 310);
 }

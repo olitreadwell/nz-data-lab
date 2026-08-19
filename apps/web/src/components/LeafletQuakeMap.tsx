@@ -62,8 +62,8 @@ export function LeafletQuakeMap({ quakes, label }: LeafletQuakeMapProps): React.
             center={[quake.latitude, quake.longitude]}
             radius={radiusFor(quake.magnitude)}
             pathOptions={{
-              color: BAND_COLORS[bandOf(quake.mmi)] ?? '#94a3b8',
-              fillColor: BAND_COLORS[bandOf(quake.mmi)] ?? '#94a3b8',
+              color: BAND_COLORS[bandOf(quake.mmi)] ?? '#999999',
+              fillColor: BAND_COLORS[bandOf(quake.mmi)] ?? '#999999',
               fillOpacity: BUBBLE_FILL_OPACITY,
               weight: 1,
             }}

@@ -21,8 +21,8 @@ const PLOT_RIGHT = 52;
 const PLOT_TOP = 24;
 const PLOT_BOTTOM = 36;
 const BAR_GAP = 14;
-const BAR_COLOR = '#d97706';
-const CUMULATIVE_COLOR = '#be123c';
+const BAR_COLOR = '#E69F00';
+const CUMULATIVE_COLOR = '#D55E00';
 
 type Measure = 'enterprises' | 'employeeCount';
 

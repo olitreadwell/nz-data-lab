@@ -14,7 +14,7 @@ interface DeerBoomBustChartProps {
   points: LivestockSeriesPoint[];
 }
 
-const DEER_COLOR = '#8b5cf6';
+const DEER_COLOR = '#CC79A7';
 const DEER_GRADIENT_ID = 'deerAreaFill';
 const GRADIENT_TOP_OPACITY = 0.4;
 const GRADIENT_BOTTOM_OPACITY = 0.05;

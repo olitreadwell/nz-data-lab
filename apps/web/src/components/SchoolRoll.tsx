@@ -33,8 +33,8 @@ const AUTHORITY_LABELS: Record<SchoolAuthority, string> = {
 
 const AUTHORITY_COLORS: Record<SchoolAuthority, string> = {
   state: 'var(--color-fg)',
-  integrated: '#0ea5e9',
-  private: '#f59e0b',
+  integrated: '#0072B2',
+  private: '#E69F00',
   other: 'var(--color-muted)',
 };
 

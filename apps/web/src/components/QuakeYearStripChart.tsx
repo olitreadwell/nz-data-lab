@@ -25,10 +25,10 @@ const MIN_FLOOR = 4;
 const MAX_FLOOR = 7;
 
 const MAG_COLORS = [
-  { from: 4, color: '#f59e0b' },
-  { from: 5, color: '#fb7185' },
-  { from: 6, color: '#e11d48' },
-  { from: 7, color: '#881337' },
+  { from: 4, color: '#E69F00' },
+  { from: 5, color: '#CC79A7' },
+  { from: 6, color: '#D55E00' },
+  { from: 7, color: '#661100' },
 ] as const;
 
 function magnitudeColor(magnitude: number): string {

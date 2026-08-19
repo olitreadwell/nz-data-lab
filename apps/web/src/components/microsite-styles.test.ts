@@ -1,10 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  getMicrositeAccentStyles,
-  type MicrositeAccent,
-  type MicrositeAccentStyles,
-} from './microsite-styles';
+import { getMicrositeAccentStyles, type MicrositeAccent } from './microsite-styles';
 
 const ACCENTS: MicrositeAccent[] = [
   'amber',
@@ -35,34 +31,27 @@ interface Rgb {
 // WCAG 1.4.3 AA minimum contrast ratio for normal-size text.
 const MIN_CONTRAST_AA = 4.5;
 
-// Tailwind CSS v4 default palette (oklch), from the installed tailwindcss
-// default-theme. Only the shades the accent styles reference are included.
-const PALETTE: Record<string, Oklch> = {
-  'amber-50': { lightness: 98.7, chroma: 0.022, hue: 95.277 },
-  'amber-700': { lightness: 55.5, chroma: 0.163, hue: 48.998 },
-  'sky-50': { lightness: 97.7, chroma: 0.013, hue: 236.62 },
-  'sky-700': { lightness: 50.0, chroma: 0.134, hue: 242.749 },
-  'purple-50': { lightness: 97.7, chroma: 0.014, hue: 308.299 },
-  'purple-700': { lightness: 49.6, chroma: 0.265, hue: 301.924 },
-  'emerald-50': { lightness: 97.9, chroma: 0.021, hue: 166.113 },
-  'emerald-700': { lightness: 50.8, chroma: 0.118, hue: 165.612 },
-  'lime-50': { lightness: 98.6, chroma: 0.031, hue: 120.757 },
-  'lime-700': { lightness: 53.2, chroma: 0.157, hue: 131.589 },
-  'violet-50': { lightness: 96.9, chroma: 0.016, hue: 293.756 },
-  'violet-700': { lightness: 49.1, chroma: 0.27, hue: 292.581 },
-  'rose-50': { lightness: 96.9, chroma: 0.015, hue: 12.422 },
-  'rose-700': { lightness: 51.4, chroma: 0.222, hue: 16.935 },
-  'teal-50': { lightness: 98.4, chroma: 0.014, hue: 180.72 },
-  'teal-700': { lightness: 51.1, chroma: 0.096, hue: 186.391 },
-  'indigo-50': { lightness: 96.2, chroma: 0.018, hue: 272.314 },
-  'indigo-700': { lightness: 45.7, chroma: 0.24, hue: 277.023 },
-  'cyan-50': { lightness: 98.4, chroma: 0.019, hue: 200.873 },
-  'cyan-700': { lightness: 52.0, chroma: 0.105, hue: 223.128 },
-  'fuchsia-50': { lightness: 97.7, chroma: 0.017, hue: 320.058 },
-  'fuchsia-700': { lightness: 51.8, chroma: 0.253, hue: 323.949 },
+// Design tokens from packages/ui/src/tokens/tokens.css, mirrored here so a
+// change that breaks the contrast guarantee fails the test.
+const ACCENT_TOKENS: Record<MicrositeAccent, Oklch> = {
+  amber: { lightness: 0.45, chroma: 0.13, hue: 70 },
+  sky: { lightness: 0.45, chroma: 0.13, hue: 240 },
+  purple: { lightness: 0.45, chroma: 0.13, hue: 290 },
+  emerald: { lightness: 0.45, chroma: 0.13, hue: 150 },
+  lime: { lightness: 0.45, chroma: 0.13, hue: 120 },
+  violet: { lightness: 0.45, chroma: 0.13, hue: 330 },
+  rose: { lightness: 0.45, chroma: 0.13, hue: 25 },
+  teal: { lightness: 0.45, chroma: 0.13, hue: 190 },
+  indigo: { lightness: 0.45, chroma: 0.13, hue: 265 },
+  cyan: { lightness: 0.45, chroma: 0.13, hue: 225 },
+  fuchsia: { lightness: 0.45, chroma: 0.13, hue: 310 },
 };
 
-const WHITE: Rgb = { red: 1, green: 1, blue: 1 };
+// Page and card backgrounds: light mode (:root) and dark mode (.dark).
+const LIGHT_PAGE_BG: Oklch = { lightness: 0.985, chroma: 0, hue: 0 };
+const LIGHT_CARD_BG: Oklch = { lightness: 0.97, chroma: 0.02, hue: 0 };
+const DARK_PAGE_BG: Oklch = { lightness: 0.12, chroma: 0, hue: 0 };
+const DARK_CARD_BG: Oklch = { lightness: 0.21, chroma: 0.03, hue: 0 };
 
 const LUMINANCE_WEIGHTS = { red: 0.2126, green: 0.7152, blue: 0.0722 };
 const CONTRAST_OFFSET = 0.05;
@@ -73,9 +62,9 @@ function clampChannel(channel: number): number {
 
 function oklchToLinearRgb(color: Oklch): Rgb {
   const radianHue = (color.hue * Math.PI) / 180;
-  const a = (color.chroma / 100) * Math.cos(radianHue);
-  const b = (color.chroma / 100) * Math.sin(radianHue);
-  const lightness = color.lightness / 100;
+  const a = color.chroma * Math.cos(radianHue);
+  const b = color.chroma * Math.sin(radianHue);
+  const lightness = color.lightness;
 
   const lPrime = lightness + 0.3963377774 * a + 0.2158037573 * b;
   const mPrime = lightness - 0.1055613458 * a - 0.0638541728 * b;
@@ -110,64 +99,43 @@ function contrastRatio(foreground: Rgb, background: Rgb): number {
   return (lighter + CONTRAST_OFFSET) / (darker + CONTRAST_OFFSET);
 }
 
-function blendOverWhite(color: Rgb, alpha: number): Rgb {
-  return {
-    red: color.red * alpha + WHITE.red * (1 - alpha),
-    green: color.green * alpha + WHITE.green * (1 - alpha),
-    blue: color.blue * alpha + WHITE.blue * (1 - alpha),
-  };
+/** The accent foreground color in a given mode (light or dark). */
+function accentFg(accent: MicrositeAccent, dark: boolean): Oklch {
+  const base = ACCENT_TOKENS[accent];
+  return dark ? { ...base, lightness: 0.82 } : base;
 }
 
-interface ParsedClass {
-  accent: string;
-  shade: string;
-}
-
-function parseShade(className: string, prefix: string): ParsedClass {
-  const match = new RegExp(`${prefix}(\\w+)-(\\d+)`).exec(className);
-  const accent = match?.[1];
-  const shade = match?.[2];
-  if (accent === undefined || shade === undefined) {
-    throw new Error(`Could not parse color shade from ${className}`);
-  }
-  return { accent, shade };
-}
-
-function colorFor(parsed: ParsedClass): Oklch {
-  const color = PALETTE[`${parsed.accent}-${parsed.shade}`];
-  if (color === undefined) {
-    throw new Error(`No palette entry for ${parsed.accent}-${parsed.shade}`);
-  }
-  return color;
-}
-
-function assertEyebrowContrast(styles: MicrositeAccentStyles): void {
-  const eyebrow = colorFor(parseShade(styles.eyebrow, 'text-'));
-  const cardBg = colorFor(parseShade(styles.cardBg, 'bg-'));
-  const sectionMatch = /from-(\w+)-(\d+)\/(\d+)/.exec(styles.sectionBg);
-  const sectionAccent = sectionMatch?.[1];
-  const sectionShade = sectionMatch?.[2];
-  const sectionAlphaRaw = sectionMatch?.[3];
-  if (sectionAccent === undefined || sectionShade === undefined || sectionAlphaRaw === undefined) {
-    throw new Error(`Could not parse section background from ${styles.sectionBg}`);
-  }
-  const sectionBg = colorFor({ accent: sectionAccent, shade: sectionShade });
-  const sectionAlpha = Number(sectionAlphaRaw) / 100;
-
-  const eyebrowRgb = oklchToLinearRgb(eyebrow);
-  expect(contrastRatio(eyebrowRgb, oklchToLinearRgb(cardBg))).toBeGreaterThanOrEqual(
-    MIN_CONTRAST_AA,
-  );
-  expect(
-    contrastRatio(eyebrowRgb, blendOverWhite(oklchToLinearRgb(sectionBg), sectionAlpha)),
-  ).toBeGreaterThanOrEqual(MIN_CONTRAST_AA);
+/** The accent card background color in a given mode. */
+function accentBg(dark: boolean): Oklch {
+  return dark ? DARK_CARD_BG : LIGHT_CARD_BG;
 }
 
 describe('microsite accent styles', () => {
-  it.each(ACCENTS)(
-    '%s eyebrow meets a 4.5:1 contrast ratio on its tinted backgrounds',
-    (accent) => {
-      assertEyebrowContrast(getMicrositeAccentStyles(accent));
-    },
-  );
+  it.each(ACCENTS)('%s styles reference the accent design tokens', (accent) => {
+    const styles = getMicrositeAccentStyles(accent);
+    expect(styles.eyebrow).toBe(`text-[var(--accent-${accent}-fg)]`);
+    expect(styles.cardValue).toBe(`text-[var(--accent-${accent}-fg)]`);
+    expect(styles.cardBg).toBe(`bg-[var(--accent-${accent}-bg)]`);
+    expect(styles.chartBorder).toBe(`border-[var(--accent-${accent}-border)]`);
+  });
+
+  it.each(ACCENTS)('%s accent text keeps 4.5:1 contrast in light mode', (accent) => {
+    const fg = oklchToLinearRgb(accentFg(accent, false));
+    expect(contrastRatio(fg, oklchToLinearRgb(LIGHT_CARD_BG))).toBeGreaterThanOrEqual(
+      MIN_CONTRAST_AA,
+    );
+    expect(contrastRatio(fg, oklchToLinearRgb(LIGHT_PAGE_BG))).toBeGreaterThanOrEqual(
+      MIN_CONTRAST_AA,
+    );
+  });
+
+  it.each(ACCENTS)('%s accent text keeps 4.5:1 contrast in dark mode', (accent) => {
+    const fg = oklchToLinearRgb(accentFg(accent, true));
+    expect(contrastRatio(fg, oklchToLinearRgb(DARK_CARD_BG))).toBeGreaterThanOrEqual(
+      MIN_CONTRAST_AA,
+    );
+    expect(contrastRatio(fg, oklchToLinearRgb(DARK_PAGE_BG))).toBeGreaterThanOrEqual(
+      MIN_CONTRAST_AA,
+    );
+  });
 });

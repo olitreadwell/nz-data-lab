@@ -16,14 +16,14 @@ const PIE_COLORS = [
   'var(--color-fg)',
   'var(--color-muted)',
   'var(--color-border)',
-  '#f59e0b',
-  '#0ea5e9',
-  '#8b5cf6',
-  '#10b981',
-  '#f43f5e',
-  '#14b8a6',
-  '#f97316',
-  '#6366f1',
+  '#E69F00',
+  '#0072B2',
+  '#CC79A7',
+  '#009E73',
+  '#D55E00',
+  '#56B4E9',
+  '#D55E00',
+  '#0072B2',
 ];
 
 interface PieDatum {

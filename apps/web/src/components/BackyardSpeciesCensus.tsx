@@ -12,15 +12,15 @@ import { ChartDataTable } from './ChartDataTable';
 import type { ChartDataColumn } from './ChartDataTable';
 
 const TAXON_COLORS: Record<string, string> = {
-  Aves: '#f59e0b',
-  Mammalia: '#ef4444',
-  Reptilia: '#10b981',
-  Actinopterygii: '#0ea5e9',
-  Insecta: '#8b5cf6',
-  Arachnida: '#d946ef',
-  Mollusca: '#14b8a6',
-  Plantae: '#84cc16',
-  Fungi: '#f97316',
+  Aves: '#E69F00',
+  Mammalia: '#D55E00',
+  Reptilia: '#009E73',
+  Actinopterygii: '#0072B2',
+  Insecta: '#CC79A7',
+  Arachnida: '#F0E442',
+  Mollusca: '#56B4E9',
+  Plantae: '#E69F00',
+  Fungi: '#D55E00',
 };
 
 const COMPACT_FORMATTER = new Intl.NumberFormat('en-NZ', {
@@ -186,7 +186,7 @@ export function BackyardSpeciesCensus(): React.ReactElement {
                     key={taxon.taxon}
                     data={[taxon]}
                     isAnimationActive={!prefersReducedMotion}
-                    fill={TAXON_COLORS[taxon.taxon] ?? '#64748b'}
+                    fill={TAXON_COLORS[taxon.taxon] ?? '#999999'}
                     name={taxon.taxon}
                   />
                 ))}

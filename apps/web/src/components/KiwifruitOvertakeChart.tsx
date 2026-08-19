@@ -23,8 +23,8 @@ interface BeforeAfterDatum {
   latest: number;
 }
 
-const FIRST_BAR_COLOR = '#f59e0b';
-const LATEST_BAR_COLOR = '#22c55e';
+const FIRST_BAR_COLOR = '#E69F00';
+const LATEST_BAR_COLOR = '#009E73';
 const BAR_RADIUS: [number, number, number, number] = [4, 4, 0, 0];
 const BAR_GAP = 4;
 const CURSOR_OPACITY = 0.2;

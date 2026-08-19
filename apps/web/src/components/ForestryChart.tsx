@@ -23,8 +23,8 @@ interface ForestryChartProps {
 }
 
 const SERIES: ChartSeriesDef[] = [
-  { key: 'newPlanting', label: 'New planting', emoji: '🌱', color: '#10b981' },
-  { key: 'harvestedArea', label: 'Harvested area', emoji: '🌲', color: '#d97706' },
+  { key: 'newPlanting', label: 'New planting', emoji: '🌱', color: '#009E73' },
+  { key: 'harvestedArea', label: 'Harvested area', emoji: '🌲', color: '#E69F00' },
 ];
 
 function formatAxisTick(value: number): string {
@@ -79,12 +79,12 @@ export function ForestryChart({ points }: ForestryChartProps): React.ReactElemen
           >
             <defs>
               <linearGradient id="newPlantingFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#10b981" stopOpacity={0.35} />
-                <stop offset="100%" stopColor="#10b981" stopOpacity={0.02} />
+                <stop offset="0%" stopColor="#009E73" stopOpacity={0.35} />
+                <stop offset="100%" stopColor="#009E73" stopOpacity={0.02} />
               </linearGradient>
               <linearGradient id="harvestedAreaFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#d97706" stopOpacity={0.3} />
-                <stop offset="100%" stopColor="#d97706" stopOpacity={0.02} />
+                <stop offset="0%" stopColor="#E69F00" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="#E69F00" stopOpacity={0.02} />
               </linearGradient>
             </defs>
             <XAxis
@@ -123,7 +123,7 @@ export function ForestryChart({ points }: ForestryChartProps): React.ReactElemen
               type="monotone"
               dataKey="newPlanting"
               isAnimationActive={!prefersReducedMotion}
-              stroke="#10b981"
+              stroke="#009E73"
               strokeWidth={2.5}
               fill="url(#newPlantingFill)"
               dot={false}
@@ -133,7 +133,7 @@ export function ForestryChart({ points }: ForestryChartProps): React.ReactElemen
               type="monotone"
               dataKey="harvestedArea"
               isAnimationActive={!prefersReducedMotion}
-              stroke="#d97706"
+              stroke="#E69F00"
               strokeWidth={2.5}
               fill="url(#harvestedAreaFill)"
               dot={false}

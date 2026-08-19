@@ -16,10 +16,10 @@ interface HorticultureChartProps {
 }
 
 const SERIES: ChartSeriesDef[] = [
-  { key: 'wineGrapes', label: 'Wine grapes', emoji: '🍇', color: '#a855f7' },
-  { key: 'kiwifruit', label: 'Kiwifruit', emoji: '🥝', color: '#22c55e' },
-  { key: 'apples', label: 'Apples', emoji: '🍎', color: '#ef4444' },
-  { key: 'avocados', label: 'Avocados', emoji: '🥑', color: '#84cc16' },
+  { key: 'wineGrapes', label: 'Wine grapes', emoji: '🍇', color: '#CC79A7' },
+  { key: 'kiwifruit', label: 'Kiwifruit', emoji: '🥝', color: '#009E73' },
+  { key: 'apples', label: 'Apples', emoji: '🍎', color: '#D55E00' },
+  { key: 'avocados', label: 'Avocados', emoji: '🥑', color: '#E69F00' },
 ];
 
 export function HorticultureChart({ points }: HorticultureChartProps): React.ReactElement {
@@ -78,8 +78,8 @@ export function HorticultureChart({ points }: HorticultureChartProps): React.Rea
           >
             <defs>
               <linearGradient id="wineGrapesFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#a855f7" stopOpacity={0.35} />
-                <stop offset="100%" stopColor="#a855f7" stopOpacity={0.02} />
+                <stop offset="0%" stopColor="#CC79A7" stopOpacity={0.35} />
+                <stop offset="100%" stopColor="#CC79A7" stopOpacity={0.02} />
               </linearGradient>
             </defs>
             <XAxis
@@ -112,7 +112,7 @@ export function HorticultureChart({ points }: HorticultureChartProps): React.Rea
               type="monotone"
               dataKey="wineGrapes"
               isAnimationActive={!prefersReducedMotion}
-              stroke="#a855f7"
+              stroke="#CC79A7"
               strokeWidth={2.5}
               fill="url(#wineGrapesFill)"
               dot={false}

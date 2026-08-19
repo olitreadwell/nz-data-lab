@@ -131,7 +131,7 @@ export function QuakeFrequencyMagnitude({
               tick={{ fill: 'var(--color-muted)', fontSize: 11 }}
             />
             <Tooltip content={(props) => <FrequencyTooltip {...props} />} />
-            <Scatter data={points} fill="#4f46e5" />
+            <Scatter data={points} fill="#0072B2" />
           </ScatterChart>
         </ResponsiveContainer>
       </div>

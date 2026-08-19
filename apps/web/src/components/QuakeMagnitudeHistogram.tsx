@@ -154,7 +154,7 @@ export function QuakeMagnitudeHistogram({
             <XAxis dataKey="label" stroke="var(--color-muted)" />
             <YAxis tickFormatter={formatCount} stroke="var(--color-muted)" />
             <Tooltip content={(props) => <BinTooltip {...props} />} />
-            <Bar dataKey="count" fill="#be123c" isAnimationActive={!prefersReducedMotion} />
+            <Bar dataKey="count" fill="#D55E00" isAnimationActive={!prefersReducedMotion} />
           </BarChart>
         </ResponsiveContainer>
       </div>

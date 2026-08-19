@@ -17,12 +17,12 @@ const PLOT_BOTTOM = 36;
 const MAX_ARRIVALS = 600000;
 
 const YEAR_COLORS: Record<number, string> = {
-  2017: '#8b5cf6',
-  2018: '#d97706',
-  2019: '#e11d48',
-  2023: '#14b8a6',
-  2024: '#0284c7',
-  2025: '#059669',
+  2017: '#CC79A7',
+  2018: '#E69F00',
+  2019: '#D55E00',
+  2023: '#56B4E9',
+  2024: '#0072B2',
+  2025: '#009E73',
 };
 
 interface MonthPoint {
@@ -192,7 +192,7 @@ export function TourismArrivalsCyclePlot(): React.ReactElement {
             </g>
           ))}
           {TOURISM_ARRIVALS_YEARS.map((yearRow) => {
-            const color = YEAR_COLORS[yearRow.year] ?? '#64748b';
+            const color = YEAR_COLORS[yearRow.year] ?? '#999999';
             const isVisible = visibleYears.has(yearRow.year);
             const isHighlighted = highlightedYear === yearRow.year;
             const points = yearPoints(yearRow);

@@ -123,7 +123,7 @@ export function QuakeDepthDistribution({
               dataKey="label"
               tick={{ fill: 'var(--color-muted)', fontSize: 11 }}
             />
-            <RadialBar dataKey="count" fill="#0d9488" background={{ fill: 'var(--color-muted)' }} />
+            <RadialBar dataKey="count" fill="#661100" background={{ fill: 'var(--color-muted)' }} />
             <Tooltip content={(props) => <DepthBandTooltip {...props} />} />
           </RadialBarChart>
         </ResponsiveContainer>

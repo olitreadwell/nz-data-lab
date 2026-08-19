@@ -31,7 +31,7 @@ describe('EthnicityWaffle', () => {
     const cells = europeanRow.querySelectorAll('li');
     expect(cells).toHaveLength(100);
     const filled = Array.from(cells).filter((cell) =>
-      cell.getAttribute('style')?.includes('rgb(14, 165, 233)'),
+      cell.getAttribute('style')?.includes('rgb(0, 114, 178)'),
     );
     expect(filled).toHaveLength(74);
   });

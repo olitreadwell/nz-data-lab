@@ -17,10 +17,10 @@ interface LivestockChartProps {
 }
 
 const SERIES: ChartSeriesDef[] = [
-  { key: 'sheep', label: 'Sheep', emoji: '🐑', color: '#f59e0b' },
-  { key: 'dairyCattle', label: 'Dairy cattle', emoji: '🐄', color: '#0ea5e9' },
-  { key: 'beefCattle', label: 'Beef cattle', emoji: '🐂', color: '#f43f5e' },
-  { key: 'deer', label: 'Deer', emoji: '🦌', color: '#8b5cf6' },
+  { key: 'sheep', label: 'Sheep', emoji: '🐑', color: '#E69F00' },
+  { key: 'dairyCattle', label: 'Dairy cattle', emoji: '🐄', color: '#0072B2' },
+  { key: 'beefCattle', label: 'Beef cattle', emoji: '🐂', color: '#D55E00' },
+  { key: 'deer', label: 'Deer', emoji: '🦌', color: '#CC79A7' },
 ];
 
 function formatAxisTick(value: number): string {

@@ -24,7 +24,7 @@ export const EXPORT_RANK_COUNTRIES: ExportRankCountry[] = [
   {
     key: 'china',
     label: 'China',
-    color: '#e11d48',
+    color: '#D55E00',
     exportsByYear: {
       2015: 10762.0,
       2016: 11730.5,
@@ -38,7 +38,7 @@ export const EXPORT_RANK_COUNTRIES: ExportRankCountry[] = [
   {
     key: 'australia',
     label: 'Australia',
-    color: '#2563eb',
+    color: '#0072B2',
     exportsByYear: {
       2015: 12888.6,
       2016: 13074.7,
@@ -52,7 +52,7 @@ export const EXPORT_RANK_COUNTRIES: ExportRankCountry[] = [
   {
     key: 'united-states',
     label: 'United States',
-    color: '#059669',
+    color: '#009E73',
     exportsByYear: {
       2015: 7522.3,
       2016: 8584.7,
@@ -66,7 +66,7 @@ export const EXPORT_RANK_COUNTRIES: ExportRankCountry[] = [
   {
     key: 'japan',
     label: 'Japan',
-    color: '#d97706',
+    color: '#E69F00',
     exportsByYear: {
       2015: 3676.6,
       2016: 3768.2,
@@ -80,7 +80,7 @@ export const EXPORT_RANK_COUNTRIES: ExportRankCountry[] = [
   {
     key: 'united-kingdom',
     label: 'United Kingdom',
-    color: '#7c3aed',
+    color: '#CC79A7',
     exportsByYear: {
       2015: 2875.3,
       2016: 3183.4,
@@ -94,7 +94,7 @@ export const EXPORT_RANK_COUNTRIES: ExportRankCountry[] = [
   {
     key: 'south-korea',
     label: 'South Korea',
-    color: '#0d9488',
+    color: '#56B4E9',
     exportsByYear: {
       2015: 2176.8,
       2016: 2145.9,
@@ -108,7 +108,7 @@ export const EXPORT_RANK_COUNTRIES: ExportRankCountry[] = [
   {
     key: 'singapore',
     label: 'Singapore',
-    color: '#0891b2',
+    color: '#661100',
     exportsByYear: {
       2015: 1510.3,
       2016: 1573.5,
@@ -122,7 +122,7 @@ export const EXPORT_RANK_COUNTRIES: ExportRankCountry[] = [
   {
     key: 'germany',
     label: 'Germany',
-    color: '#be185d',
+    color: '#999999',
     exportsByYear: {
       2015: 1298.8,
       2016: 1506.7,
