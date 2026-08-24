@@ -1,0 +1,255 @@
+/**
+ * Single source of truth for design tokens, including the shadcn/ui
+ * base-nova color system (--background, --primary, --sidebar-*, etc).
+ *
+ * Consumed by:
+ *  - Tailwind 4 via `@theme` aliases in `apps/web/src/app/globals.css`
+ *
+ * Dark mode strategy: `.dark` class on `<html>`.
+ *
+ * Import path (consumers): `@import '@nzlab/ui/tokens.css';`
+ */
+
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+:root {
+  /* shadcn/ui base-nova color system */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+
+  /* Brand scale (OKLCH, hue 260 / blue-violet) */
+  --brand-50: oklch(0.97 0.02 260);
+  --brand-100: oklch(0.94 0.04 260);
+  --brand-200: oklch(0.88 0.08 260);
+  --brand-300: oklch(0.8 0.12 260);
+  --brand-400: oklch(0.72 0.16 260);
+  --brand-500: oklch(0.65 0.2 260);
+  --brand-600: oklch(0.56 0.2 260);
+  --brand-700: oklch(0.47 0.18 260);
+  --brand-800: oklch(0.38 0.14 260);
+  --brand-900: oklch(0.3 0.1 260);
+  --brand-950: oklch(0.2 0.06 260);
+
+  /* Neutral scale (OKLCH, near-zero chroma) */
+  --neutral-50: oklch(0.985 0 0);
+  --neutral-100: oklch(0.96 0 0);
+  --neutral-200: oklch(0.92 0 0);
+  --neutral-300: oklch(0.86 0 0);
+  --neutral-400: oklch(0.7 0 0);
+  --neutral-500: oklch(0.55 0 0);
+  --neutral-600: oklch(0.44 0 0);
+  --neutral-700: oklch(0.35 0 0);
+  --neutral-800: oklch(0.26 0 0);
+  --neutral-900: oklch(0.18 0 0);
+  --neutral-950: oklch(0.12 0 0);
+
+  /* Semantic color tokens */
+  --color-bg: var(--neutral-50);
+  --color-fg: var(--neutral-900);
+  --color-muted: var(--neutral-600);
+  --color-border: var(--neutral-200);
+  --color-ring: var(--brand-500);
+  --color-success: oklch(0.65 0.18 145);
+  --color-warning: oklch(0.78 0.16 75);
+  --color-danger: oklch(0.62 0.22 25);
+
+  /* Microsite accent: amber (light) */
+  --accent-amber-fg: oklch(0.45 0.13 70);
+  --accent-amber-bg: oklch(0.97 0.02 70);
+  --accent-amber-border: oklch(0.9 0.05 70);
+  /* Microsite accent: sky (light) */
+  --accent-sky-fg: oklch(0.45 0.13 240);
+  --accent-sky-bg: oklch(0.97 0.02 240);
+  --accent-sky-border: oklch(0.9 0.05 240);
+  /* Microsite accent: purple (light) */
+  --accent-purple-fg: oklch(0.45 0.13 290);
+  --accent-purple-bg: oklch(0.97 0.02 290);
+  --accent-purple-border: oklch(0.9 0.05 290);
+  /* Microsite accent: emerald (light) */
+  --accent-emerald-fg: oklch(0.45 0.13 150);
+  --accent-emerald-bg: oklch(0.97 0.02 150);
+  --accent-emerald-border: oklch(0.9 0.05 150);
+  /* Microsite accent: lime (light) */
+  --accent-lime-fg: oklch(0.45 0.13 120);
+  --accent-lime-bg: oklch(0.97 0.02 120);
+  --accent-lime-border: oklch(0.9 0.05 120);
+  /* Microsite accent: violet (light) */
+  --accent-violet-fg: oklch(0.45 0.13 330);
+  --accent-violet-bg: oklch(0.97 0.02 330);
+  --accent-violet-border: oklch(0.9 0.05 330);
+  /* Microsite accent: rose (light) */
+  --accent-rose-fg: oklch(0.45 0.13 25);
+  --accent-rose-bg: oklch(0.97 0.02 25);
+  --accent-rose-border: oklch(0.9 0.05 25);
+  /* Microsite accent: teal (light) */
+  --accent-teal-fg: oklch(0.45 0.13 190);
+  --accent-teal-bg: oklch(0.97 0.02 190);
+  --accent-teal-border: oklch(0.9 0.05 190);
+  /* Microsite accent: indigo (light) */
+  --accent-indigo-fg: oklch(0.45 0.13 265);
+  --accent-indigo-bg: oklch(0.97 0.02 265);
+  --accent-indigo-border: oklch(0.9 0.05 265);
+  /* Microsite accent: cyan (light) */
+  --accent-cyan-fg: oklch(0.45 0.13 225);
+  --accent-cyan-bg: oklch(0.97 0.02 225);
+  --accent-cyan-border: oklch(0.9 0.05 225);
+  /* Microsite accent: fuchsia (light) */
+  --accent-fuchsia-fg: oklch(0.45 0.13 310);
+  --accent-fuchsia-bg: oklch(0.97 0.02 310);
+  --accent-fuchsia-border: oklch(0.9 0.05 310);
+
+  /*
+   * Spacing and radius scales are NOT redefined here — they live in
+   * `packages/config-tailwind/tokens.css` (`--spacing-0..24`, generates the
+   * Tailwind `p-*`/`gap-*` utilities) and are consumed directly via
+   * `var(--radius-sm)` etc. A duplicate, differently-valued radius/spacing
+   * scale used to live in this file too and silently shadowed the real one
+   * via import order — removed. If you need a token that isn't in
+   * `config-tailwind/tokens.css`, add it there, not here; this file owns
+   * colors only.
+   */
+}
+
+.dark {
+  /* shadcn/ui base-nova color system */
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+
+  --brand-50: oklch(0.22 0.06 260);
+  --brand-100: oklch(0.28 0.08 260);
+  --brand-200: oklch(0.34 0.1 260);
+  --brand-300: oklch(0.42 0.13 260);
+  --brand-400: oklch(0.52 0.16 260);
+  --brand-500: oklch(0.62 0.18 260);
+  --brand-600: oklch(0.7 0.18 260);
+  --brand-700: oklch(0.78 0.16 260);
+  --brand-800: oklch(0.86 0.12 260);
+  --brand-900: oklch(0.92 0.08 260);
+  --brand-950: oklch(0.97 0.04 260);
+
+  --neutral-50: oklch(0.12 0 0);
+  --neutral-100: oklch(0.18 0 0);
+  --neutral-200: oklch(0.24 0 0);
+  --neutral-300: oklch(0.32 0 0);
+  --neutral-400: oklch(0.45 0 0);
+  --neutral-500: oklch(0.6 0 0);
+  --neutral-600: oklch(0.72 0 0);
+  --neutral-700: oklch(0.82 0 0);
+  --neutral-800: oklch(0.9 0 0);
+  --neutral-900: oklch(0.96 0 0);
+  --neutral-950: oklch(0.985 0 0);
+
+  --color-bg: var(--neutral-50);
+  --color-fg: var(--neutral-900);
+  --color-muted: var(--neutral-600);
+  --color-border: var(--neutral-200);
+  --color-ring: var(--brand-500);
+  --color-success: oklch(0.7 0.16 145);
+  --color-warning: oklch(0.82 0.14 75);
+  --color-danger: oklch(0.7 0.2 25);
+
+  /* Microsite accent: amber (dark) */
+  --accent-amber-fg: oklch(0.82 0.12 70);
+  --accent-amber-bg: oklch(0.21 0.03 70);
+  --accent-amber-border: oklch(0.32 0.04 70);
+  /* Microsite accent: sky (dark) */
+  --accent-sky-fg: oklch(0.82 0.12 240);
+  --accent-sky-bg: oklch(0.21 0.03 240);
+  --accent-sky-border: oklch(0.32 0.04 240);
+  /* Microsite accent: purple (dark) */
+  --accent-purple-fg: oklch(0.82 0.12 290);
+  --accent-purple-bg: oklch(0.21 0.03 290);
+  --accent-purple-border: oklch(0.32 0.04 290);
+  /* Microsite accent: emerald (dark) */
+  --accent-emerald-fg: oklch(0.82 0.12 150);
+  --accent-emerald-bg: oklch(0.21 0.03 150);
+  --accent-emerald-border: oklch(0.32 0.04 150);
+  /* Microsite accent: lime (dark) */
+  --accent-lime-fg: oklch(0.82 0.12 120);
+  --accent-lime-bg: oklch(0.21 0.03 120);
+  --accent-lime-border: oklch(0.32 0.04 120);
+  /* Microsite accent: violet (dark) */
+  --accent-violet-fg: oklch(0.82 0.12 330);
+  --accent-violet-bg: oklch(0.21 0.03 330);
+  --accent-violet-border: oklch(0.32 0.04 330);
+  /* Microsite accent: rose (dark) */
+  --accent-rose-fg: oklch(0.82 0.12 25);
+  --accent-rose-bg: oklch(0.21 0.03 25);
+  --accent-rose-border: oklch(0.32 0.04 25);
+  /* Microsite accent: teal (dark) */
+  --accent-teal-fg: oklch(0.82 0.12 190);
+  --accent-teal-bg: oklch(0.21 0.03 190);
+  --accent-teal-border: oklch(0.32 0.04 190);
+  /* Microsite accent: indigo (dark) */
+  --accent-indigo-fg: oklch(0.82 0.12 265);
+  --accent-indigo-bg: oklch(0.21 0.03 265);
+  --accent-indigo-border: oklch(0.32 0.04 265);
+  /* Microsite accent: cyan (dark) */
+  --accent-cyan-fg: oklch(0.82 0.12 225);
+  --accent-cyan-bg: oklch(0.21 0.03 225);
+  --accent-cyan-border: oklch(0.32 0.04 225);
+  /* Microsite accent: fuchsia (dark) */
+  --accent-fuchsia-fg: oklch(0.82 0.12 310);
+  --accent-fuchsia-bg: oklch(0.21 0.03 310);
+  --accent-fuchsia-border: oklch(0.32 0.04 310);
+}
