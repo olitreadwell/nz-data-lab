@@ -5,7 +5,7 @@ surprising.
 
 ## Live now
 
-- **The sheep index** — New Zealand's national flock has nearly halved since
+- **The sheep index**: New Zealand's national flock has nearly halved since
   1994, from 49.5 million sheep to 23.3 million. Data from the Stats NZ
   Aotearoa Data Explorer, fetched at deploy time.
 

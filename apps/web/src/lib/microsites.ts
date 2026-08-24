@@ -117,8 +117,8 @@ export function relatedMicrositesFor(
 /** Human-readable freshness line for one microsite, from its data note. */
 export function freshnessLabelFor(microsite: Pick<MicrositeConfig, 'dataNote'>): string {
   return microsite.dataNote.includes('live from the browser')
-    ? 'Live data — loaded from your browser'
-    : 'Data fetched at deploy time — the site redeploys daily';
+    ? 'Live data, loaded from your browser'
+    : 'Data fetched at deploy time; the site redeploys daily';
 }
 
 export interface MicrositeConfig {
@@ -150,7 +150,7 @@ export const CATEGORY_DETAILS: Record<MicrositeCategory, string> = {
   'Biodiversity & nature':
     'The living catalogue of New Zealand species, from the national register to citizen-science observations.',
   'Environment & geography':
-    'Rivers, peaks, parks, rain gauges, and the map of every school — the physical environment in data.',
+    'Rivers, peaks, parks, rain gauges, and the map of every school: the physical environment in data.',
   'Census & population':
     'The 2013, 2018, and 2023 censuses: who lives where, how old they are, and how the ranks shifted.',
   'Economy & business':
@@ -359,7 +359,7 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved<Microsi
       'Isabel Fraser brought kiwifruit seeds back from China in 1904.',
       'PSA hit green vines in 2010 and pushed growers into the gold variety.',
     ],
-    howToRead: 'Two lines — kiwifruit and apples — show the orchard flip.',
+    howToRead: 'Two lines, kiwifruit and apples, show the orchard flip.',
     sourceUrl:
       'https://www.stats.govt.nz/news/livestock-numbers-fall-over-the-last-10-years-while-area-planted-in-fruit-increases/',
     label: 'Kiwifruit overtake',
@@ -855,7 +855,7 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved<Microsi
     slug: 'auckland-parks',
     keyFacts: [
       '3,953 parks covering 536.8 square kilometres.',
-      'Franklin holds 200.6 km² and Waitākere Ranges 183.4 km² — together 72% of the total.',
+      'Franklin holds 200.6 km² and Waitākere Ranges 183.4 km², together 72% of the total.',
       'Park land is the maintained extent, not the legal reserve boundary.',
     ],
     howToRead:
@@ -1918,7 +1918,7 @@ export const MICROSITES: MicrositeConfig[] = withHiddenMicrositesRemoved<Microsi
   {
     slug: 'region-density',
     keyFacts: [
-      'Auckland holds 1,656,486 people on 4,941 square kilometres — a third of the country on under 2% of the land.',
+      'Auckland holds 1,656,486 people on 4,941 square kilometres, a third of the country on under 2% of the land.',
       'The national density is about 18.9 people per square kilometre; Auckland runs at 335.3.',
       'The West Coast is the emptiest at 1.4 people per square kilometre.',
     ],

@@ -14,19 +14,19 @@ export default function AboutPage(): React.ReactElement {
         <h1 className="numeral-heading-3xl">About nz-data-lab</h1>
         <p className="numeral-paragraph-lg text-[var(--color-muted)]">
           Small experiments digging through New Zealand public data for the funny and the
-          surprising. One experiment at a time, each one a real dataset with a real story.
+          surprising. One experiment at a time, each on a real dataset.
         </p>
 
         <section className="space-y-3">
           <h2 className="numeral-heading-lg">The sheep index</h2>
           <p className="numeral-paragraph-md">
-            The current experiment tracks the national sheep flock, which has nearly halved since
-            1994 — from 49.5 million sheep to 23.3 million by 2025. The real peak came earlier: in
-            1982 New Zealand counted 70 million sheep, more than 20 for every person.
+            The current experiment tracks the national sheep flock. It has nearly halved since 1994,
+            from 49.5 million sheep to 23.3 million by 2025. The real peak came earlier: in 1982 New
+            Zealand counted 70 million sheep, more than 20 for every person.
           </p>
           <p className="numeral-paragraph-md">
             The series comes from the Stats NZ Aotearoa Data Explorer (table AGR_AGR_003, Livestock
-            Numbers by Regional Council), fetched at deploy time with a committed snapshot as
+            Numbers by Regional Council). It's fetched at deploy time, with a committed snapshot as
             fallback when the API blocks the build runner. The site redeploys daily.
           </p>
         </section>
@@ -49,7 +49,7 @@ export default function AboutPage(): React.ReactElement {
             >
               GitHub
             </Link>
-            . Found a bug, a broken link, or a story worth telling? Open an issue there.
+            . Found a bug or a broken link? Open an issue there.
           </p>
         </section>
       </Stack>
