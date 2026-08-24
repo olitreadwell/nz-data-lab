@@ -105,11 +105,6 @@ function accentFg(accent: MicrositeAccent, dark: boolean): Oklch {
   return dark ? { ...base, lightness: 0.82 } : base;
 }
 
-/** The accent card background color in a given mode. */
-function accentBg(dark: boolean): Oklch {
-  return dark ? DARK_CARD_BG : LIGHT_CARD_BG;
-}
-
 describe('microsite accent styles', () => {
   it.each(ACCENTS)('%s styles reference the accent design tokens', (accent) => {
     const styles = getMicrositeAccentStyles(accent);

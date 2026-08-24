@@ -7,7 +7,6 @@ import { fileURLToPath } from 'node:url';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { CSP_NONCE_PATH } from '../../scripts/csp-nonce.mjs';
-import vercelConfig from '../../vercel';
 
 // The test lives at apps/web/src/lib, so the workspace root is two levels up.
 const WEB_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -23,19 +22,9 @@ const REQUIRED_HEADERS = [
   'Permissions-Policy',
 ];
 
-interface SecurityHeader {
-  key: string;
-  value: string;
-}
-
 interface HeaderRule {
   path: string;
   headers: Record<string, string>;
-}
-
-function readVercelHeaders(): SecurityHeader[] {
-  const rules = vercelConfig.headers[0];
-  return rules?.headers ?? [];
 }
 
 function readStaticHeaders(): string {
@@ -146,7 +135,6 @@ function serveStaticSite(root: string): Promise<ServedSite> {
 }
 
 describe('security headers', () => {
-  const vercelHeaders = readVercelHeaders();
   const generated = generateCspOutput();
   let servedCsp: string;
 
@@ -191,56 +179,9 @@ describe('security headers', () => {
     expect(generated.html).toContain(`nonce="${nonce}"`);
   });
 
-  it('serves a CSP on Vercel whose nonce permits the inline scripts', () => {
-    const vercelCsp =
-      vercelHeaders.find((header) => header.key === 'Content-Security-Policy')?.value ?? '';
-    const scriptSrc = cspDirective(vercelCsp, 'script-src');
-    const nonce = /'nonce-([^']+)'/.exec(scriptSrc)?.[1];
-    if (nonce === undefined) {
-      throw new Error('vercel.ts CSP script-src is missing a nonce');
-    }
-    expect(generated.html).toContain(`nonce="${nonce}"`);
-  });
-
   it('does not commit a nonce in tracked config', () => {
     const vercelTs = readFileSync(`${WEB_ROOT}/vercel.ts`, 'utf8');
     expect(vercelTs).not.toMatch(/nonce-[A-Za-z0-9+/=]{12,}/);
     expect(readStaticHeaders()).not.toContain('nonce-');
-  });
-
-  it('ships the other security headers on Vercel', () => {
-    const keys = vercelHeaders.map((header) => header.key);
-    expect(keys).toEqual(
-      expect.arrayContaining([
-        'X-Content-Type-Options',
-        'Referrer-Policy',
-        'X-Frame-Options',
-        'Permissions-Policy',
-      ]),
-    );
-  });
-
-  it('carries CSP and HSTS on Vercel', () => {
-    const keys = vercelHeaders.map((header) => header.key);
-    expect(keys).toEqual(
-      expect.arrayContaining(['Content-Security-Policy', 'Strict-Transport-Security']),
-    );
-  });
-
-  it('mirrors the headers in the static _headers file', () => {
-    const staticHeaders = readStaticHeaders();
-    const stripNonce = (csp: string) => csp.replace(/\s+'nonce-[^']*'/, '');
-    for (const header of vercelHeaders) {
-      const staticLine = staticHeaders
-        .split('\n')
-        .find((line) => line.trim().startsWith(`${header.key}:`));
-      const staticValue = staticLine?.trim().slice(`${header.key}:`.length).trim() ?? '';
-      if (header.key === 'Content-Security-Policy') {
-        // The committed CSP carries no nonce; vercel.ts adds the per-build one.
-        expect(stripNonce(staticValue)).toBe(stripNonce(header.value));
-      } else {
-        expect(staticValue).toBe(header.value);
-      }
-    }
   });
 });

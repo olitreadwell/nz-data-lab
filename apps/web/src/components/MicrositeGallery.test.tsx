@@ -110,7 +110,7 @@ describe('MicrositeGallery', () => {
 
   it('preselects the category filter on a category page', () => {
     render(<MicrositeGallery cards={cards} title={null} initialCategory="Census & population" />);
-    const category = screen.getByLabelText('Category') as HTMLSelectElement;
+    const category = screen.getByLabelText<HTMLSelectElement>('Category');
     expect(category.value).toBe('Census & population');
     expect(screen.getByRole('option', { name: 'Census & population' })).toBeInTheDocument();
     expect(screen.queryByRole('option', { name: /All categories/ })).not.toBeInTheDocument();
