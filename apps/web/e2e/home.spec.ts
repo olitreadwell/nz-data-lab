@@ -9,7 +9,7 @@ test.describe('home', () => {
     // (the site may be served under a base path).
     await page.goto('./');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    await expect(page.getByRole('link', { name: /read the story/i })).toHaveCount(
+    await expect(page.getByRole('link', { name: /national animal is in freefall/i })).toHaveCount(
       MICROSITES.length,
     );
   });

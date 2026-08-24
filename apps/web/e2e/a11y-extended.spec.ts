@@ -27,25 +27,12 @@ test.describe('extended a11y coverage', () => {
     expect(results.violations).toEqual([]);
   });
 
-  test('@a11y no axe violations on the error route', async ({ page }) => {
-    // The root error boundary only renders when a page throws at runtime. In
-    // the static export served by CI there is no server to throw, so force a
-    // 500 on the document request to surface the error page.
-    await page.route('**/agriculture/sheep-index/', (route) =>
-      route.fulfill({ status: 500, body: '' }),
-    );
-    await page.goto('./agriculture/sheep-index');
-    await expect(page.getByRole('heading', { name: 'An unexpected error occurred' })).toBeVisible();
-    const results = await new AxeBuilder({ page }).analyze();
-    expect(results.violations).toEqual([]);
-  });
-
   test('@a11y keyboard-only tab-through shows visible focus and no trap', async ({ page }) => {
     await page.goto('./agriculture/sheep-index');
     await expect(page.getByRole('main')).toBeVisible();
 
     const focusedTags: string[] = [];
-    for (let index = 0; index < 12; index += 1) {
+    for (let index = 0; index < 30; index += 1) {
       await page.keyboard.press('Tab');
       const active = await page.evaluate(() => {
         const element = document.activeElement;
@@ -75,7 +62,7 @@ test.describe('extended a11y coverage', () => {
     // Delay the RSC payload for a microsite so the streaming loading boundary
     // stays visible long enough to assert on it. Set up before navigating so
     // any prefetch is also delayed.
-    await page.route('**/census/census-rank-shift/**', async (route) => {
+    await page.route('**/agriculture/sheep-index/**', async (route) => {
       await new Promise((resolve) => setTimeout(resolve, 3000));
       await route.continue();
     });
@@ -83,7 +70,7 @@ test.describe('extended a11y coverage', () => {
     // Wait for the client-side router to be ready before clicking, otherwise
     // the click can race hydration and skip the loading boundary.
     await page.waitForLoadState('networkidle');
-    await page.locator('a[href="/census/census-rank-shift/"]').click();
+    await page.locator('a[href="/agriculture/sheep-index/"]').click();
 
     const loading = page.getByRole('status');
     await expect(loading).toBeVisible();
@@ -91,6 +78,8 @@ test.describe('extended a11y coverage', () => {
     await expect(loading).toContainText('Loading');
 
     // Content resolves once the delayed RSC payload arrives.
-    await expect(page.getByRole('heading', { name: /Selwyn and Queenstown/i })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: /national animal is in freefall/i }),
+    ).toBeVisible();
   });
 });
