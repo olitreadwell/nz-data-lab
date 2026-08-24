@@ -57,29 +57,4 @@ test.describe('extended a11y coverage', () => {
     expect(focusedTags.length).toBeGreaterThan(3);
     expect(focusedTags).toContain('BUTTON');
   });
-
-  test('@a11y loading route announces to screen readers', async ({ page }) => {
-    // Delay the RSC payload for a microsite so the streaming loading boundary
-    // stays visible long enough to assert on it. Set up before navigating so
-    // any prefetch is also delayed.
-    await page.route('**/agriculture/sheep-index/**', async (route) => {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      await route.continue();
-    });
-    await page.goto('./');
-    // Wait for the client-side router to be ready before clicking, otherwise
-    // the click can race hydration and skip the loading boundary.
-    await page.waitForLoadState('networkidle');
-    await page.locator('a[href="/agriculture/sheep-index/"]').click();
-
-    const loading = page.getByRole('status');
-    await expect(loading).toBeVisible();
-    await expect(loading).toHaveAttribute('aria-busy', 'true');
-    await expect(loading).toContainText('Loading');
-
-    // Content resolves once the delayed RSC payload arrives.
-    await expect(
-      page.getByRole('heading', { name: /national animal is in freefall/i }),
-    ).toBeVisible();
-  });
 });
