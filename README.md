@@ -1,8 +1,7 @@
 # nz-data-lab
 
 Small experiments digging through New Zealand public data for the funny and the
-surprising. This is the public site repo: only published experiments live here,
-one at a time. The working repo (`nz-data-lab-private`) holds everything else.
+surprising. T
 
 ## Live now
 
@@ -23,14 +22,3 @@ one at a time. The working repo (`nz-data-lab-private`) holds everything else.
 npm install
 npm run dev
 ```
-
-## Publishing an experiment
-
-Work happens in `nz-data-lab-private`. When an experiment ships:
-
-1. Copy the experiment's files into this repo.
-2. Add its slug to `apps/web/src/lib/published-microsites.ts`.
-3. Add its headline stat to `apps/web/src/app/page.tsx` if it earns one.
-4. Commit, push, and Vercel deploys.
-
-Never commit secrets here. Env vars live in Vercel, not in the repo.
