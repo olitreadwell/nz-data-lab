@@ -1,7 +1,7 @@
 # nz-data-lab
 
 Small experiments digging through New Zealand public data for the funny and the
-surprising. T
+surprising.
 
 ## Live now
 

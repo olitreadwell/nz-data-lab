@@ -12,6 +12,11 @@ describe('SiteHeader', () => {
     expect(screen.getByRole('link', { name: 'nz-data-lab' })).toHaveAttribute('href', '/');
   });
 
+  it('links to the about page', () => {
+    render(<SiteHeader />);
+    expect(screen.getByRole('link', { name: 'About' })).toHaveAttribute('href', '/about');
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = render(<SiteHeader />);
     const results = await axe(container);
