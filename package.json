@@ -27,7 +27,6 @@
     "build:storybook": "turbo build-storybook --filter=@nzlab/ui",
     "clean": "rm -rf .turbo apps/*/.next apps/*/.turbo apps/*/dist apps/*/tsconfig.tsbuildinfo apps/*/coverage apps/*/playwright-report apps/*/test-results packages/*/.turbo packages/*/dist packages/*/tsconfig.tsbuildinfo packages/*/.rollup.cache packages/*/coverage packages/*/storybook-static",
     "clean:all": "rm -rf node_modules apps/*/node_modules packages/*/node_modules .turbo apps/*/.next apps/*/.turbo apps/*/dist apps/*/tsconfig.tsbuildinfo apps/*/coverage apps/*/playwright-report apps/*/test-results packages/*/.turbo packages/*/dist packages/*/tsconfig.tsbuildinfo packages/*/.rollup.cache packages/*/coverage packages/*/storybook-static && npm cache clean --force",
-    "prepare": "husky",
     "setup": "node scripts/setup.mjs"
   },
   "lint-staged": {
