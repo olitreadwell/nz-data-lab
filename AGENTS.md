@@ -2,9 +2,9 @@
 
 # nz-data-lab
 
-Small NZ-public-data experiments + practice directing Claude to orchestrate a cheaper
-model for mechanical work. See root `README.md` and `CLAUDE.md` for the full mission
-and package structure.
+Example site for `nz-open-data-connectors`: one microsite (the sheep index)
+showing the full pipeline from a NZ public-data connector to a deployed static
+chart. See root `README.md` for the mission and package structure.
 
 ## Stack (this is the real one — verify against `package.json` before trusting any
 
@@ -16,6 +16,9 @@ doc that disagrees)
   `packages/ui/components.json` and the Storybook Style Guide
 - Vitest + Testing Library + jest-axe (unit/a11y), Playwright + `@axe-core/playwright`
   (e2e/a11y), Storybook
+- `packages/stats-nz` is vendored from
+  `github.com/olitreadwell/nz-open-data-connectors` — sync it with
+  `node scripts/sync-connectors.mjs`, never edit it in place.
 
 ## Quality gates (enforced by husky + ESLint, see `packages/config-eslint/base.js`)
 
@@ -46,10 +49,9 @@ doc that disagrees)
   (single source of truth, including the shadcn color system) — don't hand-roll a
   second set of CSS variables elsewhere.
 - Env vars: declared in `apps/web/src/env.ts`.
-- Experiments: every one is self-contained under
-  `apps/web/src/app/experiments/<slug>/` with its own `error.tsx` boundary, so one
-  broken experiment doesn't take the rest of the site down. See
-  `apps/web/src/app/experiments/_example/` for the full template.
+- Published microsites: gate what ships via `PUBLISHED_MICROSITES` in
+  `apps/web/src/lib/published-microsites.ts`; microsite copy and config live in
+  `apps/web/src/lib/microsites.ts`.
 
 ## Scope discipline
 

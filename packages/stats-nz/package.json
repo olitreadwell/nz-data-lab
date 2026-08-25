@@ -1,7 +1,7 @@
 {
   "name": "@nzlab/stats-nz",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.1.0",
+  "private": false,
   "type": "module",
   "exports": {
     ".": "./src/index.ts"
@@ -32,5 +32,8 @@
   "dependencies": {
     "fast-xml-parser": "^5.11.0",
     "zod": "^3.25.76"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -2,7 +2,7 @@
 
 Shared client for the [Aotearoa Data Explorer (ADE) API](https://www.stats.govt.nz/tools/aotearoa-data-explorer/ade-api-user-guide/) - the current Stats NZ data API (the old `api.stats.govt.nz` open data API closed 30 August 2024). SDMX 2.1 REST, base URL `https://api.data.stats.govt.nz/rest/`.
 
-The published microsites use this package to fetch Stats NZ data. Server-side only (SDMX responses can be large; never call this from the browser).
+Server-side only (SDMX responses can be large; never call this from the browser).
 
 ## Quick start
 
@@ -38,13 +38,15 @@ Keyless requests must use the explicit published version. The client defaults to
 
 ## Subscription key
 
-Free signup at [portal.apis.stats.govt.nz](https://portal.apis.stats.govt.nz). Set `STATS_NZ_SUBSCRIPTION_KEY` in the app env (server-only, see `apps/web/src/env.ts`). Sent as the `Ocp-Apim-Subscription-Key` header; never exposed to the browser.
+Free signup at [portal.apis.stats.govt.nz](https://portal.apis.stats.govt.nz). Set `STATS_NZ_SUBSCRIPTION_KEY` in the app env (server-only). Sent as the `Ocp-Apim-Subscription-Key` header; never exposed to the browser.
 
 ## Formats
 
 - `csv` - codes only, keyless for `AGR_*` tables. Fast to parse, verified against the real API.
 - `csvfilewithlabels` - code + label columns, requires a key.
 - `jsondata` - SDMX-JSON, requires a key. Parser implemented against the SDMX-JSON 1.0 spec; **not yet live-verified** (needs a subscription key).
+
+`serializeStatsNzRowsToCsv(rows)` turns typed observations back into CSV (dimension columns, then `value`, then `status` when present) for language-agnostic output.
 
 ## Errors
 
