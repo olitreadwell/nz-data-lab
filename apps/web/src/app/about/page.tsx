@@ -18,6 +18,39 @@ export default function AboutPage(): React.ReactElement {
         </p>
 
         <section className="space-y-3">
+          <h2 className="numeral-heading-lg">nz-open-data-connectors</h2>
+          <p className="numeral-paragraph-md">
+            The data here is pulled through{' '}
+            <Link
+              href="https://github.com/olitreadwell/nz-open-data-connectors"
+              className="underline hover:text-[var(--color-fg)]"
+            >
+              nz-open-data-connectors
+            </Link>
+            : TypeScript connectors for New Zealand public data, keyless-first, with
+            language-agnostic wrappers so any language can call them. There is an HTTP API with an
+            OpenAPI spec, an nzdata command line tool that prints JSON or CSV, and Python and Ruby
+            ports. Every connector works without an API key; optional keys unlock more and stay
+            server-side, read from the environment and never exposed.
+          </p>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="numeral-heading-lg">New Zealand Data &amp; APIs</h2>
+          <p className="numeral-paragraph-md">
+            When a new source is needed, it usually starts in{' '}
+            <Link
+              href="https://github.com/olitreadwell/new-zealand-data"
+              className="underline hover:text-[var(--color-fg)]"
+            >
+              olitreadwell/new-zealand-data
+            </Link>
+            , a community list of New Zealand data and available APIs, from central government
+            agencies to local councils, published as a searchable site.
+          </p>
+        </section>
+
+        <section className="space-y-3">
           <h2 className="numeral-heading-lg">The sheep index</h2>
           <p className="numeral-paragraph-md">
             The current experiment tracks the national sheep flock. It has nearly halved since 1994,

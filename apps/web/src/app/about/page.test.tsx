@@ -12,6 +12,14 @@ describe('AboutPage', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'About nz-data-lab' })).toBeVisible();
     expect(screen.getByText(/national sheep flock/)).toBeVisible();
     expect(screen.getByText(/Stats NZ Aotearoa Data Explorer/)).toBeVisible();
+    expect(screen.getByRole('link', { name: 'nz-open-data-connectors' })).toHaveAttribute(
+      'href',
+      'https://github.com/olitreadwell/nz-open-data-connectors',
+    );
+    expect(screen.getByRole('link', { name: 'olitreadwell/new-zealand-data' })).toHaveAttribute(
+      'href',
+      'https://github.com/olitreadwell/new-zealand-data',
+    );
     expect(screen.getByRole('link', { name: 'GitHub' })).toHaveAttribute(
       'href',
       'https://github.com/olitreadwell/nz-data-lab',
