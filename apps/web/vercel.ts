@@ -3,6 +3,8 @@
 // static export, so no headers block is needed here.
 const config = {
   buildCommand: 'next build && node scripts/generate-csp.mjs',
+  git: { deploymentEnabled: { main: true, development: true, '**': false } },
+  github: { autoJobCancelation: true },
 };
 
 export default config;
