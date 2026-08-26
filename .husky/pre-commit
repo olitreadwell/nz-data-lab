@@ -1,13 +1,31 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
+# Pre-commit gate: lint, typecheck, and tests in parallel.
+set -e
 
-# Autofix only — no blocking checks.
-#
-# Runs prettier --write and eslint --fix on staged files via lint-staged.
-# The commit succeeds even if eslint reports warnings; only unfixable
-# *errors* will fail. To bypass entirely:  git commit --no-verify
-#
-# The CI lint job is advisory (continue-on-error: true). PR comments via
-# reviewdog surface any new findings inline. Only build / type-check /
-# tests can fail a PR check.
+echo "=== Pre-commit checks ==="
 
-npx lint-staged --concurrent=2
+(
+  npm run lint --if-present
+) &
+G1=$!
+
+(
+  npm run typecheck --if-present
+) &
+G2=$!
+
+(
+  npm test --if-present
+) &
+G3=$!
+
+FAILED=0
+wait $G1 || FAILED=1
+wait $G2 || FAILED=1
+wait $G3 || FAILED=1
+
+if [ $FAILED -eq 1 ]; then
+  echo "FAILED. Fix then commit again. Skip with: git commit --no-verify"
+  exit 1
+fi
+echo "All checks passed."
