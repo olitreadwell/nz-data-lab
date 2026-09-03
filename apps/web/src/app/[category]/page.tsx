@@ -16,6 +16,8 @@ interface CategoryPageProps {
   params: Promise<{ category: string }>;
 }
 
+export const dynamicParams = false;
+
 export function generateStaticParams(): { category: string }[] {
   const usedCategories = new Set(MICROSITES.map((microsite) => microsite.category));
   return Object.entries(CATEGORY_SLUGS)

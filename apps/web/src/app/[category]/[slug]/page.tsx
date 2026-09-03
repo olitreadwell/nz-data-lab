@@ -22,6 +22,8 @@ interface MicrositePageProps {
   params: Promise<{ category: string; slug: string }>;
 }
 
+export const dynamicParams = false;
+
 export function generateStaticParams(): { category: string; slug: string }[] {
   return MICROSITES.map((microsite) => ({
     category: categorySlugFor(microsite),

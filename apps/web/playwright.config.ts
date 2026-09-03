@@ -52,10 +52,11 @@ export default defineConfig({
     },
   ],
   webServer: {
-    // CI serves the static export (the workflow builds first); local dev
-    // uses the dev server. The repo is npm-only, so no pnpm.
-    command: CI ? 'npx serve out -l 3000' : 'npm run dev',
+    // The app is a static export (output: 'export'), so the server must be
+    // the built `out/` directory in both CI and local runs. Run `npm run
+    // build` (or `npm run check`) first so `out/` exists.
+    command: 'npx serve out -l 3000',
     port: 3000,
-    reuseExistingServer: !CI,
+    reuseExistingServer: false,
   },
 });
