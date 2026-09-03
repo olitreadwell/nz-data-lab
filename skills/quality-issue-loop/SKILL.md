@@ -76,7 +76,7 @@ every iteration makes the next one faster.
   resolve `next` from a worktree. Worktree verification is type-check, lint,
   and unit tests; the build runs in CI on merged main.
 - The launchd plist must pass the model provider env vars
-  (OLLAMA_CLOUD_API_KEY etc.) or every `codex exec` dies before doing work.
+  (OLLAMA_CLOUD_MAX_API_KEY etc.) or every `codex exec` dies before doing work.
 - Fan-out agents run in parallel worktrees and must be awaited with their
   real exit codes; an un-awaited child looks like a failed agent.
 - Never delete or weaken a failing test to get green.

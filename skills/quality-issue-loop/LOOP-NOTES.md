@@ -13,7 +13,7 @@ type-check passed, Pages deploy verified, issues closed.
 
 Blockers found and fixed this iteration:
 
-- launchd environment was missing OLLAMA_CLOUD_API_KEY, so every scheduled
+- launchd environment was missing OLLAMA_CLOUD_MAX_API_KEY, so every scheduled
   `codex exec` died at startup for ~6 hours before diagnosis. Fix: write the
   provider env vars into the launchd plist EnvironmentVariables.
 - The Next.js build cannot run inside a git worktree (turbopack refuses to
