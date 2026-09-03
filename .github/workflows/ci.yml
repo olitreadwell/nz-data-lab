@@ -112,6 +112,8 @@ jobs:
           else
             npm ci
           fi
+      - name: Build static export (e2e bootstraps its own server)
+        run: npm run build
       - name: Install Playwright browsers
         working-directory: apps/web
         run: npx playwright install --with-deps chromium
