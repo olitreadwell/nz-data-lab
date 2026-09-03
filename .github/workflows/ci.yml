@@ -113,14 +113,16 @@ jobs:
             npm ci
           fi
       - name: Install Playwright browsers
+        working-directory: apps/web
         run: npx playwright install --with-deps chromium
       - run: npx playwright test --shard=${{ matrix.shard }}/2
+        working-directory: apps/web
       - name: Upload Playwright report
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
-          path: playwright-report/
+          path: apps/web/playwright-report/
           retention-days: 3
 
   actions-lint:
