@@ -1,4 +1,4 @@
-import { Container, Stack } from '@nzlab/ui';
+import { Container, Stack } from '@nz-lab/ui';
 import Link from 'next/link';
 
 export default function NotFound(): React.ReactElement {

@@ -6,9 +6,9 @@
 // cannot target a subpackage inside a workspace monorepo, so the single
 // package the site uses is vendored here and kept in sync with this script.
 //
-// The connectors repo still publishes under the @nzlab scope while this site
-// publishes under @nzlab, so every sync rewrites the vendored scope back.
-// Without that step the next sync silently restores @nzlab/ in the copy.
+// The connectors repo still publishes under the @nz-lab scope while this site
+// publishes under @nz-lab, so every sync rewrites the vendored scope back.
+// Without that step the next sync silently restores @nz-lab/ in the copy.
 //
 // Usage:
 //   node scripts/sync-connectors.mjs                      uses ../nz-open-data-connectors
@@ -32,11 +32,11 @@ const SYNCED_FILES = [
 ];
 
 /** Package name the connectors repo publishes; the guard rejects anything else. */
-const UPSTREAM_PACKAGE_NAME = '@nzlab/stats-nz';
+const UPSTREAM_PACKAGE_NAME = '@nz-lab/stats-nz';
 
 /** Scope the connectors repo publishes under, and the one this site uses. */
-const UPSTREAM_SCOPE = '@nzlab/';
-const VENDORED_SCOPE = '@nzlab/';
+const UPSTREAM_SCOPE = '@nz-lab/';
+const VENDORED_SCOPE = '@nz-lab/';
 
 /** Extensions the scope rewrite touches; anything else is copied verbatim. */
 const RESCOPE_EXTENSIONS = ['.json', '.md', '.mjs', '.ts', '.tsx'];
@@ -64,7 +64,7 @@ function readPackageName(packageJsonPath) {
   return JSON.parse(readFileSync(packageJsonPath, 'utf8')).name;
 }
 
-/** Rewrites every @nzlab/ occurrence under a copied path to @nzlab/. */
+/** Rewrites every @nz-lab/ occurrence under a copied path to @nz-lab/. */
 function rescopeVendoredCopy(targetPath) {
   const entries = readdirSync(targetPath, { recursive: true, withFileTypes: true });
   for (const entry of entries) {

@@ -1,4 +1,4 @@
-import { Container } from '@nzlab/ui';
+import { Container } from '@nz-lab/ui';
 
 export default function Loading(): React.ReactElement {
   return (
