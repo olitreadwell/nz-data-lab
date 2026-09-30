@@ -11,7 +11,7 @@
 gh repo create my-project --template numeralstudio/template --private
 cd my-project
 npm install
-npm run setup       # interactive: rename @nzlab scope, copy .env, pick integrations
+npm run setup       # interactive: rename @nz-lab scope, copy .env, pick integrations
 npm run dev
 ```
 

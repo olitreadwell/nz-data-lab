@@ -1,4 +1,4 @@
-import { Container, Stack } from '@nzlab/ui';
+import { Container, Stack } from '@nz-lab/ui';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 

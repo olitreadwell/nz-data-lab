@@ -1,5 +1,5 @@
-import { cn } from '@nzlab/ui';
-import '@nzlab/ui/styles';
+import { cn } from '@nz-lab/ui';
+import '@nz-lab/ui/styles';
 import type { Metadata } from 'next';
 import { Geist } from 'next/font/google';
 

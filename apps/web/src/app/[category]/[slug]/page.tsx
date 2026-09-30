@@ -1,4 +1,4 @@
-import { Container } from '@nzlab/ui';
+import { Container } from '@nz-lab/ui';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
