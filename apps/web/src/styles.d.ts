@@ -1,1 +1,1 @@
-declare module '@kiwilab/ui/styles';
+declare module '@nzlab/ui/styles';

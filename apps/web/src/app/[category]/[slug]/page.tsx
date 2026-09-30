@@ -1,4 +1,4 @@
-import { Container } from '@kiwilab/ui';
+import { Container } from '@nzlab/ui';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -67,14 +67,14 @@ export async function generateMetadata({ params }: MicrositePageProps): Promise<
   const { category, slug } = await params;
   const microsite = MICROSITES.find((candidate) => candidate.slug === slug);
   if (microsite === undefined || categorySlugFor(microsite) !== category) {
-    return { title: 'kiwi-data-lab' };
+    return { title: 'nz-data-lab' };
   }
   const path = micrositePathFor(microsite);
   return {
-    title: `${microsite.label} - kiwi-data-lab`,
+    title: `${microsite.label} - nz-data-lab`,
     description: microsite.description,
     openGraph: {
-      title: `${microsite.label} - kiwi-data-lab`,
+      title: `${microsite.label} - nz-data-lab`,
       description: microsite.description,
       url: path,
       type: 'article',

@@ -7,7 +7,7 @@
 // package the site uses is vendored here and kept in sync with this script.
 //
 // The connectors repo still publishes under the @nzlab scope while this site
-// publishes under @kiwilab, so every sync rewrites the vendored scope back.
+// publishes under @nzlab, so every sync rewrites the vendored scope back.
 // Without that step the next sync silently restores @nzlab/ in the copy.
 //
 // Usage:
@@ -36,7 +36,7 @@ const UPSTREAM_PACKAGE_NAME = '@nzlab/stats-nz';
 
 /** Scope the connectors repo publishes under, and the one this site uses. */
 const UPSTREAM_SCOPE = '@nzlab/';
-const VENDORED_SCOPE = '@kiwilab/';
+const VENDORED_SCOPE = '@nzlab/';
 
 /** Extensions the scope rewrite touches; anything else is copied verbatim. */
 const RESCOPE_EXTENSIONS = ['.json', '.md', '.mjs', '.ts', '.tsx'];
@@ -64,7 +64,7 @@ function readPackageName(packageJsonPath) {
   return JSON.parse(readFileSync(packageJsonPath, 'utf8')).name;
 }
 
-/** Rewrites every @nzlab/ occurrence under a copied path to @kiwilab/. */
+/** Rewrites every @nzlab/ occurrence under a copied path to @nzlab/. */
 function rescopeVendoredCopy(targetPath) {
   const entries = readdirSync(targetPath, { recursive: true, withFileTypes: true });
   for (const entry of entries) {
